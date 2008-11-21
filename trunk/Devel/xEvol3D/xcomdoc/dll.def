@@ -1,0 +1,36 @@
+EXPORTS
+     xcd_string_hash
+     xcd_open
+     xcd_open_mem
+     xcd_create
+     xcd_close
+     xcd_get_length
+     xcd_failed
+     xcd_discard
+     xcd_get_state
+     xcd_set_buf
+     xcd_get_buf
+     xcd_clear
+
+     xcd_open_stream
+     xcd_open_stream_type
+     xcd_delete_stream
+     xcd_create_stream
+     xcd_create_stream_with_dir
+     xcd_close_stream
+     xcd_count_stream
+
+     xcd_stream_read
+     xcd_stream_write
+     xcd_stream_tellr
+     xcd_stream_tellw
+     xcd_stream_seekr
+     xcd_stream_seekw
+     xcd_stream_get_buf
+     xcd_stream_type
+     xcd_is_dir
+
+
+     xcd_add_dir
+     xcd_extrac_to_dir
+      

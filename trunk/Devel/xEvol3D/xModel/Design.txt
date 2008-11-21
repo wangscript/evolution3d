@@ -1,0 +1,40 @@
+Model System只负责数据的加载和管理。
+加载由Mesh/Model自己来实现。
+管理由对应的Manager来实现。
+
+Mesh , Action , Skeleton
+
+Mesh 可以存在的方式
+1. .mesh 文件, 只保存单个的mesh
+2. .xrm  文件, 模型里包含的mesh
+
+Action 可以存在的方式
+1. .action 文件，只保存单个的action
+2. .skeleton 文件， 骨架里保存的action
+3. .xrm      文件， 模型里包含的骨架里包含的cation
+
+Skeleton 存在的方式
+1. .skeleton 文件， 只保存单个的.skeleton文件
+2. .xrm      文件， 模型文件里带的skeleton
+
+
+目前存在的问题：
+   1. Model 是不是用来组织Mesh?
+   2. 是不是所有需要组织mesh的工作都由Model来完成。
+   3. Skeleton要不要单独存在？如果不单独存在，skeleton应该由Model来加载。
+   4. xrm文件里的mesh如何管理？如果被管理，怎么将其转成HMesh对象？
+   5. Model里的HMesh，如果被管理，那么目前的方案是每个Mesh都处于MeshManager中，对于大量使用Model的应用。代价太大。
+   
+解决方案：
+   一： Model为派生类, skeleton因为数据小，不需要受管理
+       xCorelModel , 基础管理类，能支持管理骨架。绘制等。
+       xModel      , 模型类，能加载自己的.xrm文件里的骨骼和数据。Mesh不受管理, Action不受管理。
+       xAvatorModel, 角色类，支持换装。Mesh受管理，均为HMesh，动作也为受管理的HAction.
+       
+       
+场景管理器中的对模型系统的引用有两种级别的：
+1. Core级别的。   Core的东西只包含渲染的数据，不包含任何渲染相关的参数。可定制性高。材质和渲染脚本都需要场景管理中的Map来保存和加载。
+2. Model级别的。  包含数据和参数，但是可定制性差。 材质都在模型中可以绑定。
+       
+   
+   

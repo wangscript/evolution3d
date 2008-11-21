@@ -1,0 +1,614 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0068)http://www.campaigncreations.org/starcraft/inside_mopaq/chapter2.htm -->
+<HTML><HEAD><TITLE>Inside MoPaQ - Chapter 2: Fundamentals</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<META content="The definitive, all in one guide to the MPQ file format" 
+name=description>
+<META content="Microsoft FrontPage 5.0" name=GENERATOR>
+<META 
+content="MPQ, MPQs, MoPaQ, MoPaQs, Storm, Storm.dll, LMPQAPI, Starcraft, Diablo, hacking, hacks, patching, patches, customs" 
+name=keywords>
+<META content=FrontPage.Editor.Document name=ProgId></HEAD>
+<BODY text=#121203 bgColor=#ffffff>
+<P align=center><IMG height=250 
+src="Inside MoPaQ - Chapter 2 Fundamentals.files/logo.jpg" width=450 
+align=center vspace=1 border=0> 
+<TABLE height=843 cellSpacing=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD width="5%" height=21><FONT face=Arial size=2><IMG height=1 hspace=10 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=3 border=0></FONT></TD>
+    <TD width="5%" height=21><FONT face=Arial size=2><IMG height=1 hspace=10 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=3 border=0></FONT></TD>
+    <TD width="5%" height=21><FONT face=Arial size=2><IMG height=1 hspace=10 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=3 border=0></FONT></TD>
+    <TD width="5%" height=21><FONT face=Arial size=2><IMG height=1 hspace=10 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=3 border=0></FONT></TD>
+    <TD width="65%" height=21><FONT face=Arial size=2><IMG height=1 hspace=140 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=3 border=0></FONT></TD>
+    <TD width="15%" height=21><FONT face=Arial size=2><IMG height=1 hspace=30 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=3 border=0></FONT></TD></TR>
+  <TR>
+    <TD width="5%" height=96></TD>
+    <TD width="80%" colSpan=4 height=96><FONT face=Arial size=3><B><A 
+      name=chapter_two>C H A P T E R<IMG height=1 hspace=10 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=3 border=0>T W O</A></B></FONT><FONT face=Arial size=5><BR><IMG 
+      height=1 hspace=30 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=15 border=0><BR>F</FONT><FONT face=Arial size=4>UNDAMENTALS<BR><IMG 
+      height=1 hspace=30 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=8 border=0></FONT></TD>
+    <TD width="15%" height=96></TD></TR>
+  <TR>
+    <TD width="5%" height=49></TD>
+    <TD width="5%" height=49></TD>
+    <TD width="75%" colSpan=3 height=49>
+      <P align=justify><FONT face=Arial size=4><B>M</B></FONT><FONT face=Arial 
+      size=2>ost of the advancements throughout the history of computers have 
+      been because of particular problems which required solving. In this 
+      chapter, we'll take a look at some of these problems and their solutions 
+      as they pertain to the MPQ format.<BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0></FONT></P></TD>
+    <TD width="15%" height=49></TD></TR>
+  <TR>
+    <TD width="5%" height=24></TD>
+    <TD width="5%" height=24></TD>
+    <TD width="75%" colSpan=3 height=24><FONT face=Arial size=4><B><A 
+      name=hashes>Hashes</A></B></FONT></TD>
+    <TD width="15%" height=24></TD></TR>
+  <TR>
+    <TD width="5%" height=367></TD>
+    <TD width="5%" height=367></TD>
+    <TD width="5%" height=367></TD>
+    <TD width="70%" colSpan=2 height=367>
+      <P align=justify><FONT face=Arial size=2><B>Problem:</B> You have a very 
+      large array of strings. You have another string and need to know if it is 
+      already in the list. You would probably begin by comparing each string in 
+      the list with the string other, but when put into application, you would 
+      find that this method is far too slow for practical use. Something else 
+      must be done. But how can you know if the string exists without comparing 
+      it to all the other strings?<BR><B>Solution:</B><IMG height=1 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0> <I>Hashes</I>. Hashes are smaller data types (i.e. 
+      numbers) that represent other, larger, data types (usually strings). In 
+      this scenario, you could store hashes in the array with the strings. Then 
+      you could compute the hash of the other string and compare it to the 
+      stored hashes. If a hash in the array matches the new hash, the strings 
+      can be compared to verify the match. This method, called <I>indexing</I>, 
+      could speed things up by about 100 times, depending on the size of the 
+      array and the average length of the strings.<BR>&nbsp;</FONT> 
+      <TABLE borderColor=#ffffff cellSpacing=1 align=center bgColor=#c0c0c0 
+      border=1 width="827">
+        <TBODY>
+        <TR>
+          <TD width="819">
+            <TABLE cellSpacing=0 cellPadding=0 border=0 width="769">
+              <TBODY>
+              <TR>
+                <TD width="769" colSpan=3><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">unsigned 
+                  long HashString(char *lpszString)<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="20"></TD>
+                <TD width="749" colSpan=2><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">unsigned 
+                  long ulHash = 0xf1e2d3c4;<BR><BR>while (*lpszString != 
+                  0)<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="20"></TD>
+                <TD width="20"></TD>
+                <TD width="729"><FONT color=#0000FF><CODE><font face="Fixedsys">ulHash &lt;&lt;= 
+                  1;<BR>ulHash += *lpszString++;</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="20"></TD>
+                <TD width="749" colSpan=2>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}<BR><BR>return 
+ulHash;</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="769" colSpan=3>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}</font></CODE></FONT></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><FONT 
+      face=Arial size=2>&nbsp;<BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0>The previous code function demonstrates a very simple 
+      hashing algorithm. The function sums the characters in the string, 
+      shifting the hash value left one bit before each character is added in. 
+      Using this algorithm, the string "arr\units.dat" would hash to 0x5A858026, 
+      and "unit\neutral\acritter.grp" would hash to 0x694CD020. Now, this is, 
+      admittedly, a very simple algorithm, and it isn't very useful, because it 
+      would generate a relatively predictable output, and a lot of 
+      <I>collisions</I> in the lower range of numbers. Collisions are what 
+      happen when more than one string hash to the same value.<BR><IMG height=1 
+      hspace=15 src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" 
+      width=1 vspace=10 border=0>The MPQ format, on the other hand, uses a very 
+      complicated hash algorithm (shown below) to generate totally unpredictable 
+      hash values. In fact, the hashing algorithm is so effective that it is 
+      called a <I>one-way hash</I>. A one-way hash is a an algorithm that is 
+      constructed in such a way that deriving the original string (set of 
+      strings, actually) is virtually impossible. Using this particular 
+      algorithm, the filename "arr\units.dat" would hash to 0xF4E6C69D, and 
+      "unit\neutral\acritter.grp" would hash to 0xA26067F3.<BR>&nbsp;</FONT> 
+      <TABLE borderColor=#ffffff cellSpacing=1 align=center bgColor=#c0c0c0 
+      border=1 width="829">
+        <TBODY>
+        <TR>
+          <TD width="821">
+            <TABLE cellSpacing=0 cellPadding=0 border=0 width="776">
+              <TBODY>
+              <TR>
+                <TD width="776" colSpan=3><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">unsigned 
+                  long HashString(char *lpszFileName, unsigned long 
+                  dwHashType)<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="33"></TD>
+                <TD width="743" colSpan=2><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">unsigned 
+                  char *key = (unsigned char *)lpszFileName;<BR>unsigned long 
+                  seed1 = 0x7FED7FED, seed2 = 0xEEEEEEEE;<BR>int 
+                  ch;<BR><BR>while(*key != 0)<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="33"></TD>
+                <TD width="33"></TD>
+                <TD width="710"><FONT color=#0000FF><CODE><font face="Fixedsys">ch = 
+                  toupper(*key++);<BR><BR>seed1 = cryptTable[(dwHashType 
+                  &lt;&lt; 8) + ch] ^ (seed1 + seed2);<BR>seed2 = ch + seed1 + 
+                  seed2 + (seed2 &lt;&lt; 5) + 3;</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="33"></TD>
+                <TD width="743" colSpan=2>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}<BR>return seed1;</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="776" colSpan=3>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}</font></CODE></FONT></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><IMG 
+      height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0></P></TD>
+    <TD width="15%" height=367></TD></TR>
+  <TR>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="75%" colSpan=3 height=21><FONT face=Arial size=4><B><A 
+      name=hash_tables>Hash Tables</A></B></FONT></TD>
+    <TD width="15%" height=21></TD></TR>
+  <TR>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="70%" colSpan=2 height=21>
+      <P align=justify><FONT face=Arial size=2><B>Problem:</B> You tried using 
+      an index like in the previous sample, but your program absolutely demands 
+      break-neck speeds, and indexing just isn't fast enough. About the only 
+      thing you could do to make it faster is to not check all of the hashes in 
+      the array. Or, even better, if you could only make one comparison in order 
+      to be sure the string doesn't exist anywhere in the array. Sound too good 
+      to be true? It's not.<BR><B>Solution:</B><IMG height=1 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0> A<I> hash table</I>. A hash table is a special type of 
+      array in which the offset of the desired string <I>is</I> the hash of that 
+      string. What I mean is this. Say that you make that string array use a 
+      separate array of fixed size (let's say 1024 entries, to make it an even 
+      power of 2) for the hash table. You want to see if the new string is in 
+      that table. To get the string's place in the hash table, you compute the 
+      hash of that string, then modulo (division remainder) that hash value by 
+      the size of that table. Thus, if you used the simple hash algorithm in the 
+      previous section, "arr\units.dat" would hash to 0x5A858026, making its 
+      offset 0x26 (0x5A858026 divided by 0x400 is 0x16A160, with a remainder of 
+      0x26). The string at this location (if there was one) would then be 
+      compared to the string to add. If the string at 0x26 doesn't match or just 
+      plain doesn't exist, then the string to add doesn't exist in the array. 
+      The following code illustrates this:<BR>&nbsp;</FONT> 
+      <TABLE borderColor=#ffffff cellSpacing=1 align=center bgColor=#c0c0c0 
+      border=1 width="822">
+        <TBODY>
+        <TR>
+          <TD width="814">
+            <TABLE cellSpacing=0 cellPadding=0 border=0 width="710">
+              <TBODY>
+              <TR>
+                <TD width="710" colSpan=3><CODE>
+                <font face="Fixedsys" color="#0000FF">int 
+                  GetHashTablePos(char *lpszString, SOMESTRUCTURE *lpTable, int 
+                  nTableSize)<BR><BR>{</font></CODE></TD></TR>
+              <TR>
+                <TD width="38"></TD>
+                <TD width="672" colSpan=2><CODE>
+                <font face="Fixedsys" color="#0000FF">int nHash 
+                  = HashString(lpszString), nHashPos = nHash % 
+                  nTableSize;<BR><BR>if (lpTable[nHashPos].bExists &amp;&amp; 
+                  !strcmp(lpTable[nHashPos].pString, 
+                lpszString))</font></CODE></TD></TR>
+              <TR>
+                <TD width="38"></TD>
+                <TD width="38"></TD>
+                <TD width="634"><font face="Fixedsys" color="#0000FF"><code>return 
+                  nHashPos;</code></font></TD></TR>
+              <TR>
+                <TD width="38"></TD>
+                <TD width="672" colSpan=2><CODE>
+                <font face="Fixedsys" color="#0000FF">else</font></CODE></TD></TR>
+              <TR>
+                <TD width="38"></TD>
+                <TD width="38"></TD>
+                <TD width="634"><CODE><font face="Fixedsys" color="#0000FF">return -1; //Error 
+                  value</font></CODE></TD></TR>
+              <TR>
+                <TD width="710" colSpan=3><CODE>
+                <font face="Fixedsys" color="#0000FF">}</font></CODE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><FONT 
+      face=Arial size=2>&nbsp;<BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0>Now, there is one glaring flaw in that explanation. What 
+      do you think happens when a collision occurs (two different strings hash 
+      to the same value)? Obviously, they can't occupy the same entry in the 
+      hash table. Normally, this is solved by each entry in the hash table being 
+      a pointer to a linked list, and the linked list would hold all the entries 
+      that hash to that same value.<BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0>MPQs use a hash table of filenames to keep track of the 
+      files inside, but the format of this table is somewhat different from the 
+      way hash tables are normally done. First of all, instead of using a hash 
+      as an offset, and storing the actually filename for verification, MPQs do 
+      not store the filename at all, but rather use three different hashes: one 
+      for the hash table offset, two for verification. These two verification 
+      hashes are used in place of the actual filename. Of course, this leaves 
+      the possibility that two different filenames would hash to the same three 
+      hashes, but the chances of this happening are, on average, 
+      1:18889465931478580854784, which should be safe enough for just about 
+      anyone.<BR></FONT><FONT face=Arial size=2><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0>The other way that an MPQ's hash table differs from the 
+      conventional implementation is that instead of using a linked list for 
+      each entry, when a collision occurs, the entry will be shifted to the next 
+      slot, and the process repeated until a free space is found. Take a look at 
+      the following illustrational code, which is basically the way a file is 
+      located for reading in an MPQ:<BR>&nbsp;</FONT> 
+      <TABLE borderColor=#ffffff cellSpacing=1 bgColor=#c0c0c0 border=1>
+        <TBODY>
+        <TR>
+          <TD width="100%">
+            <TABLE cellSpacing=0 cellPadding=0 border=0 width="844">
+              <TBODY>
+              <TR>
+                <TD width="844" colSpan=4><CODE>
+                <font face="Fixedsys" color="#0000FF">int 
+                  GetHashTablePos(char *lpszString, MPQHASHTABLE *lpTable, int 
+                  nTableSize)<BR>{</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"></TD>
+                <TD width="785" colSpan=3><CODE>
+                <font face="Fixedsys" color="#0000FF">const int 
+                  HASH_OFFSET = 0, HASH_A = 1, HASH_B = 2;<BR>int nHash = 
+                  HashString(lpszString, HASH_OFFSET), nHashA = 
+                  HashString(lpszString, HASH_A), nHashB = 
+                  HashString(lpszString, HASH_B), nHashStart = nHash % 
+                  nTableSize, nHashPos = nHashStart;<BR><BR>while 
+                  (lpTable[nHashPos].bExists)<BR>{</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"></TD>
+                <TD width="42"></TD>
+                <TD width="744" colSpan=2><CODE>
+                <font face="Fixedsys" color="#0000FF">if 
+                  (lpTable[nHashPos].nHashA == nHashA &amp;&amp; 
+                  lpTable[nHashPos].nHashB == nHashB)</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"></TD>
+                <TD width="42"></TD>
+                <TD width="50"></TD>
+                <TD width="694"><CODE><font face="Fixedsys" color="#0000FF">return 
+                  nHashPos;</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"></TD>
+                <TD width="42"></TD>
+                <TD width="744" colSpan=2><CODE>
+                <font face="Fixedsys" color="#0000FF">else</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"></TD>
+                <TD width="42"></TD>
+                <TD width="50"></TD>
+                <TD width="694"><CODE><font face="Fixedsys" color="#0000FF">nHashPos = (nHashPos 
+                  + 1) % nTableSize;<BR>&nbsp;</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"></TD>
+                <TD width="42"></TD>
+                <TD width="744" colSpan=2><CODE>
+                <font face="Fixedsys" color="#0000FF">if 
+                  (nHashPos == nHashStart)</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"></TD>
+                <TD width="42"></TD>
+                <TD width="50"></TD>
+                <TD width="694"><CODE><font face="Fixedsys" color="#0000FF">break;</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"></TD>
+                <TD width="785" colSpan=3><CODE>
+                <font face="Fixedsys" color="#0000FF">}<BR><BR>return -1; //Error 
+                  value</font></CODE></TD></TR>
+              <TR>
+                <TD width="59"><CODE><font face="Fixedsys" color="#0000FF">}</font></CODE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><FONT 
+      face=Arial size=2>&nbsp;<BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0>However convoluted that code may look,&nbsp; the theory 
+      behind it isn't difficult. It basically follows this process when looking 
+      to read a file:</FONT> 
+      <OL>
+        <LI><FONT face=Arial size=2>Compute the three hashes (offset hash and 
+        two check hashes) and store them in variables.</FONT> 
+        <LI><FONT face=Arial size=2>Move to the entry of the offset hash</FONT> 
+        <LI><FONT face=Arial size=2>Is the entry unused? If so, stop the search 
+        and return 'file not found'.</FONT> 
+        <LI><FONT face=Arial size=2>Do the two check hashes match the check 
+        hashes of the file we're looking for? If so, stop the search and return 
+        the current entry.</FONT> 
+        <LI><FONT face=Arial size=2>Move to the next entry in the list, wrapping 
+        around to the beginning if we were on the last entry.</FONT> 
+        <LI><FONT face=Arial size=2>Is the entry we just moved to the same as 
+        the offset hash (did we look through the whole hash table?)? If so, stop 
+        the search and return 'file not found'.</FONT> 
+        <LI><FONT face=Arial size=2>Go back to step 3.</FONT> </LI></OL>
+      <P><FONT face=Arial size=2><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0>If you were paying attention, you might have noticed 
+      from my explanation and sample code is that the MPQ's hash table has to 
+      hold all the file entries in the MPQ. But what do you think happens when 
+      every hash-table entry gets filled? The answer might surprise you with its 
+      obviousness: you can't add any more files. Several people have asked me 
+      why there is a limit (called the <I>file limit</I>) on the number of files 
+      that can be put in an MPQ, and if there is any way around this limit. 
+      Well, you already have the answer to the first question. As for the 
+      second; <I>no</I>, you cannot get around the file limit. For that matter, 
+      hash tables cannot even be resized without remaking the entire MPQ from 
+      scratch. This is because the location of each entry in the hash table may 
+      well change due to the resizing, and we would not be able to derive the 
+      new position because the position is the hash of the file name, and we may 
+      not know the file name.<BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0></FONT></P></TD>
+    <TD width="15%" height=21></TD></TR>
+  <TR>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="75%" colSpan=3 height=21><FONT face=Arial size=4><B><A 
+      name=compression>Compression</A></B></FONT></TD>
+    <TD width="15%" height=21></TD></TR>
+  <TR>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="70%" colSpan=2 height=21><FONT face=Arial 
+      size=2><B>Problem:</B> You have a large program (let's say 50 megs), that 
+      you want to distribute on the internet. But 50 megs is an awfully large 
+      download, and people might not be interested in waiting the four and a 
+      half hours to download this program.<BR><B>Solution:</B><IMG height=1 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0> <I>Compression</I>. Compression is the art of 
+      representing a given amount of data in a smaller space. There are 
+      literally hundreds of different compression algorithms, each working in 
+      different ways. The actual algorithm that MPQs use is the Data Compression 
+      Library, licensed from PKWare (one of the leaders in applied compression), 
+      and is far too complicated to explain here. Instead, I'll try to explain a 
+      more simple compression algorithm for the purpose of illustration.</FONT> 
+      <P align=center><FONT face=Arial size=2><I><B>THIS SECTION IS INCOMPLETE 
+      BECAUSE THE AUTHOR IS UNAVAILABLE</B></I><BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0></FONT></P></TD>
+    <TD width="15%" height=21></TD></TR>
+  <TR>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="75%" colSpan=3 height=21><FONT face=Arial size=4><B><A 
+      name=encryption>Encryption</A></B></FONT></TD>
+    <TD width="15%" height=21></TD></TR>
+  <TR>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="70%" colSpan=2 height=21><FONT face=Arial size=2>The need for a 
+      system of protecting information from prying eyes is timeless. People have 
+      been trying to privately pass information to others for thousands of 
+      years. From handwritten letters carried on foot by the couriers of ancient 
+      Greece, to Nazi submarine radio transmissions in World War 2, to credit 
+      card transactions over the internet today, the ability to assure that no 
+      unwanted people are reading your information is a necessity.<BR><IMG 
+      height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0>This complex art of protection is called 
+      <I>encryption</I>, and, while we don't know when the first algorithm was 
+      devised, we do know that the number of algorithms is too numerous to 
+      count. Everything from simple scrambling of data, to transmutation, and 
+      even algorithms in which the decryption key (sometimes called a 
+      <I>password</I>) is different from the encryption key (in a method called 
+      <I>asymmetric encryption)</I>, has been done time and time again.<BR><IMG 
+      height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0>This article certainly never claims, nor expects, to be 
+      a comprehensive authority on encryption methods, but it is necessary that 
+      you understand encryption is you intend to work with the MPQ format 
+      directly.<BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0>Let us start with a simple encryption algorithm that 
+      was published in Basic Lab Notes (adapted to C by myself; some variable 
+      names changed for readability; comments removed):<BR>&nbsp;</FONT> 
+      <TABLE borderColor=#ffffff cellSpacing=1 align=center bgColor=#c0c0c0 
+      border=1 width="817">
+        <TBODY>
+        <TR>
+          <TD align=left width="809">
+            <TABLE cellSpacing=0 cellPadding=0 border=0 width="757">
+              <TBODY>
+              <TR>
+                <TD width="757" colSpan=3><CODE>
+                <font face="Fixedsys" color="#0000FF">void 
+                  EncryptBlock(void *lpvBlock, int nBlockLen, char 
+                  *lpszPassword)<BR>{</font></CODE></TD></TR>
+              <TR>
+                <TD width="32"></TD>
+                <TD width="725" colSpan=2><CODE>
+                <font face="Fixedsys" color="#0000FF">int nPWLen 
+                  = strlen(lpszPassword), nCount = 0;<BR>char *lpsPassBuff = 
+                  (char *)_alloca(nPWLen);<BR><BR>memcpy(lpsPassBuff, 
+                  lpszPassword, nPWLen);<BR><BR>for (int nChar = 0; nCount &lt; 
+                  nBlockLen; nCount++)<BR>{</font></CODE></TD></TR>
+              <TR>
+                <TD width="32"></TD>
+                <TD width="32"></TD>
+                <TD width="693"><CODE><font face="Fixedsys" color="#0000FF">char cPW = 
+                  lpsPassBuff[nCount];<BR><BR>lpvBlock[nChar] ^= 
+                  cPW;<BR><BR>lpsPassBuff[nCount] = cPW + 13;<BR><BR>nCount = 
+                  (nCount + 1) % nPWLen;</font></CODE></TD></TR>
+              <TR>
+                <TD width="32"></TD>
+                <TD width="725" colSpan=2><CODE>
+                <font face="Fixedsys" color="#0000FF">}<BR><BR>return;</font></CODE></TD></TR>
+              <TR>
+                <TD width="757" colSpan=3><CODE>
+                <font face="Fixedsys" color="#0000FF">}</font></CODE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><BR><FONT 
+      face=Arial size=2><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0>Just like the demonstration hash code, this code is 
+      extremely simple, and shouldn't be used in an actual program where 
+      security is required. What it does is simple, even if the code is cryptic 
+      (no pun intended). It goes through the block to encrypt, XORing each byte 
+      with the corresponding byte of the password. It then modifies the byte in 
+      the password by adding 13 to it (13 was chosen because it is a prime 
+      number). This is done to make the code's pattern more difficult to 
+      recognize. Thus, with this algorithm, the string "encryption" (65 6E 63 72 
+      79 70 74 69 6F 6E) encrypted with a password of "MPQ" (4D 50 51) would be 
+      an unreadable string (28 3E 32 28 24 2E 13 03 04 1A).<BR><IMG height=1 
+      hspace=15 src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" 
+      width=1 vspace=10 border=0>Now, this algorithm is symmetrical. That means 
+      the key (or password) that is used to encrypt a block is the same as the 
+      key to decrypt it. In fact, because XOR is a symmetric operation, the 
+      <B>exact</B> same algorithm can be used to decrypt as to encrypt. Note 
+      that most symmetric encryption algorithms are not exactly symmetric, so 
+      they require the encrypt and decrypt functions to be different.<BR><IMG 
+      height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=10 border=0>Okay, this is where things get dirty. If you want to 
+      work with the MPQ format directly, you're gonna have to know the 
+      encryption algorithm, and that makes it my job to teach it to you. The MPQ 
+      encryption algorithm is an interesting hybrid of other encryption 
+      techniques. It creates an encryption table (which is also used in the hash 
+      function), and uses a file's encryption key to pick certain members out of 
+      the encryption table. It then XORs the data to be encrypted with the 
+      members from the table. Now, that's a pretty strange way to do things, so 
+      maybe some code will show you that it is overcomplicated :-p. The 
+      following code generates the cryptTable array of 0x500 
+      longs:<BR>&nbsp;</FONT> 
+      <TABLE borderColor=#ffffff cellSpacing=1 align=center bgColor=#c0c0c0 
+      border=1 width="802">
+        <TBODY>
+        <TR>
+          <TD width="794">
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD width="100%" colSpan=4><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">void 
+                  prepareCryptTable()<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="6%"></TD>
+                <TD width="94%" colSpan=3><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">unsigned 
+                  long seed = 0x00100001, index1 = 0, index2 = 0, 
+                  i;<BR><BR>for(index1 = 0; index1 &lt; 0x100; 
+                  index1++)<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="6%"></TD>
+                <TD width="6%"></TD>
+                <TD width="88%" colSpan=2><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">for(index2 
+                  = index1, i = 0; i &lt; 5; i++, index2 += 
+                  0x100)<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="6%"></TD>
+                <TD width="6%"></TD>
+                <TD width="6%"></TD>
+                <TD width="82%"><FONT color=#0000FF><CODE><font face="Fixedsys">unsigned long temp1, 
+                  temp2;<BR><BR>seed = (seed * 125 + 3) % 0x2AAAAB;<BR>temp1 = 
+                  (seed &amp; 0xFFFF) &lt;&lt; 0x10;<BR><BR>seed = (seed * 125 + 
+                  3) % 0x2AAAAB;<BR>temp2 = (seed &amp; 
+                  0xFFFF);<BR><BR>cryptTable[index2] = (temp1 | 
+                  temp2);</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="6%"></TD>
+                <TD width="6%"></TD>
+                <TD width="88%" colSpan=2>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="6%"></TD>
+                <TD width="94%" colSpan=3>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="100%" colSpan=4>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}</font></CODE></FONT></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>&nbsp;<FONT 
+      face=Arial size=2><BR><IMG height=1 hspace=15 
+      src="Inside MoPaQ - Chapter 2 Fundamentals.files/spacer.gif" width=1 
+      vspace=4 border=0>Are you kinda getting the feeling that Blizzard hired a 
+      disgruntled calculus professor to write these algorithms? I know I am. 
+      Fortunately, it isn't a big problem if you don't understand this code. If 
+      you want to work directly with MPQs, you'll need these functions; you 
+      don't necessarily have to understand them. Anyway, after the cryptTable is 
+      initialized, we can decrypt MPQ data with the following function (don't 
+      expect me to explain it to you; I don't want to know how it works 
+      myself!):<BR>&nbsp;</FONT> 
+      <TABLE borderColor=#ffffff cellSpacing=1 align=center bgColor=#c0c0c0 
+      border=1>
+        <TBODY>
+        <TR>
+          <TD width="100%">
+            <TABLE cellSpacing=0 cellPadding=0 border=0 width="790">
+              <TBODY>
+              <TR>
+                <TD width="790" colSpan=3><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">void 
+                  DecryptBlock(void *block, long length, unsigned long 
+                  key)<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="29"></TD>
+                <TD width="761" colSpan=2><FONT color=#0000FF><CODE>
+                <font face="Fixedsys">unsigned 
+                  long seed = 0xEEEEEEEE, unsigned long ch;<BR>unsigned long 
+                  *castBlock = (unsigned long *)block;<BR><BR>// Round to 
+                  longs<BR>length &gt;&gt;= 2;<BR><BR>while(length-- &gt; 
+                  0)<BR>{</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="29"></TD>
+                <TD width="29"></TD>
+                <TD width="732"><FONT color=#0000FF><CODE><font face="Fixedsys">seed += 
+                  stormBuffer[0x400 + (key &amp; 0xFF)];<BR>ch = *castBlock ^ 
+                  (key + seed);<BR><BR>key = ((~key &lt;&lt; 0x15) + 0x11111111) 
+                  | (key &gt;&gt; 0x0B);<BR>seed = ch + seed + (seed &lt;&lt; 5) 
+                  + 3;<BR>*castBlock++ = ch;</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="29"></TD>
+                <TD width="761" colSpan=2>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}</font></CODE></FONT></TD></TR>
+              <TR>
+                <TD width="790" colSpan=3>
+                <FONT 
+                  color=#0000FF><CODE><font face="Fixedsys">}</font></CODE></FONT></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD>
+    <TD width="15%" height=42 rowspan="2">&nbsp;</TD></TR>
+  <TR>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="5%" height=21></TD>
+    <TD width="65%" height=21></TD>
+    </TR></TBODY></TABLE>
+<!-- webbot bot="HTMLMarkup" endspan --><!-- END WEBSIDESTORY CODE  --></BODY></HTML>
