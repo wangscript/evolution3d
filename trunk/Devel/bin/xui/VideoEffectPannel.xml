@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog type="xuiVideoEffectPannel" name="VideoEffectPannel">
+  <attribute color="0x66ffff00" textcolor="0xffffffff" font="small"	region="RECT[10,10,120,400]"  HasSepKbFocus="false">
+    <border color="0xff0000ff" bevel="2:2:0:0" size="2"/>
+  </attribute>
+
+  <control type="xuiButton" name="Simple"  font="small"	public="BaseButton" tab ="2" text="无效果"     region="RECT[10 ,20 , 100,40]" videoMaterial="simpleVideo.xmt" />
+  <control type="xuiButton" name="mosaic"  font="small"	public="BaseButton" tab ="0" text="马赛克效果" region="RECT[10 ,70 , 100,40]" videoMaterial="mosicVideo.xmt" />
+  <control type="xuiButton" name="Simple"  font="small"	public="BaseButton" tab ="2" text="水彩效果"   region="RECT[10 ,120, 100,40]" videoMaterial="waterColorVideo.xmt" />
+  <control type="xuiButton" name="Simple"  font="small"	public="BaseButton" tab ="2" text="铅笔画效果" region="RECT[10 ,170, 100,40]" videoMaterial="soblePencil.xmt" />
+  <control type="xuiButton" name="Simple"  font="small"	public="BaseButton" tab ="2" text="油画效果" region="RECT[10 ,220, 100,40]" videoMaterial="paintColorVideo.xmt" />
+  <!--control type="xuiButton" name="watercolor"  font="small"	public="BaseButton" tab ="2" text="水彩画效果" region="RECT[10 ,70, 100,40]" videoShader="waterColorVideo.shader" /-->
+  </control>
+
+</dialog>
