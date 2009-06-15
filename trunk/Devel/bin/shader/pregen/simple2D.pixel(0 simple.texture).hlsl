@@ -4,28 +4,27 @@
 //============================================
 
 
-//Insert Node Declaration Node= l:\Projects\SVN\Evol3D\Devel\bin\shader\d3d10\simple2D.pixel.hlsl
+//Insert Node Declaration Node= r:\Projects\SVN\Evol3D\Devel\bin\shader\d3d10\simple2D.pixel.hlsl
 
 SamplerState DefaultSampler : register(s0);
 Texture2D    DiffuseTexture : register(t0);
 struct PS_INPUT
 {
-    float4 Pos      : SV_POSITION;
-    float4 Tex      : TEXCOORD0;
-    float4 Tex1     : TEXCOORD1;
-    float4 Color    : COLOR;
-   
+      float4 Pos      : SV_POSITION;
+      float4 Tex      : TEXCOORD0;
+      float4 Tex1     : TEXCOORD1;
+      float4 Color    : COLOR;
 };
 
 //==================================================
 
 //============================================
 
-//Insert Node Code Node= l:\Projects\SVN\Evol3D\Devel\bin\shader\lib\simple.texture.hlsl
+//Insert Node Code Node= r:\Projects\SVN\Evol3D\Devel\bin\shader\lib\simple.texture.hlsl
 
 float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , Texture2D _texture )
 {
-     return _texture.Sample(_sampler, texCoord.xy) * _Color ;
+      return _texture.Sample(_sampler, texCoord.xy) * _Color ;
 }
 
 //============================================
@@ -36,7 +35,7 @@ float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , 
 
 float4 main( PS_INPUT input) : SV_Target
 {
-    float4 vDiffuse =  input.Color ;
+      float4 vDiffuse =  input.Color ;
 
 
    //Ó¦ÓÃÐÞ¸ÄÆ÷ name=simple.texture 
@@ -44,6 +43,6 @@ float4 main( PS_INPUT input) : SV_Target
 
    vDiffuse = Node_0_Ret; 
 
-   return vDiffuse;
+      return vDiffuse;
 }
 

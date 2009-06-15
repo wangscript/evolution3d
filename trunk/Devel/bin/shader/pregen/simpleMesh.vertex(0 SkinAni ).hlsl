@@ -4,61 +4,70 @@
 //============================================
 
 
-//Insert Node Declaration Node= l:\Projects\SVN\Evol3D\Devel\bin\shader\d3d10\simpleMesh.vertex.hlsl
+//Insert Node Declaration Node= r:\Projects\SVN\Evol3D\Devel\bin\shader\d3d10\simpleMesh.vertex.hlsl
 
 cbuffer TransformBuffer
 {
-   matrix matWorld;
-   matrix matView;
-   matrix matProject;
+      matrix matWorld;
+      matrix matView;
+      matrix matProject;
 }
 
 struct STATICMESHVS_INPUT
 {
-    float4 Pos      : POSITION;
-    float4 Nor      : NORMAL;
-    float4 Color    : COLOR;
-    float4 Tan      : TANGENT;
-	float2 Tex      : TEXCOORD;  
+      float4 Pos      : POSITION;
+      float4 Nor      : NORMAL;
+      float4 Color    : COLOR;
+      float4 Tan      : TANGENT;
+      float2 Tex      : TEXCOORD;  
 };
 
 
 struct PS_INPUT
 {
-    float4 Pos      : SV_POSITION;
-    float4 Nor      : NORMAL;
-    float4 Color    : COLOR;
-    float4 Tan      : TANGENT;
-	float2 Tex      : TEXCOORD;    
+      float4 Pos      : SV_POSITION;
+      float4 Nor      : NORMAL;
+      float4 Color    : COLOR;
+      float4 Tan      : TANGENT;
+      float2 Tex      : TEXCOORD;  
+
+      float4 wPosition : TEXCOORD2;
+      float4 wNormal   : TEXCOORD3;  
+      float4 wTangent  : TEXCOORD4;
 };
 
 #define VS_INPUT STATICMESHVS_INPUT
 
 
-//Insert Node Declaration Node= l:\Projects\SVN\Evol3D\Devel\bin\shader\d3d10\SkinAni.hlsl
+//Insert Node Declaration Node= r:\Projects\SVN\Evol3D\Devel\bin\shader\d3d10\SkinAni.hlsl
 
+#define _CBUFFER_ANI_
 struct SKINMESHVS_INPUT
 {
-    float4 Pos      : POSITION;
-    float4 Nor      : NORMAL;
-    float4 Color    : COLOR;
-    float4 Tan      : TANGENT;
-	float4 Weights  : BLENDWEIGHT;
-	int4   BoneIdxs : BLENDINDICES;
-	float2 Tex      : TEXCOORD;  
+      float4 Pos      : POSITION;
+      float4 Nor      : NORMAL;
+      float4 Color    : COLOR;
+      float4 Tan      : TANGENT;
+      float4 Weights  : BLENDWEIGHT;
+      int4   BoneIdxs : BLENDINDICES;
+      float2 Tex      : TEXCOORD;  
 };
 
 struct VM_SkinRet
 {
-	float4 Pos;
-	float4 Tan;
-	float4 Nor;
+      float4 Pos;
+      float4 Tan;
+      float4 Nor;
+      float4 wPos;
+      float4 wNor;
+      float4 wTan;	
 };
-#define _CBUFFER_ANI_
+
+
 #ifdef  _CBUFFER_ANI_
 cbuffer BoneFrame
 {       
-    float4x4 matBone[256];
+      float4x4 matBone[256];
 }
 #else
 Buffer<float4> BoneFrame;//[256]
@@ -72,70 +81,84 @@ VM_SkinRet VM_DoSkin(float4 Pos , float4 Nor , float4 Tan , float4 Weights , int
 
 //============================================
 
-//Insert Node Code Node= l:\Projects\SVN\Evol3D\Devel\bin\shader\d3d10\SkinAni.hlsl
+//Insert Node Code Node= r:\Projects\SVN\Evol3D\Devel\bin\shader\d3d10\SkinAni.hlsl
 
 float4x4 ToNormalMat(float4x4 mat)
 {
-	float4x4 matNormal = mat;
-	matNormal[3] = float4(0.0f,0.0f,0.0f,1.0f);
-	matNormal[0][3] = 0.0f; 
-    matNormal[1][3] = 0.0f;  
-    matNormal[2][3] = 0.0f;  
-	return matNormal;
+      float4x4 matNormal = mat;
+      matNormal[3] = float4(0.0f,0.0f,0.0f,1.0f);
+      matNormal[0][3] = 0.0f; 
+      matNormal[1][3] = 0.0f;  
+      matNormal[2][3] = 0.0f;  
+      return matNormal;
 }
 
 VM_SkinRet VM_DoSkin(float4 Pos , float4 Nor , float4 Tan , float4 Weights , int4   BoneIdxs)
 {
-	VM_SkinRet ret;
-    
-    float vWeight[4];
-    vWeight[0] = Weights.x;
-    vWeight[1] = Weights.y;
-    vWeight[2] = Weights.z;
-    vWeight[3] = Weights.w;
-    
-    int vBoneIdxs[4];
-    vBoneIdxs[0] = BoneIdxs.x;
-    vBoneIdxs[1] = BoneIdxs.y;
-    vBoneIdxs[2] = BoneIdxs.z;
-    vBoneIdxs[3] = BoneIdxs.w;
-    
-    
-	float4 vPos = float4(0.0f,0.0f,0.0f,0.0f);
-	float4 vNor = float4(0.0f,0.0f,0.0f,0.0f);
-	float4 vTan = float4(0.0f,0.0f,0.0f,0.0f);
+      VM_SkinRet ret;
 
-    for(int i = 0 ; i < 4 ; i ++ )
-    {
+      float vWeight[4];
+      vWeight[0] = Weights.x;
+      vWeight[1] = Weights.y;
+      vWeight[2] = Weights.z;
+      vWeight[3] = Weights.w;
+
+      int vBoneIdxs[4];
+      vBoneIdxs[0] = BoneIdxs.x;
+      vBoneIdxs[1] = BoneIdxs.y;
+      vBoneIdxs[2] = BoneIdxs.z;
+      vBoneIdxs[3] = BoneIdxs.w;
+
+
+      float4 vPos = float4(0.0f,0.0f,0.0f,0.0f);
+      float4 vNor = float4(0.0f,0.0f,0.0f,0.0f);
+      float4 vTan = float4(0.0f,0.0f,0.0f,0.0f);
+
+      for(int i = 0 ; i < 4 ; i ++ )
+      {
 #ifdef _CBUFFER_ANI_
-		float4x4 matPos = matBone[ vBoneIdxs[i] ];
+            float4x4 matPos = matBone[ vBoneIdxs[i] ];
 #else
-		int iBone = vBoneIdxs[i];
-		iBone *= 4;
-        float4 row1 = BoneFrame.Load( iBone );
-        float4 row2 = BoneFrame.Load( iBone + 1 );
-        float4 row3 = BoneFrame.Load( iBone + 2 );
-        float4 row4 = BoneFrame.Load( iBone + 3 );
-        
-        float4x4 matPos = transpose(float4x4( row1, row2, row3, row4 ));
+            int iBone = vBoneIdxs[i];
+            iBone *= 4;
+            float4 row1 = BoneFrame.Load( iBone );
+            float4 row2 = BoneFrame.Load( iBone + 1 );
+            float4 row3 = BoneFrame.Load( iBone + 2 );
+            float4 row4 = BoneFrame.Load( iBone + 3 );
+
+            float4x4 matPos = transpose(float4x4( row1, row2, row3, row4 ));
 #endif
 
-        float4x4 matNor = ToNormalMat(matPos);
-        vPos += vWeight[i] * mul( matPos   ,     Pos );
-		vNor += vWeight[i] * mul( matNor   ,     Nor );
-		vTan += vWeight[i] * mul( matNor   ,     Tan );
-    }
-    
-    vPos.w = 1.0f;
-	vPos    = mul( matWorld   , vPos);
-	vPos    = mul( matView    , vPos);
-	ret.Pos = mul( matProject , vPos);
+            float4x4 matNor = ToNormalMat(matPos);
+            vPos += vWeight[i] * mul( matPos   ,     Pos );
+            vNor += vWeight[i] * mul( matNor   ,     Nor );
+            vTan += vWeight[i] * mul( matNor   ,     Tan );
+      }
 
-	float matNor = ToNormalMat(matView);
-	ret.Nor = mul( matNor   ,     vNor ); ;
-	ret.Tan = mul( matNor   ,     vTan ); ;
+      vPos.w = 1.0f;
+      //先保存世界空间的返回值
+      ret.wPos = vPos;
+      ret.wNor = vNor;
+      ret.wTan = vTan;
 
-	return ret;
+      //计算变换后的位置
+      vPos    = mul( matWorld   , vPos);
+      vPos    = mul( matView    , vPos);
+      ret.Pos = mul( matProject , vPos);
+
+
+      //计算世界空间的位置和法/切向量
+      float4x4 matWordNormal = ToNormalMat(matWorld);
+      ret.wPos = mul( matWorld      , ret.wPos);
+      ret.wNor = mul( matWordNormal , ret.wNor ); ;
+      ret.wTan = mul( matWordNormal , ret.wTan ); ;
+
+      //计算观察空间的位置和法/切向量
+      float4x4 matNor = ToNormalMat(matView);
+      ret.Nor = mul( matNor   , ret.wNor ); ;
+      ret.Tan = mul( matNor   , ret.wTan ); ;
+
+      return ret;
 }
 
 //============================================
@@ -146,14 +169,18 @@ VM_SkinRet VM_DoSkin(float4 Pos , float4 Nor , float4 Tan , float4 Weights , int
 
 PS_INPUT main( VS_INPUT input )
 {
-    PS_INPUT output = (PS_INPUT)0;
-    output.Pos = mul( matWorld   , input.Pos );
-    output.Pos = mul( matView    , output.Pos);
-    output.Pos = mul( matProject , output.Pos);
-	output.Tex   = input.Tex;
-    output.Color = input.Color.xyzw;
-    output.Tan   = input.Tan;
-    output.Nor   = input.Nor;
+      PS_INPUT output = (PS_INPUT)0;
+      output.Pos   = mul( matWorld   , input.Pos );
+      output.Pos   = mul( matView    , output.Pos);
+      output.Pos   = mul( matProject , output.Pos);
+      output.Tex   = input.Tex;
+      output.Color = input.Color.xyzw;
+      output.Tan   = input.Tan;
+      output.Nor   = input.Nor;
+
+      output.wPosition = input.Pos; 
+      output.wNormal   = input.Nor;
+      output.wTangent  = input.Tan;
 
 
    //应用修改器 name=SkinAni 
@@ -162,6 +189,9 @@ PS_INPUT main( VS_INPUT input )
    output.Pos = Node_0_Ret.Pos; 
    output.Nor = Node_0_Ret.Nor; 
    output.Tan = Node_0_Ret.Tan; 
+   output.wPosition = Node_0_Ret.wPos; 
+   output.wNormal = Node_0_Ret.wNor; 
+   output.wTangent = Node_0_Ret.wTan; 
    output.Color = input.Color; 
    output.Tex = input.Tex; 
 
