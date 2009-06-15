@@ -5,7 +5,7 @@
 #include "Evol3D.Net.h"
 #include "xnRenderApi.h"
 #include "xnMath.h"
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 	//=========Font======================================
 	xFont::xFont(HFontRender pFontRender)
@@ -148,6 +148,11 @@ namespace xEvol3D
 	xRenderApi::xRenderApi(IRenderApi*  pRenderApi)
 	{
 		m_pRenderApi = pRenderApi;
+	}
+
+	xRenderApi::xRenderApi(Int32  Handle)
+	{
+		m_pRenderApi = (IRenderApi*)Handle;
 	}
 
 	bool	xRenderApi::begin(float r , float g , float b , float a , float z , unsigned int stencil )

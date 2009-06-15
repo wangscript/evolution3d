@@ -6,7 +6,7 @@
 #include "xnRenderApi.h"
 #include "xnRenderer.h"
 #pragma comment(lib,"user32.lib")
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 
 		xEvol3DEnvWindowMsgHandler::xEvol3DEnvWindowMsgHandler(HWND hWnd , HWND hParentWnd)
@@ -18,9 +18,9 @@ namespace xEvol3D
 		{
 			if(m_hParentWnd == NULL)
 				return false;
-			if(msg.eMsgID >= WIN_MOUSE_MESSAGE_BEGIN && msg.eMsgID <= WIN_MOUSE_MESSAGE_END )
+			if(msg.MsgID >= WIN_MOUSE_MESSAGE_BEGIN && msg.MsgID <= WIN_MOUSE_MESSAGE_END )
 				PostMessage(m_hParentWnd , msg.sSysMsg.nMsg , msg.sSysMsg.wParam , msg.sSysMsg.lParam);
-			if(msg.eMsgID >= WIN_KEYBOARD_MESSAGE_BEGIN && msg.eMsgID <= WIN_KEYBOARD_MESSAGE_END )
+			if(msg.MsgID >= WIN_KEYBOARD_MESSAGE_BEGIN && msg.MsgID <= WIN_KEYBOARD_MESSAGE_END )
 				PostMessage(m_hParentWnd , msg.sSysMsg.nMsg , msg.sSysMsg.wParam , msg.sSysMsg.lParam);
 			return true;
 		}
@@ -39,7 +39,7 @@ namespace xEvol3D
 		pin_ptr<const wchar_t> xmlCfg   = PtrToStringChars(_xmlCfg);
 		pin_ptr<const wchar_t> plugDir  = PtrToStringChars(_plugDir);
 
-		m_cfgDocument = new xCfgDocument;
+		m_cfgDocument = new xXmlDocument;
 		wchar_t appName[512] = {0};
 		::GetModuleFileName(NULL, appName , 512);
 		xOperationSys::singleton()->init(appName);
@@ -66,7 +66,7 @@ namespace xEvol3D
 		{
 
 			
-			XEvol3D::xCfgNode node;
+			XEvol3D::xXmlNode node;
 			if(hParentWnd) node.setValue(L"parentWindow" , hParentWnd);
 			XEvol3D::IRenderApi * pRenderApi = NULL;
 			RECT rect;
@@ -83,7 +83,7 @@ namespace xEvol3D
 		}
 		else
 		{
-			XEvol3D::xCfgNode node;
+			XEvol3D::xXmlNode node;
 			node.setValue(L"externWindow" , hWnd);
 			XEvol3D::IRenderApi * pRenderApi = NULL;
 			m_pWindow = m_platform->createRenderWindow(&pRenderApi , cs , L"Direct3D10" , &node);

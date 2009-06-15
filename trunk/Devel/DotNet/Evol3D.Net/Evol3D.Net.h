@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "BaseLib/xCfgParser.h"
+#include "BaseLib/xXmlDocument.h"
 #include "BaseLib/xLogger.h"
 #include "OperationSys/xOperationSys.h"
 #include "Application/xPluginMgr.h"
@@ -23,7 +23,7 @@
 using namespace XEvol3D;
 using namespace System;
 
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 	ref class xRenderApi;
     ref class xHelperDrawable;
@@ -54,7 +54,7 @@ namespace xEvol3D
 	public ref class xEvol3DEnv
 	{
 	internal:
-		xCfgDocument*   m_cfgDocument;
+		xXmlDocument*   m_cfgDocument;
 		IPlatform*      m_platform;
 		IRenderApi*     m_pRenderApi;
         HWND            m_hParentWnd;
@@ -67,6 +67,7 @@ namespace xEvol3D
 		xRenderApi^         createRenderApi();
 		unsigned int        stringHash(String^ hashValue) {return xStringHash(ToPtr(hashValue) ) ; };
 		String^             absPath(String^ _Path) { return gcnew String( _ABSPATH( ToPtr(_Path) ) ) ; }
+		String^             relatedPath(String^ _Path) { return gcnew String( _RELATEPATH( ToPtr(_Path) ) ) ; }
 		xHelperDrawable^    createHelperDrawable(String^ objName);
 		// TODO: Add your methods for this class here.
 	};

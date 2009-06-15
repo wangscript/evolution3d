@@ -3,5 +3,11 @@
 // but are changed infrequently
 
 #pragma once
-
+#using <mscorlib.dll>
+#include <windows.h>
+#include <atlstr.h>
+using namespace System;
+using namespace System::IO;
+using namespace System::Collections;
+using namespace System::Collections::Specialized;
 

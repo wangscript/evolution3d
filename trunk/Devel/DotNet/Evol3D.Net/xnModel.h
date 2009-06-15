@@ -11,7 +11,7 @@
 using namespace XEvol3D;
 using namespace System;
 
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 	ref class   xColorF;
 
@@ -23,8 +23,10 @@ namespace xEvol3D
 	internal:
 		XEvol3D::HBaseModel*  m_obj;
 		xBaseModel(XEvol3D::HBaseModel hModl) { m_obj = new XEvol3D::HBaseModel; *m_obj = hModl ; }
-		~xBaseModel(){delete m_obj ; }
 	public:		
+		~xBaseModel(){delete m_obj ; }
+		xBaseModel(Int32  Handle) {	m_obj = (XEvol3D::HBaseModel*)Handle;	}
+		PS_ReadOnly(int, Handle, m_obj,,);
 		void Release() {m_obj->release() ;}
 		void AddRef()  {m_obj->addRef() ; }
 		void Lock()    {m_obj->lock();    }
@@ -52,7 +54,8 @@ namespace xEvol3D
 			xBaseTextureMgr* pMgr = _texMgr->m_pTexMgr;
 			m_mgr = xBaseModelMgr::createInstance(pApi , pMgr , ToPtr(name));
 		}
-
+		xBaseModelManager(Int32  Handle) {	m_mgr = (xBaseModelMgr*)Handle;	}
+		PS_ReadOnly(int, Handle, m_mgr,,);
 		xBaseModel^ loadModel(String^ model)
 		{
 			HBaseModel hModel = m_mgr->add(ToPtr(model) , 0 , true);

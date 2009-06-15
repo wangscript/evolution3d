@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "BaseLib/xCfgParser.h"
+#include "BaseLib/xXmlDocument.h"
 #include "BaseLib/xLogger.h"
 #include "OperationSys/xOperationSys.h"
 #include "Application/xPluginMgr.h"
@@ -24,7 +24,7 @@
 using namespace XEvol3D;
 using namespace System;
 
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 	ref class   xColorF;
 
@@ -77,6 +77,8 @@ namespace xEvol3D
 
 	public:
 		xCamera(IRenderCamera* pCamera) {m_obj = pCamera; }
+		xCamera(Int32  Handle) {	m_obj = (IRenderCamera*)Handle;	}
+		PS_ReadOnly(int, Handle, m_obj,,);
 		void yaw(float angle)                                            { m_obj->yaw(angle) ;    }
 		void pitch(float angle)                                          { m_obj->pitch(angle) ;  }
 		void roll(float angle)                                           { m_obj->roll(angle) ;   }
@@ -98,6 +100,7 @@ namespace xEvol3D
 		void setPerspective2D(int w , int h , float fov, bool bResetEye) { m_obj->setPerspective2D ( w , h , fov,  bResetEye) ; }
 		void setViewRect(float  l,float r,float t,float b)               { m_obj->setViewRect ( l, r, t, b ) ; }
 
+		//[DisplayName("类型"), Category("Basic"), DefaultValue(eCameraProject::PT_PROJECT), Description("投影类型")]
 		PF_ReadWrite(eCameraProject  , projType ,  this  , getProjectType ,  setProjectType , , ); 
 		PF_ReadWrite(float           , fov      ,  m_obj , getFOV         ,  setFOV         , , );
 		PF_ReadWrite(float           , nearPlan ,  m_obj , getNearPlan    ,  setNearPlan    , , );
@@ -151,6 +154,8 @@ namespace xEvol3D
 		~xSamplerState(){};
 	public:
 		xSamplerState() : m_pSampler(NULL) , xRenderState(NULL) {};
+		xSamplerState(Int32  Handle) : xRenderState((ISamplerState*)Handle)	{	m_pSampler = (ISamplerState*)Handle;	}
+		PS_ReadOnly(int, Handle, m_pSampler,,);
 	};
 
 	public ref   class xBlenderState : public xRenderState
@@ -165,6 +170,8 @@ namespace xEvol3D
 		xBlenderState() : m_pBlender(NULL) , xRenderState(NULL) {};
 		PF_ReadWrite(xColorF^, factor     , this       , getFactor   , setFactor      , ,);
 		PF_ReadWrite(UInt32  , samplemask , m_pBlender , samplemask  , set_samplemask , ,);
+		xBlenderState(Int32  Handle) : xRenderState((IBlenderState*)Handle)	{	m_pBlender = (IBlenderState*)Handle;	}
+		PS_ReadOnly(int, Handle, m_pBlender,,);
 	};
 	public ref   class xDepthStencilState : public xRenderState
 	{
@@ -174,7 +181,9 @@ namespace xEvol3D
 		~xDepthStencilState(){};
 	public:
 		xDepthStencilState() : m_pZStencil(NULL) , xRenderState(NULL) {};
-		PF_ReadWrite(UInt32 , stencilRef , m_pZStencil ,  stencil_ref  ,  stencil_ref , , )
+		PF_ReadWrite(UInt32 , stencilRef , m_pZStencil ,  stencil_ref  ,  stencil_ref , , );
+		xDepthStencilState(Int32  Handle) : xRenderState((IDepthStencilState*)Handle)	{	m_pZStencil = (IDepthStencilState*)Handle;	}
+		PS_ReadOnly(int, Handle, m_pZStencil,,);
 	};
 	public ref   class xRasterizerState : public xRenderState
 	{
@@ -184,6 +193,8 @@ namespace xEvol3D
 		~xRasterizerState(){};
 	public:
 		xRasterizerState() : m_pRaszier(NULL) , xRenderState(NULL) {};
+		xRasterizerState(Int32  Handle) : xRenderState((IRasterizerState*)Handle)	{	m_pRaszier = (IRasterizerState*)Handle;	}
+		PS_ReadOnly(int, Handle, m_pRaszier,,);
 	};
 
 	//字体对象
@@ -195,7 +206,6 @@ namespace xEvol3D
 	public:
 		//virtual const  xFontInfo& getInfo() = 0;
 		//virtual bool  drawChar(wchar_t _chr , float x , float y, int& dx , int& dy, xColor_4f cl) = 0;
-
 		PF_ReadWrite(Boolean , antialias , m_pRendeDevice->getResource() , isAntialias  , enableAntialias , ,);
         PF_ReadWrite(int     , cacheSize , m_pRendeDevice->getResource() , getCacheSize , setCacheSize    , ,);
 		PF_ReadOnly(int      , height	 , m_pRendeDevice->getResource() , getFontHeight, ,); 
@@ -225,6 +235,8 @@ namespace xEvol3D
 		xGpuProgram(IGpuProgram* pProgram): xRenderResource(pProgram) , m_pProgram(pProgram) {}
 		~xGpuProgram() {} 
 	public:
+		xGpuProgram(Int32  Handle) : xRenderResource((IGpuProgram*)Handle)	{	m_pProgram = (IGpuProgram*)Handle;	}
+		PS_ReadOnly(int, Handle, m_pProgram,,);
 	};
 
 	public ref   class xBaseTexture : public xRenderResource
@@ -234,6 +246,8 @@ namespace xEvol3D
 		xBaseTexture(IBaseTexture* pTexture) : m_pBaseTexture(pTexture) , xRenderResource(pTexture) {};
 		~xBaseTexture() {}
 	public:
+		xBaseTexture(Int32  Handle) : xRenderResource((IBaseTexture*)Handle)	{	m_pBaseTexture = (IBaseTexture*)Handle;	}
+		PS_ReadOnly(int, Handle, m_pBaseTexture,,);
 		xBaseTexture() :  m_pBaseTexture(NULL) , xRenderResource(NULL) {};
 	};
 
@@ -253,6 +267,12 @@ namespace xEvol3D
 		xBaseTextureMgr* m_pTexMgr;
 		IRenderApi*      m_Api;
 	public:
+		xBaseTextureManager(Int32  Handle)
+		{
+			m_pTexMgr = (xBaseTextureMgr*)Handle;
+			m_Api = m_pTexMgr->renderApi();
+		}
+		PS_ReadOnly(int, Handle, m_pTexMgr,,);
 		~xBaseTextureManager();
 		xBaseTextureManager(xRenderApi^ pApi , String^ name , bool bNonRefKeep);
 		void addPackage(String^ pkgName , String^ _dir);
@@ -323,6 +343,7 @@ namespace xEvol3D
 	public:
 		xShaderProgramName();
 		~xShaderProgramName();
+		PS_ReadOnly(int, Handle, m_pName,,);
 		void  set(String^ vs , String^ ps , String^ gs);
 		void  set(String^ _shaderName, bool bLoadFromeFile);
 		bool  setShaderName(eShaderType _shaderType , String^ _shaderName);
@@ -338,6 +359,8 @@ namespace xEvol3D
 		IRenderApi*     m_pRenderApi;
 	public:
 		xRenderApi(IRenderApi*  pRenderApi);
+		xRenderApi(Int32  Handle);
+		PS_ReadOnly(int, Handle, m_pRenderApi,,);
 		bool     onResize(int w , int h){  return m_pRenderApi->onResize(w , h );	}
 		bool     begin(float r , float g , float b , float a , float z , unsigned int stencil);
 		bool     beginScene(){  return m_pRenderApi->beginScene();	}

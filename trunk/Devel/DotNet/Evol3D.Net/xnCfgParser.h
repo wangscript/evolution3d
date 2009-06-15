@@ -2,20 +2,20 @@
 
 #pragma once
 
-#include "BaseLib/xCfgParser.h"
+#include "BaseLib/xXmlDocument.h"
 #include "xDotNetUlti.h"
 using namespace XEvol3D;
 using namespace System;
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 	public ref   class xXmlNode
 	{
-		xCfgNode* m_pObject;
-		bool      m_bNeedDeleted;
+        XEvol3D::xXmlNode* m_pObject;
+		bool               m_bNeedDeleted;
 	internal:
-		xXmlNode(xCfgNode*  pObject): m_pObject(pObject),m_bNeedDeleted(false) {};
+		xXmlNode(XEvol3D::xXmlNode*  pObject): m_pObject(pObject),m_bNeedDeleted(false) {};
 	public:
-		xXmlNode() : m_bNeedDeleted(false) {m_pObject = new xCfgNode; }
+		xXmlNode() : m_bNeedDeleted(false) {m_pObject = new XEvol3D::xXmlNode; }
 		~xXmlNode(){if(m_bNeedDeleted && m_pObject ) delete m_pObject ; }
 	public:
 		xXmlNode^                 find(String^ nodeName , int idx){ return gcnew xXmlNode( m_pObject->findNode(ToPtr(nodeName)  , idx ) ) ; }
@@ -24,7 +24,7 @@ namespace xEvol3D
 		void                      clear() {  return m_pObject->clear() ; } 
 		array<xXmlNode^>^ find(String^ nodeName)
 		{
-			xCfgNode::CfgNodes nodes;
+			XEvol3D::xXmlNode::XmlNodes nodes;
 			m_pObject->findNode( ToPtr(nodeName) , nodes );
 			array<xXmlNode^>^ _array = gcnew array<xXmlNode^>(nodes.size());
 			for(size_t i = 0 ; i < nodes.size() ; i ++)
@@ -35,7 +35,7 @@ namespace xEvol3D
 			return _array;
 		}
 		//{
-		//	xCfgNode::CfgNodes nodes;
+		//	xXmlNode::XmlNodes nodes;
 		//	xXmlNode[] _array = gcnew xXmlNode()[ nodes.size() ];
 		//	m_pObject->findNode( ToPtr(nodeName) , nodes );
 		//	for(size_t i = 0 ; i < nodes.size() ; i ++)
@@ -73,12 +73,12 @@ namespace xEvol3D
 
 	public ref   class xXmlDoc
 	{
-		xCfgDocument* m_pObject;
+		xXmlDocument* m_pObject;
 		bool          m_bNeedDeleted;
     internal:
-		xXmlDoc(xCfgDocument*  pObject): m_pObject(pObject),m_bNeedDeleted(false) {};
+		xXmlDoc(xXmlDocument*  pObject): m_pObject(pObject),m_bNeedDeleted(false) {};
 	public:
-		xXmlDoc() : m_bNeedDeleted(false) {m_pObject = new xCfgDocument; }
+		xXmlDoc() : m_bNeedDeleted(false) {m_pObject = new xXmlDocument; }
 		~xXmlDoc(){if(m_bNeedDeleted && m_pObject ) delete m_pObject ; }
 	public:
 		bool          load(String^ fileName , bool bLoadFileHeader) {return  m_pObject->load(ToPtr(fileName) , bLoadFileHeader) ; }

@@ -9,7 +9,7 @@ using namespace xMathLib;
 using namespace xGeomLib;
 using namespace System;
 
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 
 	public ref class xVector2
@@ -17,13 +17,17 @@ namespace xEvol3D
 	internal:
 		xvec2*  m_vec;
 		bool    m_bNeedDel;
+	public:
 		float*  data() { return m_vec->v ; }
 		xvec2&  xvec() { return *m_vec ; }
-		xVector2(xvec2* vec){  m_vec = vec      ; m_bNeedDel = false; }
+		xVector2(xvec2* vec){  m_vec = vec                 ; m_bNeedDel = false; }
+		xVector2(int handle){  m_vec = (xvec2*)handle      ; m_bNeedDel = false; }
 	public:
 		xVector2(float x, float y) {  m_vec = new xvec2(x , y); m_bNeedDel = true; }
 		xVector2() {  m_vec = new xvec2; m_bNeedDel = true; }
 		~xVector2(){ if( m_bNeedDel ) delete m_vec ; }
+		PS_ReadOnly(int, Handle, m_vec,,);
+
 		float fabs()                    {return m_vec->fabs() ; }
 		float dp (const xVector2^ v1)   {return m_vec->dp(*v1->m_vec) ; }
 		void  add(const xVector2^ v1)   {return m_vec->add(*v1->m_vec) ; }
@@ -43,6 +47,7 @@ namespace xEvol3D
 			xvec2 ret = *v1->m_vec + xvec();
 			return gcnew xVector2(ret.x , ret.y);
 		}
+		//[DisplayName("ÀàÐÍ"), Category("Basic"), DefaultValue(0.0f), Description("x×ø±ê")]
 		PS_ReadWrite(Single, x,m_vec->x,,);
 		PS_ReadWrite(Single, y,m_vec->y,,);
 
@@ -55,15 +60,15 @@ namespace xEvol3D
 	internal:
 		xvec3*  m_vec;
 		bool    m_bNeedDel;
+	public:
 		float*  data() { return m_vec->v ; }
 		xvec3&  xvec() { return *m_vec ; }
 		xVector3(xvec3* vec){  m_vec = vec      ; m_bNeedDel = false; }
 	public:
 		xVector3(float x ,float y ,float z)          {  m_vec = new xvec3(x , y , z); m_bNeedDel = true; }
 		xVector3()          {  m_vec = new xvec3; m_bNeedDel = true; }
-
-
 		~xVector3(){ if( m_bNeedDel ) delete m_vec ; }
+		PS_ReadOnly(int, Handle, m_vec,,);
 		float fabs()                    {return m_vec->fabs() ; }
 		float dp (const xVector3^ v1)   {return m_vec->dp(*v1->m_vec) ; }
 		void  add(const xVector3^ v1)   {return m_vec->add(*v1->m_vec) ; }
@@ -95,12 +100,16 @@ namespace xEvol3D
 	internal:
 		xvec4*  m_vec;
 		bool    m_bNeedDel;
+	public:
 		float*  data() { return m_vec->v ; }
 		xvec4&  xvec() { return *m_vec ; }
+		
 	public:
 		xVector(float x ,float y ,float z ,float w)          {  m_vec = new xvec4(x , y , z ,w); m_bNeedDel = true; }
 		xVector()          {  m_vec = new xvec4; m_bNeedDel = true; }
 		xVector(xvec4* vec){  m_vec = vec      ; m_bNeedDel = false; }
+		xVector(int handle){  m_vec = (xvec4*)handle      ; m_bNeedDel = false; }
+		PS_ReadOnly(int, Handle, m_vec,,);
 
 		~xVector(){ if( m_bNeedDel ) delete m_vec ; }
 		float fabs()                    {return m_vec->fabs() ; }
@@ -149,11 +158,15 @@ namespace xEvol3D
 	internal:
 		xmat4*  m_mat;
 		bool    m_bNeedDel;
+	public:
 		xmat4&  mat(){return *m_mat ; }
         xMatrix(xmat4* mat){m_mat = mat ; m_bNeedDel = false; };
+		
 	public:
-		xMatrix() {m_mat = new xmat4 ; m_bNeedDel = true ; }
+		xMatrix(int handle){  m_mat = (xmat4*)handle      ; m_bNeedDel = false; }
+		xMatrix()          {  m_mat = new xmat4           ; m_bNeedDel = true ; }
 		~xMatrix(){if(m_bNeedDel) delete m_mat ; };
+		PS_ReadOnly(int, Handle, m_mat,,);
 		void   identity() { m_mat->identity() ; }
 		void   zero() { m_mat->zero() ; }
 		void   transform(float tx,float ty,float tz)    { m_mat->transform(tx,ty,tz); }
@@ -171,12 +184,15 @@ namespace xEvol3D
 	internal:
 		xquat*  m_quat;
 		bool    m_bNeedDel;
+	public:
 		float*  data() { return  &m_quat->x ; }
 		xquat&  quat() { return *m_quat ; }
 		xQuat(xquat* vec){  m_quat = vec      ; m_bNeedDel = false; }
 	public:
+		
 		xQuat(float x ,float y ,float z ,float w) {  m_quat = new xquat(x , y , z ,w); m_bNeedDel = true; }
-		xQuat()          {  m_quat = new xquat; m_bNeedDel = true; }
+		xQuat()          {  m_quat = new xquat           ; m_bNeedDel = true ; }
+		xQuat(int handle){  m_quat = (xquat*)handle      ; m_bNeedDel = false; }
 		xQuat(xVector^ axis,float angle){  m_quat = new xquat(axis->xvec() , angle); m_bNeedDel = true; }
 	public:
 		float  magnitude(){ return quat().magnitude() ; }
@@ -199,6 +215,7 @@ namespace xEvol3D
 		PS_ReadWrite(Single, y,m_quat->y,,);
 		PS_ReadWrite(Single, z,m_quat->z,,);
 		PS_ReadWrite(Single, w,m_quat->w,,);
+		PS_ReadOnly(int, Handle, m_quat,,);
 	};
 
 	public ref class xAABB
@@ -206,13 +223,16 @@ namespace xEvol3D
 	internal:
 		xaabb*  m_aabb;
 		bool    m_bNeedDel;
+	public:
 		xaabb&  aabb() { return *m_aabb ; }
 		xAABB(xaabb* vec){  m_aabb = vec      ; m_bNeedDel = false; }
 	public:
 		xAABB(xVector3^ _min , xVector3^ _max) {  m_aabb = new xaabb(_min->xvec() , _max->xvec() ); m_bNeedDel = true; }
-		xAABB() {  m_aabb = new xaabb( ); m_bNeedDel = true; }
+		xAABB()          {  m_aabb = new xaabb( )        ; m_bNeedDel = true; }
+		xAABB(int handle){  m_aabb = (xaabb*)handle      ; m_bNeedDel = false;}
 		~xAABB(){ if( m_bNeedDel ) delete m_aabb ; }
 		void Add(xVector3^ pt) {m_aabb->AddPoint(pt->xvec() ) ; }
+		PS_ReadOnly(int, Handle, m_aabb,,);
 	};
 
 	public ref class xSphere
@@ -220,12 +240,15 @@ namespace xEvol3D
 	internal:
 		xshpere*  m_shpere;
 		bool      m_bNeedDel;
+	public:
 		xshpere&  shpere() { return *m_shpere ; }
 		xSphere(xshpere* vec){  m_shpere = vec      ; m_bNeedDel = false; }
 	public:
 		xSphere(xVector3^ _ct , float _r) {  m_shpere = new xshpere ; m_shpere->m_Orign = _ct->xvec()  ; m_shpere->m_R = _r;  m_bNeedDel = true; }
-		xSphere() {  m_shpere = new xshpere ; m_bNeedDel = true; }
+		xSphere()           {  m_shpere = new xshpere           ; m_bNeedDel = true; }
+		xSphere(int handle) {  m_shpere = (xshpere*)handle      ; m_bNeedDel = false;}
 		~xSphere(){ if( m_bNeedDel ) delete m_shpere ; }
+		PS_ReadOnly(int, Handle, m_shpere,,);
 	};
 
 	public ref class xMathlib

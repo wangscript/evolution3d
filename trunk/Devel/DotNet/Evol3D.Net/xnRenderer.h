@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "BaseLib/xCfgParser.h"
+#include "BaseLib/xXmlDocument.h"
 #include "BaseLib/xLogger.h"
 #include "OperationSys/xOperationSys.h"
 #include "Application/xPluginMgr.h"
@@ -28,7 +28,7 @@
 using namespace XEvol3D;
 using namespace System;
 
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 	public ref   class xDrawable 
 	{
@@ -40,7 +40,7 @@ namespace xEvol3D
 		xSphere^  _sphere (  )  {xSphere^  _ret = gcnew xSphere()   ; m_pObject->shpere(_ret->shpere()); return _ret ; }
 		xVector3^ _center (  )  {xVector3^ _ret = gcnew xVector3()  ; m_pObject->center(_ret->xvec()  ); return _ret ; } 
 	public:
-		void render() {return m_pObject->render() ; }
+		bool render(int passedTime) {return m_pObject->render(passedTime) ; }
 		PF_ReadOnly(xAABB^    , aabb   , this , _aabb   , , );
 		PF_ReadOnly(xSphere^  , sphere , this , _sphere , , );
 		PF_ReadOnly(xVector3^ , center , this , _center , , );

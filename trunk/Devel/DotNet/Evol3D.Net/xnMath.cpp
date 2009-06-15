@@ -3,7 +3,7 @@
 
 #include "xnMath.h"
 
-namespace xEvol3D 
+namespace xEvol3DNet 
 {
 
 	//Vec3

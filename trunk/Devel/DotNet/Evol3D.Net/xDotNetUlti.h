@@ -74,13 +74,22 @@
 }\
 }
 
+template<typename T> T& handle_refcast(int Handle)
+{
+	return *(T*)Handle;
+}
 
+template<typename T> T& handle_ptrcast(int Handle)
+{
+	return (T*)Handle;
+}
 
 #define P_ImpGet(C,N,T) T C::N::get()
 #define P_ImpSet(C,N,T) void C::N::set(T value)
 
 using namespace	System;
 using namespace System::Collections::Generic;
+using namespace System::Runtime::InteropServices;
 #include <vcclr.h>
 inline const wchar_t* ToPtr(String^ text) { pin_ptr<const wchar_t> _text   = PtrToStringChars(text); return _text ; }
 #endif
