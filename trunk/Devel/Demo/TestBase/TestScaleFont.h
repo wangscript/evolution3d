@@ -1,7 +1,7 @@
 // TestBase.cpp : Defines the entry point for the console application.
 //
 
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 #include <BaseLib/xLogger.h>
 #include <OperationSys/xOperationSys.h>
 #include <Application/xPluginMgr.h>

@@ -217,6 +217,14 @@
 				RelativePath=".\TestScaleFont.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\xuiDemoInfoPannel.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\xuiDemoInfoPannel.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -265,6 +273,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\bin\shader\lib\simple.Lighting.hlsl"
+					>
+				</File>
+				<File
 					RelativePath="..\..\bin\shader\lib\simple.mask.hlsl"
 					>
 				</File>
@@ -294,6 +306,10 @@
 				>
 				<File
 					RelativePath="..\..\bin\shader\lib\libDip.hlsl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\bin\shader\lib\libLighting.hlsl"
 					>
 				</File>
 			</Filter>
@@ -369,6 +385,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\bin\shader\d3d10\simpleNoTexture.ps.hlsl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\bin\shader\d3d10\simpleNoTexture.vs.hlsl"
+					>
+				</File>
+				<File
 					RelativePath="..\..\bin\shader\d3d10\vFont.pixel.hlsl"
 					>
 				</File>
@@ -437,6 +461,18 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="xui"
+			>
+			<File
+				RelativePath="..\..\bin\xui\comonctrl.xml"
+				>
+			</File>
+			<File
+				RelativePath="..\..\bin\xui\infopanel.xml"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\bin\system.xml"

@@ -1,7 +1,7 @@
 // TestBase.cpp : Defines the entry point for the console application.
 //
 #include "stdafx.h"
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 #include <BaseLib/xLogger.h>
 #include <OperationSys/xOperationSys.h>
 #include <Application/xPluginMgr.h>
@@ -12,6 +12,9 @@
 #include <RenderAPI/xShaderNode.h>
 #include <RenderAPI/xShaderManager.h>
 #include <RenderAPI/xRenderView.h>
+#include <RenderAPI/xTLEnvioroment.h>
+#include <Renderer/xRenderer.h>
+#include "xui/xuiWindowManager.h"
 #include <tchar.h>
 #include <XMathLib/xMathlib.h>
 #include <Image/xILImage.h>
@@ -21,7 +24,7 @@
 #include "Image/xFreeImage.h"
 #include "TestScaleFont.h"
 #include "font/xDistanceFont.h"
-
+#include "xuiDemoInfoPannel.h"
 #include "xEvol3D.h"
 using namespace XEvol3D;
 
@@ -29,7 +32,8 @@ class xMyTestApp : public IApplication
 {
 	xEvol3DEngine*      m_pEngine;
 	IRenderApi*         m_pRenderApi;
-	IDrawableHelper*    m_Drawable;
+	IDrawableHelper*    m_ArcBall;
+	IDrawableHelper*    m_GridPlan;
 	
 	IRenderCamera*      m_pCamera;
 	IRenderCamera*      m_p2DCamera;
@@ -53,6 +57,8 @@ class xMyTestApp : public IApplication
 	xmat4               m_ModelRotate;
 	int                 m_RotateAxis;
 	
+    xui::xuiDemoInfoPannel*  m_InfoPanel;
+    xui::xuiWindowManager*   m_xuiWinMgr;
 public:
 	bool   onResize()
 	{
@@ -109,8 +115,8 @@ public:
 	}
 	xvec4  getMouseMoveDir(int x , int y , float& movPercent)
 	{
-		float dx = x- m_lastDragPos.x;
-		float dy = y- m_lastDragPos.y;
+		float dx = x - m_lastDragPos.x;
+		float dy = y - m_lastDragPos.y;
 		xTextureDesc _desc;
 		m_pRenderApi->getRenderView()->desc(_desc);
 
@@ -138,7 +144,8 @@ public:
 	}
 	bool   onMessage(xWindowMsg& msg)
 	{
-		if(msg.eMsgID == WIN_LMOUSE_DOWN)
+        m_xuiWinMgr->dispatchMsg(msg);
+		if(msg.MsgID == WIN_LMOUSE_DOWN)
 		{
 			m_pRenderApi->lock();
 			m_pRenderApi->colorSelector()->setRenderObjectID(0xcdef0a74 , 0x12345678 );
@@ -189,7 +196,7 @@ public:
 			//image.flipRGBA(4);
 			//image.save(_ABSPATH(L"rendertarget.tga"));
 		}
-		if(msg.eMsgID == WIN_MOUSE_MOVE)
+		if(msg.MsgID == WIN_MOUSE_MOVE)
 		{
 			int x = msg.Mouse.x;
 			int y = msg.Mouse.y;
@@ -249,7 +256,7 @@ public:
 			m_lastDragPos = xvec2i(x , y);
 			return true;
 		}
-		if(msg.eMsgID == WIN_LMOUSE_RELEASE)
+		if(msg.MsgID == WIN_LMOUSE_RELEASE)
 		{
 			int x = msg.Mouse.x;
 			int y = msg.Mouse.y;
@@ -258,12 +265,12 @@ public:
 			m_lastDragPos = xvec2i(x , y);
 			return true;
 		}
-		if(msg.eMsgID == WIN_RESIZE)
+		if(msg.MsgID == WIN_RESIZE)
 		{
            onResize();
 		   return true;
 		}
-		else if(msg.eMsgID == WIN_KEYUP)
+		else if(msg.MsgID == WIN_KEYUP)
 		{
              if(msg.Keyboard.cKeyChar >= '1' && msg.Keyboard.cKeyChar <= '9')
 			 {
@@ -271,7 +278,7 @@ public:
 			 }
 			 return true;
 		}
-		else if(msg.eMsgID == WIN_KEYDOWN)
+		else if(msg.MsgID == WIN_KEYDOWN)
 		{
 			if(msg.Keyboard.cKeyChar == 'f' )
 			{
@@ -349,11 +356,23 @@ public:
 		XM_Decomp_XForm_Center(mOut , trCent);
 
 
+		xmat4 _rotMatX ;
+		XM_RotateX(_rotMatX , 45.0f);
+		xvec3 _xVec(0,1,0);
+		_xVec.normalize();
+		xquat _quat;
+		_quat.set(_xVec , 45.0f);
+		xeuler _Euler;
+		_quat.toEuler(_Euler);
+		_Euler.toMatrix( _rotMatX );
+
 		m_pEngine = new xEvol3DEngine;
 		m_pEngine->init(this , NULL , L".\\system.xml" , L"BaseDemo" , NULL , 0);
 	    m_pRenderApi = m_pEngine->renderApi();
 		//===============
 
+		IBaseRenderer* pRenderer = xRendererManager::singleton()->createRenderer(L"KidRenderer",m_pRenderApi);
+		pRenderer->loadConfig(_ABSPATH(L"./system.xml"),NULL,0);
 		wchar_t* ch_ = L"啊";
 		//xDistanceFontGenerator fontGen(32 , 4096 , ch_[0] , ch_[0] + 2);
 		//fontGen.generate( _ABSPATH(L".\\font\\STXINGKA.TTF") ,_ABSPATH(L".\\font\\test") );
@@ -362,13 +381,14 @@ public:
 		//m_FontGen.proccess();
 		
 		m_FontGen.load(m_pRenderApi , _ABSPATH(L".\\font\\test") , ch_[0]  );
-     	m_pRenderApi = m_pRenderApi;
+     	      m_pRenderApi = m_pRenderApi;
 
 		//初始化摄像机
 		m_pCamera = m_pRenderApi->createCamera(L"Default");
 		m_pCamera->m_Eye.m_EyePos = xvec4(0.0f,0.0f,-500.0f);
 		m_pCamera->m_Eye.m_EyeTarget = xvec4(0.0f,0.0f,0.0f);
 		m_pCamera->m_Eye.m_Up = xvec4(0.0f,1.0f,0.0f);
+		
 		
 		m_pCamera->setFarPlan(1000.0f);
 		m_pCamera->setNearPlan(0.1f);
@@ -396,7 +416,7 @@ public:
 
 		m_pModelMgr= xBaseModelMgr::createInstance(m_pRenderApi , m_pTexMgr , L"ModelMgr");
 		m_pModelMgr->addPath(_ABSPATH(L"./model/") );
-		m_Model = m_pModelMgr->add(L"Girl-Evol.xrm" , true , 0);
+		m_Model = m_pModelMgr->add(L"einxin.xrm" , true , 0);
 		frontCamera(m_Model->boundBox() );
 
 		//判断有没有骨架，如果是骨骼动画，则要加SkinAni的Node
@@ -406,7 +426,7 @@ public:
 		{
 			_parser.addShaderNode( eShader_VertexShader , L"SkinAni" , (size_t)0);
 		}
-		_parser.setShaderName( eShader_PixelShader , L"simpleMesh.pixel<0:simple.texture;>" );
+		_parser.setShaderName( eShader_PixelShader , L"simpleMesh.pixel<0:simple.texture,simple.Lighting;>" );
 		xGpuProgramName _modelShaderName;
 		_parser.toName(_modelShaderName);
 		HGpuProgram hModelShader = m_pRenderApi->gpuProgramManager()->load(_modelShaderName);
@@ -414,10 +434,33 @@ public:
         m_DefRasterizer= m_pRenderApi->createRasterizerState(L"Default");
 		m_pRenderApi->setRasterizerState(m_DefRasterizer);
 
-		m_Drawable = (IDrawableHelper *)xPluginMgr::singleton()->createObject(L"ArcBall",NULL);
-		m_Drawable->init(m_pRenderApi , m_pTexMgr);
+		m_ArcBall = (IDrawableHelper *)xPluginMgr::singleton()->createObject(L"ArcBall",NULL);
+		m_ArcBall->init(m_pRenderApi , m_pTexMgr);
+
+		m_GridPlan = (IDrawableHelper *)xPluginMgr::singleton()->createObject(L"PlaneGrid",NULL);
+		m_GridPlan->init(m_pRenderApi , m_pTexMgr);
+
+
 		m_pSelView = m_pRenderApi->createRenderView(800 , 600 , true);
 		m_pSelView->createRenderTarget(1 , PIXELFORMAT_R8G8B8A8 , true , true);
+
+		ILightingEnv* pLightEnv = m_pRenderApi->findLightingState(L"xLightState");
+		pLightEnv->enableLight(2);
+		xLightDesc* pLight= pLightEnv->lightDesc(0);
+            pLight->m_position  = xMathLib::xvec4(1000.0f , 1000.0f , 1000.0f , 1.0f);
+		pLight->m_Diffuse   = xMathLib::xvec4(1.0f , 1.0f , 1.0f , 1.0f);  
+            pLight->m_Speculer  = xMathLib::xvec4(1.0f , 1.0f , 1.0f , 25.0f);  
+
+		//第二个灯光
+		pLight= pLightEnv->lightDesc(1);
+            pLight->m_position  = xMathLib::xvec4(1000.0f , -1000.0f , -500.0f , 1.0f);
+            pLight->m_Diffuse   = xMathLib::xvec4(0.6f , 0.0f , 0.4f , 1.0f);  
+            pLight->m_Speculer  = xMathLib::xvec4(1.0f , 1.0f , 1.0f , 25.0f);  
+
+		pLightEnv->applyChange();
+        m_xuiWinMgr = xui::xuiWindowManager::createManager(m_pRenderApi , m_pTexMgr);
+        m_xuiWinMgr->getXMLManager()->addPath(_ABSPATH(L"./xui/"));
+        m_InfoPanel  = XUI_CREATE_DIALOG(xuiDemoInfoPannel,m_xuiWinMgr);
 		return ;
 	}
 
@@ -464,7 +507,7 @@ public:
 		xvec3 _center =  getModelCeneter(m_Model.getResource() );
 
 		m_pRenderApi->identityMatrix(MATRIXMODE_World);
-		xMathLib::XM_Scale(mat,500.0f,500.0f,500.0f);
+		xMathLib::XM_Scale(mat,30.0f,30.0f,30.0f);
 		m_pRenderApi->multiMatrix(mat.data, MATRIXMODE_World);
 		xMathLib::XM_Transform(mat , _center.x , _center.y , _center.z );
 		m_pRenderApi->multiMatrix(mat.data, MATRIXMODE_World);
@@ -472,9 +515,17 @@ public:
 		m_pRenderApi->multiMatrix(mat.data, MATRIXMODE_World);		
 
 		m_pRenderApi->colorSelector()->setRenderObjectID(100,0);
-		m_Drawable->begin();
-		m_Drawable->render();
+		m_ArcBall->begin();
+		m_ArcBall->render(passedTime);
 
+
+		//Plan
+		m_pRenderApi->identityMatrix(MATRIXMODE_World);
+		xMathLib::XM_Scale(mat,500.0f,500.0f,500.0f);
+		m_pRenderApi->multiMatrix(mat.data, MATRIXMODE_World);
+		m_pRenderApi->colorSelector()->setRenderObjectID(101,0);
+		m_GridPlan->begin();
+		m_GridPlan->render(passedTime);
 
 		//===================
 		m_pRenderApi->applyCamera(m_p2DCamera);
@@ -499,10 +550,14 @@ public:
         //m_FontGen.draw();
 
 		wchar_t texInfo[1024] = {0};
-		swprintf(texInfo , L"FPS=%f RenderApi=%s" , nFrame*1000.0f/tPassed ,m_pRenderApi->name() );
+		swprintf(texInfo , L"FPS=%f \nRenderApi=%s" , nFrame*1000.0f/tPassed ,m_pRenderApi->name() );
 		
-		m_hFont->drawText(texInfo,10,10,xColor_4f(1.0f,1.0f,1.0f,1.0f));
-		m_hFont->drawText(L"Evolution3D 测试程序 ",10,50,xColor_4f(1.0f,1.0f,1.0f,1.0f));
+		//m_hFont->drawText(texInfo,10,10,xColor_4f(1.0f,1.0f,1.0f,1.0f));
+		//m_hFont->drawText(L"Evolution3D 测试程序 ",10,50,xColor_4f(1.0f,1.0f,1.0f,1.0f));
+        m_InfoPanel->show();
+        ds_wstring infoText = ds_wstring(texInfo) + L"\nEvolution3D 测试程序 "; 
+        m_InfoPanel->setText(infoText.c_str() );
+        m_xuiWinMgr->draw();
 		//m_pRenderApi->
 		//===================
 		m_pRenderApi->endScene();
@@ -518,6 +573,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	app.init();
 	app.run();
 	app.exit();
+    IBaseObject::DumpObjectList();
 	return 0;
 }
 

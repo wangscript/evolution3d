@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using xEvol3D;
+using xEvol3DNet;
 namespace BaseTest.Net
 {
 
@@ -69,7 +69,7 @@ namespace BaseTest.Net
             m_modelMgr.addPath(m_Evol3D.absPath("model/"));
 
             m_model = m_modelMgr.loadModel("Girl-Evol.xrm");
-            m_scene = m_modelMgr.loadModel("Scene.xrm");
+            //m_scene = m_modelMgr.loadModel("Scene.xrm");
             xVector3 min = new xVector3();
             xVector3 max = new xVector3();
             m_model.BoundBox(min ,max);
@@ -117,18 +117,18 @@ namespace BaseTest.Net
 
             m_RenderApi.GpuShader = m_pModelShader;
 
-            xVector3 min = new xVector3();
-            xVector3 max = new xVector3();
-            m_scene.BoundBox(min, max);
+            //xVector3 min = new xVector3();
+            //xVector3 max = new xVector3();
+            //m_model.BoundBox(min, max);
 
-            xVector3 len = new xVector3(max.x - min.x, max.y - min.y, max.z - min.z);
-            xVector3 cen = new xVector3(0.5f * max.x + 0.5f * min.x, 0.5f * max.y + 0.5f * min.y, 0.5f * max.z + 0.5f * min.z);
+            //xVector3 len = new xVector3(max.x - min.x, max.y - min.y, max.z - min.z);
+            //xVector3 cen = new xVector3(0.5f * max.x + 0.5f * min.x, 0.5f * max.y + 0.5f * min.y, 0.5f * max.z + 0.5f * min.z);
 
             //设置矩阵绘制场景
-            xMatrix tranMat = new xMatrix();
-            xMathlib.Transform(tranMat, -cen.x, -cen.y, -cen.z);
-            m_RenderApi.setMatrix(tranMat, eMatrixMode.MATRIXMODE_World);            
-            m_scene.Draw();
+            //xMatrix tranMat = new xMatrix();
+            //xMathlib.Transform(tranMat, -cen.x, -cen.y, -cen.z);
+            //m_RenderApi.setMatrix(tranMat, eMatrixMode.MATRIXMODE_World);            
+            //m_scene.Draw();
             int timePassed = 20;
             m_RenderApi.GpuShader = m_SkelShader;
 
