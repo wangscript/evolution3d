@@ -112,6 +112,7 @@ public:
 	void*              createObject(const wchar_t* _name,const wchar_t * _arg);
 	void               registeObject(const wchar_t* _name , xPlugin* plugin);
 	void               unregObject(const wchar_t* _name);
+	const wchar_t*     compilerID();
 protected:
 	bool              __addPlugin(xPlugin* plugin) ;
 

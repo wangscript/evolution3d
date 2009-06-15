@@ -44,12 +44,31 @@ protected:
 };
 
 
+class xFileStream : public IRWStream
+{
+	FILE* m_fStream;
+	DECL_REFCOUNT_OBJECT_INTERFACE(xFileStream)
+public:	
+	xFileStream();
+	~xFileStream();
+	size_t   read(char* buf, size_t byte_read);
+	size_t   write(char* buf,size_t len);
+	size_t   seek(long _offset, std::ios_base::seekdir _dir);
+	size_t   tell();
+	int      close();	
+	bool     eof();
+public:
+	bool     open_stream(const wchar_t* _fileName);
+};
+
 class _XEVOL_BASE_API_  xFileSystem
 {
 	xFileSystem(){};
 public:
 
 public:
+	std::ds_wstring     getFileName(const wchar_t* fullName);
+	std::ds_wstring     getPathName(const wchar_t* fullName);
 	const wchar_t*      getFileExtName(const wchar_t* filename );
 	int                 loadFile( unsigned int8*& fileBufer , const wchar_t* fileName);
 	void                unloadFile( unsigned int8*& fileBufer);

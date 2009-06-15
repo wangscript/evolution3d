@@ -23,8 +23,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <string.h>
 #include "xEvol3DAPI.h"
 #include "xBaseObject.h"
+#include "stl_dllalloc.h"
 #include "xLogger.h"
 #include "../mem/mem_operator.h"
+
+#ifdef _WIN32
+#define PATH_SPLITTER '\\'
+#endif
+
+#ifdef _LINUX
+#define PATH_SPLITTER '/'
+#endif
 
 //#define ENUM_PUBLIC 
 //#define ENUM_CLASS 
@@ -36,27 +45,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define PUBLIC 
 
 BEGIN_NAMESPACE_XEVOL3D
-class _XEVOL_BASE_API_  IRWStream : public IRefCountObject
-{
-	enum eStreamSeekDir
-	{
-		eSEEK_BEG,
-        eSEEK_END,
-		eSEEK_CUR,
-	};
-public:
-	virtual int read(char* buffer, size_t size_to_read) = 0;
-	virtual int write(const char* buffer, size_t size_to_write) = 0;
-	virtual int seek(int offset , eStreamSeekDir _where) = 0;
-	virtual int tell() = 0;
-};
-
-class _XEVOL_BASE_API_  IStreamObject : public IRefCountObject
-{
-public:
-	virtual bool load(IRWStream* pStream ) = 0;
-	virtual bool save(IRWStream* pStream ) = 0;
-};
 
 template <typename T> void T_XEvolSwap(T& a , T& b)
 {
@@ -100,6 +88,7 @@ inline bool XEvol_IsAbsPath(const wchar_t* strResName)
 		return true;
 	return false;
 }
+
 
 template<typename T> class TAutoLocker
 {

@@ -68,6 +68,16 @@ int    xcd_string_hash(const wchar_t* str , int* valueA , int* valueB)
 	return value.indexHash;
 }
 
+xcomdoc* xcomdoc::newInstance(const wchar_t* strResName, unsigned long arg)
+{
+	return new xcomdoc;
+}
+
+void xcomdoc::deleteInstance(xcomdoc* pRes)
+{
+    delete pRes;
+}
+
 //=================================================================
 xcomdoc::xcomdoc()
 {
@@ -77,11 +87,8 @@ xcomdoc::xcomdoc()
 xcomdoc& xcomdoc::operator = (const xcomdoc& rhv)
 {
 	m_hFIle = rhv.m_hFIle;
-	m_hDir  = rhv.m_hDir;
 	IComDocBase* pDoc = CDCLASS(m_hFIle);
 	if(pDoc) pDoc->addRef();
-
-
 	return *this;
 }
 

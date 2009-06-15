@@ -249,7 +249,7 @@ bool  xComDocument::save(IWriteBuffer* pOstream)
 			startAddr += m_DataEntrys[i].m_DataEntryItem.m_DataSize;
 		}
 		entry.m_pStream->_relase_all_data_from_dataprovider_src_file();
-		pOstream->write((_xcd_int8*)& entry.m_DataEntryItem , sizeof(sCDDataEntryItem));
+		pOstream->write((_xcd_int8*)&entry.m_DataEntryItem , sizeof(sCDDataEntryItem));
 
 	}
 

@@ -278,12 +278,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
-		</Filter>
-		<Filter
 			Name="BaseLib"
 			>
 			<File
@@ -299,27 +293,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BaseLib\xBaseLexer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseLib\xBaseLexer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\BaseLib\xBaseMath.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\BaseLib\xBaseMath.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseLib\xBaseObject.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseLib\xBaseObject.h"
 				>
 			</File>
 			<File
@@ -334,55 +312,31 @@
 				RelativePath=".\BaseLib\xRect.h"
 				>
 			</File>
-			<File
-				RelativePath=".\BaseLib\xRefCountObjPtr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseLib\xResourceMgr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseLib\xResPackageMgr.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseLib\xstring.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseLib\xstring.h"
-				>
-			</File>
-			<File
-				RelativePath=".\BaseLib\xStringHash.h"
-				>
-			</File>
 			<Filter
-				Name="xCfgParser"
+				Name="xXMLParser"
 				>
 				<File
-					RelativePath=".\BaseLib\xCfgBuilder.cpp"
+					RelativePath=".\BaseLib\xXmlDocBuilder.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\BaseLib\xCfgBuilder.h"
+					RelativePath=".\BaseLib\xXmlDocBuilder.h"
 					>
 				</File>
 				<File
-					RelativePath=".\BaseLib\xCfgParser.cpp"
+					RelativePath=".\BaseLib\xXmlDocument.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\BaseLib\xCfgParser.h"
+					RelativePath=".\BaseLib\xXmlDocument.h"
 					>
 				</File>
 				<File
-					RelativePath=".\BaseLib\xXMLManager.cpp"
+					RelativePath=".\BaseLib\xXmlManager.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\BaseLib\xXMLManager.h"
+					RelativePath=".\BaseLib\xXmlManager.h"
 					>
 				</File>
 			</Filter>
@@ -411,6 +365,62 @@
 				</File>
 				<File
 					RelativePath=".\BaseLib\xI18N.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="ResourceManager"
+				>
+				<File
+					RelativePath=".\BaseLib\xResourceMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseLib\xResPackageMgr.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Object"
+				>
+				<File
+					RelativePath=".\BaseLib\xBaseObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseLib\xBaseObject.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseLib\xObjectFactory.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseLib\xRefCountObjPtr.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="String"
+				>
+				<File
+					RelativePath=".\BaseLib\xBaseLexer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseLib\xBaseLexer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseLib\xstring.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseLib\xstring.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseLib\xStringHash.h"
 					>
 				</File>
 			</Filter>
@@ -929,6 +939,14 @@
 					RelativePath=".\RenderAPI\xRenderView.h"
 					>
 				</File>
+				<File
+					RelativePath=".\RenderAPI\xTLEnvioroment.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RenderAPI\xTLEnvioroment.h"
+					>
+				</File>
 				<Filter
 					Name="Shader"
 					>
@@ -1070,6 +1088,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\font\xGdiFont.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\font\xGdiFont.h"
+					>
+				</File>
+				<File
 					RelativePath=".\font\xMultiFtRender.cpp"
 					>
 				</File>
@@ -1081,6 +1107,10 @@
 			<Filter
 				Name="Renderer"
 				>
+				<File
+					RelativePath=".\Renderer\Renderer.vsd"
+					>
+				</File>
 				<Filter
 					Name="src"
 					>
@@ -1089,23 +1119,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Renderer\xDrawableObject.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\Renderer\xDrawElement.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Renderer\xGeomElementObject.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\Renderer\xMaterial.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\xMaterialManager.cpp"
 						>
 					</File>
 					<File
@@ -1125,23 +1143,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Renderer\xDrawableObject.h"
-						>
-					</File>
-					<File
 						RelativePath=".\Renderer\xDrawElement.h"
 						>
 					</File>
 					<File
-						RelativePath=".\Renderer\xGeomElementObject.h"
-						>
-					</File>
-					<File
 						RelativePath=".\Renderer\xMaterial.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\xMaterialManager.h"
 						>
 					</File>
 					<File
@@ -1150,6 +1156,50 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\xRendererQueue.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="KidRender"
+					>
+					<File
+						RelativePath=".\Renderer\KidsRender\xKidMaterail.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\KidsRender\xKidMaterail.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\KidsRender\xKidRenderCreator.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\KidsRender\xKidRenderer.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\KidsRender\xKidRenderer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\KidsRender\xKidRTech.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\KidsRender\xKidRTech.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="ToyRender"
+					>
+					<File
+						RelativePath=".\Renderer\ToyRender\xToyRenderer.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\ToyRender\xToyRenderer.h"
 						>
 					</File>
 				</Filter>
@@ -1202,12 +1252,6 @@
 					</File>
 				</Filter>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
-			>
 		</Filter>
 		<Filter
 			Name="float16"
@@ -1320,6 +1364,134 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="xui"
+			>
+			<Filter
+				Name="include"
+				>
+				<File
+					RelativePath=".\xui\xui.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuibase.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiButton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiCaption.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiControl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiCtrlContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiDataType.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiDialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiHotArea.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiStringParser.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiTextArea.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiTextLabel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiWindow.h"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\xuiWindowManager.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="src"
+				>
+				<File
+					RelativePath=".\xui\src\xuiButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiCaption.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiControl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiCtrlContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiDialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiHotArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiStateBlend.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiStringParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiTextArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiTextLabel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiTransBlend.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\xui\src\xuiWindowManager.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Audio"
+			>
+			<File
+				RelativePath=".\audio\xMediaFX.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

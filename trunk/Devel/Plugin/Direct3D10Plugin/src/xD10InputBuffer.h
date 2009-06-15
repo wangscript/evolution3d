@@ -23,7 +23,7 @@ class xD10InputBuffer : public IInputBuffer
 	bool _destory() ; 
 public:
 	void* handle(){ return m_pBuffer ; }
-	ID3D10ShaderResourceView* toShaderResourceView();
+	ID3D10ShaderResourceView* toShaderResourceView(ePIXEL_FORMAT fmt);
 	xD10InputBuffer(xD3D10RenderApi* pAPI  );
 	~xD10InputBuffer();
 	bool create(size_t nVertex , size_t bytePerVertex ,const xInputBufferDesc* pDesc , void* pInitData  ) ;
@@ -55,11 +55,11 @@ public:
 	~xD10VertexStream();
 	IInputAssembler* getAssembler() ;
 	IInputBuffer*    getInputBuffer(size_t nSlot) ;
-	size_t            nInputSlot() ;
+	size_t           nInputSlot() ;
 	//Create Vertex Buffers with inite Data;
-	bool              createBuffers(size_t nVertex , void** pInitData = NULL, const  xInputBufferDesc** pDesc = NULL) ; 
+	bool             createBuffers(size_t nVertex , void** pInitData = NULL, const  xInputBufferDesc** pDesc = NULL) ; 
 	IInputBuffer*    createInputBuffer(size_t nSlot , size_t nVertex , void* pData ,const   xInputBufferDesc* pDesc = NULL) ;
-	bool              setInputBuffer(size_t nSlot , IInputBuffer* pIB) ;
+	bool             setInputBuffer(size_t nSlot , IInputBuffer* pIB) ;
 };
 
 
@@ -96,9 +96,10 @@ public:
 	size_t                       lenght();
 	size_t                       nConstant();
 	IShaderConstantReflection*   constantDesc(size_t idx);
-	void                         addConstant(xD10ShaderConstReflection* cd);
+	//void                         addConstant(xD10ShaderConstReflection* cd);
 	xD10ShaderConstReflection*   addConstant();
-
+    void*                        systemBuffer();
+	void                         setDirty(bool bDirty = true) {m_bDirty = bDirty; }
 public:
 	bool                         setData(int _off , void* _data , int dataLen);
 	bool                         flushToBuffer();

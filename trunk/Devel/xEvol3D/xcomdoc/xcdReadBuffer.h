@@ -28,6 +28,7 @@ BEGIN_NAMESPACE_XEVOL3D
 class CCPPIFStream : public IReadStream
 {
 	FILE* m_fStream;
+    IMPL_NONE_REFCOUNT_OBJECT_INTERFACE(CCPPIFStream)
 public:
 	bool open_stream(const wchar_t* _fileName)
 	{
@@ -35,34 +36,35 @@ public:
 		return m_fStream != NULL;
 	}
 
-	void   close()
+	int   close()
 	{
-		fclose(m_fStream);
+		return fclose(m_fStream);
 	}
 
-	int    read(_xcd_int8* buf, int byte_read)
+	size_t    read(_xcd_int8* buf, size_t byte_read)
 	{
 		fread(buf,1, byte_read,m_fStream);
 		return byte_read;
 	}
 
-	void   seekg(int _offset, ios::seekdir _dir)
+    size_t   seek(long _offset, std::ios_base::seekdir _dir)
 	{
 		switch(_dir)
 		{
-		case ios::beg:
-			fseek(m_fStream,_offset,SEEK_SET);
+        case std::ios_base::beg:
+			fseek(m_fStream,(long)_offset,SEEK_SET);
 			break;
-		case ios::end:
-			fseek(m_fStream,_offset,SEEK_END);
+		case std::ios_base::end:
+			fseek(m_fStream,(long)_offset,SEEK_END);
 			break;
-		case ios::cur:
-			fseek(m_fStream,_offset,SEEK_CUR);
+		case std::ios_base::cur:
+			fseek(m_fStream,(long)_offset,SEEK_CUR);
 			break;
 		}
+        return tell();
 	}
 
-	int    tellg()
+	size_t    tell()
 	{
 		return ftell(m_fStream);
 	}
@@ -76,22 +78,26 @@ public:
 class CCPPIStream : public IReadStream
 {
 	std::istream* m_pStream;
+    IMPL_NONE_REFCOUNT_OBJECT_INTERFACE(CCPPIStream)
 public:
-	void   close()
+	int   close()
 	{
+        return 0;
 	}
-	int    read(_xcd_int8* buf, int byte_read)
+
+	size_t    read(_xcd_int8* buf, size_t byte_read)
 	{
-		m_pStream->read(buf,byte_read);
+        m_pStream->read(buf , (std::streamsize)byte_read);
 		return byte_read;
 	}
 
-	void   seekg(int _offset, ios::seekdir dir)
+    size_t   seek(long _offset, std::ios_base::seekdir dir)
 	{
 		m_pStream->seekg(_offset,dir);
+        return m_pStream->tellg();
 	}
 
-	int    tellg()
+	size_t    tell()
 	{
 		return m_pStream->tellg();
 	}
@@ -109,6 +115,7 @@ public:
 
 class CXComDocReadStream : public IReadStream
 {
+    IMPL_NONE_REFCOUNT_OBJECT_INTERFACE(CXComDocReadStream);
 	xcomdocstream* m_pStream;
 public:
 	CXComDocReadStream()
@@ -120,29 +127,30 @@ public:
 		m_pStream->release();
 	}
 
-	void   close()
+	int   close()
 	{
-
+        return 0;
 	}
 
-	int    read(_xcd_int8* buf, int byte_read)
+	size_t    read(_xcd_int8* buf, size_t byte_read)
 	{
 		m_pStream->read(buf,byte_read);
 		return byte_read;
 	}
 
-	void   seekg(int _offset, ios::seekdir dir)
+	size_t   seek(long _offset, std::ios_base::seekdir dir)
 	{
 		xcd_seek_dir pos = xcdsd_cur;
-		if(dir == std::ios::cur) pos = xcdsd_cur;
-		else if(dir == std::ios::end) pos = xcdsd_end;
-		else if(dir == std::ios::beg) pos = xcdsd_beg;
+		if(dir == std::ios_base::cur) pos = xcdsd_cur;
+		else if(dir == std::ios_base::end) pos = xcdsd_end;
+		else if(dir == std::ios_base::beg) pos = xcdsd_beg;
 		else _offset = 0;
 
 		m_pStream->stream_seekr(pos,_offset);
+        return m_pStream->stream_tellr();
 	}
 
-	int    tellg()
+	size_t    tell()
 	{
 		return m_pStream->stream_tellr();
 	}
@@ -154,7 +162,7 @@ public:
 
 	bool eof()
 	{
-		if( tellg() >= (int)m_pStream->data_len() )
+		if( tell() >= (int)m_pStream->data_len() )
 			return true;
 		return false;
 	}
@@ -170,11 +178,11 @@ class CReadBuffer
 public:
 	int    get_file_read_pos()
 	{
-		return m_DiskFile->tellg();
+		return (int)m_DiskFile->tell();
 	}
 	void   set_file_read_pos(int pos)
 	{
-		m_DiskFile->seekg(pos,ios::beg);
+		m_DiskFile->seek(pos,std::ios_base::beg);
 	}
 	void   set_stream(IReadStream* DiskFile,int beginPos, int len)
 	{
@@ -190,7 +198,7 @@ public:
 
 	void   rewind();
 	int    read(_xcd_int8* buf, int byte_read);
-	void   seekg(int _offset, ios::seekdir dir);
+	void   seekg(int _offset, std::ios_base::seekdir dir);
 	int    tellg();
 	int    data_len();
 	void   close();

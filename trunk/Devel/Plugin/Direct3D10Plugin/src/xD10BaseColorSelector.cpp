@@ -88,7 +88,7 @@ xD10BaseColorSelector::~xD10BaseColorSelector()
 	//m_pD10Api->unRegisteShaderConstBinder(L"ucolor_id");
 }
 
-bool xD10BaseColorSelector::create(xCfgNode* pSelNode)
+bool xD10BaseColorSelector::create(xXmlNode* pSelNode)
 {
 	ePIXEL_FORMAT fmt = xPixelFormatAssit::singleton()->GetPixelFormat( pSelNode->value(L"format") );
 	const wchar_t* pColorShader = pSelNode->value(L"shader");

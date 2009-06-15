@@ -212,6 +212,9 @@ ENUMCLASS(enum)  eResourceType
 	RESOURCE_SHADER     = 0x0030,
 	RESOURCE_GPUPROGRAM   ,
 
+    //
+    RESOURCE_OTHER , 
+
 };
 
 ENUMCLASS(enum)  eLockPolicy

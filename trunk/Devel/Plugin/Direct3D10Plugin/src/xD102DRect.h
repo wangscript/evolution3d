@@ -15,7 +15,7 @@ class xD102DRectEnv
 protected:
 	IVertexStream*   m_pVertexStream;
 	IInputBuffer*    m_pIdxBuffer;
-	IInputAssembler* m_pAss[MAX_UV_CHANEL];
+	IInputAssembler* m_pAss[MAX_UV_CHANEL + 1];
 	xD3D10RenderApi* m_pRenderApi;
 public:
 	xD102DRectEnv(xD3D10RenderApi* pApi);

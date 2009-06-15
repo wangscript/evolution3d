@@ -10,19 +10,27 @@ class xD10RenderTarget : public xD10BaseRenderTarget
 {
 	ID3D10RenderTargetView*   m_pRenderTargetView;
 	IMPL_BASE_OBJECT_CLASSID_INTERFACE(xD10RenderTarget);
-	int m_mipLevel;
-	int m_arraySlice;
+	int           m_mipLevel;
+	int           m_arraySlice;
 public:
-	int      RefCount();
-	int      AddRef();
-	int      ReleaseObject();
-	int      KillObject();
+	int           RefCount();
+	int           AddRef();
+	int           ReleaseObject();
+	int           KillObject();
 public:
 	xD10RenderTarget(xD3D10RenderApi* pAPI);
 	virtual       ~xD10RenderTarget();
 	void*         handle(){ return m_pRenderTargetView ;}
 	bool          destory();
 	bool          create(ID3D10Resource* pTexture , xD10TexInfo& TexInfo , int iSlice = 0, int mipLevel = 0);
+};
+
+class xD10DynamicRenderTarget : public xD10RenderTarget
+{
+public:
+    xD10DynamicRenderTarget(xD3D10RenderApi* pAPI):xD10RenderTarget(pAPI){}
+    int           ReleaseObject();
+    int           KillObject();
 };
 
 class xD10RenderTexture : public xD10UnkwonTexture
@@ -42,10 +50,12 @@ public:
 	bool           create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevels = 1 , int arraySize = 1);
 	bool           create(int w , int h , int depth , ePIXEL_FORMAT fmt, int mipMapLevels = 1 , int arraySize = 1);
 	IRenderTarget* toRenderTarget(size_t iSlice = 0 , size_t iMipMapLevel = 0);
+    bool           isSameInstance(IRenderTarget* pRenderTarget);
 	bool           grabRenderTagetData(int x , int y , int w , int h , void* pData);
 private:
 	bool           load(const wchar_t* fileName , unsigned long  arg){ return false ; }
 	bool           load(const wchar_t* fileName , const unsigned int8* buf , size_t bufLen, unsigned long arg){ return false ; }
+    bool           unload();
 };
 
 
@@ -78,10 +88,13 @@ public:
 	~xD10DepthTexture();
 	bool           create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevels = 1 , int arraySize = 1);
 	IRenderTarget* toRenderTarget(size_t iSlice = 0 , size_t iMipMapLevel = 0);
+    bool           unload();
+    bool           isSameInstance(IRenderTarget* pRenderTarget);
 private:
 	bool           create(int w , int h , int depth , ePIXEL_FORMAT fmt, int mipMapLevels = 1 , int arraySize = 1){return false;}
 	bool           load(const wchar_t* fileName , unsigned long  arg){ return false ; }
 	bool           load(const wchar_t* fileName , const unsigned int8* buf , size_t bufLen, unsigned long arg){ return false ; }
+
 };
 
 END_NAMESPACE_XEVOL3D

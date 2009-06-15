@@ -40,7 +40,7 @@ using namespace std;
 #include "xcdReadBuffer.h"
 #include "xcdWriteBuffer.h"
 #include "zlibStream.h"
-
+#include "../BaseLib/xI18N.h"
 #pragma  pack(push,1)
 
 
@@ -114,6 +114,7 @@ Data Entry . for index the data entry.
 */
 struct sCDDataEntryItem
 {
+public:
 	int            m_StartAddr;           /*long 4 - byte : FileStartAt */
 	xcd_data_type  m_DataType;
 	int            m_DataCompressedSize;	/*long 4 - byte : PackedSize */
@@ -121,31 +122,8 @@ struct sCDDataEntryItem
 
 	int            m_CompressedRate;       /**/
 	int            m_Reserved ;	        /*long 4 - byte : Reserved */
-	unsigned short m_us2Name[128];
-    unsigned int   m_ucs4DataName[128];
-
-	wchar_t*  getDataName()
-	{
-		if(sizeof(wchar_t) == 4)
-			return (wchar_t*)m_ucs4DataName;
-		return  (wchar_t*)m_us2Name;
-	}
-    void ValidateName()
-	{
-
-	}
-	void SetDataName(const wchar_t* name)
-	{
-		if(sizeof(wchar_t) == 4)
-		{
-			wcscpy( (wchar_t*)m_ucs4DataName,name);
-		}
-		else
-		{
-			wcscpy( (wchar_t*)m_us2Name,name);
-		}
-	}
-
+	unsigned short m_utf16Name[128];
+public:
 	sCDDataEntryItem()
 	{
 		m_StartAddr = 0;           /*long 4 - byte : FileStartAt */
@@ -155,13 +133,60 @@ struct sCDDataEntryItem
 
 		m_CompressedRate = XCOMDOC_NOCOMPRESS;       /**/
 		m_Reserved  = 0 ;	        /*long 4 - byte : Reserved */
-		m_us2Name[0] = 0;	    /*char       128 - byte : File Name(Readable) */
-		m_ucs4DataName[0] = 0;
+		memset(m_utf16Name,0,sizeof(unsigned short)*128); 	    /*char       128 - byte : File Name(Readable) */
 	}
 };
 
 
+template <int UCSTYPE> class  T_CDDataEntryItemImp : public sCDDataEntryItem
+{
+};
 
+template <> class  T_CDDataEntryItemImp<2> : public sCDDataEntryItem
+{
+public:
+    wchar_t*  getDataName()
+    {
+        return  (wchar_t*)m_utf16Name;
+    }
+    void ValidateName()
+    {
+
+    }
+    void SetDataName(const wchar_t* name)
+    {
+        wcscpy( (wchar_t*)m_utf16Name,name);
+    }
+};
+
+template <> class  T_CDDataEntryItemImp<4> : public sCDDataEntryItem
+{
+    unsigned int   m_ucs4DataName[128];
+public:
+    wchar_t*  getDataName()
+    {
+        if(sizeof(wchar_t) == 4)
+            return (wchar_t*)m_ucs4DataName;
+    }
+    void ValidateName()
+    {
+         XEvol_UCS2ToUCS4(m_utf16Name , m_ucs4DataName,128,128);
+    }
+
+    void SetDataName(const wchar_t* name)
+    {
+        wcscpy( (wchar_t*)m_ucs4DataName,name);
+        XEvol_UCS4ToUCS2(m_ucs4DataName , m_utf16Name ,128,128);
+        
+    }
+
+    T_CDDataEntryItemImp()
+    {
+        memset(m_ucs4DataName , 0, sizeof(wchar_t) * 128);
+    }
+};
+
+typedef T_CDDataEntryItemImp<sizeof(wchar_t)> CDDataEntryItemImp;
 
 
 class xComDocument;
@@ -208,16 +233,15 @@ __private:
 	/*
 	Data in the file.
 	*/
-	bool              m_DataInMemBuffer;
-	CReadBuffer       m_ReadBuffer;
-	CWriteBuffer      m_WriteBuffer;
-	CZLibReadBuffer   m_compressedReadBuffer;
-	IWriteBuffer*     m_pWriteBuffer;
-	xcd_rwmode           m_mode;
-	xcd_data_type      m_data_type;
-	sCDDataEntryItem* m_EntryItem;
-
-	xComDocument*          m_pComDoc;
+	bool                m_DataInMemBuffer;
+	CReadBuffer         m_ReadBuffer;
+	CWriteBuffer        m_WriteBuffer;
+	CZLibReadBuffer     m_compressedReadBuffer;
+	IWriteBuffer*       m_pWriteBuffer;
+	xcd_rwmode          m_mode;
+	xcd_data_type       m_data_type;
+	CDDataEntryItemImp* m_EntryItem;
+	xComDocument*       m_pComDoc;
 
 
 protected:
@@ -236,8 +260,8 @@ public:
 	_xcd_int8*       get_compress_info(int& streamLen , int& compressedSize , int compressRate, int blockSize = 1024*64);
 	void             releaseCompressBuffer();
 public:
-	XComDocStreamImp(xComDocument* pDoc,xcd_rwmode  mode,sCDDataEntryItem* pItem = NULL);
-	XComDocStreamImp(xComDocument* pDoc,const _xcd_int8* buf,size_t buf_len,sCDDataEntryItem* pItem = NULL);
+	XComDocStreamImp(xComDocument* pDoc,xcd_rwmode  mode,CDDataEntryItemImp* pItem = NULL);
+	XComDocStreamImp(xComDocument* pDoc,const _xcd_int8* buf,size_t buf_len,CDDataEntryItemImp* pItem = NULL);
 	~XComDocStreamImp();
 public:
 	void _set_src_file(const wchar_t* file_name , bool bUseSrcFile = true);
@@ -300,7 +324,7 @@ __private:
 		}
 		int                 m_hashTableIndex; //这个东西基本没什么用处
 		XComDocStreamImp*   m_pStream;
-		sCDDataEntryItem    m_DataEntryItem;
+		CDDataEntryItemImp  m_DataEntryItem;
 
 		bool _is_compressed()
 		{

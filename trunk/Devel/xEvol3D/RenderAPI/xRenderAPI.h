@@ -43,7 +43,9 @@ public:
 	virtual ~IRenderApi();
 	//选择模式
     virtual eRenderMode           renderMode() = 0;
-
+    virtual void                  addRenderObject(IRenderObject* pObject) = 0;
+    virtual void                  removeRenderObject(IRenderObject* pObject) = 0;
+    virtual void                  dumpRenderObject() = 0;
 	virtual bool                  beginSelectMode() = 0;
 	virtual IColorSelector*       colorSelector() = 0;
 	virtual bool                  setColorSelector(IColorSelector* pColorSel) = 0;
@@ -51,7 +53,7 @@ public:
 	virtual bool                  endSelectMode(int x , int y , int w , int h , void* _id) = 0;
 
 	virtual wchar_t*              name() = 0;
-	virtual bool                  init(xCfgNode* pxmlNode) = 0;
+	virtual bool                  init(xXmlNode* pxmlNode) = 0;
 	virtual bool                  uninit() = 0;
 	virtual bool                  lock() = 0;
 	virtual bool                  unlock() = 0;
@@ -63,7 +65,9 @@ public:
 	virtual bool                  endScene() = 0;
 	virtual bool                  swapBuffer() = 0;
     virtual bool                  onResize(int w , int h) = 0;
-	//Transform Matrix
+    virtual bool                  getWindowSize(int& w , int & h) = 0 ;
+    virtual bool                  getRenderViewSize(int& w , int & h) =0 ;
+    //Transform Matrix
 	virtual bool                  multiMatrix(float* mat , eMatrixMode matMode) = 0;
 	virtual bool                  setMatrix(float* mat   , eMatrixMode matMode) = 0;
 	virtual bool                  identityMatrix(eMatrixMode matMode)           = 0;
@@ -73,6 +77,8 @@ public:
 	virtual bool                  enter2DMode(int x , int y , int w , int h , bool bTextMode) = 0;
 	virtual bool                  leave2DMode() = 0;
     virtual IRenderCamera*        createCamera(const wchar_t* cameraName) = 0;
+	virtual ILightingEnv*         createLightingState(const wchar_t* _name) = 0;
+	virtual ILightingEnv*         findLightingState(const wchar_t* _name) = 0;
 	//使得相机改变的参数起作用
 	virtual bool                  applyCamera(IRenderCamera* pCamera) = 0;
 	virtual bool                  applyCamera() = 0;
@@ -147,7 +153,7 @@ public:
 	virtual bool                  setRenderView(IRenderView* renderView) = 0;
 	virtual bool                  pushRenderView(IRenderView* renderView) = 0;
 	virtual bool                  popRenderView() = 0;
-
+    
 	//Mem Buffer function
 	virtual IInputAssembler*      getInputAssembler(const wchar_t* name) = 0;
 	virtual IInputAssembler*      createInputAssembler(const wchar_t* name , xInputLayoutDesc& desc ) = 0;
@@ -155,6 +161,8 @@ public:
 	virtual IInputBuffer*         createBuffer(size_t iBufLen ,const xInputBufferDesc* pBufferDesc , void* pData = NULL)  = 0;
     virtual IInputBuffer*         findInputBuffer(const wchar_t* _name) = 0;
 	virtual bool                  setInputBuffer(const wchar_t* _name, IInputBuffer* pConstBuffer) = 0;
+	virtual bool                  removeInputBuffer(IInputBuffer* pConstBuffer) = 0;
+	virtual bool                  removeInputBuffer(const wchar_t* _name) = 0;
 	virtual IInputBuffer*         createConstBuffer(size_t iBufLen) = 0;
 	virtual IInputBuffer*         createInputBuffer(size_t iBufLen) = 0;
 	//State Object create

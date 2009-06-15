@@ -273,7 +273,7 @@ bool Win32WindowImp::__createWindow(HWND hWnd)
 	return true;
 }
 
-bool Win32WindowImp::__createWindow(WIN_CREATE_STRUCT& cs,const xCfgNode* params)
+bool Win32WindowImp::__createWindow(WIN_CREATE_STRUCT& cs,const xXmlNode* params)
 {
 	//Ã»ÓÐ¸¸´°¿Ú
 	bool ret = false;

@@ -20,7 +20,7 @@ public:
 	const wchar_t*          name() const;
 	const size_t            hash_name() const;
 	bool                    create() ;
-	IVertexStream*         createVertexStream();
+	IVertexStream*          createVertexStream();
 	xInputLayoutDesc&       layoutDesc(){return m_Desc ; }
 
 public:

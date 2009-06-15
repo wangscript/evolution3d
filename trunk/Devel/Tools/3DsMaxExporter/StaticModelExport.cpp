@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "XEvolMaxExporter.h"
 #include "StaticMeshExportDlg.h"
 #include "StaticModelExport.h"
-#include "xCfgParser.h"
+#include "xXmlDocument.h"
 #include "xExportFunction.h"
 CStaticModelExporter::CStaticModelExporter(CMaxNodeTree& nodeTree)
 :m_nodeTree(nodeTree)
@@ -61,11 +61,11 @@ bool CStaticModelExporter::export_header(wstring prefix,vector<wstring>& mesh_na
     xcomdocstream* pstream =  m_doc.create_stream((prefix + L"desc.xml").c_str(),(xcd_data_type)cddt_static_model_desc);
 
 
-	xCfgDocument xml;
-	xCfgNode* rootNode = xml.insertNode(L"model");
+	xXmlDocument xml;
+	xXmlNode* rootNode = xml.insertNode(L"model");
 	rootNode->insertValue(L"type")->setValue(L"static");
 	rootNode->insertValue(L"name")->setValue(m_desc.m_Name);
-	xCfgNode* bbNode = rootNode->insertNode(L"BoundBox");
+	xXmlNode* bbNode = rootNode->insertNode(L"BoundBox");
 	bbNode->insertValue(L"min_x")->setValue(m_BoundBox.m_minx);
 	bbNode->insertValue(L"min_y")->setValue(m_BoundBox.m_miny);
 	bbNode->insertValue(L"min_z")->setValue(m_BoundBox.m_minz);
@@ -75,7 +75,7 @@ bool CStaticModelExporter::export_header(wstring prefix,vector<wstring>& mesh_na
 
 	for(size_t i = 0 ; i<mesh_names.size();++i)
 	{
-		xCfgNode* meshNode = rootNode->insertNode(L"mesh");
+		xXmlNode* meshNode = rootNode->insertNode(L"mesh");
 		meshNode->insertValue(L"name")->setValue(mesh_names[i].c_str());
 	}
 

@@ -182,7 +182,7 @@ bool XEVOL_SVAE_LOGINFO_FILE(const wchar_t* fileName , const char* data )
 		//if(ansiFileName[i] == '.') ansiFileName[i] = '_';
 	}
 	std::ofstream out(ansiFileName);//, std::ios_base::binary);
-	out.write(data , strlen(data) );
+	out.write(data , (std::streamsize)strlen(data) );
 	out.close();
 	return true;
 }

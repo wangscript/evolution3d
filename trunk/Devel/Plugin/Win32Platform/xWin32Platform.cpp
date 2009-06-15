@@ -75,6 +75,7 @@ PlatformWin32Factory g_Win32Factory;
 
 PlatformWin32::PlatformWin32()
 {
+    m_RefCount = 1;
 	m_pWindowInCreating = NULL;
 	m_startTickt = getTicktCount();
 	m_FrameTime  = 0;
@@ -184,7 +185,7 @@ bool  PlatformWin32::grabWindowEvent(IWindow* pWnd)
 //
 //IWindow*        createWindow( WIN_CREATE_STRUCT createStruct)
 //___________________________________________________________________
-IWindow*        PlatformWin32::createWindow(WIN_CREATE_STRUCT& createStruct  , const xCfgNode* params)
+IWindow*        PlatformWin32::createWindow(WIN_CREATE_STRUCT& createStruct  , const xXmlNode* params)
 {
 	if(createStruct.m_isFullScreen == true && (createStruct.m_WinRect.w == 0 || createStruct.m_WinRect.h == 0) )
 	{
@@ -214,13 +215,13 @@ IWindow*        PlatformWin32::createWindow(WIN_CREATE_STRUCT& createStruct  , c
 	m_pWindowInCreating = NULL;
 	wcsncpy( ((Win32WindowImp*)pWindow)->m_name , createStruct.m_WinName, 64);
 	xWindowMsg msg;
-	msg.eMsgID = WIN_CREATE;
+	msg.MsgID = WIN_CREATE;
 	pWindow->dispatchMsg(msg);
 	((Win32WindowImp*)pWindow)->saveWindowMsgHandler();
 	return pWindow;
 }
 
-IRenderApi*   PlatformWin32::createRenderApi(int iWnd , const wchar_t* RenderApi , const xCfgNode* params)
+IRenderApi*   PlatformWin32::createRenderApi(int iWnd , const wchar_t* RenderApi , const xXmlNode* params)
 {
 	IRenderApiCreator * pCreator = xRendererAPIManager::findAPICreator(RenderApi);
 	
@@ -241,7 +242,7 @@ IRenderApi*   PlatformWin32::createRenderApi(int iWnd , const wchar_t* RenderApi
 	return pOutRenderApi;
 }
 
-IWindow*   PlatformWin32::createRenderWindow(IRenderApi** pOutRenderApi ,  WIN_CREATE_STRUCT& createStruct, const wchar_t* RenderApi , const xCfgNode* params)
+IWindow*   PlatformWin32::createRenderWindow(IRenderApi** pOutRenderApi ,  WIN_CREATE_STRUCT& createStruct, const wchar_t* RenderApi , const xXmlNode* params)
 {
      IWindow* pWindow = createWindow(createStruct , params);
 	 if(pWindow == NULL) return NULL;
@@ -493,64 +494,68 @@ WIND_MSG_PROC:
 	case WM_ERASEBKGND:
 		return 1;
 	case WM_LBUTTONDBLCLK:
-		WinMsg.eMsgID = WIN_LMOUSE_DB_CLICK;
+		WinMsg.MsgID = WIN_LMOUSE_DB_CLICK;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_LBUTTONDOWN:
-		WinMsg.eMsgID = WIN_LMOUSE_DOWN;
+		WinMsg.MsgID = WIN_LMOUSE_DOWN;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_LBUTTONUP:
-		WinMsg.eMsgID = WIN_LMOUSE_RELEASE;
+		WinMsg.MsgID = WIN_LMOUSE_RELEASE;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_RBUTTONDBLCLK:
-		WinMsg.eMsgID = WIN_RMOUSE_DB_CLICK;
+		WinMsg.MsgID = WIN_RMOUSE_DB_CLICK;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_RBUTTONDOWN:
-		WinMsg.eMsgID = WIN_RMOUSE_DOWN;
+		WinMsg.MsgID = WIN_RMOUSE_DOWN;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_RBUTTONUP:
-		WinMsg.eMsgID = WIN_RMOUSE_RELEASE;
+		WinMsg.MsgID = WIN_RMOUSE_RELEASE;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_MBUTTONDBLCLK:
-		WinMsg.eMsgID = WIN_MMOUSE_DB_CLICK;
+		WinMsg.MsgID = WIN_MMOUSE_DB_CLICK;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_MBUTTONDOWN:
-		WinMsg.eMsgID = WIN_MMOUSE_DOWN;
+		WinMsg.MsgID = WIN_MMOUSE_DOWN;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_MBUTTONUP:
-		WinMsg.eMsgID = WIN_MMOUSE_RELEASE;
+		WinMsg.MsgID = WIN_MMOUSE_RELEASE;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_MOUSEWHEEL:
-		WinMsg.eMsgID = WIN_MOUSE_WHEEL;
+		WinMsg.MsgID = WIN_MOUSE_WHEEL;
 		WinMsg.Mouse.nValue = HIWORD(wParam);
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 
 	case WM_MOUSEMOVE :
-		WinMsg.eMsgID = WIN_MOUSE_MOVE;
+		WinMsg.MsgID = WIN_MOUSE_MOVE;
 		g_pPlatFormWin32->__processMouseMsg(WinMsg,wParam,lParam);
 		return 0;
 		break;
 
 	case WM_SIZE:
-		WinMsg.eMsgID = WIN_RESIZE;
+		WinMsg.MsgID = WIN_RESIZE;
+        WinMsg.Common.x = 0;
+        WinMsg.Common.y = 0;
+        WinMsg.Common.w = LOWORD(lParam);
+        WinMsg.Common.h = HIWORD(lParam);
 		g_pPlatFormWin32->dispatchMsg(WinMsg);
 		return 0;
 
@@ -558,7 +563,7 @@ WIND_MSG_PROC:
 	case WM_KEYDOWN:
 		WinMsg.Keyboard.nSysVKey  = (unsigned char)wParam;
 		m_bKeyPressed[(unsigned char)wParam] = true;
-		WinMsg.eMsgID = WIN_KEYDOWN;
+		WinMsg.MsgID = WIN_KEYDOWN;
 		g_pPlatFormWin32->__translateKbMsg(WinMsg);
 		g_pPlatFormWin32->dispatchMsg(WinMsg);
 		return 0;
@@ -566,26 +571,26 @@ WIND_MSG_PROC:
 	case WM_KEYUP:
 		m_bKeyPressed[(unsigned char)wParam] = false;
 		WinMsg.Keyboard.nSysVKey = (unsigned char)wParam;
-		WinMsg.eMsgID          = WIN_KEYUP;
+		WinMsg.MsgID          = WIN_KEYUP;
 		g_pPlatFormWin32->__translateKbMsg(WinMsg);
 		g_pPlatFormWin32->dispatchMsg(WinMsg);
 		return 0;
 				
 	case WM_CLOSE:
-		WinMsg.eMsgID = WIN_CLOSE;
+		WinMsg.MsgID = WIN_CLOSE;
 		if(false == g_pPlatFormWin32->dispatchMsg(WinMsg))
 			::DestroyWindow(hWnd);
 
 		return 0;
 
 	case WM_DESTROY:
-		WinMsg.eMsgID = WIN_CLOSED;
+		WinMsg.MsgID = WIN_CLOSED;
 		if(false == g_pPlatFormWin32->dispatchMsg(WinMsg) )
 			return g_pPlatFormWin32->quit();
 		return 0;
 
 	case WM_QUIT:
-		WinMsg.eMsgID = WIN_QUIT;
+		WinMsg.MsgID = WIN_QUIT;
 		g_pPlatFormWin32->dispatchMsg(WinMsg);
 		return 0;
 

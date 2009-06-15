@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "xApplication.h"
 #include "xVirtualKey.h"
 #include "../BaseLib/stl_dllalloc.h"
-#include "../BaseLib/xCfgParser.h"
+#include "../BaseLib/xXmlDocument.h"
 #include "../BaseLib/logstream.h"
 using namespace std;
 BEGIN_NAMESPACE_XEVOL3D
@@ -63,6 +63,7 @@ protected:
 public:
 
 	IPlatform();
+    virtual ~IPlatform();
 	static  IPlatform*      singleton();
 	virtual const wchar_t*  name() = 0;
 	//初始化平台
@@ -76,15 +77,15 @@ public:
 
 	virtual bool            setDisplayMode(int w, int h, int cl_bits,int display_fre) = 0;
 	//创建一个窗口
-	virtual IWindow*        createWindow(WIN_CREATE_STRUCT& createStruct,  const xCfgNode* params = NULL) = 0;
+	virtual IWindow*        createWindow(WIN_CREATE_STRUCT& createStruct,  const xXmlNode* params = NULL) = 0;
 
 	//创建一个渲染窗口
 	//Win32 + OpenGL < Win32Platform Window -> OpenGL Win32 RenderInitor ->
 	//Win32 + D3D    < Win32Platform Window -> D3D Win32 RenderInitor ->
 	//SDL + OpenGL   < SDL Platform (OpenGL) -> OpenGL Renderer
 	//XLib + OpenGL  < Unix/Linux Platform  ->  GLX OpenGL RendererInitor->
-	virtual IWindow*        createRenderWindow(IRenderApi** pOutRenderApi ,  WIN_CREATE_STRUCT& createStruct, const wchar_t* RenderApi , const xCfgNode* params = NULL) = 0;
-    virtual IRenderApi*     createRenderApi(int iWnd , const wchar_t* RenderApi , const xCfgNode* params = NULL) = 0;
+	virtual IWindow*        createRenderWindow(IRenderApi** pOutRenderApi ,  WIN_CREATE_STRUCT& createStruct, const wchar_t* RenderApi , const xXmlNode* params = NULL) = 0;
+    virtual IRenderApi*     createRenderApi(int iWnd , const wchar_t* RenderApi , const xXmlNode* params = NULL) = 0;
 
 	//关闭一个窗口
 	virtual bool            closeWindow(IWindow* pWnd) = 0;

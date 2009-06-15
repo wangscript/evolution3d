@@ -18,10 +18,12 @@
 #ifndef  __XWINDOW_MSG_H__
 #define  __XWINDOW_MSG_H__
 #include "xVirtualKey.h"
+#include "../BaseLib/xEvol3DAPI.h"
+BEGIN_NAMESPACE_XEVOL3D
 //------------------------------------------------------------------------------------------
 //消息的定义．
 //第一部分．窗口消息
-enum eXrMessageID
+enum eMsgID
 {
 	WIN_CREATE          =   1001,
 	WIN_INIT_UPDATE     =   1002,
@@ -76,34 +78,34 @@ enum eXrMessageID
 #define IsKeybdMsg(id) (id >= WIN_KEYDOWN && id <= WIN_CHAR)
 
 //------------------------------------------------------------------------------------------
-enum eXrMsgType
+enum eBaseMsgType
 {
 	XMT_System      ,
 	XMT_Application ,
 };
 
-struct sXrMouseMsg
+struct xMouseMsg
 {
-	eXrMessageID eMsgID;
+	eMsgID      MsgID;
 	int         x;
 	int         y;
 	int         nParam;
 	int         nValue;
 };
 
-struct sXrKeyboardMsg
+struct xKeyboardMsg
 {
-	eXrMessageID   eMsgID;
+	eMsgID         MsgID;
 	VIRTUAL_KEY    nKey;
 	bool           bIsCharKey;
 	char           cKeyChar;
-	wchar_t		   nSysVKey;
+	wchar_t        nSysVKey;
 	int            nScanCode;
 };
 
-struct sXrCommonMsg
+struct xCommonMsg
 {
-	eXrMessageID	eMsgID;
+	eMsgID	eMsgID;
 	union
 	{
 		struct 
@@ -121,15 +123,15 @@ struct sXrCommonMsg
 };
 
 
-struct sXrBaseMsg
+struct xBaseWindowMsg
 {
 public:
 	union
 	{
-		eXrMessageID	eMsgID;
-		sXrCommonMsg	Common;
-		sXrKeyboardMsg	Keyboard;
-		sXrMouseMsg		Mouse; 
+		eMsgID	      MsgID;
+		xCommonMsg	      Common;
+		xKeyboardMsg	Keyboard;
+		xMouseMsg		Mouse; 
 	};
 
 	struct _sSysMsg
@@ -140,7 +142,7 @@ public:
 		int             hWnd;
 	}sSysMsg;
 
-	eXrMsgType          eMsgType;
+	eBaseMsgType          eMsgType;
 };
 
 //------------------------------------------------------------------------------------------
@@ -153,4 +155,5 @@ public:
 #define WIN_STYLE_RENDERABLE  0x00000010
 //------------------------------------------------------------------------------------------
 
+END_NAMESPACE_XEVOL3D
 #endif

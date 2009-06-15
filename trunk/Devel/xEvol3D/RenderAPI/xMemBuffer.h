@@ -23,9 +23,9 @@ struct xInputBufferDesc
 {
      eResourceUsage       m_usage;
 	 eResourceAccessFlage m_accessFlage;
-	 eResourceBindType         m_bindtype;//Vertex Buffer or Index buffer;
-	 bool                    m_bShared;//Shared between two device;
-	 bool                    m_bCreateBuffer;
+	 eResourceBindType    m_bindtype;//Vertex Buffer or Index buffer;
+	 bool                 m_bShared;//Shared between two device;
+	 bool                 m_bCreateBuffer;
 public:
 	 xInputBufferDesc()
 	 {
@@ -126,7 +126,8 @@ public:
 	virtual const size_t            hash_name() const = 0;
 
 	//Create a group of input Buffers; 
-	virtual IVertexStream*   createVertexStream() = 0;
+	virtual IVertexStream*          createVertexStream() = 0;
+    virtual xInputLayoutDesc&       layoutDesc() = 0;
 };
 
 END_NAMESPACE_XEVOL3D

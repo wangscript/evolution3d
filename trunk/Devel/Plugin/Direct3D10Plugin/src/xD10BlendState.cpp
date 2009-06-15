@@ -1,7 +1,7 @@
 #include "xD10BlendState.h"
 #include "xD10ConstLexer.h"
 #include "xDirect3D10API.h"
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xD10BlendState  , IBlenderState);
 bool xD10BlendState::_destory()
@@ -17,7 +17,7 @@ float* xD10BlendState::factor()
 	return (float*)&m_color;
 }
 
-bool xD10BlendState::_load(xCfgNode* node)
+bool xD10BlendState::_load(xXmlNode* node)
 {
 	/*
 	<?xml version ="1.0" encoding="unicode" ?>
@@ -43,7 +43,7 @@ bool xD10BlendState::_load(xCfgNode* node)
 	desc.SrcBlendAlpha  = D3D10_BLEND_ONE;
 	desc.DestBlendAlpha = D3D10_BLEND_ZERO;
 	desc.BlendOpAlpha   = D3D10_BLEND_OP_ADD;
-	xCfgNode* pNode = node->findNode(L"color");
+	xXmlNode* pNode = node->findNode(L"color");
 	if(pNode)
 	{
 		desc.SrcBlend  = xD10ConstLexer::GetBlendFactor(pNode->value(L"src"));
@@ -73,11 +73,11 @@ bool xD10BlendState::_load(xCfgNode* node)
 		m_color.a = pNode->float_value(L"a");
 	}
 
-	xCfgNode::CfgNodes nodes;
+	xXmlNode::XmlNodes nodes;
 	node->findNode(L"rendertarget",nodes);
 	for(size_t i = 0 ; i < nodes.size() ; i ++)
 	{
-		xCfgNode* pRTNode = nodes[i];
+		xXmlNode* pRTNode = nodes[i];
 		int  idx = pRTNode->int_value(L"index");
 		bool bEnable = pRTNode->bool_value(L"blend");
 		int  mask    = pRTNode->hex_value(L"write");
@@ -103,7 +103,7 @@ xD10BlendState::~xD10BlendState()
 
 bool xD10BlendState::load(const wchar_t* fileName , unsigned long  arg)
 {
-	xCfgDocument doc;
+	xXmlDocument doc;
 	if(false == doc.load(fileName , true) )
 		return false;
 	return _load(doc.root() );
@@ -113,7 +113,7 @@ bool xD10BlendState::load(const wchar_t* fileName , const unsigned int8* buf , s
 {
 	if(buf == 0 || bufLen == 0)
 		return load(fileName , arg);
-	xCfgDocument doc;
+	xXmlDocument doc;
 	if(false == doc.load((const wchar_t* )buf, bufLen ,  true) )
 		return false;
 	return _load(doc.root() );

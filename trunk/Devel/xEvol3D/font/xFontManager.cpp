@@ -72,35 +72,35 @@ void   xFontLoader::unload()
 
 bool xFontLoader::load(const wchar_t* cfgFile)
 {
-	xCfgDocument fontCfgDoc;
+	xXmlDocument fontCfgDoc;
 	if( false == fontCfgDoc.load( cfgFile ) )
 		return false;
 	
-	xCfgNode* font_cfg = fontCfgDoc.root();
+	xXmlNode* font_cfg = fontCfgDoc.root();
 	load(font_cfg);
 	fontCfgDoc.unload();
 	return true;
 }
 
-bool xFontLoader::load(xCfgNode* pXMLNode)
+bool xFontLoader::load(xXmlNode* pXMLNode)
 {
-	xCfgNode*	freeTypeNode = pXMLNode->findNode(L"freetype",0);
+	xXmlNode*	freeTypeNode = pXMLNode->findNode(L"freetype",0);
 	if(freeTypeNode)
 	{
-		xCfgNode::CfgNodes  familyNodes;
+		xXmlNode::XmlNodes  familyNodes;
 		freeTypeNode->findNode(L"family",familyNodes);
 		for(size_t i = 0 ; i < familyNodes.size() ; i ++)
 		{
-			xCfgNode* pFamillyNode = familyNodes[i];
+			xXmlNode* pFamillyNode = familyNodes[i];
 			load_familly(pFamillyNode);
 		}
 	}
 
-	xCfgNode::CfgNodes  mixedNodes;
+	xXmlNode::XmlNodes  mixedNodes;
 	pXMLNode->findNode(L"mixed",mixedNodes);
 	for(size_t i = 0 ; i < mixedNodes.size() ; i ++)
 	{
-		xCfgNode* pMixedNode = mixedNodes[i];
+		xXmlNode* pMixedNode = mixedNodes[i];
 		load_mixed(pMixedNode);
 	}
 
@@ -133,7 +133,7 @@ void xFontLoader::endFontRender()
 从一个配置文件的节点开始加载一组字体
 配置文件结构为
 
-<Root/or xCfgDocument>
+<Root/or xXmlDocument>
     <family>
 	   <font> </font>
     </family>
@@ -230,13 +230,13 @@ xFontRender*  xFontLoader::insertMixed(const wchar_t* pFontName ,  const wchar_t
 	return pMixedFont;
 }
 
-bool   xFontLoader::load_mixed(xCfgNode* pNode)
+bool   xFontLoader::load_mixed(xXmlNode* pNode)
 {
-	xCfgNode::CfgNodes  fontNodes;
+	xXmlNode::XmlNodes  fontNodes;
 	pNode->findNode(L"font",fontNodes);
 	for(size_t i = 0  ; i < fontNodes.size() ; i++)
 	{
-		xCfgNode* pFontNode = fontNodes[i];
+		xXmlNode* pFontNode = fontNodes[i];
 
 		const  wchar_t*  pFontName = pFontNode->value(L"name");
 		const  wchar_t*  pUSCFontName  = pFontNode->value(L"unicode");
@@ -253,12 +253,12 @@ bool   xFontLoader::load_mixed(xCfgNode* pNode)
 		insertMixed(pFontName , pUSCFontName , pAsciiFontName , filter , line_pitch ,nMaxCache);
 	}
 
-	xCfgNode::CfgNodes  aliasNodes;
+	xXmlNode::XmlNodes  aliasNodes;
 	pNode->findNode(L"alias",aliasNodes);
 	//处理link
 	for(size_t i = 0  ; i < aliasNodes.size() ; i++)
 	{
-		xCfgNode* pFontNode = aliasNodes[i];
+		xXmlNode* pFontNode = aliasNodes[i];
 		const  wchar_t*  pFontName  =  pFontNode->value(L"name");
 		const  wchar_t*  pLinkFontName  = pFontNode->value(L"link");
 		//没有link字体。错误
@@ -277,7 +277,7 @@ bool   xFontLoader::load_mixed(xCfgNode* pNode)
 /*
 加载一种family的字体族
 */
-bool   xFontLoader::load_familly(xCfgNode* pFamillyNode)
+bool   xFontLoader::load_familly(xXmlNode* pFamillyNode)
 {
 	if(pFamillyNode->findValue(L"type") == NULL)
 	{
@@ -448,9 +448,9 @@ xFontRender* xFontLoader::insertTrueType(const wchar_t* familly, const wchar_t* 
     return NULL;
 }
 
-bool   xFontLoader::__load_truetype_familly(xCfgNode* pFamillyNode)
+bool   xFontLoader::__load_truetype_familly(xXmlNode* pFamillyNode)
 {
-	xCfgNode::CfgNodes  fontNodes;
+	xXmlNode::XmlNodes  fontNodes;
 	pFamillyNode->findNode(L"font",fontNodes);
 	const wchar_t* pFontFile = pFamillyNode->value(L"file");
 	
@@ -461,7 +461,7 @@ bool   xFontLoader::__load_truetype_familly(xCfgNode* pFamillyNode)
 	//处理非缩放过的字体
 	for(size_t i = 0  ; i < fontNodes.size() ; i++)
 	{
-		xCfgNode* pFontNode = fontNodes[i];
+		xXmlNode* pFontNode = fontNodes[i];
 
 		//字体为缩放的字体，
 		const  wchar_t*  pFontName = pFontNode->value(L"name");

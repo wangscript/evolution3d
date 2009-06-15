@@ -1,0 +1,6 @@
+#include "./../../DotNet/Evol3D.Net/xDotNetUlti.h"
+//#include "./../../DotNet/Evol3D.Net/xnCfgParser.h"
+//#include "./../../DotNet/Evol3D.Net/xnMath.h"
+//#include "./../../DotNet/Evol3D.Net/xnModel.h"
+//#include "./../../DotNet/Evol3D.Net/xnRenderApi.h"
+//#include "./../../DotNet/Evol3D.Net/xnRenderer.h"

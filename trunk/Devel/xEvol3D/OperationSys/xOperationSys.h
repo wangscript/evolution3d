@@ -5,14 +5,6 @@
 #include "../Application/xVirtualKey.h"
 
 #define XEVOL_MAX_PATH 512
-#ifdef _WIN32
-#define PATH_SPLITTER '\\'
-#endif
-
-#ifdef _LINUX
-#define PATH_SPLITTER '/'
-
-#endif
 
 BEGIN_NAMESPACE_XEVOL3D
 //Operation System API
@@ -118,10 +110,13 @@ public:
 	void			  unInit();
 	std::ds_wstring   getAbsPath(const wchar_t* _relPath);
 	std::ds_wstring   getPath(const wchar_t* _filename);
+	std::ds_wstring   getRelatePath(const wchar_t* _filename);
+	std::ds_wstring   getRelatePath(const wchar_t* _filename , const wchar_t* basePath);
 	const wchar_t*    getWorkPath();
 	const wchar_t*    getAppPath();
 	void			  setCursorStyle(int nStyle);
 	void              enableConsole();
+	void              convertSystemFileName(std::ds_wstring& _fileName);
     const wchar_t*    name();
 	//Implement OS dependent;
 public:
@@ -143,8 +138,9 @@ public:
 	int             messageBox(const wchar_t* message , const wchar_t* title);
 };
 
-#define _ABSPATH(_path) ( xOperationSys::singleton()->getAbsPath((_path)).c_str() )
-
+#define _ABSPATH(_path)    ( xOperationSys::singleton()->getAbsPath( (_path)).c_str() )
+#define _RELATEPATH(_path) ( xOperationSys::singleton()->getRelatePath((_path)).c_str() )
+#define _RELATEPATH2(_path , _basePath) ( xOperationSys::singleton()->getRelatePath((_path) , (_basePath) ).c_str() )
 END_NAMESPACE_XEVOL3D
 
 #endif

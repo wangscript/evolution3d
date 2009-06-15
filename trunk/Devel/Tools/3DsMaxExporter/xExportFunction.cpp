@@ -4,7 +4,7 @@
 #include "xcomdoc/xcomdoc.h"
 #include "MaxMeshNode.h"
 #include "xExportFunction.h"
-#include "xCfgParser.h"
+#include "xXmlDocument.h"
 
 void  CModelBaseExportor::export_mesh_data(xMeshData& meshData , wstring& mesh_dir , xcomdoc& doc , sSkeletonID_t&  sid  , bool SkinMesh , bool bTextMode )
 {
@@ -67,9 +67,9 @@ bool  CModelBaseExportor::exportMeshDescToStreamAsXML( wstring mesh_dir , xcomdo
 	sMeshDesc_t* pDesc = meshData.m_pMeshDesc;
 	pDesc->m_nVertex = (int)meshData.m_VertexData.m_Positons.size();
 
-	xCfgDocument xmlDoc ;
+	xXmlDocument xmlDoc ;
 	xmlDoc.setXMLStyle(true);
-	xCfgNode* pRootNode = xmlDoc.insertNode(L"mesh");
+	xXmlNode* pRootNode = xmlDoc.insertNode(L"mesh");
 	{
 		pRootNode->setValue(L"name"      , pDesc->m_Name);
 		pRootNode->setValue(L"nSubMesh"  , pDesc->m_nSubMesh);
@@ -79,13 +79,13 @@ bool  CModelBaseExportor::exportMeshDescToStreamAsXML( wstring mesh_dir , xcomdo
 	}
 
 	{
-		xCfgNode* pSidNode = pRootNode->insertNode(L"skeleton");
+		xXmlNode* pSidNode = pRootNode->insertNode(L"skeleton");
 		pSidNode->setValue(L"LoID" , sid.m_HiWord);
 		pSidNode->setValue(L"HiID" , sid.m_LoWord);
 	}
 
 	{
-		xCfgNode* pFurNode = pRootNode->insertNode(L"fur");
+		xXmlNode* pFurNode = pRootNode->insertNode(L"fur");
 		pFurNode->setValue(L"furShellHeight" , pDesc->m_FurInfo.m_furShellHeight);
 		pFurNode->setValue(L"furLevel"       , pDesc->m_FurInfo.m_furLevel);
 		pFurNode->setValue(L"isFur"          , pDesc->m_FurInfo.m_isFur);
@@ -94,7 +94,7 @@ bool  CModelBaseExportor::exportMeshDescToStreamAsXML( wstring mesh_dir , xcomdo
 	}
 	for(int i = 0 ; i < pDesc->m_nSubMesh ; i ++)
 	{
-		xCfgNode* pSubNode = pRootNode->insertNode(L"submesh");
+		xXmlNode* pSubNode = pRootNode->insertNode(L"submesh");
 		pSubNode->setValue(L"nFace"    , pDesc->m_SubMesh[i].m_nFace);
 		pSubNode->setValue(L"nMatIndex", pDesc->m_SubMesh[i].m_nMatIndex);
 	}
@@ -134,17 +134,17 @@ bool  CModelBaseExportor::exportFaceToStreamAsXML( wstring mesh_dir , xcomdoc& d
 {
 	wstring mesh_face_file = mesh_dir + L"/face.xml";
 	xcomdocstream* pFaceStream = doc.create_stream(mesh_face_file.c_str());
-	xCfgDocument xmlDoc ;
+	xXmlDocument xmlDoc ;
 	xmlDoc.setXMLStyle(true);
 
-	xCfgNode* pRootNode = xmlDoc.insertNode(L"Mesh");
+	xXmlNode* pRootNode = xmlDoc.insertNode(L"Mesh");
 	pRootNode->setValue(L"nIndexBuffer" , meshData.m_IndexBuffers.size() );
 	pRootNode->setValue(L"name"         , mesh_dir.c_str() );
 	for(size_t i = 0 ; i < meshData.m_IndexBuffers.size() ; ++i )
 	{
 		sFace_t* index_buffer  = meshData.m_IndexBuffers[i];
 		wchar_t index[32]={0};swprintf(index , L"idx-%d",i);
-		xCfgNode* pSubMeshNode = pRootNode->insertNode(index);
+		xXmlNode* pSubMeshNode = pRootNode->insertNode(index);
 		pSubMeshNode->setValue(L"index",i);
 		pSubMeshNode->setValue(L"nFace",meshData.m_pMeshDesc->m_SubMesh[i].m_nFace);
 		pSubMeshNode->setValue(L"nMatIndex",meshData.m_pMeshDesc->m_SubMesh[i].m_nMatIndex);
@@ -152,7 +152,7 @@ bool  CModelBaseExportor::exportFaceToStreamAsXML( wstring mesh_dir , xcomdoc& d
 		for(int j = 0 ;  j < nFace ; j ++ )
 		{
 			wchar_t index[32]={0};swprintf(index , L"idx-%d",j);
-			xCfgNode* pFaceNode = pSubMeshNode->insertNode(index);
+			xXmlNode* pFaceNode = pSubMeshNode->insertNode(index);
 			sFace_t& _face =  index_buffer[j];
 			pFaceNode->setValue(L"A",_face.vert[0]);
 			pFaceNode->setValue(L"B",_face.vert[1]);
@@ -188,8 +188,8 @@ bool  CModelBaseExportor::exportMaterialToStream(wstring mesh_dir , xcomdoc& doc
 	wstring mesh_matxml_file = mesh_dir + L"/material.xml";
 	xcomdocstream* pMatXMLStream = doc.create_stream(mesh_matxml_file.c_str());
 
-	xCfgDocument xml;
-	xCfgNode* rootNode = xml.insertNode(L"materials");
+	xXmlDocument xml;
+	xXmlNode* rootNode = xml.insertNode(L"materials");
 	wchar_t* pMaterialName =  (wchar_t*)meshData.m_MatName.c_str();
 	wchar_t matScriptName[64]= L"simple";
 	int id;
@@ -203,13 +203,13 @@ bool  CModelBaseExportor::exportMaterialToStream(wstring mesh_dir , xcomdoc& doc
 	for(size_t i = 0 ; i < meshData.m_Materials.size() ; ++i)
 	{
 		sMaxMatrial_t& mat = meshData.m_Materials[i];
-		xCfgNode* matNode = rootNode->insertNode(L"material");
+		xXmlNode* matNode = rootNode->insertNode(L"material");
 		matNode->setValue(L"index" , (int)i);
 		matNode->setValue(L"nTexture" , (int) mat.m_TexLayers.size() );
 		matNode->setValue(L"matscript", L"simple");
 		for(size_t j = 0 ; j < mat.m_TexLayers.size(); ++j)
 		{
-			xCfgNode* texNode = matNode->insertNode(L"texture");
+			xXmlNode* texNode = matNode->insertNode(L"texture");
 			texNode->setValue(L"image"  , mat.m_TexLayers[j].m_MTL.m_TexName);
 			texNode->setValue(L"channel", mat.m_TexLayers[j].m_MTL.m_UVChannel);
 		}
@@ -244,14 +244,14 @@ bool  CModelBaseExportor::exportWeightToStream(wstring mesh_dir , xcomdoc& doc ,
 bool  CModelBaseExportor::exportWeightToStreamAsXML(wstring mesh_dir , xcomdoc& doc , xMeshData& meshData , int compress_rate)
 {
     int nVert = (int)meshData.m_VertexData.m_Positons.size();
-	xCfgDocument xml;
-	xCfgNode* rootNode = xml.insertNode(L"MeshWeight");
+	xXmlDocument xml;
+	xXmlNode* rootNode = xml.insertNode(L"MeshWeight");
 	rootNode->setValue(L"nVertex",nVert);
 	for(int i = 0 ; i <  nVert ; ++i )
 	{
 		sWeightedVertex_t & v = meshData.m_VertexData.m_VertexWeights[i];
 		wchar_t index[32]={0};swprintf(index , L"idx-%d",i);
-		xCfgNode* pVertexNode = rootNode->insertNode(index);
+		xXmlNode* pVertexNode = rootNode->insertNode(index);
 		pVertexNode->setValue(L"x" , v.m_InitPos.x);
 		pVertexNode->setValue(L"y" , v.m_InitPos.x);
 		pVertexNode->setValue(L"z" , v.m_InitPos.x);
@@ -260,7 +260,7 @@ bool  CModelBaseExportor::exportWeightToStreamAsXML(wstring mesh_dir , xcomdoc& 
 		{
 			sVertWeight_t w = v.m_BoneWeights[j];
 			wchar_t index[32]={0};swprintf(index , L"idx-%d",j);
-			xCfgNode* pWeiNode = pVertexNode->insertNode(index);
+			xXmlNode* pWeiNode = pVertexNode->insertNode(index);
 			pWeiNode->setValue(L"boneID" , w.m_BoneID);
 			pWeiNode->setValue(L"boneIndex" , w.m_BoneIndex);
 			pWeiNode->setValue(L"weight" , w.m_fWeight);	
@@ -283,14 +283,14 @@ bool  CModelBaseExportor::exportWeightToStreamAsXML(wstring mesh_dir , xcomdoc& 
 bool  CModelBaseExportor::_export_svectorsAsXML(sVectors_t& vec , xcomdoc& doc , wstring mesh_dir , wstring stream_name , wstring rootNode_name , int compress_rate)
 {
 	int nVert = (int)vec.size();
-	xCfgDocument xml;
-	xCfgNode* rootNode = xml.insertNode(rootNode_name.c_str());
+	xXmlDocument xml;
+	xXmlNode* rootNode = xml.insertNode(rootNode_name.c_str());
 	rootNode->setValue(L"nVertex",nVert);
 	for(int i = 0 ; i <  nVert ; ++i )
 	{
 		sVector_t& v = vec[i];
 		wchar_t index[32]={0};swprintf(index , L"idx-%d",i);
-		xCfgNode* pVecNode = rootNode->insertNode(index);
+		xXmlNode* pVecNode = rootNode->insertNode(index);
 		pVecNode->setValue(L"x" , v.x);
 		pVecNode->setValue(L"y" , v.y);
 		pVecNode->setValue(L"z" , v.z);
@@ -343,14 +343,14 @@ bool  CModelBaseExportor::exportDiffuseToStream(wstring mesh_dir , xcomdoc& doc 
 bool  CModelBaseExportor::exportDiffuseToStreamAsXML(wstring mesh_dir , xcomdoc& doc , xMeshData& meshData, int compress_rate)
 {
 	int nVert = (int)meshData.m_VertexData.m_Positons.size();
-    xCfgDocument xml;
-	xCfgNode* rootNode = xml.insertNode(L"MeshColor");
+    xXmlDocument xml;
+	xXmlNode* rootNode = xml.insertNode(L"MeshColor");
 	rootNode->setValue(L"nVertex",nVert);
 	for(int i = 0 ; i <  nVert ; ++i )
 	{
 		sColor_t & cl = meshData.m_VertexData.m_Diffuses[i];
 		wchar_t index[32]={0};swprintf(index , L"idx-%d",i);
-		xCfgNode* pVecNode = rootNode->insertNode( index );
+		xXmlNode* pVecNode = rootNode->insertNode( index );
 		pVecNode->setValue(L"r" , cl.r);
 		pVecNode->setValue(L"g" , cl.g);
 		pVecNode->setValue(L"b" , cl.b);
@@ -396,15 +396,15 @@ bool  CModelBaseExportor::exportUVChannelToStreamAsXML(wstring mesh_dir , xcomdo
 	int nVert = (int)meshData.m_VertexData.m_Positons.size();
 	for(int iUVCh = 0 ; iUVCh < meshData.m_VertexData.m_nUVChannes ; ++iUVCh )
 	{
-		xCfgDocument xml;
-		xCfgNode* rootNode = xml.insertNode(L"MeshUV");
+		xXmlDocument xml;
+		xXmlNode* rootNode = xml.insertNode(L"MeshUV");
 		rootNode->setValue(L"nVertex",nVert);
 		rootNode->setValue(L"nMapChanel",iUVCh);
 		for(int i = 0 ; i <  nVert ; ++i )
 		{
 			sUVCoord_t & uv = meshData.m_VertexData.m_UVChannels[iUVCh][i];
 			wchar_t index[32]={0};swprintf(index , L"idx-%d",i);
-			xCfgNode* pUVNode = rootNode->insertNode( index );
+			xXmlNode* pUVNode = rootNode->insertNode( index );
 			pUVNode->setValue(L"u" , uv.u);
 			pUVNode->setValue(L"v" , uv.v);
 		}

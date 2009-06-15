@@ -1,7 +1,7 @@
 #include "xD10RazState.h"
 #include "xD10ConstLexer.h"
 #include "xDirect3D10API.h"
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xD10RazState  , IRasterizerState);
 bool xD10RazState::_destory()
@@ -13,7 +13,7 @@ bool xD10RazState::_destory()
 }
 
 
-bool xD10RazState::_load(xCfgNode* node)
+bool xD10RazState::_load(xXmlNode* node)
 {
 
 
@@ -42,7 +42,7 @@ bool xD10RazState::_load(xCfgNode* node)
 	if(front == L"ccw") desc.FrontCounterClockwise = true;
 	else desc.FrontCounterClockwise = false;
 
-	xCfgNode* pNode = node->findNode(L"depthbias");
+	xXmlNode* pNode = node->findNode(L"depthbias");
 	if(pNode)
 	{
 		desc.DepthBias             = pNode->int_value(L"value");
@@ -74,7 +74,7 @@ xD10RazState::~xD10RazState()
 
 bool xD10RazState::load(const wchar_t* fileName , unsigned long  arg)
 {
-	xCfgDocument doc;
+	xXmlDocument doc;
 	if(false == doc.load(fileName , true) )
 		return false;
 	return _load(doc.root() );
@@ -84,7 +84,7 @@ bool xD10RazState::load(const wchar_t* fileName , const unsigned int8* buf , siz
 {
 	if(buf == 0 || bufLen == 0)
 		return load(fileName , arg);
-	xCfgDocument doc;
+	xXmlDocument doc;
 	if(false == doc.load((const wchar_t* )buf, bufLen ,  true) )
 		return false;
 	return _load(doc.root() );

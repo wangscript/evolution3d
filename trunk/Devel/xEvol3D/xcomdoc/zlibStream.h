@@ -111,11 +111,11 @@ public:
 	}
 	int    get_file_read_pos()
 	{
-		return m_DiskFile->tellg();
+		return (int)m_DiskFile->tell();
 	}
 	void   set_file_read_pos(int pos)
 	{
-		m_DiskFile->seekg(pos,ios::beg);
+        m_DiskFile->seek(pos,std::ios_base::beg);
 	}
 	void   set_stream(_xcd_int8* /*read_buf*/,int /*beginPos*/, int /*len*/,int /*compressedLen*/)
 	{
@@ -136,7 +136,7 @@ public:
 
 	void   rewind();
 	int    read(_xcd_int8* buf, int byte_read);
-	void   seekg(int _offset, ios::seekdir dir);
+    void   seekg(int _offset, std::ios_base::seekdir dir);
 	int    tellg();
 	int    data_len();
 	void   close();

@@ -7,7 +7,7 @@ xD102DRectEnv::xD102DRectEnv(xD3D10RenderApi* pApi)
 {
 	m_pVertexStream = NULL;
 	m_pIdxBuffer = NULL;
-	for(int i = 0 ; i < MAX_UV_CHANEL ; i ++)
+	for(int i = 0 ; i <= MAX_UV_CHANEL ; i ++)
 	{
 		m_pAss[i] = NULL;
 	}
@@ -19,7 +19,7 @@ xD102DRectEnv::~xD102DRectEnv()
 {
 	m_pVertexStream->ReleaseObject();
 	m_pIdxBuffer->ReleaseObject();
-	for(int i = 0 ; i < MAX_UV_CHANEL ; i ++)
+	for(int i = 0 ; i <= MAX_UV_CHANEL ; i ++)
 	{
 		m_pAss[i]->ReleaseObject();
 	}
@@ -33,7 +33,7 @@ float xD102DRectEnv::zValue()
 
 bool xD102DRectEnv::create()
 {
-	for(int i = 1 ; i < MAX_UV_CHANEL + 1; i ++)
+	for(int i = 0 ; i <= MAX_UV_CHANEL; i ++)
 	{
 		xInputLayoutDesc InputDesc;
 		InputDesc.addElement(SHADER_SEMANTIC_POSITION     , SHADERVARTYPE_FLOAT4);
@@ -45,10 +45,10 @@ bool xD102DRectEnv::create()
 		InputDesc.addBufferDesc(RESOURCE_USAGE_DEFAULT , RESOURCE_ACCESS_NONE);
 		wchar_t _iisName[16] = {0};
 		wsprintf(_iisName , L"xD10Rect%d" , i);
-		m_pAss[i - 1] = m_pRenderApi->createInputAssembler(_iisName, InputDesc);
+		m_pAss[i] = m_pRenderApi->createInputAssembler(_iisName, InputDesc);
 	}
 
-	m_pVertexStream = m_pAss[MAX_UV_CHANEL - 1]->createVertexStream();
+	m_pVertexStream = m_pAss[MAX_UV_CHANEL]->createVertexStream();
 
 	unsigned int indices[6] =
 	{
@@ -76,6 +76,7 @@ xD102DRect::xD102DRect(xD102DRectEnv*  pRectEnv)
 		m_Texture[i] = NULL;
 	}
 	m_pVertexBuffer = NULL;
+    m_pInputAss = NULL;
 	m_cl = xColor_4f(1.0f,1.0f,1.0f,1.0f);
 	create();
 }
@@ -190,7 +191,11 @@ void xD102DRect::create()
 
 void xD102DRect::setUVChanel(int iUVChanel)
 {
-	m_nUVChanel = m_nUVChanel;
+    if(m_pInputAss && m_nUVChanel == iUVChanel)
+        return ;
+
+    XSAFE_RELEASEOBJECT(m_pInputAss);
+	m_nUVChanel = iUVChanel;
 	wchar_t _iisName[16] = {0};
 	wsprintf(_iisName , L"xD10Rect%d" , iUVChanel );
 	m_pInputAss = m_pRectEnv->m_pRenderApi->getInputAssembler(_iisName);
@@ -208,6 +213,7 @@ xD102DRect::~xD102DRect()
 		m_pVertexBuffer->KillObject();
 	}
 	m_pVertexBuffer = NULL;
+    XSAFE_RELEASEOBJECT(m_pInputAss);
 	return ;	
 }
 

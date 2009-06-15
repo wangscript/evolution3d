@@ -65,22 +65,22 @@ IL_IMAGE_FILTER GetILFilter(IMAGE_FILTER filter)
 {
 	switch(filter)
 	{
-	case FILTER_BOX:
+	case eFILTER_BOX:
 		return IL_FILTER_SCALE_BOX;
 		break;
-	case FILTER_BICUBIC:
+	case eFILTER_BICUBIC:
 		return IL_FILTER_SCALE_TRIANGLE;
 		break;	  
-	case FILTER_BILINEAR:
+	case eFILTER_BILINEAR:
 		return IL_FILTER_BILINEAR;
 		break;   
-	case FILTER_BSPLINE	:
+	case eFILTER_BSPLINE	:
 		return IL_FILTER_SCALE_BSPLINE;
 		break;  
-	case FILTER_CATMULLROM :
+	case eFILTER_CATMULLROM :
 		return IL_FILTER_SCALE_MITCHELL;
 		break;
-	case FILTER_LANCZOS3:
+	case eFILTER_LANCZOS3:
 		return IL_FILTER_SCALE_LANCZOS3;
 		break;
 	default:

@@ -377,6 +377,14 @@
 				RelativePath=".\src\xD10Sampler.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\xD10TLEnviroment.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\xD10TLEnviroment.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

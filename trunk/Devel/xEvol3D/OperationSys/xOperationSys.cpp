@@ -36,6 +36,29 @@ xOperationSys* xOperationSys::singleton()
 	return g_OS;
 }
 
+std::ds_wstring xOperationSys::getRelatePath(const wchar_t* _filename)
+{
+      return getRelatePath( _filename , getAppPath() );
+}
+
+std::ds_wstring xOperationSys::getRelatePath(const wchar_t* _filename , const wchar_t* _basePath)
+{
+	std::ds_wstring fileName = _filename;
+	std::ds_wstring basePath = _basePath;
+	convertSystemFileName(fileName);
+	convertSystemFileName(basePath);
+	if(basePath[basePath.length() - 1] != PATH_SPLITTER )
+	{
+		basePath.push_back(PATH_SPLITTER);
+	}
+
+	std::ds_wstring::size_type pos = fileName.find(basePath);
+	if(pos != 0)
+		return L"";
+	std::ds_wstring ret = fileName.c_str() + basePath.length();;
+	return ret;
+}
+
 static std::wstring _GetFilePath(const wchar_t* appName)
 {
 	std::wstring _filePath = L"";

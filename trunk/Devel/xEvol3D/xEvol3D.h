@@ -6,12 +6,12 @@ BEGIN_NAMESPACE_XEVOL3D
 class _XEVOL_BASE_API_ IPlatform;
 class _XEVOL_BASE_API_ IWindow;
 class _XEVOL_BASE_API_ IRenderApi;
-class _XEVOL_BASE_API_ xCfgDocument;
+class _XEVOL_BASE_API_ xXmlDocument;
 class _XEVOL_BASE_API_ IApplication;
 class _XEVOL_BASE_API_ xEvol3DEngine
 {
 protected:
-	xCfgDocument*    m_cfgDocument;
+	xXmlDocument*    m_cfgDocument;
 	IPlatform*       m_platform;
 	IWindow*         m_pWindow ;
 	IRenderApi*      m_pRenderApi;

@@ -5,7 +5,9 @@ IMPL_BASE_OBJECT_CLASSID(xCoreMesh  , IBaseResource);
 
 
 xCoreMesh::xCoreMesh(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr , bool bSusMemCopy)
+:IRenderOtherRes(pRenderApi)
 {
+    m_RefCount = 1;
 	m_pRenderApi = pRenderApi;
 	m_pTexMgr    = pTexMgr;
 }
@@ -127,22 +129,22 @@ bool xCoreMesh::loadMaterial(xcomdoc& doc , const wchar_t* _dir)
 
 	xcomdocstream* pMatStream = doc.open_stream(matXMLName.c_str() );
 	xcdstream  _in(pMatStream);
-	xCfgDocument xml;
+	xXmlDocument xml;
 	xml.load(_in);
 	_in.close();
 	doc.close_stream(pMatStream);
 
-	xCfgNode* pRootNode = xml.root();
+	xXmlNode* pRootNode = xml.root();
 	if(pRootNode == NULL)
 		return false;
 
-	xCfgNode::CfgNodes nodes;
+	xXmlNode::XmlNodes nodes;
 	pRootNode->findNode(L"material" , nodes);
 	for(size_t i = 0 ; i < nodes.size() ; i ++)
 	{
-		xCfgNode* pMatNode = nodes[i];
+		xXmlNode* pMatNode = nodes[i];
 		xMeshMaterial mat;
-		xCfgNode::CfgNodes texNodes;
+		xXmlNode::XmlNodes texNodes;
 		pMatNode->findNode(L"texture" , texNodes);
 		for(size_t iTex = 0; iTex < texNodes.size() ; iTex ++)
 		{
@@ -179,12 +181,12 @@ bool xCoreMesh::load(xcomdoc& doc , const wchar_t* _dir , unsigned int arg)
 	if(pdescstream == NULL)
 		return false;
 	xcdstream  _in(pdescstream);
-	xCfgDocument xml;
+	xXmlDocument xml;
 	xml.load(_in);
 	_in.close();
 	doc.close_stream(pdescstream);
 
-	xCfgNode* pRootNode = xml.root();
+	xXmlNode* pRootNode = xml.root();
 	m_name     =pRootNode->value(L"name");
 	m_nFace    =pRootNode->int_value(L"nFace");
 	m_nVertex  =pRootNode->int_value(L"nVertex");
@@ -192,7 +194,7 @@ bool xCoreMesh::load(xcomdoc& doc , const wchar_t* _dir , unsigned int arg)
 	m_nUVMaps  =pRootNode->int_value(L"nUVMaps");
 	
 	//¹Ç¼ÜID
-    xCfgNode* pSkelNode = pRootNode->findNode(L"skeleton");
+    xXmlNode* pSkelNode = pRootNode->findNode(L"skeleton");
 	if(pSkelNode)
 	{
 		m_SkeltonID.m_HiWord = pSkelNode->int_value(L"HiID");
@@ -206,13 +208,13 @@ bool xCoreMesh::load(xcomdoc& doc , const wchar_t* _dir , unsigned int arg)
     
 	//¶ÁÈëSubMeshÐÅÏ¢
 	m_SubMeshs.resize(m_nSubMesh);
-	xCfgNode::CfgNodes subMeshNodes;
+	xXmlNode::XmlNodes subMeshNodes;
 	pRootNode->findNode(L"submesh", subMeshNodes);
 	assert(subMeshNodes.size() == m_nSubMesh);
 	for(int i = 0 ; i < m_nSubMesh ; i ++)
 	{
 		xSubMesh& subMesh      = m_SubMeshs[i];
-		xCfgNode* pSubMeshNode = subMeshNodes[i];
+		xXmlNode* pSubMeshNode = subMeshNodes[i];
 		subMesh.m_iMatIdx = pSubMeshNode->int_value(L"nMatIndex");
 		subMesh.m_nFace   = pSubMeshNode->int_value(L"nFace");
  	}

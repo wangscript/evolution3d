@@ -46,8 +46,8 @@ public:
 	void   free();
 	int    write(const _xcd_int8* buf,int byte_write);
 	int    read(_xcd_int8* buf, int byte_read);
-	void   seekg(int _offset, ios::seekdir dir);
-	void   seekw(int _offset, ios::seekdir dir);
+    void   seekg(int _offset, std::ios_base::seekdir dir);
+	void   seekw(int _offset, std::ios_base::seekdir dir);
 	int    tellg();
 	int    tellw();
 	_xcd_int8*  get_buf();

@@ -23,6 +23,29 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 BEGIN_NAMESPACE_XMATHLIB
 
+template <typename _Type> class TRect
+{
+public:
+      _Type x ;
+      _Type y ;
+      _Type w ;
+      _Type h ;
+public:
+      _Type right() {     return x + w;   }
+      _Type bottom(){     return y + h;   }
+      _Type top()   {     return y;       }
+      _Type left()  {     return x;       }
+      bool  PtInRect(_Type _x , _Type _y)
+      {
+            if( _x > left()  &&	_x < right() &&
+                  _y > top()   &&	_y < bottom() )
+            {
+                  return true;
+            }
+            return false;
+      }
+};
+
 template <typename _Type> class  _XEVOL_BASE_API_ TVec4
 {
 public:
@@ -33,6 +56,10 @@ public:
 	TVec4(const TVec3<_Type>& v, float _w = 1.0f){x = v.x ; y = v.y ; z = v.z ; 	w = _w ;	}
 	~TVec4(){};//Force a Null destorier
 public:
+      void setRect(_Type _x , _Type _y , _Type _w , _Type _h)
+      {
+            rect.x = _x ; rect.y = _y ; rect.w = _w ; rect.h = _h;
+      }
 	//-----------------------------------------------------
 	//
 	//-----------------------------------------------------
@@ -285,15 +312,8 @@ public://We set this data public is for easy access
 		{
 			_Type s,t,r,q;
 		};
-
-		struct 
-		{
-			_Type x;
-			_Type y;
-			_Type w;
-			_Type h;
-		}rect;
-		_Type v[4];
+		TRect<_Type> rect;
+		_Type        v[4];
 	};
 };
 

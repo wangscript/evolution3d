@@ -7,7 +7,6 @@ xArcBallDrawable::xArcBallDrawable()
 {
 	m_pVertexStream = NULL;
 	m_pIdxBuffer = NULL;
-	memset(&m_InputDesc , 0 , sizeof(xInputLayoutDesc) );
 	m_pAss = NULL;
 	m_pRenderApi = NULL;
 	m_pTexture = NULL;
@@ -15,6 +14,7 @@ xArcBallDrawable::xArcBallDrawable()
 
 	m_pMaskTexture = NULL;
 	m_pBlendState = NULL;
+    m_RefCount = 1;
 }
 
 xArcBallDrawable::~xArcBallDrawable()
@@ -30,6 +30,8 @@ bool xArcBallDrawable::init(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr)
 	};
 	m_Radios    = 1.0f;
 	m_nSegement = 64;
+
+	m_InputDesc.addElement(SHADER_SEMANTIC_POSITION , SHADERVARTYPE_FLOAT4);
 
 	int nPoint = 3 * (m_nSegement + 1);
 	SimpleVertex*  vertices = new SimpleVertex[ nPoint ] ;
@@ -65,7 +67,7 @@ bool xArcBallDrawable::init(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr)
 	void* initData[] = { vertices };
 	m_pRenderApi = pRenderApi;
 	int nStride = sizeof(SimpleVertex);
-	m_InputDesc.addElement(SHADER_SEMANTIC_POSITION , SHADERVARTYPE_FLOAT4);
+	
 	IInputAssembler* pAss = m_pRenderApi->createInputAssembler(L"LineArcBall",m_InputDesc);
 	m_pVertexStream = pAss->createVertexStream();
 	m_pVertexStream->createBuffers( nPoint , (void**)&initData, NULL );
@@ -103,7 +105,7 @@ bool xArcBallDrawable::begin()
 	return true;
 }
 
-void xArcBallDrawable::render(unsigned long passedTime)
+bool xArcBallDrawable::render(unsigned long passedTime)
 {
 	int nVertex =  (m_nSegement + 1);
 	m_pRenderApi->setVertexStream( m_pVertexStream );
@@ -112,7 +114,7 @@ void xArcBallDrawable::render(unsigned long passedTime)
 		m_pRenderApi->colorSelector()->setRenderObjSlaveID(i);
 	    m_pRenderApi->draw(m_pIdxBuffer , nVertex , i  * nVertex , ePrimtiveType_LineStrip );
 	}
-	return ;
+	return true;
 }
 
 bool xArcBallDrawable::end()

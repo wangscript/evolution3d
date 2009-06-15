@@ -3,12 +3,13 @@
 #include "../RenderAPI/xRenderAPI.h"
 #include "../XMathLib/XGeomLib.h"
 #include "../XMathLib/XGVolume.h"
-#include "xDrawableObject.h"
+#include "xDrawElement.h"
 BEGIN_NAMESPACE_XEVOL3D
 class _XEVOL_BASE_API_  IDrawableHelper : public IDrawableObject
 {
 public:
-	IMPL_BASE_OBJECT_CLASSID_INTERFACE(IDrawableHelper);
+	DECL_BASE_OBJECT_DLLSAFE(IDrawableHelper);
+      IDrawableHelper();
 	virtual ~IDrawableHelper(){};       
 	//used for culling
 	virtual bool  init(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr) = 0;

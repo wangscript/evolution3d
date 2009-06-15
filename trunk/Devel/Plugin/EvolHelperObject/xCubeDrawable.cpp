@@ -7,7 +7,6 @@ xCubeDrawable::xCubeDrawable()
 {
 	m_pVertexStream = NULL;
 	m_pIdxBuffer = NULL;
-	memset(&m_InputDesc , 0 , sizeof(xInputLayoutDesc) );
 	m_pAss = NULL;
 	m_pRenderApi = NULL;
 	m_pTexture = NULL;
@@ -15,6 +14,7 @@ xCubeDrawable::xCubeDrawable()
 
 	m_pMaskTexture = NULL;
 	m_pBlendState = NULL;
+    m_RefCount = 1;
 }
 
 xCubeDrawable::~xCubeDrawable()
@@ -136,11 +136,11 @@ bool xCubeDrawable::begin()
 	return true;
 }
 
-void xCubeDrawable::render(unsigned long passedTime)
+bool xCubeDrawable::render(unsigned long passedTime)
 {
 	m_pRenderApi->setVertexStream( m_pVertexStream );
 	m_pRenderApi->draw(m_pIdxBuffer , 36 );
-	return ;
+	return true;
 }
 
 bool xCubeDrawable::end()

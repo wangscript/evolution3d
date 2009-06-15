@@ -20,6 +20,7 @@ class xFontRenderDevice : public IFontRenderDevice
 public:
 	xFontRenderDevice(IRenderApi* pRenderApi);
 	~xFontRenderDevice();
+    IRenderApi*             renderApi(){return m_pRenderApi ; }
 public:
 	virtual I2DRectObject*  get2DObject();
 	virtual bool            setUVLayer(int nUVLayer);
@@ -185,6 +186,45 @@ xRenderApiImp::xRenderApiImp()
 xRenderApiImp::~xRenderApiImp()
 {
 	XSAFE_DELETE(m_FontRenderDevice);
+}
+void  xRenderApiImp::addRenderObject(IRenderObject* pObject)
+{
+    m_RenderObjectSet.insert(pObject);
+}
+
+void  xRenderApiImp::removeRenderObject(IRenderObject* pObject)
+{
+    m_RenderObjectSet.erase(pObject);
+}
+
+void  xRenderApiImp::dumpRenderObject()
+{
+    OBJECTSETS::iterator pos = m_RenderObjectSet.begin();
+    XEVOL_LOG(eXL_DEBUG_HIGH , "Begin RendererObject dumping......\n");
+    for(; pos != m_RenderObjectSet.end() ; pos ++)
+    {
+        IRenderObject* pObject = *pos;
+        int refCount = pObject->RefCount();
+        const xObjectClassID& clsID = pObject->classID();
+        XEVOL_LOG(eXL_DEBUG_HIGH , L"   ->RenderApi Object not released: refcount=%d , name=%s POINTER=0x%XH\n" , pObject->RefCount() , clsID.name() , (int)pObject );
+    }
+    XEVOL_LOG(eXL_DEBUG_HIGH , "End RendererObject dumping......\n");   
+    return ;
+}
+
+void  xRenderApiImp::KillRenderObject()
+{
+    //while(m_RenderObjectSet.size())
+    //{
+    //    OBJECTSETS::iterator pos = m_RenderObjectSet.begin();
+    //    IRenderObject* pObject = *pos;
+    //    int refCount = pObject->RefCount();
+    //    const xObjectClassID& clsID = pObject->classID();
+    //    XEVOL_LOG(eXL_DEBUG_HIGH , L"   ->RenderApi Object Released: refcount=%d , name=%s POINTER=0x%XH\n" , pObject->RefCount() , clsID.name() , (int)pObject );
+    //    pObject->ReleaseObject();
+    //    continue;
+    //}
+    return ;
 }
 
 xFontManager* xRenderApiImp::fontManager()

@@ -135,23 +135,23 @@ int CWriteBuffer::read(_xcd_int8* buf, int byte_read)
 	return byte_need_read;
 }
 
-void CWriteBuffer::seekw(int _offset, ios::seekdir dir)
+void CWriteBuffer::seekw(int _offset, std::ios_base::seekdir dir)
 {
-	if(dir == std::ios::cur)
+	if(dir == std::ios_base::cur)
 	{
 		if( m_write_pos + _offset >= m_real_len )
 			m_write_pos = m_real_len-1;
 		else
 			m_write_pos += _offset;
 	}
-	else if(dir == std::ios::beg)
+	else if(dir == std::ios_base::beg)
 	{
 		if( _offset > (int)m_real_len )
 			m_write_pos = m_real_len-1;               
 		else
 			m_write_pos = _offset;                
 	}
-	else if(dir == std::ios::end)
+	else if(dir == std::ios_base::end)
 	{
 		if( _offset >= (int)m_real_len)
 			m_write_pos = 0;  
@@ -164,23 +164,23 @@ void CWriteBuffer::seekw(int _offset, ios::seekdir dir)
 	}
 }
 
-void CWriteBuffer::seekg(int _offset, ios::seekdir dir)
+void CWriteBuffer::seekg(int _offset, std::ios_base::seekdir dir)
 {
-	if(dir == std::ios::cur)
+	if(dir == std::ios_base::cur)
 	{
 		if( m_read_pos + _offset >= m_real_len )
 			m_read_pos = m_real_len-1;
 		else
 			m_read_pos += _offset;
 	}
-	else if(dir == std::ios::beg)
+	else if(dir == std::ios_base::beg)
 	{
 		if( _offset > (int)m_real_len )
 			m_read_pos = m_real_len-1;               
 		else
 			m_read_pos = _offset;                
 	}
-	else if(dir == std::ios::end)
+	else if(dir == std::ios_base::end)
 	{
 		if( _offset >= (int)m_real_len)
 			m_read_pos = 0;  
@@ -242,30 +242,30 @@ int    CReadBuffer::read(_xcd_int8* buf, int byte_read)
 	if(byte_need_read == 0)
 		return 0;
 	//int disk_file_pos = m_DiskFile->tellg();
-	m_DiskFile->seekg(m_FileNowPos,std::ios::beg);
+	m_DiskFile->seek(m_FileNowPos,std::ios_base::beg);
 	m_DiskFile->read(buf,(int)byte_need_read);
-	m_FileNowPos = m_DiskFile->tellg();
+	m_FileNowPos = (int)m_DiskFile->tell();
 	//m_DiskFile->seekg(disk_file_pos,xcdsd_beg);
 	return byte_need_read;
 }
 
-void   CReadBuffer::seekg(int _offset, ios::seekdir pos)
+void   CReadBuffer::seekg(int _offset, std::ios_base::seekdir pos)
 {
-	if(pos == std::ios::cur)
+	if(pos == std::ios_base::cur)
 	{
 		if( (m_FileNowPos + _offset - m_FileBegPos) > m_DataInFileLen )
 			m_FileNowPos = m_FileBegPos + m_DataInFileLen;
 		else
 			m_FileNowPos += _offset;
 	}
-	else if(pos == std::ios::beg)
+	else if(pos == std::ios_base::beg)
 	{
 		if( _offset > (int)m_DataInFileLen )
 			m_FileNowPos = m_FileBegPos + m_DataInFileLen;
 		else
 			m_FileNowPos = m_FileBegPos + _offset;
 	}
-	else if(pos == std::ios::end)
+	else if(pos == std::ios_base::end)
 	{
 		if( _offset > (int)m_DataInFileLen )
 			m_FileNowPos = m_FileBegPos;

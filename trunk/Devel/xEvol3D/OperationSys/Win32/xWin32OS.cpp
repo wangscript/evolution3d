@@ -89,6 +89,21 @@ int  xOperationSys::messageBox(const wchar_t* message , const wchar_t* title)
 	return ::MessageBoxW(::GetActiveWindow() , message , title , MB_OK);
 }
 
+void  xOperationSys::convertSystemFileName(std::ds_wstring& _fileName)
+{
+	for(size_t i = 0 ; i < _fileName.length() ; i ++)
+	{
+		if(_fileName[i] == '/')
+		{
+			_fileName[i] = '\\';
+		}
+		else if(_fileName[i] >= 'A' && _fileName[i] <= 'Z')
+		{
+			_fileName[i] -= ('A'-'a');
+		}
+	}
+}
+
 bool  xOperationSys::clearClipboard()
 {
 	OpenClipboard(GetActiveWindow());

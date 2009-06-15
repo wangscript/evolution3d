@@ -12,7 +12,9 @@ public:
 	IBaseTexture*  createTexture(IRenderApi* pApi);
 	IBaseTexture*  loadTexture(IRenderApi* pApi , const wchar_t* textFile, void* _buf , int bufLen ,  const xTextureName& _texName );
 	size_t         nExt();
-	const wchar_t*    ext(size_t index);
+	const wchar_t* ext(size_t index);
+    xVideoTextureLoader();
+    ~xVideoTextureLoader();
 };
 
 class xVideoCaptureTextureLoader : public ITextureLoader
@@ -23,6 +25,8 @@ public:
 	IBaseTexture*  loadTexture(IRenderApi* pApi , const wchar_t* textFile , void* _buf , int bufLen,  const xTextureName& _texName );
 	size_t         nExt();
 	const wchar_t* ext(size_t index);
+    xVideoCaptureTextureLoader();
+    ~xVideoCaptureTextureLoader();
 };
 
 #endif

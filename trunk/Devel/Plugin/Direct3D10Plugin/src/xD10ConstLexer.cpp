@@ -9,7 +9,7 @@ void xD10ConstLexer::__addDXGIFormat(ePIXEL_FORMAT fmt , DXGI_FORMAT dxfmt , con
 	fmtInfo.m_desc = descStr;
 	fmtInfo.m_dxfmt = dxfmt;
 	fmtInfo.m_fmt   = fmt;
-	fmtInfo.m_byte  = _byte;
+	fmtInfo.m_bytePerComponent  = _byte;
 	m_vForamts.push_back(fmtInfo);
 	int nIdx = (int)m_vForamts.size() - 1;
 	m_dxindex.insert( MapsDXGIToIndex::value_type(dxfmt , nIdx) );
@@ -65,22 +65,24 @@ xD10ConstLexer::xD10ConstLexer()
 		//__addDXGIFormat(PIXELFORMAT_            ,DXGI_FORMAT_R10G10B10A2_UINT 
 		//__addDXGIFormat(PIXELFORMAT_            ,DXGI_FORMAT_R11G11B10_FLOAT 
 		//__addDXGIFormat(PIXELFORMAT_            ,DXGI_FORMAT_R8G8B8A8_TYPELESS 
-		__addDXGIFormat(PIXELFORMAT_R8G8B8A8      ,DXGI_FORMAT_R8G8B8A8_UNORM	        , L"FORMAT_R8G8B8A8_UNORM"      , 4 , 1);
-		__addDXGIFormat(PIXELFORMAT_R8G8B8A8      ,DXGI_FORMAT_R8G8B8A8_UNORM_SRGB      , L"FORMAT_R8G8B8A8_UNORM_SRGB" , 4 , 1);
-		__addDXGIFormat(PIXELFORMAT_R8G8B8A8UINT  ,DXGI_FORMAT_R8G8B8A8_UINT	        , L"FORMAT_R8G8B8A8_UINT"       , 4 , 1);
-		__addDXGIFormat(PIXELFORMAT_R8G8B8A8S     ,DXGI_FORMAT_R8G8B8A8_SNORM	        , L"FORMAT_R8G8B8A8_SNORM"      , 4 , 1);
-		__addDXGIFormat(PIXELFORMAT_R8G8B8A8SINT  ,DXGI_FORMAT_R8G8B8A8_SINT            , L"FORMAT_R8G8B8A8_SINT"       , 4 , 1);
+		__addDXGIFormat(PIXELFORMAT_R8G8B8A8      ,DXGI_FORMAT_R8G8B8A8_UNORM	        , L"FORMAT_R8G8B8A8_UNORM"       , 4 , 1);
+		__addDXGIFormat(PIXELFORMAT_R8G8B8A8      ,DXGI_FORMAT_R8G8B8A8_UNORM_SRGB      , L"FORMAT_R8G8B8A8_UNORM_SRGB"  , 4 , 1);
+		__addDXGIFormat(PIXELFORMAT_R8G8B8A8UINT  ,DXGI_FORMAT_R8G8B8A8_UINT	        , L"FORMAT_R8G8B8A8_UINT"        , 4 , 1);
+		__addDXGIFormat(PIXELFORMAT_R8G8B8A8S     ,DXGI_FORMAT_R8G8B8A8_SNORM	        , L"FORMAT_R8G8B8A8_SNORM"       , 4 , 1);
+		__addDXGIFormat(PIXELFORMAT_R8G8B8A8SINT  ,DXGI_FORMAT_R8G8B8A8_SINT            , L"FORMAT_R8G8B8A8_SINT"        , 4 , 1);
 		//__addDXGIFormat(PIXELFORMAT_            ,DXGI_FORMAT_R16G16_TYPELESS	= 33,
-		__addDXGIFormat(PIXELFORMAT_R16G16F       ,DXGI_FORMAT_R16G16_FLOAT             , L"FORMAT_R16G16_FLOAT"        , 2 , 2);
-		__addDXGIFormat(PIXELFORMAT_R16G16U       ,DXGI_FORMAT_R16G16_UNORM				, L"FORMAT_R16G16_UNORM"        , 2 , 2);
-		__addDXGIFormat(PIXELFORMAT_R16G16UINT    ,DXGI_FORMAT_R16G16_UINT              , L"FORMAT_R16G16_UINT"         , 2 , 2);
-		__addDXGIFormat(PIXELFORMAT_R16G16S       ,DXGI_FORMAT_R16G16_SNORM				, L"FORMAT_R16G16_SNORM"        , 2 , 2);
-		__addDXGIFormat(PIXELFORMAT_R16G16SINT    ,DXGI_FORMAT_R16G16_SINT              , L"FORMAT_R16G16_SINT"         , 2 , 2);
-		//__addDXGIFormat(PIXELFORMAT_R32F        ,DXGI_FORMAT_R32_TYPELESS     
-		__addDXGIFormat(PIXELFORMAT_DEPTH32       ,DXGI_FORMAT_D32_FLOAT                , L"FORMAT_D32_FLOAT"        , 1 , 4);
-		__addDXGIFormat(PIXELFORMAT_R32F          ,DXGI_FORMAT_R32_FLOAT                , L"FORMAT_R32_FLOAT"        , 1 , 4);
-		__addDXGIFormat(PIXELFORMAT_R32U          ,DXGI_FORMAT_R32_UINT	                , L"FORMAT_R32_UINT"         , 1 , 4);
-		__addDXGIFormat(PIXELFORMAT_R32S          ,DXGI_FORMAT_R32_SINT	                , L"FORMAT_R32_SINT"         , 1 , 4);
+		__addDXGIFormat(PIXELFORMAT_R16G16F       ,DXGI_FORMAT_R16G16_FLOAT             , L"FORMAT_R16G16_FLOAT"         , 2  , 2);
+		__addDXGIFormat(PIXELFORMAT_R16G16U       ,DXGI_FORMAT_R16G16_UNORM				, L"FORMAT_R16G16_UNORM"         , 2  , 2);
+		__addDXGIFormat(PIXELFORMAT_R16G16UINT    ,DXGI_FORMAT_R16G16_UINT              , L"FORMAT_R16G16_UINT"          , 2  , 2);
+		__addDXGIFormat(PIXELFORMAT_R16G16S       ,DXGI_FORMAT_R16G16_SNORM				, L"FORMAT_R16G16_SNORM"         , 2  , 2);
+		__addDXGIFormat(PIXELFORMAT_R16G16SINT    ,DXGI_FORMAT_R16G16_SINT              , L"FORMAT_R16G16_SINT"          , 2  , 2);
+		__addDXGIFormat(PIXELFORMAT_DEPTH32       ,DXGI_FORMAT_D32_FLOAT                , L"FORMAT_D32_FLOAT"            , 1  , 4);
+		__addDXGIFormat(PIXELFORMAT_R32F          ,DXGI_FORMAT_R32_FLOAT                , L"FORMAT_R32_FLOAT"            , 1  , 4);
+		__addDXGIFormat(PIXELFORMAT_R32U          ,DXGI_FORMAT_R32_UINT	                , L"FORMAT_R32_UINT"             , 1  , 4);
+		__addDXGIFormat(PIXELFORMAT_R32S          ,DXGI_FORMAT_R32_SINT	                , L"FORMAT_R32_SINT"             , 1  , 4);
+
+        //__addDXGIFormat(PIXELFORMAT_            ,DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS	= 21,
+        __addDXGIFormat(PIXELFORMAT_DEPTH32S8UX24 ,DXGI_FORMAT_D32_FLOAT_S8X24_UINT     , L"FORMAT_D32_FLOAT_S8X24_UINT" , 2  , 4);
 		//__addDXGIFormat(PIXELFORMAT_            ,DXGI_FORMAT_R24G8_TYPELESS 
 		__addDXGIFormat(PIXELFORMAT_DEPTH24       ,DXGI_FORMAT_D24_UNORM_S8_UINT	    , L"FORMAT_D24_UNORM_S8_UINT"         , 1 , 3);
 		//__addDXGIFormat(PIXELFORMAT_            ,DXGI_FORMAT_R24_UNORM_X8_TYPELESS 

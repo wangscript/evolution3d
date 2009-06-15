@@ -14,7 +14,7 @@ class xD10RazState : public IRasterizerState
 	std::wstring              m_name;
 
 	bool                      _destory() ; 
-	bool                      _load(xCfgNode* node);
+	bool                      _load(xXmlNode* node);
 public:
 	void*        handle(){ return m_pD10RasterizerState ; }
 	xD10RazState(xD3D10RenderApi* pAPI  );

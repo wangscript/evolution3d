@@ -449,10 +449,10 @@ int  xFT2Font::getCacheSize()
 {
 	return m_pFontCharMgr->getMaxSize();
 }
-
+IMPL_BASE_OBJECT_CLASSID(xFT2Font  , xFontRender);
 xFT2Font::xFT2Font(IFontRenderDevice* pRenderer):xFontRender(pRenderer)
 {
-	
+	m_RefCount = 1 ;
 	m_LinePitch = 5;
 	m_Filter = eFontFilter_Point;
 }

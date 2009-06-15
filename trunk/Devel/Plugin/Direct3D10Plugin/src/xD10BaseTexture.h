@@ -14,7 +14,9 @@ BEGIN_NAMESPACE_XEVOL3D
 class xD3D10RenderApi;
 struct xD10TexInfo
 {
-	DXGI_FORMAT   m_format;
+	DXGI_FORMAT   m_ShaderViewFmt;
+    DXGI_FORMAT   m_ResFmt;
+    DXGI_FORMAT   m_RTViewFmt;
 	size_t        m_TexWidth;
 	size_t        m_TexHeight;
 	size_t        m_TexDepth;
@@ -62,6 +64,7 @@ public:
 	virtual bool           validate(){return true; }
 	virtual bool           desc(xTextureDesc& _desc);
 	virtual bool           grabRenderTagetData(int x , int y , int w , int h , void* pData) { return false ; }
+    virtual bool           unload();
 };
 
 class xD10UnkwonTexture : public xD10BaseTexture
@@ -83,7 +86,7 @@ protected:
 protected:
 	virtual bool          _load(ID3D10Resource* pTexture , bool bCreateTextureView = true);
 	xD10UnkwonTexture(xD3D10RenderApi* pD10Api);
-	virtual ~xD10UnkwonTexture(){};
+	virtual ~xD10UnkwonTexture();
 };
 bool fillLoadInfo(D3DX10_IMAGE_LOAD_INFO& loadInfo , bool lockAble);
 END_NAMESPACE_XEVOL3D

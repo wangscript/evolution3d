@@ -1,7 +1,7 @@
 #include "xD10GPUProgram.h"
 #include "xDirect3D10API.h"
 #include <OperationSys/xOperationSys.h>
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xD10GpuProgram   , IGpuProgram)
 
@@ -41,7 +41,7 @@ IShaderParamTable* xD10GpuProgParamTable::getShaderParamTab(eShaderType shType)
 	return NULL;
 }
 
-bool xD10GpuProgParamTable::load(xCfgNode* pXMLNode)
+bool xD10GpuProgParamTable::load(xXmlNode* pXMLNode)
 {
 	XEVOL_WARNNING_NOT_IMPLEMENT;
 	return false;
@@ -210,19 +210,19 @@ bool xD10GpuProgram::_afterLoad()
 	return m_pVertexShader!= NULL || m_pPixelShader != NULL;
 }
 
-bool xD10GpuProgram::_load(xCfgNode* pNode )
+bool xD10GpuProgram::_load(xXmlNode* pNode )
 {
 	
-    xCfgNode* pShaderNode =  pNode->findNode(RENDER_NAME,0);
-	xCfgNode::CfgNodes nodes;
+    xXmlNode* pShaderNode =  pNode->findNode(RENDER_NAME,0);
+	xXmlNode::XmlNodes nodes;
 	pShaderNode->findNode(L"shader", nodes );
-	xCfgNode* pShaderConstNode = pShaderNode->findNode(L"Constants");
+	xXmlNode* pShaderConstNode = pShaderNode->findNode(L"Constants");
 	if(pShaderConstNode) 
 		pShaderConstNode = pShaderNode->findNode(L"Paramaters");
 
 	for(size_t i = 0 ; i < nodes.size() ; i ++)
 	{
-		xCfgNode* pShaderFileNode = nodes[i];
+		xXmlNode* pShaderFileNode = nodes[i];
 		const wchar_t* strFile = pShaderFileNode->value(L"file");
 		XEVOL_ASSERT_POINTER(strFile , L"Shader node not find <file> value\n");
 		const wchar_t* strType = pShaderFileNode->value(L"type");
@@ -298,7 +298,7 @@ bool xD10GpuProgram::load(const wchar_t* vsName , const wchar_t* psName, const w
 bool xD10GpuProgram::load(const wchar_t* fileName , unsigned long  arg)
 {
     unload();
-    xCfgDocument xmlDoc;
+    xXmlDocument xmlDoc;
 	if(false == xmlDoc.load(fileName,true) ) return false;
 	return _load(xmlDoc.root());
 }
@@ -306,7 +306,7 @@ bool xD10GpuProgram::load(const wchar_t* fileName , unsigned long  arg)
 bool xD10GpuProgram::load(const wchar_t* fileName , const unsigned int8* buf , size_t bufLen, unsigned long arg)
 {
 	unload();
-	xCfgDocument xmlDoc;
+	xXmlDocument xmlDoc;
 
 	if(false == xmlDoc.load( (const wchar_t*)buf, (int)bufLen , true) ) 
 		return false;

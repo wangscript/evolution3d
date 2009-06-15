@@ -72,6 +72,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <assert.h>
 #include "xcomdoc/xcomdoc.h"
 #include "xcomdoc/xdocfstream.h"
-#include "BaseLib/xCfgParser.h"
+#include "BaseLib/xXmlDocument.h"
 #include "BaseLib/xLogger.h"
 #define ACTION_DATA_COMPRESS XCOMDOC_COMPRESS_BEST

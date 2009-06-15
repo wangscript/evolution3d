@@ -256,6 +256,7 @@ namespace XEvol3D
 		void     addRef();
 		int      refCount();
 		bool     isHandle(){return m_pResMgr != NULL;}
+            operator bool(){return isHandle() };
 	};
 
 	//------------------------------------------------------

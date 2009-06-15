@@ -56,6 +56,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 #define USING_NS_XEVOL3D using namespace XEvol3D;
+#define NS_XEVOL3D XEvol3D
 
 #ifndef _WIN32
 #define int8 char  

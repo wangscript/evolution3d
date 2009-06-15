@@ -184,7 +184,7 @@ protected:
 };
 
 
-bool convertXLibMsg(XKeyEvent& key_event, sXrBaseMsg& basMsg)
+bool convertXLibMsg(XKeyEvent& key_event, xWindowMsg& basMsg)
 {
 	KeySym    key_code  = XLookupKeysym(&key_event,0);
 	XlibVkeyItem item = CXlibVkeyItemMap::singleto()->findKeyItem(key_code);
@@ -196,7 +196,7 @@ bool convertXLibMsg(XKeyEvent& key_event, sXrBaseMsg& basMsg)
 	return item._ksym == key_code;
 }
 
-bool convertXLibMsg(XEvent& event, sXrBaseMsg& basMsg)
+bool convertXLibMsg(XEvent& event, xWindowMsg& basMsg)
 {
 	XKeyEvent key_event;
 	
@@ -259,6 +259,18 @@ const wchar_t*  xOperationSys::name()
 	static wchar_t* _osName = L"Linux";
 	return _osName;
 }
+
+void  xOperationSys::convertSystemFileName(std::ds_wstring& _fileName)
+{
+	for(size_t i = 0 ; i < _fileName.length() ; i ++)
+	{
+		if(_fileName[i] == '\\')
+		{
+			_fileName[i] = '/';
+		}
+	}
+}
+
 IIMEInput* xOperationSys::getImeInput()
 {
 	if(m_pImeInput == NULL) m_pImeInput = new xLinuxIMEInput;

@@ -22,6 +22,107 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "XMathLib.h"
 
 BEGIN_NAMESPACE_XMATHLIB
+
+void xeuler::toMatrix(xmat4& mOut)
+{
+#define M(row,col)  mOut.m [row ] [ col ]
+	float &h = y;//heading
+	float &p = x;//pitch.
+	float &b = z;//bunk
+
+	float sp = -M(2 , 1);
+	if(sp <= -1.0f )
+	{
+		p = -1.570796f ; // -Pi/2
+	}
+	else
+	{
+		p = asin(sp);
+	}
+
+	if( sp > 0.9999999f)
+	{
+		b = 0.0f;
+		h = atan2(-M(0,2) , M(0,0) );
+	}
+	else
+	{
+		 b = atan2(M(0,1) , M(1,1) );
+		 h = atan2(M(2,0) , M(2,2) );
+	}
+#undef M
+}
+
+void xeuler::fromMatrix(xmat4& mIn)
+{
+#define M(row,col)  mIn.m [row ] [ col ]
+	float &h = y;//heading
+	float &p = x;//pitch.
+	float &b = z;//bunk
+	float sin_h = sin(h) ;
+	float sin_p = sin(p) ;
+	float sin_b = sin(b) ;
+	float cos_h = cos(h) ; 
+	float cos_p = cos(p) ;
+	float cos_b = cos(b) ;
+
+	M(0,0) =  cos_h * cos_b + sin_h * sin_p * sin_b;
+	M(1,0) =  sin_b * cos_p;
+	M(2,0) = -sin_h * cos_b + cos_h * sin_p * sin_b;
+	M(3,0) = 0;
+
+	M(0,1) = -cos_h * sin_b + sin_h * sin_p * cos_b;
+	M(1,1) =  cos_b * cos_p;
+	M(2,1) =  sin_h * sin_b + cos_h * sin_p * cos_b;
+	M(3,1) = 0;
+
+	M(0,2) = sin_h * cos_p;
+	M(1,2) = -sin_p;
+	M(2,2) = cos_h * cos_p;
+	M(3,2) = 0;
+
+	M(0,3) = 0;
+	M(1,3) = 0;
+	M(2,3) = 0;
+	M(3,3) = 1;
+#undef M
+}
+
+void xquat::fromEuler(xeuler& _euler)
+{
+	float h = _euler.y;//heading
+	float p = _euler.x;//pitch.
+	float b = _euler.z;//bunk
+	w = cos(h/2)*cos(p/2)*cos(b/2) + sin(h/2)*sin(p/2)*sin(b/2);
+
+	x = cos(h/2)*sin(p/2)*cos(b/2) + sin(h/2)*cos(p/2)*sin(b/2);
+	y = sin(h/2)*cos(p/2)*cos(b/2) - cos(h/2)*sin(p/2)*sin(b/2);
+	z = cos(h/2)*cos(p/2)*sin(b/2) - sin(h/2)*sin(p/2)*cos(b/2);
+}
+
+void xquat::toEuler(xeuler& _euler)
+{
+	float &h = _euler.y;//heading
+	float &p = _euler.x;//pitch.
+	float &b = _euler.z;//bunk
+	h = 0.0f;
+	p = 0.0f; 
+	b = 0.0f; 
+	float sp = -2.0f *(y*z + w*x);
+	if(fabs(sp) > 0.99999f)
+	{
+		p = 1.570796f * sp;
+		h = atan2(-x * z + w * y , 0.5f - y * y - z * z);
+		b = 0.0f;
+	}
+	else
+	{
+		p = asin( sp);
+		h = atan2(x * z + w * y , 0.5f - x * x - y * y);
+		b = atan2(x * y + w * z , 0.5f - x * x - z * z);
+	}
+}
+
 xquat& xquat::operator *= (const xquat& q2)
 {
 	xquat ret ;

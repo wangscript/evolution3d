@@ -5,6 +5,7 @@
 #include "xCubeDrawable.h"
 #include "xPlaneGrid.h"
 #include "xArcBall.h"
+#include "xBoundBox.h"
 using namespace XEvol3D;
 
 //=====================
@@ -13,6 +14,7 @@ static wchar_t* g_ObjectList[] =
 	L"CubeDrawable",
 	L"PlaneGrid",
 	L"ArcBall",
+	L"BoundBox",
 	NULL
 };
 
@@ -36,7 +38,7 @@ class xEvolHelperObjPlugin : public IPluginObject
 
 	unsigned int    nObject()
 	{
-		return 1;
+		return 4;
 	}
 
 	void*           createObject(const wchar_t* objName, const wchar_t * arg)
@@ -47,6 +49,8 @@ class xEvolHelperObjPlugin : public IPluginObject
 			return new xPlaneGridDrawable;
 		if( std::ds_wstring(objName) == g_ObjectList[2] )
 			return new xArcBallDrawable;
+		if( std::ds_wstring(objName) == g_ObjectList[3] )
+			return new xBoundBoxHelper;
 		return NULL;
 	}
 

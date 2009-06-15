@@ -2,36 +2,54 @@
 #include "xMaterial.h"
 BEGIN_NAMESPACE_XEVOL3D
 
+IMPL_BASE_OBJECT_DLLSAFE(IDrawableObject ,  IRenderObject);
+IMPL_BASE_OBJECT_DLLSAFE(IDrawElement    ,  IDrawableObject);
+IMPL_BASE_OBJECT_DLLSAFE(xRenderPass     ,  IRenderObject);
 
-IMPL_BASE_OBJECT_CLASSID(IDrawElement , IRenderObject);
-IDrawElement::IDrawElement(IRenderApi* pRdr):IRenderObject(pRdr)
+IDrawableObject::IDrawableObject(IRenderApi* pRenderApi)
+:IRenderObject(pRenderApi)
 {
-	m_pMaterial  = NULL;
-	m_pShader    = NULL;
+
+}
+IDrawElement::IDrawElement(IRenderApi* pRdr)
+:IDrawableObject(pRdr)
+{
 }
 
-
-void IDrawElement::setMaterial(xMaterial* pMaterial)
+xRenderPass::xRenderPass(IRenderApi* pRenderApi)
+:IRenderObject(pRenderApi)
 {
-	m_pMaterial = pMaterial;
+
 }
 
-void IDrawElement::setShader(IGpuProgram* pShader)
+xRenderPass::~xRenderPass()
 {
-	m_pShader = pShader;
+
 }
 
-
-xMaterial* IDrawElement::material()
+bool  xRenderPass::render(unsigned long passedTime)
 {
-	return m_pMaterial;
-}
+   if(m_Drawable == NULL)
+	   return false;
+  
+   //有材质
+   if(m_Material)
+   {
+	    //应用材质
+	   m_Material->begin(m_ConstTable);
 
-IGpuProgram* IDrawElement::shader()
-{
-	if( m_pShader )
-		return m_pShader;
-	return NULL;
+	   //绘制物体
+	   m_Material->render(m_Drawable,passedTime);
+
+	   //材质使用结束
+	   m_Material->end(m_ConstTable);
+   }
+   else
+   {
+	   //绘制物体
+	   m_Drawable->render(passedTime);
+   }
+   return true;
 }
 
 END_NAMESPACE_XEVOL3D

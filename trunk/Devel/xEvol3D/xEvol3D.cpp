@@ -1,6 +1,6 @@
 #include "xEvol3D.h"
 
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 #include <BaseLib/xLogger.h>
 #include <OperationSys/xOperationSys.h>
 #include <Application/xPluginMgr.h>
@@ -22,7 +22,7 @@ BEGIN_NAMESPACE_XEVOL3D
 
 xEvol3DEngine::xEvol3DEngine()
 {
-	m_cfgDocument = new xCfgDocument;
+	m_cfgDocument = new xXmlDocument;
 	m_platform = NULL;
 	m_pWindow = NULL;
 	m_pRenderApi = NULL;
@@ -55,9 +55,9 @@ bool   xEvol3DEngine::init(IApplication* pApp , void* hWnd , const wchar_t* cfgF
 	xR_CreatePlatform(L"Win32");
 	m_platform = IPlatform::singleton();
 	XEVOL_LOG_REDIR( _ABSPATH(L".\\XEvolLogger.txt") );
-	xCfgNode* pRootNode    = m_cfgDocument->root();
+	xXmlNode* pRootNode    = m_cfgDocument->root();
 
-	xCfgNode* pPrjNode     = pRootNode->findNode(projectName);
+	xXmlNode* pPrjNode     = pRootNode->findNode(projectName);
 	if(pPrjNode == NULL) pPrjNode = pRootNode->findNode(L"engine");
 
 	const wchar_t* renderApiName = pPrjNode->value(L"renderapi");

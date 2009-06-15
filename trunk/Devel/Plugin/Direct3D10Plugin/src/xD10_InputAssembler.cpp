@@ -26,6 +26,7 @@ technique10 Render                                                              
 xD10InputAssembler::xD10InputAssembler(xD3D10RenderApi* pRenderer , const wchar_t* name ,xInputLayoutDesc& desc)
 :m_pRenderApi(pRenderer) , IInputAssembler(pRenderer) , m_Name(name)
 {
+    m_RefCount = 1;
 	m_HashName = xStringHash(name);
 	m_Desc = desc;
 	m_D10InputLayout = NULL;

@@ -80,7 +80,10 @@ eResourceType xD10BaseTexture::res_type()
 	 _desc.m_height     = (int)m_TexInfo.m_TexHeight;
 	 return true;
  }
-
+bool xD10BaseTexture::unload()
+{
+    return true;
+}
  //////////////////////////////////////////////////////////////////////////
  xD10UnkwonTexture::xD10UnkwonTexture(xD3D10RenderApi* pD10Api) : xD10BaseTexture(pD10Api) 
  {
@@ -97,8 +100,15 @@ eResourceType xD10BaseTexture::res_type()
  {
 	 XSAFE_RELEASE(m_pTextureView);
 	 XSAFE_RELEASE(m_pTexture);
+     xD10BaseTexture::unload();
 	 return !isLoaded();
  }
+
+ xD10UnkwonTexture::~xD10UnkwonTexture()
+ {
+     unload();
+ }
+
  void* xD10UnkwonTexture::handle()
  {
 	 return m_pTextureView;
@@ -124,10 +134,12 @@ eResourceType xD10BaseTexture::res_type()
 			 D3D10_TEXTURE1D_DESC desc;
 			 ID3D10Texture1D *pTexture1D = (ID3D10Texture1D*)m_pTexture;
 			 pTexture1D->GetDesc( &desc );
-
+             if(m_TexInfo.m_ShaderViewFmt == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_ShaderViewFmt = desc.Format;
+             if(m_TexInfo.m_RTViewFmt  == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_RTViewFmt  = desc.Format;
+             if(m_TexInfo.m_ResFmt     == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_ResFmt     = desc.Format;
 			 if(bCreateTextureView)
 			 {
-				 srvDesc.Format = desc.Format;
+        		 srvDesc.Format = m_TexInfo.m_ShaderViewFmt;
 				 srvDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE1D;
 				 srvDesc.Texture2D.MostDetailedMip = 0;
 				 srvDesc.Texture2D.MostDetailedMip = desc.MipLevels;
@@ -142,7 +154,6 @@ eResourceType xD10BaseTexture::res_type()
 			 }			 
 
 			 //野割
-			 m_TexInfo.m_format      = desc.Format;
 			 m_TexInfo.m_ArraySize   = desc.ArraySize;
 			 m_TexInfo.m_TexWidth    = desc.Width;
 			 m_TexInfo.m_TexHeight   = 1;
@@ -156,10 +167,12 @@ eResourceType xD10BaseTexture::res_type()
 			 D3D10_TEXTURE2D_DESC desc;
 			 ID3D10Texture2D *pTexture2D = (ID3D10Texture2D*)m_pTexture;
 			 pTexture2D->GetDesc( &desc );
-			 
+             if(m_TexInfo.m_ShaderViewFmt == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_ShaderViewFmt = desc.Format;
+             if(m_TexInfo.m_RTViewFmt  == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_RTViewFmt  = desc.Format;
+             if(m_TexInfo.m_ResFmt     == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_ResFmt     = desc.Format;
 			 if(bCreateTextureView)
 			 {
-				 srvDesc.Format = desc.Format;
+				 srvDesc.Format = m_TexInfo.m_ShaderViewFmt;
 				 srvDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
 				 srvDesc.Texture2D.MostDetailedMip = 0;
 				 srvDesc.Texture2D.MipLevels       = desc.MipLevels;
@@ -174,7 +187,6 @@ eResourceType xD10BaseTexture::res_type()
 			 }
 
 			 //野割
-			 m_TexInfo.m_format      = desc.Format;
 			 m_TexInfo.m_ArraySize   = desc.ArraySize;
 			 m_TexInfo.m_TexWidth    = desc.Width;
 			 m_TexInfo.m_TexHeight   = desc.Height;
@@ -189,10 +201,12 @@ eResourceType xD10BaseTexture::res_type()
 			 D3D10_TEXTURE3D_DESC desc;
 			 ID3D10Texture3D *pTexture3D = (ID3D10Texture3D*)m_pTexture;
 			 pTexture3D->GetDesc( &desc );
-
+             if(m_TexInfo.m_ShaderViewFmt == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_ShaderViewFmt = desc.Format;
+             if(m_TexInfo.m_RTViewFmt  == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_RTViewFmt  = desc.Format;
+             if(m_TexInfo.m_ResFmt     == DXGI_FORMAT_UNKNOWN) m_TexInfo.m_ResFmt     = desc.Format;
 			 if(bCreateTextureView)
 			 {
-				 srvDesc.Format = desc.Format;
+				 srvDesc.Format = m_TexInfo.m_ShaderViewFmt;
 				 srvDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE3D;
 				 srvDesc.Texture2D.MostDetailedMip = 0;
 				 srvDesc.Texture2D.MostDetailedMip = desc.MipLevels;
@@ -207,7 +221,6 @@ eResourceType xD10BaseTexture::res_type()
 			 }
 
 			 //野割
-			 m_TexInfo.m_format      = desc.Format;
 			 m_TexInfo.m_ArraySize   = 1;
 			 m_TexInfo.m_TexWidth    = desc.Width;
 			 m_TexInfo.m_TexHeight   = desc.Height;
@@ -222,10 +235,10 @@ eResourceType xD10BaseTexture::res_type()
 	 }
 
 	 //===================================
-	 xD10GIFormatInfo* pFormat = xD10ConstLexer::singleton()->GetPixelFormat( m_TexInfo.m_format );
-	 m_TexInfo.m_nBytePerPixel = pFormat->m_compont * pFormat->m_byte;
+	 xD10GIFormatInfo* pFormat = xD10ConstLexer::singleton()->GetPixelFormat( m_TexInfo.m_ShaderViewFmt );
+	 m_TexInfo.m_nBytePerPixel = pFormat->m_compont * pFormat->m_bytePerComponent;
 	 m_TexInfo.m_xfmt = pFormat->m_fmt;
-	 unsigned int iPitch = (unsigned int) (m_TexInfo.m_TexWidth  * pFormat->m_compont * pFormat->m_byte );
+	 unsigned int iPitch = (unsigned int) (m_TexInfo.m_TexWidth  * pFormat->m_compont * pFormat->m_bytePerComponent );
 	 m_TexInfo.m_Pitch = xFloorToPower2( iPitch );
 	 m_TexInfo.m_SlicePitch = xFloorToPower2(m_TexInfo.m_Pitch * m_TexInfo.m_TexHeight );
 	 m_TexInfo.m_MemSize = int( m_TexInfo.m_Pitch * m_TexInfo.m_ArraySize * m_TexInfo.m_TexDepth * m_TexInfo.m_TexHeight );

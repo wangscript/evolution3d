@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../RenderAPI/xBaseTexture.h"
 
 BEGIN_NAMESPACE_XEVOL3D
-
+IMPL_BASE_OBJECT_CLASSID(xFontRender  , IBaseObject);
 bool  xFontRender::drawText(const wchar_t* strText, float x , float y , int maxWidth , xColor_4f cl )
 {
 	float left = x;

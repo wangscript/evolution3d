@@ -3,7 +3,15 @@
 #include "xEvol3DBaseInc.h"
 #include <assert.h>
 #include <ctype.h>
+#include <string.h>
 BEGIN_NAMESPACE_XEVOL3D
+enum eTextEncFmt
+{
+    TXTENC_ASCII,
+    TXTENC_UTF8,
+    TXTENC_UNICODE
+};
+
 template <typename _CharT , typename _StrT> class xBaseStrFunc
 {
 public:

@@ -59,10 +59,10 @@ public:
 	bool            setDisplayMode(int w, int h, int cl_bits,int display_fre);
 	//创建一个窗口
 
-	IWindow*        createWindow(WIN_CREATE_STRUCT& createStruct , const xCfgNode* params = NULL) ;
+	IWindow*        createWindow(WIN_CREATE_STRUCT& createStruct , const xXmlNode* params = NULL) ;
 
-	IRenderApi*     createRenderApi(int iWnd , const wchar_t* RenderApi , const xCfgNode* params);
-	IWindow*        createRenderWindow(IRenderApi** pOutRenderApi ,  WIN_CREATE_STRUCT& createStruct, const wchar_t* RenderApi , const xCfgNode* params = NULL);
+	IRenderApi*     createRenderApi(int iWnd , const wchar_t* RenderApi , const xXmlNode* params);
+	IWindow*        createRenderWindow(IRenderApi** pOutRenderApi ,  WIN_CREATE_STRUCT& createStruct, const wchar_t* RenderApi , const xXmlNode* params = NULL);
 
 	//关闭一个窗口
 	bool            closeWindow(IWindow* pWnd) ;

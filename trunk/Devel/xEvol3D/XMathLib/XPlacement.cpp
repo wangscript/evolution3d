@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include "xPlacement.h"
-BEGIN_NAMESPACE_XGEOMLIB
+BEGIN_NAMESPACE_XMATHLIB
 
 xPlacement::xPlacement(): m_Position(0,0,0) , m_Scale(1,1,1)
 {
@@ -104,4 +104,4 @@ void xPlacement::getTransform(xmat4& mat)
 	m_bIsVialidate = true;
 }
 
-END_NAMESPACE_XGEOMLIB
+END_NAMESPACE_XMATHLIB

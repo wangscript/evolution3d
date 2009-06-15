@@ -24,10 +24,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //#define  new XNEW_OP
 
 BEGIN_NAMESPACE_XEVOL3D
-
+IMPL_BASE_OBJECT_CLASSID(xMixedFont  , xFontRender);
 //==============================
 xMixedFont::xMixedFont(IFontRenderDevice* pRenderer):xFontRender(pRenderer)
 {
+    m_RefCount = 1 ;
 	m_pAsciiFontRender = NULL;
 	m_pUCSFontRender  = NULL;
 	m_LinePitch = 2;

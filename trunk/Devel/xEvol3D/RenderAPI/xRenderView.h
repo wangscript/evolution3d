@@ -7,7 +7,7 @@ BEGIN_NAMESPACE_XEVOL3D
 
 class _XEVOL_BASE_API_ IRenderTarget : public IRenderObject
 {
-	IMPL_BASE_OBJECT_CLASSID_INTERFACE(IGpuProgram);
+	IMPL_BASE_OBJECT_CLASSID_INTERFACE(IRenderTarget);
 public:
 	IRenderTarget(IRenderApi* pRenderApi);
 	virtual ~IRenderTarget();

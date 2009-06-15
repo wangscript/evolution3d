@@ -15,8 +15,9 @@ inline bool      xcd_is_dir(xcd_data_type type){return (type & xcddt_dir_flag) !
 class CMemIFStream : public IReadStream
 {
 	const _xcd_int8* m_Buffer;
-	int              m_BufLen;
-	int              m_read_pos;
+	size_t              m_BufLen;
+	size_t              m_read_pos;
+    IMPL_NONE_REFCOUNT_OBJECT_INTERFACE(CMemIFStream)
 public:
 	CMemIFStream()
 	{
@@ -24,8 +25,9 @@ public:
 		m_Buffer  = 0;
 		m_BufLen = 0;
 	}
-	void   close()
+	int   close()
 	{
+        return 0;
 	}
 
 	_xcd_int8*  get_buf()
@@ -40,9 +42,9 @@ public:
 		m_BufLen = buf_len;       
 	}
 
-	int    read(_xcd_int8* buf, int byte_read)
+	size_t    read(_xcd_int8* buf, size_t byte_read)
 	{
-		int byte_need_read = byte_read;
+		size_t byte_need_read = byte_read;
 		if( m_BufLen - m_read_pos < byte_read )
 		{
 			byte_need_read = m_BufLen - m_read_pos;
@@ -54,36 +56,34 @@ public:
 		return byte_need_read;
 	}
 
-	void   seekg(int _offset, ios::seekdir dir)
+    size_t   seek(long _offset, std::ios_base::seekdir dir)
 	{
-		if(dir == std::ios::cur)
+		if(dir == std::ios_base::cur)
 		{
-			if( m_read_pos + _offset >= m_BufLen )
+			if( (long)m_read_pos + _offset >= (long)m_BufLen )
 				m_read_pos = m_BufLen-1;
 			else
 				m_read_pos += _offset;
 		}
-		else if(dir == std::ios::beg)
+		else if(dir == std::ios_base::beg)
 		{
-			if( _offset > (int)m_BufLen )
+			if( _offset > (long)m_BufLen )
 				m_read_pos = m_BufLen-1;               
 			else
 				m_read_pos = _offset;                
 		}
-		else if(dir == std::ios::end)
+		else if(dir == std::ios_base::end)
 		{
-			if( _offset >= (int)m_BufLen)
+			if( _offset >= (long)m_BufLen)
 				m_read_pos = 0;  
 			else
-				m_read_pos = m_BufLen -  _offset - 1;
+				m_read_pos = (long)m_BufLen -  _offset - 1;
 		}
-		else
-		{
-			return ;
-		}
+		
+        return (size_t)m_read_pos;
 	}
 
-	int    tellg()
+	size_t    tell()
 	{
 		return m_read_pos;
 	}

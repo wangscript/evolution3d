@@ -18,25 +18,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "xXMLManager.h"
+#include "xXmlManager.h"
 
 #include "../xcomdoc/xdocfstream.h"
 #include "../io/mstream.h"
 
-BEGIN_NAMESPACE_XEVOL3D
 
-bool xXMLLoader::_isResLoaded(xCfgDocument* pRes)
+BEGIN_NAMESPACE_XEVOL3D
+bool xXMLLoader::_isResLoaded(xXmlDocument* pRes)
 {
 	if( pRes == NULL )
 		return false;
 	return pRes->countNode() > 0;
 }
-unsigned int xXMLLoader::_getResSize(xCfgDocument* pRes)
+unsigned int xXMLLoader::_getResSize(xXmlDocument* pRes)
 {
 	return 1;
 }
 
-bool xXMLLoader::_loadResource(const std::ds_wstring& strResName,xCfgDocument* & pRes , int& ResSize, unsigned int arg)
+bool xXMLLoader::_loadResource(const std::ds_wstring& strResName,xXmlDocument* & pRes , int& ResSize, unsigned int arg)
 {
 	
 	ResSize = 0;
@@ -44,7 +44,7 @@ bool xXMLLoader::_loadResource(const std::ds_wstring& strResName,xCfgDocument* &
 	if(pRes == NULL)
 	{
 		needDeletePRes = true;
-		pRes = new xCfgDocument;
+		pRes = new xXmlDocument;
 	}
 
 	if(XEvol_IsAbsPath(strResName))
@@ -85,7 +85,7 @@ bool xXMLLoader::_loadResource(const std::ds_wstring& strResName,xCfgDocument* &
 					if(pRes->load(_stream , arg != 0 ) )
 					{
 						ResSize = 1;
-						XEVOL_LOG(eXL_DEBUG_TIPS, L"Load from package, search index = %d name = %s\n",i,strResName.c_str() );
+						//XEVOL_LOG(eXL_DEBUG_TIPS, L"Load from package, search index = %d name = %s\n",i,strResName.c_str() );
 						pstream->release();
 						return true;
 					}
@@ -107,7 +107,7 @@ bool xXMLLoader::_loadResource(const std::ds_wstring& strResName,xCfgDocument* &
 	return false;
 }
 
-bool xXMLLoader::_unloadResource(const std::ds_wstring& strResName , xCfgDocument* & pRes , unsigned int& TotalResSize)
+bool xXMLLoader::_unloadResource(const std::ds_wstring& strResName , xXmlDocument* & pRes , unsigned int& TotalResSize)
 {
 	TotalResSize -= 1;
 	pRes->unload();
@@ -116,7 +116,7 @@ bool xXMLLoader::_unloadResource(const std::ds_wstring& strResName , xCfgDocumen
 	return true;
 }
 
-void xXMLLoader::_deleteResource(const std::ds_wstring& strResName , xCfgDocument* pRes)
+void xXMLLoader::_deleteResource(const std::ds_wstring& strResName , xXmlDocument* pRes)
 {
 	if(pRes == NULL)
 		return ;
@@ -125,5 +125,5 @@ void xXMLLoader::_deleteResource(const std::ds_wstring& strResName , xCfgDocumen
 	pRes = NULL;
 }  
 
-
 END_NAMESPACE_XEVOL3D
+

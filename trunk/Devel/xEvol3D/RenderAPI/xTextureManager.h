@@ -51,6 +51,7 @@ class  _XEVOL_BASE_API_  xBaseTextureLoader : public xResPathManager
 	IRenderApi*          m_pRenderApi;
 public:	
 	xBaseTextureLoader();
+	IRenderApi*          renderApi(){return m_pRenderApi ;}
 	void                 setRenderApi(IRenderApi* pRenderApi);
 	HBaseTexture         load(const xTextureName& texName , bool bLoadImm  , bool arg);
 	HBaseTexture         loadTexture(const wchar_t* texName, bool bLoadImm  , bool arg);

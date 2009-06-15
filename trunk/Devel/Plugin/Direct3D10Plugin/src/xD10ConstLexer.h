@@ -14,7 +14,7 @@ struct xD10GIFormatInfo
 	DXGI_FORMAT   m_dxfmt;
 	ds_wstring    m_desc;
 	int           m_compont;
-	int           m_byte;
+	int           m_bytePerComponent;
 	ePIXEL_FORMAT m_fmt;
 };
 typedef std::map<DXGI_FORMAT   , int> MapsDXGIToIndex;

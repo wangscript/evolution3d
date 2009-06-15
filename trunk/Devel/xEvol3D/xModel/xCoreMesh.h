@@ -2,7 +2,7 @@
 #define __XBASE_MESH_H__
 #include "xCoreMeshDef.h"
 BEGIN_NAMESPACE_XEVOL3D
-class _XEVOL_BASE_API_ xCoreMesh : public IBaseResource
+class _XEVOL_BASE_API_ xCoreMesh : public IRenderOtherRes
 {
 	IMPL_BASE_OBJECT_INTERFACE(xCoreMesh);
 public:

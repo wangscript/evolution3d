@@ -1,6 +1,6 @@
 #ifndef __XVRC_SCENE_NODE_H__
 #define __XVRC_SCENE_NODE_H__
-
+#include "../../../Plugin/xPluginBaseInc.h"
 #include "xModel/xBaseModel.h"
 #include "xModel/xCoreMesh.h"
 #include "Renderer/xRenderer.h"
@@ -11,7 +11,7 @@ USING_NS_XEVOL3D
 class  xVR_SceneNode;
 class  XVR_SceneManager;
 
-class  xVR_SceneNode : public IDrawableObject
+class _XEVOL_PLUGIN_API_ xVR_SceneNode : public IDrawableObject
 {
 	IMPL_BASE_OBJECT_INTERFACE(xVR_SceneNode)
 	friend class XVR_SceneManager;
@@ -23,11 +23,12 @@ public:
 	virtual void           aabb(xGeomLib::xaabb&     _aabb);
 	virtual void           shpere(xGeomLib::xshpere& _shpere);
 	
-	virtual void           render(unsigned long passedTime) = 0;
+	virtual bool           render(unsigned long passedTime) = 0;
 	virtual bool           update(unsigned long passedTime) = 0 ;
-    virtual bool           load(xCfgNode* pNode) = 0 ;
+    virtual bool           load(xXmlNode* pNode) = 0 ;
+	virtual bool           save(xXmlNode* pXMLNode) = 0;
 public:
-	virtual IRenderApi*    renderApi();
+	virtual IRenderApi*    renderApi(){ return m_pRenderApi ; };
 	virtual const wchar_t* type();
 public:
 	void                   setTrans(const xMathLib::xmat4& Trans);

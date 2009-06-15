@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __FONT_MANAGE_H__
 #define __FONT_MANAGE_H__
 #include "xFontRender.h"
-#include "../BaseLib/xCfgParser.h"
+#include "../BaseLib/xXmlDocument.h"
 #include <map>
 
 BEGIN_NAMESPACE_XEVOL3D
@@ -79,13 +79,13 @@ public:
     HFontRender        findFont(const wchar_t* name);
 	void               unload();
 	bool               load(const wchar_t* cfgFile);
-	bool               load(xCfgNode* pXMLNode);
+	bool               load(xXmlNode* pXMLNode);
 	void               beginFontRender();
 	void               endFontRender();
 
 protected:
-    bool               load_familly(xCfgNode* pNode);
-	bool               load_mixed(xCfgNode* pNode);
+    bool               load_familly(xXmlNode* pNode);
+	bool               load_mixed(xXmlNode* pNode);
 	
 protected:
 	unsigned int       _getResSize(xFontRender* pRes);
@@ -94,8 +94,8 @@ protected:
 	bool               _unloadResource(const std::ds_wstring& strResName , xFontRender* & pRes , unsigned int& TotalResSize);
 	void               _deleteResource(const std::ds_wstring& strResName , xFontRender* pRes);
 protected:
-	bool         __load_truetype_familly(xCfgNode* pNode);
-	bool         __load_truetype_familly_withascii(xCfgNode* pNode);
+	bool         __load_truetype_familly(xXmlNode* pNode);
+	bool         __load_truetype_familly_withascii(xXmlNode* pNode);
 };
 
 END_NAMESPACE_XEVOL3D

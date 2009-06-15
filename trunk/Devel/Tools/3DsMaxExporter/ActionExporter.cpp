@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "stdafx.h"
 #include "ActionExporter.h"
-#include "xCfgParser.h"
+#include "xXmlDocument.h"
 #include <decomp.h> 
 
 void     makBoneTrans2(INode* pNode , sBoneTrans_t& boneTrans , Matrix3& mat)
@@ -104,7 +104,7 @@ bool CActionExporter::load_action_list(sActionInfos_t& actions,xcomdoc& comdoc ,
 {
 
 	xcomdocstream* pactionsstreamTXT = comdoc.open_stream((action_list_name).c_str());
-	xCfgDocument  xmlDoc;
+	xXmlDocument  xmlDoc;
 	if(pactionsstreamTXT->data_len())
 	{
 		int dataLen = (int)pactionsstreamTXT->data_len()  ;
@@ -116,13 +116,13 @@ bool CActionExporter::load_action_list(sActionInfos_t& actions,xcomdoc& comdoc ,
 	}
 
 	comdoc.close_stream(pactionsstreamTXT);
-	xCfgNode* rootNode = xmlDoc.root();
+	xXmlNode* rootNode = xmlDoc.root();
 	if(rootNode == NULL)
 		return true;
 
     for(int i = 0 ;  i < rootNode->countNode() ; i ++)
 	{
-		xCfgNode* actNode = rootNode->findNode(i);
+		xXmlNode* actNode = rootNode->findNode(i);
 		if( actNode )
 		{
 
@@ -143,7 +143,7 @@ void CActionExporter::writeActionList(sActionInfos_t& actions, xcomdoc&  comdoc,
 {
 	xcomdocstream* pactionsstream = comdoc.open_stream(action_list_name.c_str(),false);
 	pactionsstream->stream_seekr(xcdsd_beg,0);
-	xCfgDocument xmlDoc;
+	xXmlDocument xmlDoc;
 
 	if(pactionsstream->data_len())
 	{
@@ -158,7 +158,7 @@ void CActionExporter::writeActionList(sActionInfos_t& actions, xcomdoc&  comdoc,
 	{
 		xmlDoc.insertNode(L"actions");
 	}
-    xCfgNode* rootNode = xmlDoc.root();
+    xXmlNode* rootNode = xmlDoc.root();
 
 	for(size_t i = 0 ;  i < actions.size(); i ++)
 	{
@@ -170,7 +170,7 @@ void CActionExporter::writeActionList(sActionInfos_t& actions, xcomdoc&  comdoc,
 		}
 		else
 		{
-			xCfgNode* actionNode = rootNode->insertNode( actions[i].m_Name );
+			xXmlNode* actionNode = rootNode->insertNode( actions[i].m_Name );
 			actionNode->setValue(L"Name" , actions[i].m_Name);
             actionNode->setValue(L"ActionType",  actions[i].m_ActionType);
 			actionNode->setValue(L"FirstFrame",  actions[i].m_iFirstFrame);

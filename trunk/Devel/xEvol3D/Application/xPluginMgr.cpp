@@ -302,6 +302,16 @@ int  xPluginMgr::loadPluginDir(const wchar_t* pluginDir, const wchar_t* _ext)
     XEVOL_LOG(eXL_DEBUG_NORMAL,L"Find %d plugin \n" , nLoading);
     return nLoading;
 }
+
+const wchar_t*  xPluginMgr::compilerID()
+{
+#ifdef _DEBUG 
+	return L"Debug";
+#else
+	return L"Release";
+#endif
+}
+
 END_NAMESPACE_XEVOL3D
 
 

@@ -90,6 +90,15 @@ void xCamera::toProjectMatrix(xmat4& matProject)
 xCamera::xCamera()
 {
 	m_bUpdate = true;
+	m_fAspect = 1.0f;
+	m_fFar = 0.0f;
+	m_fFov = 45.0f;
+	m_fNear = 0.01f;
+	m_ProjectType = PT_ORTHO;
+	m_ViewRect.m_left = 0.0f;
+	m_ViewRect.m_right = 400.0f;
+	m_ViewRect.m_top   = 0.0f;
+	m_ViewRect.m_bottom = 300.0f;
 }
 
 void xCamera::setViewRect(XViewRect& rect)

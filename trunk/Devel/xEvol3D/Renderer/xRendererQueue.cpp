@@ -3,17 +3,17 @@
 #include <algorithm>
 BEGIN_NAMESPACE_XEVOL3D
 
-class  drawElementCmp
+class  xRenderPassCompare
 {
 	IRenderObjectCmp* m_cmp;
 public:
-	drawElementCmp(IRenderObjectCmp* cmp)
+	xRenderPassCompare(IRenderObjectCmp* cmp)
 	{
 		m_cmp = cmp;
 	}
-	bool operator()(IDrawElement* lhv, IDrawElement* rhv)
+	bool operator()(xRenderPass* lhv, xRenderPass* rhv)
 	{
-		return m_cmp->operator ()(lhv,rhv);
+		return m_cmp->operator ()(lhv->getDrawable() , rhv->getDrawable());
 	}
 
 };
@@ -33,6 +33,10 @@ const  wchar_t* xRendererQueue::name()
 {
 	return m_Name;
 }
+int xRendererQueue::idName()
+{
+	return xStringHash(m_Name);
+}
 
 void xRendererQueue::setName(const wchar_t* _name)
 {
@@ -40,58 +44,58 @@ void xRendererQueue::setName(const wchar_t* _name)
 }
 
 
-size_t        xRendererQueue::size()
+size_t xRendererQueue::size()
 {
-    return m_vecElement.size();
+    return m_vRenderPass.size();
 }
 
-size_t        xRendererQueue::capacity()
+size_t xRendererQueue::capacity()
 {
-    return m_vecElement.capacity();
+    return m_vRenderPass.capacity();
 }
 
-bool          xRendererQueue::reserve(int maxObject)
+bool xRendererQueue::reserve(int maxObject)
 {
-     m_vecElement.reserve(maxObject);
+     m_vRenderPass.reserve(maxObject);
 	 return true;
 }
 
-IDrawElement* xRendererQueue::operator[](size_t index)
+xRenderPass* xRendererQueue::operator[](size_t index)
 {
-	return m_vecElement[index];
+	return m_vRenderPass[index];
 }
 
-size_t           xRendererQueue::insert(IDrawElement* drawObject)
+size_t xRendererQueue::insert(xRenderPass* drawObject)
 {
-	 m_vecElement.push_back( drawObject );
+	 m_vRenderPass.push_back( drawObject );
 	 m_bNeedSorted = true;
-     return m_vecElement.size() - 1;
+     return m_vRenderPass.size() - 1;
 }
 
-void          xRendererQueue::clear()
+void xRendererQueue::clear()
 {
-    for(size_t i = 0 ; i < m_vecElement.size() ; i ++)
+    for(size_t i = 0 ; i < m_vRenderPass.size() ; i ++)
 	{
-		m_vecElement[i]->ReleaseObject() ;
+		m_vRenderPass[i]->ReleaseObject() ;
 	}
-	m_vecElement.clear();
+	m_vRenderPass.clear();
 }
 
-bool          xRendererQueue::setComparer(IRenderObjectCmp* cmp)
+bool xRendererQueue::setComparer(IRenderObjectCmp* cmp)
 {
 	this->m_Cmper = cmp;
 	return true;
 }
 
-
 void xRendererQueue::sort()
 {
-	if(m_Cmper == NULL) return ;
-
-	drawElementCmp cmp(m_Cmper);
-	std::sort(m_vecElement.begin() , m_vecElement.end() , cmp );
+	if(m_Cmper == NULL && m_bNeedSorted) 
+		return ;
+	xRenderPassCompare cmp(m_Cmper);
+	std::sort(m_vRenderPass.begin() , m_vRenderPass.end() , cmp );
 	m_bNeedSorted = false;
-
 }
+
+IMPL_OBJECT_FACTORY_MGR(IRenderObjectCmp , IRenderObjCmpFactory ,  xRenderObjCmpFactoryMgr);
 
 END_NAMESPACE_XEVOL3D

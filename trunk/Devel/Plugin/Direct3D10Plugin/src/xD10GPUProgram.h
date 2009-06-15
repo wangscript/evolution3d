@@ -23,7 +23,7 @@ public:
 	bool                   setTexture(const int texName          , IBaseTexture* pTexture , eShaderType _shader =  eShader_None);
 	bool                   setTextureBySlot(const int iSlot      , IBaseTexture* pTexture , eShaderType _shader =  eShader_None);
 
-	bool                   load(xCfgNode* pXMLNode);
+	bool                   load(xXmlNode* pXMLNode);
 	xD10ShaderParamTable*  getShaderParamTable(eShaderType shType);
 	bool                   setParamater(const wchar_t* name , float  _value , eShaderType shType = eShader_None);
 	bool                   setParamater(const wchar_t* name , int    _value , eShaderType shType = eShader_None);
@@ -95,7 +95,7 @@ class xD10GpuProgram : public IGpuProgram
 
 	IMPL_BASE_OBJECT_INTERFACE(xD10GpuProgram)
 public:
-    bool                    _load(xCfgNode* pNode );
+    bool                    _load(xXmlNode* pNode );
 	bool                    _afterLoad();
 public:
 	xD10GpuProgram(IRenderApi* pRenderApi);

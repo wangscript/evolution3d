@@ -1,7 +1,7 @@
 #ifndef __XBASE_MODEL_H__
 #define __XBASE_MODEL_H__
 
-#include "../BaseLib/xCfgParser.h"
+#include "../BaseLib/xXmlDocument.h"
 #include "../RenderAPI/xRenderAPI.h"
 #include "../RenderAPI/xBaseTexture.h"
 #include "../RenderAPI/xTextureManager.h"
@@ -44,8 +44,9 @@ protected:
 	xBaseTextureMgr*  m_pTexMgr;
 };
 
-class _XEVOL_BASE_API_ xBaseModel
+class _XEVOL_BASE_API_ xBaseModel : public IRenderOtherRes
 {
+    IMPL_BASE_OBJECT_INTERFACE(xBaseModel);
 public:
     xBaseModel(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr , bool bSysMemCopy = false);
 	bool              load(const wchar_t* fileName , unsigned long  arg);
@@ -63,8 +64,8 @@ public:
 
 public:
 	bool              loadSkeleton(xcomdoc& doc , const wchar_t* _dir);
-	bool              loadEmbMeshs(xcomdoc& doc , const wchar_t* _dir , xCfgNode* pRootNode);
-	bool              loadEmbSkinGroup(xcomdoc& doc , const wchar_t* _dir , xCfgNode* pRootNode);
+	bool              loadEmbMeshs(xcomdoc& doc , const wchar_t* _dir , xXmlNode* pRootNode);
+	bool              loadEmbSkinGroup(xcomdoc& doc , const wchar_t* _dir , xXmlNode* pRootNode);
 	bool              createBoneFrameBuffer();
 protected:
 	struct xModelMesh
@@ -85,7 +86,7 @@ protected:
 	size_t            m_iActTime;
 	size_t            m_iAction;
 protected:
-	bool              loadModelMeshMateril(xModelMesh& mesh , xCfgNode* pMeshNode);
+	bool              loadModelMeshMateril(xModelMesh& mesh , xXmlNode* pMeshNode);
 protected:
 	IRenderApi*       m_pRenderApi;
 	xBaseTextureMgr*  m_pTexMgr;

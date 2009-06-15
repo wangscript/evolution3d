@@ -30,9 +30,12 @@ xD10BufferBinding::~xD10BufferBinding()
 
 bool xD10BufferBinding::validate()
 {
-   if(m_InputBuffer == NULL || m_pReflection == NULL)
+   if(m_InputBuffer == NULL)
 	   return false;
-   return m_pReflection->flushToBuffer();
+   xD10InputBufReflection* 	 pReflection =   m_pReflection == NULL ? (xD10InputBufReflection*)m_InputBuffer->reflection() : m_pReflection;
+   if(pReflection == NULL) 
+	   return false;
+   return pReflection->flushToBuffer();
 }
 
 
@@ -557,7 +560,7 @@ bool xD10ShaderParamTable::installBuffer()
 
 		if(InputBuffer)
 		{
-			pRSV =  InputBuffer->toShaderResourceView();
+			pRSV =  InputBuffer->toShaderResourceView(PIXELFORMAT_R32G32B32A32F);
 		}
 
 		//ÅÐ¶Ï°ó¶¨µÄResource View

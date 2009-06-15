@@ -62,21 +62,21 @@ void AppandSkins(sSkinGroups_t& groups,xcomdocstream* pDescStream)
 	char* buf = new char[pDescStream->data_len() + 1];
 	pDescStream->read(buf,pDescStream->data_len());
 	buf[pDescStream->data_len() ] = 0;
-	xCfgDocument xml;
+	xXmlDocument xml;
 	xml.load( buf, (int)pDescStream->data_len() ,true);
-    xCfgNode* rootNode = xml.root();
+    xXmlNode* rootNode = xml.root();
 	if(rootNode == NULL)
 	{
 		return ;
 	}
-	xCfgNode::CfgNodes _oldNodes;
+	xXmlNode::XmlNodes _oldNodes;
 	rootNode->findNode(L"skinGroup",_oldNodes);
 	for(size_t i =  0 ; i < groups.size() ; ++i)
 	{
 		bool bFinded = false;
 		for(size_t j = 0 ; j < _oldNodes.size() ; j ++)
 		{
-			xCfgNode* pNode = _oldNodes[j];
+			xXmlNode* pNode = _oldNodes[j];
 			if( wstring(pNode->value(L"name")) == groups[i].m_GroupName)
 			{
 				bFinded = true;

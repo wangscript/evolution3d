@@ -108,6 +108,7 @@ xPixelFormatAssitImp::xPixelFormatAssitImp()
 	    __addPixelFormat(PIXELFORMAT_DEPTH16          ,  L"DEPTH16");
 	    __addPixelFormat(PIXELFORMAT_DEPTH24          ,  L"DEPTH24");
 	    __addPixelFormat(PIXELFORMAT_DEPTH32          ,  L"DEPTH32");
+        __addPixelFormat(PIXELFORMAT_DEPTH32S8UX24    ,  L"FORMAT_DEPTH32S8UX24");
 
 
 		//不可以操作的

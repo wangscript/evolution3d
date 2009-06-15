@@ -137,9 +137,9 @@ public:
 	const wchar_t*  supportExt(bool bSave);
 	int          byteAlign();
 	bool         convert(ePIXEL_FORMAT newFmt){ return false ; }; 
-	bool         scale(int w , int h , IMAGE_FILTER filter = FILTER_BOX){ return false ; }; 
-	bool         scalePOT(IMAGE_FILTER filter = FILTER_BOX){ return false ; }; 
-	bool         scaleFit(int w , int h , IMAGE_FILTER filter = FILTER_BOX){ return false ; }; 
+	bool         scale(int w , int h , IMAGE_FILTER filter = eFILTER_BOX){ return false ; }; 
+	bool         scalePOT(IMAGE_FILTER filter = eFILTER_BOX){ return false ; }; 
+	bool         scaleFit(int w , int h , IMAGE_FILTER filter = eFILTER_BOX){ return false ; }; 
 
 	bool         load(xImageSize size){ return false ; }; 
 	bool         load(int w , int h , ePIXEL_FORMAT fmt){ return false ; }; 

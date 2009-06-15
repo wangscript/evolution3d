@@ -99,8 +99,8 @@ int   XComDoc_Uncompress(_xcd_int8* dest_buf,_xcd_int8* src_buf, int dest_buf_le
 sCDCompressedFile m_FileHeader;
 void  CZLibReadBuffer::init_file_header()
 {
-	int old_pos = m_DiskFile->tellg();
-	m_DiskFile->seekg(m_FileBegPos,ios::beg);
+	int old_pos = m_DiskFile->tell();
+	m_DiskFile->seek(m_FileBegPos,std::ios_base::beg);
 	m_DiskFile->read((_xcd_int8*)&m_FileHeader.m_nBlock,4);
 	m_FileHeader.m_pEntris = t_malloc<CCDCompressedDataPackBuffer>(m_FileHeader.m_nBlock);
 
@@ -123,7 +123,7 @@ void  CZLibReadBuffer::init_file_header()
 	m_curBlockIndex   = 0;
 	m_DataNowPos = 0;
 
-	m_DiskFile->seekg(old_pos,ios::beg);
+	m_DiskFile->seek(old_pos,std::ios_base::beg);
 }
 
 
@@ -134,7 +134,7 @@ void  CZLibReadBuffer::cacheBlock(int index)
 	if(readBlock.buffer)
 		return ;
 
-	m_DiskFile->seekg(readBlock.m_OffsetInFile,ios::beg);
+	m_DiskFile->seek(readBlock.m_OffsetInFile, std::ios_base::beg);
 	readBlock.alloc();
 
 	_xcd_int8* compressedbuf = t_malloc<_xcd_int8>(readBlock.m_Info.m_CompreessedSize);
@@ -180,23 +180,23 @@ int    CZLibReadBuffer::read(_xcd_int8* buf, int byte_read)
 	}
 }
 
-void   CZLibReadBuffer::seekg(int _offset, ios::seekdir pos)
+void   CZLibReadBuffer::seekg(int _offset, std::ios_base::seekdir pos)
 {
-	if(pos == std::ios::cur)
+	if(pos == std::ios_base::cur)
 	{
 		if( (m_DataNowPos + _offset) > m_DataLen )
 			m_DataNowPos = m_DataLen;
 		else
 			m_DataNowPos += _offset;
 	}
-	else if(pos == std::ios::beg)
+	else if(pos == std::ios_base::beg)
 	{
 		if( _offset > (int)m_DataLen )
 			m_DataNowPos = 0 + m_DataLen;
 		else
 			m_DataNowPos = 0 + _offset;
 	}
-	else if(pos == std::ios::end)
+	else if(pos == std::ios_base::end)
 	{
 		if( _offset > (int)m_DataLen )
 			m_DataNowPos = 0;

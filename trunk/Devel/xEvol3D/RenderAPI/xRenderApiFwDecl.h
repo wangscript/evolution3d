@@ -4,7 +4,7 @@
 #include "../BaseLib/xEvol3DAPI.h"
 BEGIN_NAMESPACE_XEVOL3D
 //Forword decl baselib
-class _XEVOL_BASE_API_  xCfgNode;
+class _XEVOL_BASE_API_  xXmlNode;
 
 //===================================
 class _XEVOL_BASE_API_  IRenderObject;
@@ -14,8 +14,8 @@ class _XEVOL_BASE_API_  ISamplerState;
 class _XEVOL_BASE_API_  IBlenderState;
 class _XEVOL_BASE_API_  IRasterizerState;
 class _XEVOL_BASE_API_  IDepthStencilState;
+class _XEVOL_BASE_API_  ILightingEnv;
 
-class _XEVOL_BASE_API_  I2DTexture ;
 class _XEVOL_BASE_API_  IHeplerRenderApi;
 class _XEVOL_BASE_API_  IRenderApi;
 class _XEVOL_BASE_API_  IBaseTexture ;

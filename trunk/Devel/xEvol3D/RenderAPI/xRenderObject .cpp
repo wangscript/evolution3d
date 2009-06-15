@@ -1,4 +1,5 @@
 #include "xRenderObject.h"
+#include "xRenderAPI.h"
 BEGIN_NAMESPACE_XEVOL3D
 
 IMPL_BASE_OBJECT_CLASSID(IRenderObject   , IBaseObject);
@@ -23,12 +24,16 @@ IRenderResource::~IRenderResource()
 
 IRenderObject::IRenderObject(IRenderApi* pOwner)
 {
-	m_pRenderApi = pOwner;
+    m_pRenderApi = pOwner;
+    if(m_pRenderApi)
+    {
+          m_pRenderApi->addRenderObject(this);
+    }
 }
 
 IRenderObject::~IRenderObject()
 {
-
+    m_pRenderApi->removeRenderObject(this);
 }
 
 IRenderState::IRenderState(IRenderApi* pOwner):IRenderObject(pOwner) 

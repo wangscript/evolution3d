@@ -33,7 +33,7 @@ xheartblue 2004-10-25
 */
 
 #include "xcomdoc.h"
-using namespace XEvol3D;
+
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/device/file.hpp>
 
@@ -50,7 +50,7 @@ namespace std
 	  typedef _Char char_type;
 #endif
 	   typedef boost::iostreams::seekable_device_tag             category;
-	   xcomdocstream_device(xcomdocstream* pStream) 
+       xcomdocstream_device(NS_XEVOL3D::xcomdocstream* pStream) 
 	   { 
 		   m_pStream = pStream;
 	   }
@@ -69,7 +69,7 @@ namespace std
 
 	   boost::iostreams::stream_offset seek(boost::iostreams::stream_offset off, std::ios_base::seekdir way)
 	   {
-		   xcd_seek_dir xcom_way = xcdsd_cur;
+		   NS_XEVOL3D::xcd_seek_dir xcom_way = xcdsd_cur;
 		   if(way == std::ios_base::cur) 
 			   xcom_way = xcdsd_cur;
 		   else if(way == std::ios_base::end) 
@@ -83,7 +83,7 @@ namespace std
    private:
 	   //typedef typename Container::size_type   size_type;
 	   typedef int                               size_type;
-	   xcomdocstream                             *m_pStream;
+	   NS_XEVOL3D::xcomdocstream                 *m_pStream;
    };
 
 

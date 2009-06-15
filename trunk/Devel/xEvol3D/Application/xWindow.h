@@ -31,9 +31,9 @@ using namespace std;
 
 BEGIN_NAMESPACE_XEVOL3D
 class _XEVOL_BASE_API_  IWindow;
-struct xWindowMsg : public sXrBaseMsg
+struct xWindowMsg : public xBaseWindowMsg
 {
-	IWindow*               m_pWndReciver;
+	IWindow*      m_pWndReciver;
 };
 
 typedef bool (*PFNWINDOWPROC)(IWindow* pWnd,xWindowMsg msg);

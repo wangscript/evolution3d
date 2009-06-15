@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "stdafx.h"
 #include "FrameAniModelExpoter.h"
-#include "xCfgParser.h"
+#include "xXmlDocument.h"
 #include "xExportFunction.h"
 CFrameAniModelExporter::CFrameAniModelExporter(CMaxNodeTree& nodeTree)
 :m_nodeTree(nodeTree)
@@ -136,14 +136,14 @@ bool CFrameAniModelExporter::__export_header(wstring prefix,vector<wstring>& mes
     //write the model desc
     //m_doc.create_stream( (prefix + MODEL_TYPE_STRING(XRM_STATIC_MODEL) ).c_str());
     xcomdocstream* pstream =  m_doc.create_stream((prefix + L"desc.xml").c_str(),(xcd_data_type)cddt_frame_ani_model_desc);
-	xCfgDocument xml;
-	xCfgNode* rootNode = xml.insertNode(L"model");
+	xXmlDocument xml;
+	xXmlNode* rootNode = xml.insertNode(L"model");
 	rootNode->insertValue(L"type")->setValue(L"frame");
 	rootNode->insertValue(L"name")->setValue(m_ExpContex.m_ModelDesc.m_Name);
 
 	for(size_t i = 0 ; i<mesh_names.size();++i)
 	{
-		xCfgNode* meshNode = rootNode->insertNode(L"mesh");
+		xXmlNode* meshNode = rootNode->insertNode(L"mesh");
 		meshNode->insertValue(L"name")->setValue(mesh_names[i].c_str());
 	}
 
@@ -158,13 +158,13 @@ bool CFrameAniModelExporter::__export_header(wstring prefix,vector<wstring>& mes
     //写入每一动作的数据
     xcomdocstream* pActstream =  m_doc.create_stream((prefix + L"actions.xml").c_str());
 
-	xCfgDocument xmlAct;
-	xCfgNode* rootActNode = xmlAct.insertNode(L"actions");
+	xXmlDocument xmlAct;
+	xXmlNode* rootActNode = xmlAct.insertNode(L"actions");
 	int nAct = (int)m_ExpContex.m_Actions.size();
     int nFrame = 0;
     for(int i = 0 ; i < nAct ; ++i)
 	{
-		xCfgNode* actNode = rootActNode->insertNode(L"action");
+		xXmlNode* actNode = rootActNode->insertNode(L"action");
 		sActionInfo_t& action = m_ActionDatas[i].m_ActionInfoExp.m_BaseInfo ;
 		action.m_nFrame = GetActNumFrame(action);
 

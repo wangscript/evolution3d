@@ -93,7 +93,7 @@ public:
 	template <typename OSTREAM_T> bool  save_hiberarchys_xml(OSTREAM_T& asciistream);
 	
 public:
-	bool  save_hiberarchys_xml_node(xCfgNode* pRootNode , int boneIndex);
+	bool  save_hiberarchys_xml_node(xXmlNode* pRootNode , int boneIndex);
 
 	bool        save_skeleton(xcomdoc& doc,wstring skeleton_dir = L"skeleton/");
 	//bool        save_bone_inf(xcomdoc& comdoc,wstring skeleton_dir);

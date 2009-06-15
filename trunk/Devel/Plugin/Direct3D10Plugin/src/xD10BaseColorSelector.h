@@ -72,7 +72,7 @@ public:
 	bool beginPrimitive();
 	bool endPrimitive();
 	bool getSelectID(int x , int y , int w , int h, void* _data);
-	bool create(xCfgNode* pNode);
+	bool create(xXmlNode* pNode);
 	bool resize(int w , int h );
 };
 

@@ -31,15 +31,15 @@ namespace std
 	void* xDllSafeMemAlloc::alloc(size_t _size)
 	{
 		//return ::malloc(_size);
-		//std::allocator<char> _alloc;
-		//return _alloc.allocate(_size);
+		std::allocator<char> _alloc;
+		return _alloc.allocate(_size);
 		return XEvol3D::Mem::Alloc(_size);
 	}
 	void  xDllSafeMemAlloc::dealloc(void* pdata,size_t _size)
 	{
 		//::free(pdata);
-		//std::allocator<char> _alloc;
-		//return _alloc.deallocate((char*)pdata , _size);
+		std::allocator<char> _alloc;
+		return _alloc.deallocate((char*)pdata , _size);
 
 		return XEvol3D::Mem::Dealloc(pdata);
 	}

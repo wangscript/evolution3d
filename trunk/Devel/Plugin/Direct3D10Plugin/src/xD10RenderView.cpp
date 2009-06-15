@@ -19,14 +19,7 @@ xD10RenderView::xD10RenderView(xD3D10RenderApi* pRenderApi) : IRenderView(pRende
 	m_pDepthStencilView    = NULL;
 	m_DepthBuffer          = NULL;
 
-	IRenderTarget* pDefDepthBuffer = m_pD10Api->DefDepthBuffer();
-	if(pDefDepthBuffer)
-	{
-		xTextureDesc desc;
-		pDefDepthBuffer->desc( desc);
-		m_widht   = desc.m_width;
-		m_height  = desc.m_height;
-	};
+    pRenderApi->getWindowSize(m_widht , m_height );
 }
 
 xD10RenderView::~xD10RenderView()
@@ -35,8 +28,8 @@ xD10RenderView::~xD10RenderView()
 }
 bool  xD10RenderView::destory()
 {
+    XSAFE_RELEASEOBJECT(m_DepthBuffer);
 	XSAFE_RELEASEOBJECT(m_DepthTexture);
-	XSAFE_RELEASEOBJECT(m_DepthBuffer);
 	for(size_t i = startIdx() ; i < MAX_RENDER_TARGET ; i ++ )
 	{
 		XSAFE_RELEASEOBJECT(m_RenderTargets[i]);
@@ -52,6 +45,7 @@ bool  xD10RenderView::createRenderTarget(int nRenderTarget , ePIXEL_FORMAT fmt ,
 	{
 		IRenderTarget* pRenderTarget = m_pD10Api->createRenderTarget(w , h ,fmt , bLockable , bAsTexture);
 		setRenderTarget(pRenderTarget , i);
+        XSAFE_RELEASEOBJECT(pRenderTarget);
 	}
 	return setup();
 }
@@ -73,7 +67,6 @@ bool xD10RenderView::setRenderTarget(IBaseTexture*  pTexture , size_t rtIdx)
 
 	if(pTexture == NULL)
 		return false;
-	IRenderTarget* pRT = pTexture->toRenderTarget();
 	return setRenderTarget(pTexture , rtIdx);
 }
 
@@ -96,6 +89,42 @@ bool xD10RenderView::setRenderTarget(IRenderTarget* pRenderTarget , size_t rtIdx
 	m_RenderTargetsView[rtIdx] = pRTV;
 	return true;
 }
+bool xD10RenderView::setupDepthView(int w , int h , bool bSet)
+{
+    if( false == m_DepthTexture->create(w , h , PIXELFORMAT_DEPTH32) )
+    {
+        return false;
+    }
+    if(bSet)
+    {
+        return setDepthBuffer(m_DepthTexture);
+    }
+    return true;
+}
+
+bool xD10RenderView::createDepthView(int w , int h)
+{
+    HRESULT hr = S_OK;
+    ID3D10Device* pDevice = m_pD10Api->d10Device();
+    XSAFE_RELEASEOBJECT(m_DepthTexture);
+    m_DepthTexture = new xD10DepthTexture(false , false , m_pD10Api);
+    if(setupDepthView( w , h , true) == false)
+    {
+         XSAFE_RELEASEOBJECT(m_DepthTexture);
+         return false;
+    }
+    return true;
+}
+bool xD10RenderView::setDepthBuffer(IBaseTexture* pDepthTexture)
+{
+    if(pDepthTexture == NULL)
+        return false;
+
+    IRenderTarget* pRenderTarget = pDepthTexture->toRenderTarget();
+    bool bRet = setDepthBuffer( pRenderTarget );
+    XSAFE_RELEASEOBJECT(pRenderTarget);
+    return bRet;
+}
 
 bool xD10RenderView::setDepthBuffer(IRenderTarget* pDepthBuffer) 
 {
@@ -103,11 +132,11 @@ bool xD10RenderView::setDepthBuffer(IRenderTarget* pDepthBuffer)
 	{
 		if(m_DepthTexture == NULL)
 			return false;
-		setDepthBuffer( m_DepthTexture->toRenderTarget() );
+        return setDepthBuffer(m_DepthTexture);
 	}
 
 	ID3D10DepthStencilView* pDSV = (ID3D10DepthStencilView*)pDepthBuffer->handle();
-	if(m_DepthBuffer) m_DepthBuffer->ReleaseObject();
+	XSAFE_RELEASEOBJECT(m_DepthBuffer) ;
 	pDepthBuffer->AddRef();
 	m_DepthBuffer = pDepthBuffer;
 	m_pDepthStencilView = pDSV;
@@ -139,13 +168,17 @@ bool xD10RenderView::resize(int w , int h)
 	if( m_DepthTexture )
 	{
 		m_DepthTexture->unload();
-		if( false == m_DepthTexture->create(w , h , PIXELFORMAT_DEPTH32) )
-		{
-			return false;
-		}
-		return setDepthBuffer( m_DepthTexture->toRenderTarget() );
+        bool bSet = m_DepthTexture->isSameInstance(m_DepthBuffer);
+		return setupDepthView( w , h , bSet);
 	}
 	return false;
+}
+
+ID3D10DepthStencilView* xD10RenderView::depthView()
+{
+    ID3D10DepthStencilView* pDepthStencilView = m_pDepthStencilView;
+    if(pDepthStencilView == NULL) pDepthStencilView = m_pD10Api->DefDepthStencilView();
+    return pDepthStencilView;
 }
 
 int xD10RenderView::addRenderTarget(IBaseTexture*  pTexture)
@@ -180,26 +213,28 @@ IRenderTarget*  xD10RenderView::depthBuffer()
 { 
 	if(m_DepthBuffer) 
 	{
-		m_DepthBuffer->AddRef();
+        m_DepthBuffer->AddRef();
 		return m_DepthBuffer;
 	}
 	return m_DepthTexture->toRenderTarget();
 }
 
+bool  xD10RenderView::depthBufferDesc(xTextureDesc& _desc )
+{
+    if(m_DepthBuffer) 
+    {
+        return m_DepthBuffer->desc(_desc);
+    }
+    return m_DepthTexture->desc(_desc);
+}
 IRenderObject*  xD10RenderView::renderTarget(size_t rtIdx )
 { 
 	if( (int)rtIdx < startIdx() || rtIdx >= MAX_RENDER_TARGET )
 		return NULL;
-	m_RenderTargets[rtIdx]->AddRef();
 	return m_RenderTargets[rtIdx] ; 
 }
 
-ID3D10DepthStencilView* xD10RenderView::depthView()
-{
-	ID3D10DepthStencilView* pDepthStencilView = m_pDepthStencilView;
-	if(pDepthStencilView == NULL) pDepthStencilView = m_pD10Api->DefDepthStencilView();
-	return pDepthStencilView;
-}
+
 
 bool xD10RenderView::install()
 {
@@ -228,12 +263,15 @@ bool xD10RenderView::setup()
     if(m_TextureDesc.m_nArraySize == 0)
 		return false;
 	xTextureDesc _desc;
-	depthBuffer()->desc(_desc);
+	depthBufferDesc(_desc);
 	for(size_t i = 0 ; i < (size_t)nRT ; i ++)
 	{
-		m_RenderTargets[i]->desc( m_TextureDesc );
-		if(_desc.m_fmt != m_TextureDesc.m_fmt || _desc.m_width != m_TextureDesc.m_width || _desc.m_height != m_TextureDesc.m_height)
-			return false;
+		if(m_RenderTargets[i]) 
+        {
+            m_RenderTargets[i]->desc( m_TextureDesc );
+		    if(_desc.m_fmt != m_TextureDesc.m_fmt || _desc.m_width != m_TextureDesc.m_width || _desc.m_height != m_TextureDesc.m_height)
+			   return false;
+        }
 	}
 	m_TextureDesc.m_nArraySize = nRT;
 	return true;
@@ -276,23 +314,8 @@ bool xD10RenderView::clear(xColor_4f& bkColor ,  float z , unsigned int stencil,
 	return true;
 }
 
-bool xD10RenderView::createDepthView(int w , int h)
-{
-	HRESULT hr = S_OK;
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
-	
-	xD10DepthTexture* pDepthTexture = new xD10DepthTexture(false , false , m_pD10Api);
-	if( false == pDepthTexture->create(w , h , PIXELFORMAT_DEPTH32) )
-	{
-		delete pDepthTexture;
-		return false;
-	}
-	m_DepthTexture = pDepthTexture;
-	return setDepthBuffer( pDepthTexture->toRenderTarget() );
-}
-
 //==================´°¿Ú»¯µÄ====================================================
-xD10RenderWindow::xD10RenderWindow(HWND hWnd , xD3D10RenderApi* pRenderApi) : xD10RenderView(pRenderApi),m_WindowRT(pRenderApi)
+xD10RenderWindow::xD10RenderWindow(HWND hWnd , xD3D10RenderApi* pRenderApi) : xD10RenderView(pRenderApi),m_WindowRT(pRenderApi ,m_TextureDesc )
 {
 	m_hWnd = hWnd;
 	m_pSwapChain = NULL;
@@ -311,6 +334,7 @@ bool xD10RenderWindow::resize(int w , int h)
 		return true; 
 	m_pD10Api->d10Device()->OMSetRenderTargets(0 , NULL , NULL );
 
+    XSAFE_RELEASEOBJECT(m_DepthBuffer);
 	XSAFE_UNLOAD(m_DepthTexture);
 	XSAFE_RELEASE(m_RenderTargetsView[0]);
 	DXGI_SWAP_CHAIN_FLAG swcFlag = (DXGI_SWAP_CHAIN_FLAG)0;
@@ -345,6 +369,12 @@ bool xD10RenderWindow::_createRenderTargets()
 		return 	setup();
 	}
 	return false;
+}
+
+bool xD10RenderWindow::desc(xTextureDesc& _desc)
+{
+	_desc = m_WindowRT.m_TexDesc;
+	return true;
 }
 
 bool xD10RenderWindow::create(IDXGISwapChain* pSwapChain , int width , int height)

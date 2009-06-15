@@ -13,7 +13,7 @@ class xD10Sampler : public ISamplerState
 	ID3D10SamplerState *      m_pD10Sampler;
 	std::wstring              m_name;
 	bool                      _destory() ; 
-	bool                      _load(xCfgNode* node);
+	bool                      _load(xXmlNode* node);
 public:
 	void*        handle(){ return m_pD10Sampler ; }
 	xD10Sampler(xD3D10RenderApi* pAPI  );

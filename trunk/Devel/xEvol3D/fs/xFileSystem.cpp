@@ -17,12 +17,20 @@
 #include "../BaseLib/xI18N.h"
 BEGIN_NAMESPACE_XEVOL3D
 
-xFileSystem* xFileSystem::singleton()
-{
-	static xFileSystem sys;
-	return &sys;
-}
 
+IMPL_REFCOUNT_OBJECT_FUNCTION(xFileStream);
+
+static FILE* xOpenFileRWB(const wchar_t* wcsFileName)
+{
+#ifdef _WIN32
+	FILE* fp = _wfopen(wcsFileName , L"rwb");
+#else
+	int8 mbsFileName[512]={0};
+	XEvol_UnicodeToLocale(wcsFileName,mbsFileName,512);
+	FILE* fp = fopen(mbsFileName , "rwb");
+#endif
+	return fp;
+}
 static FILE* OpenFileRB(const wchar_t* wcsFileName)
 {
 #ifdef _WIN32
@@ -33,6 +41,110 @@ static FILE* OpenFileRB(const wchar_t* wcsFileName)
 	FILE* fp = fopen(mbsFileName , "rb");
 #endif
 	return fp;
+}
+
+
+xFileStream::xFileStream()
+{
+	m_fStream = NULL;
+}
+
+xFileStream::~xFileStream()
+{
+	m_fStream = NULL;
+}
+
+bool xFileStream::open_stream(const wchar_t* _fileName)
+{
+	m_fStream = xOpenFileRWB(_fileName);
+	return m_fStream != NULL;
+}
+
+int xFileStream::close()
+{
+	return fclose(m_fStream);
+}
+
+size_t xFileStream::read(char* buf, size_t byte_read)
+{
+	return fread(buf,1 , byte_read,m_fStream);
+}
+
+size_t xFileStream::write(char* buf,size_t byte_read)
+{
+	return fwrite(buf,1 , byte_read,m_fStream);
+}
+
+size_t xFileStream::seek(long _offset, std::ios_base::seekdir _dir)
+{
+	switch(_dir)
+	{
+	case std::ios_base::beg:
+		fseek(m_fStream,(long)_offset,SEEK_SET);
+		break;
+	case std::ios_base::end:
+		fseek(m_fStream,(long)_offset,SEEK_END);
+		break;
+	case std::ios_base::cur:
+		fseek(m_fStream,(long)_offset,SEEK_CUR);
+		break;
+	}
+	return tell();
+}
+
+size_t xFileStream::tell()
+{
+	return ftell(m_fStream);
+}
+
+bool xFileStream::eof()
+{
+	return  feof(m_fStream) != 0;
+}
+
+
+
+xFileSystem* xFileSystem::singleton()
+{
+	static xFileSystem sys;
+	return &sys;
+}
+
+
+
+std::ds_wstring xFileSystem::getFileName(const wchar_t* fullName)
+{
+	if(fullName == NULL)
+		return L"";
+	int idx = (int)wcslen(fullName - 1);
+	for(; idx >= 0 ; idx --)
+	{
+		if(fullName[idx] == '\\' || fullName[idx]=='/')
+		{
+			break;
+		}
+	}
+	std::ds_wstring _ret = fullName + (idx + 1);   
+	return _ret;
+}
+
+std::ds_wstring xFileSystem::getPathName(const wchar_t* fullName)
+{
+	if(fullName == NULL)
+		return L"";
+	std::ds_wstring _ret = fullName;   
+	std::ds_wstring::size_type pos = _ret.rfind('\\');
+	if(pos == std::ds_wstring::npos) 
+	{
+		pos = _ret.rfind('/');
+	}
+	if(pos == std::ds_wstring::npos )
+	{
+		return L"";
+	}
+
+	_ret.replace(pos ,wcslen(fullName), L"");
+	return _ret;
 }
 
 bool xFileSystem::fileExist(const wchar_t* wcsFileName)
@@ -71,13 +183,17 @@ void xFileSystem::unloadFile( unsigned int8*& fileBufer)
 
 IRWStream* xFileSystem::loadFile(const wchar_t* fileStream)
 {
-	XEVOL_WARNNING_NOT_IMPLEMENT;
+    xFileStream* pFileStream = new xFileStream;
+	if(true == pFileStream->open_stream(fileStream) )
+		return pFileStream;
+	delete pFileStream;
     return NULL;
 }
 
 const wchar_t* xFileSystem::getFileExtName(const wchar_t* filename )
 {
 	static wchar_t name_ext[16]={0};
+	name_ext[0] = 0;
 	size_t  len = wcslen(filename);
 
 	for( size_t i = len-1 ; i > 0 ; i -- )

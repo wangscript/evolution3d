@@ -109,18 +109,22 @@ public:
 	bool                 unlock();
 	bool                 enableThreadLocker(bool bEnable);
 	bool                 onResize(int w , int h);
-	bool                 init(xCfgNode* pxmlNode);
+	bool                 init(xXmlNode* pxmlNode);
 	bool                 uninit();
 	//
 	//Mem buffer
 	IInputAssembler*     getInputAssembler(const wchar_t* name);
 	IInputAssembler*     createInputAssembler(const wchar_t* name , xInputLayoutDesc& desc );
-    IInputBuffer*        createInputBuffer(size_t nVert , size_t nBytePerVertex , const xInputBufferDesc* pBufferDesc , void* pData) ;
+      IInputBuffer*        createInputBuffer(size_t nVert , size_t nBytePerVertex , const xInputBufferDesc* pBufferDesc , void* pData) ;
 	IInputBuffer*        createBuffer(size_t iBufLen ,const xInputBufferDesc* pBufferDesc , void* pData);
 	IInputBuffer*        findInputBuffer(const wchar_t* _name);
+	bool                 removeInputBuffer(IInputBuffer* pConstBuffer);
+	bool                 removeInputBuffer(const wchar_t* _name);
 	bool                 setInputBuffer(const wchar_t* _name, IInputBuffer* pConstBuffer);
 	IInputBuffer*        createConstBuffer(size_t iBufLen);
 	IInputBuffer*        createInputBuffer(size_t iBufLen);
+	ILightingEnv*        createLightingState(const wchar_t* _name);
+	ILightingEnv*        findLightingState(const wchar_t* _name);
 	//Object Manager
 	xD3D10ObjectManager& objectManager()    {return  m_objManager    ; }
 	xGpuProgramManager*  gpuProgramManager(){return &m_GpuProgramMgr ; }
@@ -230,12 +234,14 @@ public:
 	bool                 setRenderView(IRenderView* renderView);
 	bool                 pushRenderView(IRenderView* renderView);
 	bool                 popRenderView();
-
+    bool                 getWindowSize(int& w , int & h);
+    bool                 getRenderViewSize(int& w , int & h);
 	//D3D10RenderApi特有的
 public:
 	ID3D10Device*            d10Device();
 	ID3D10DepthStencilView*  DefDepthStencilView();
 	IRenderTarget*           DefDepthBuffer();
+	bool                     removeLightingState(const wchar_t* _name);
 protected:
 	bool           __needResize(int width , int height);
 	bool           __resetViewPort();
@@ -287,6 +293,8 @@ protected:
 	xD102DRectEnv*          m_pDef2DRectEnv;
 	float                   m_2DZValue;
 
+	//光照系统
+	ILightingEnv*           m_LightingState;
 	//像素选择
 	eRenderMode                   m_RenderMode;
     IColorSelector*               m_pColorSelector;

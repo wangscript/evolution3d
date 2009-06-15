@@ -295,3 +295,4 @@ void printBits (char c[35], float f)
 
 	c[34] = 0;
 }
+

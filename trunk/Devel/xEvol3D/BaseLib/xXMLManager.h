@@ -18,24 +18,24 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#ifndef __XUI__XML_MANAGER_H__
-#define __XUI__XML_MANAGER_H__
+#ifndef __XML_MANAGER_H__
+#define __XML_MANAGER_H__
 #include "xResPackageMgr.h"
-#include "xCfgParser.h"
-BEGIN_NAMESPACE_XEVOL3D
+#include "xXmlDocument.h"
 
+BEGIN_NAMESPACE_XEVOL3D
 class  _XEVOL_BASE_API_  xXMLLoader : public xResPathManager
 {
 protected:
-	unsigned int _getResSize(xCfgDocument* pRes);
-	virtual bool _isResLoaded(xCfgDocument* pRes);
-	virtual bool _loadResource(const std::ds_wstring& strResName   , XEvol3D::xCfgDocument* & pRes , int& ResSize, unsigned int arg);
-	virtual bool _unloadResource(const std::ds_wstring& strResName , XEvol3D::xCfgDocument* & pRes , unsigned int& TotalResSize);
-	virtual void _deleteResource(const std::ds_wstring& strResName , XEvol3D::xCfgDocument* pRes);
+	unsigned int _getResSize(xXmlDocument* pRes);
+	virtual bool _isResLoaded(xXmlDocument* pRes);
+	virtual bool _loadResource(const std::ds_wstring& strResName   , XEvol3D::xXmlDocument* & pRes , int& ResSize, unsigned int arg);
+	virtual bool _unloadResource(const std::ds_wstring& strResName , XEvol3D::xXmlDocument* & pRes , unsigned int& TotalResSize);
+	virtual void _deleteResource(const std::ds_wstring& strResName , XEvol3D::xXmlDocument* pRes);
 };
 
-typedef TResHandle <xCfgDocument , std::ds_wstring , xXMLLoader     > HXMLCfg;
-typedef TLRUPolicyResMgr<xCfgDocument , std::ds_wstring , xXMLLoader> xXMLCfgMgr;
+typedef TResHandle <xXmlDocument , std::ds_wstring , xXMLLoader     > HXMLDoc;
+typedef TLRUPolicyResMgr<xXmlDocument , std::ds_wstring , xXMLLoader> xXMLDocMgr;
 
 END_NAMESPACE_XEVOL3D
 

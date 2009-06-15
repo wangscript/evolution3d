@@ -61,9 +61,9 @@ public:
 	const wchar_t*  supportExt(bool bSave);
 	int          byteAlign();
 	bool         convert(ePIXEL_FORMAT newFmt);
-	bool         scale(int w , int h , IMAGE_FILTER filter = FILTER_BOX);
-	bool         scalePOT(IMAGE_FILTER filter = FILTER_BOX) ; 
-	bool         scaleFit(int w , int h , IMAGE_FILTER filter = FILTER_BOX) ;
+	bool         scale(int w , int h , IMAGE_FILTER filter = eFILTER_BOX);
+	bool         scalePOT(IMAGE_FILTER filter = eFILTER_BOX) ; 
+	bool         scaleFit(int w , int h , IMAGE_FILTER filter = eFILTER_BOX) ;
 
 	bool         load(xImageSize size);
 	bool         load(int w , int h , ePIXEL_FORMAT fmt);

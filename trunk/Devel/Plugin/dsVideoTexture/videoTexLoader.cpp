@@ -103,3 +103,21 @@ const wchar_t* xVideoCaptureTextureLoader::ext(size_t index)
 	};
     return gs_ext[index];
 }
+xVideoTextureLoader::xVideoTextureLoader()
+{
+    m_RefCount = 1;
+}
+
+xVideoTextureLoader::~xVideoTextureLoader()
+{
+
+}
+
+xVideoCaptureTextureLoader::xVideoCaptureTextureLoader()
+{
+    m_RefCount = 1;
+}
+
+xVideoCaptureTextureLoader::~xVideoCaptureTextureLoader()
+{
+}

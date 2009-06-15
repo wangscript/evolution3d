@@ -15,7 +15,7 @@ class xD10ZStencilState : public IDepthStencilState
 	unsigned     int          m_stecilref;
 
 	bool                      _destory() ; 
-	bool                      _load(xCfgNode* node);
+	bool                      _load(xXmlNode* node);
 public:
 	void         stencil_ref(unsigned int ref) {m_stecilref = ref;}
 	unsigned int stencil_ref(){return m_stecilref;}

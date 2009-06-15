@@ -230,6 +230,7 @@ int xShaderPin::load(const char* _codeBase)
 	//读入属性
 	while(1)
 	{
+		_code += gs_Lexer.skipWhiteSpace(_code);
 		if(*_code == '}')
 		{
 			_code ++ ;
@@ -238,11 +239,15 @@ int xShaderPin::load(const char* _codeBase)
 		if(*_code == 0 )
 			break;
 
+		if(gs_Lexer.stringEqual(_code,"//",false))
+		{
+			_code += gs_Lexer.skipLine(_code);
+			continue;
+		}
 		std::ds_string  _dataType    = "";
 		std::ds_string  _argName     = "";
 		std::ds_string  _argSemantic = "";
 		//类型
-		_code += gs_Lexer.skipWhiteSpace(_code);
 		_code += gs_Lexer.getToken(_code , _dataType , XEvol_IsShaderVarTypeChar  );
 
 		//名字
@@ -262,7 +267,6 @@ int xShaderPin::load(const char* _codeBase)
 		if( *_code != ';') //应该以;来结尾
 		{
 			XEVOL_LOG(eXL_DEBUG_HIGH, L"Pin的参数描述应该以;来结尾\n");
-
 		}
 
 		XEVOL_LOG(eXL_DEBUG_TIPS, "找到一个变量,Type =%s , Name=%s , Semantic=%s\n" , _dataType.c_str() , _argName.c_str() , _argSemantic.c_str() );

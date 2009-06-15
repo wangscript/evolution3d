@@ -27,16 +27,18 @@ protected:
 	friend   class   xCoreSkeleton;
 };
 
-class  _XEVOL_BASE_API_  xCoreAction
+class  _XEVOL_BASE_API_  xCoreAction : public IBaseObject
 {
 	friend  class  xCoreSkeleton;
+    IMPL_BASE_OBJECT_INTERFACE(xCoreAction);
 public:
+    xCoreAction();
+    ~xCoreAction();
 	xBoneData& getBoneData(int boneIndex, int frame);
 	//public interface
 	bool blend(long time_in_ms,xCoreActionFrame& skeletonFrame, xCoreSkeleton* pSkeleton);
-	bool load(xCfgNode* pCfgNode , xcomdoc& doc , const wchar_t* actionDir);
+	bool load(xXmlNode* pCfgNode , xcomdoc& doc , const wchar_t* actionDir);
 	void unload();
-
 	int                     m_nBone;
 protected:
 	std::ds_wstring         m_Name;      //Name
@@ -63,9 +65,9 @@ protected:
 
 typedef vector<xBoneHiberarchy>  vBoneHiberarchys;
 
-class _XEVOL_BASE_API_ xCoreSkeleton
+class _XEVOL_BASE_API_ xCoreSkeleton : public IBaseObject
 {
-
+    IMPL_BASE_OBJECT_INTERFACE(xCoreSkeleton);
 public:
 	xCoreSkeleton();
 	~xCoreSkeleton();
@@ -80,7 +82,7 @@ public:
 	bool blendHiberarchy(xCoreAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent = -1);
 	bool blendSlerp(xCoreAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent = -1);
 protected:
-	bool saveHiberarchy(xCfgNode* pRootNode , int rootindex);
+	bool saveHiberarchy(xXmlNode* pRootNode , int rootindex);
 	//�Ǽܲ�νṹ
 	xBoneHiberarchy   m_RootHibers;
 	vBoneHiberarchys  m_BoneHibers;

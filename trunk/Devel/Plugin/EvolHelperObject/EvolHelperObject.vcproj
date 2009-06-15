@@ -209,6 +209,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\xBoundBox.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\xBoundBox.h"
+			>
+		</File>
+		<File
 			RelativePath=".\xCubeDrawable.cpp"
 			>
 		</File>

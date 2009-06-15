@@ -1,5 +1,6 @@
 #include "xD10InputBuffer.h"
 #include "xDirect3D10API.h"
+#include "xD10ConstLexer.h"
 BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xD10VertexStream , IVertexStream);
 IMPL_BASE_OBJECT_CLASSID(xD10InputBuffer  , IInputBuffer);
@@ -78,6 +79,7 @@ static void conv(const xInputBufferDesc& from , D3D10_BUFFER_DESC& to)
 
 xD10InputBuffer::xD10InputBuffer(xD3D10RenderApi* pAPI  ) :m_pD10API(pAPI) , IInputBuffer(pAPI)
 {
+    m_RefCount = 1;
 	m_iBufLen = 0;
 	m_nBytePerVertex = 0;
 	m_nVertex = 0;
@@ -99,19 +101,30 @@ IInputBufferReflection* xD10InputBuffer::reflection()
 IInputBufferReflection* xD10InputBuffer::createReflection(bool bSysBuffer)
 {
 	if(m_pReflection == NULL)
-		return new xD10InputBufReflection(this , bSysBuffer , (int)m_iBufLen);
+	{
+		m_pReflection = new xD10InputBufReflection(this , bSysBuffer , (int)m_iBufLen);
+	}
 	return m_pReflection;
 }
 
-ID3D10ShaderResourceView*  xD10InputBuffer::toShaderResourceView()
+ID3D10ShaderResourceView*  xD10InputBuffer::toShaderResourceView(ePIXEL_FORMAT fmt)
 {
     if(m_pRSV) return m_pRSV;
 
+    xD10GIFormatInfo* info = xD10ConstLexer::singleton()->GetPixelFormat(fmt);
+    int elementSize   = info->m_compont * info->m_bytePerComponent;
 	D3D10_SHADER_RESOURCE_VIEW_DESC desc;
-	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	desc.Format = info->m_dxfmt;
 	desc.ViewDimension = D3D10_SRV_DIMENSION_BUFFER;
 	desc.Buffer.ElementOffset = 0;
-	desc.Buffer.ElementWidth  = (UINT)( m_iBufLen/ (sizeof(float) * 4) );
+	desc.Buffer.ElementWidth  = (UINT)( m_iBufLen/ elementSize );
+    /*
+    Members
+    ElementOffset 
+       The offset of the first element in the view to access, relative to element 0. 
+    ElementWidth 
+       The total number of elements in the view. 
+    */
 	m_pD10API->d10Device()->CreateShaderResourceView(m_pBuffer, &desc , &m_pRSV);
 	return m_pRSV;
 }
@@ -195,6 +208,7 @@ bool xD10InputBuffer::_destory()
 xD10VertexStream::xD10VertexStream(xD3D10RenderApi* d10API , xD10InputAssembler* D10Assembler)
 :IVertexStream(d10API),m_pAssembler(D10Assembler) , m_pD10API(d10API)
 {
+     m_RefCount = 1;
 	 m_pAssembler->AddRef();
 	 xInputLayoutDesc&  layoutDesc =      D10Assembler->layoutDesc();
 	 m_VertexBuffers.resize(layoutDesc.nBuffer() );
@@ -299,6 +313,10 @@ xD10InputBufReflection::xD10InputBufReflection(IInputBuffer* pBuf , bool bSysBuf
 	m_bDirty  = false;
 	m_BufLen  = bufLen;
 }
+void* xD10InputBufReflection::systemBuffer()
+{
+	return m_pSysMem;
+}
 
 xD10InputBufReflection::~xD10InputBufReflection()
 {
@@ -335,10 +353,7 @@ xD10ShaderConstReflection*  xD10InputBufReflection::addConstant()
 	m_vConstant.push_back(pDesc);
 	return pDesc;    
 }
-void xD10InputBufReflection::addConstant(xD10ShaderConstReflection* cd)
-{
-	m_vConstant.push_back(cd);
-}
+
 
 bool xD10InputBufReflection::setData(int _off , void* _data , int dataLen)
 {

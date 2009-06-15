@@ -27,6 +27,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../xcomdoc/xcomdoc.h"
 
 BEGIN_NAMESPACE_XEVOL3D
+typedef TSimpleResMgr<xcomdoc , std::ds_wstring > xComDocumentMgr;
+
+inline std::ds_wstring XReal_RelativePath(const wchar_t* _filename , const wchar_t* _basePath)
+{
+	std::ds_wstring fileName = _filename;
+	std::ds_wstring basePath = _basePath;
+
+	std::ds_wstring::size_type pos = fileName.find(basePath);
+	if(pos != 0)
+		return L"";
+
+	std::ds_wstring ret = fileName.c_str() + basePath.length();
+	return ret;
+}
+
 //-----------------------------------------------------------------------------------
 //一个通用的ResMgr，
 //只要求ResType实现了XNullRes的接口
@@ -92,6 +107,21 @@ public:
     ResPackageItem& packageItem(int index)
 	{
 		return m_Packages[index];
+	}
+
+	std::ds_wstring relativePath( const wchar_t* _path )
+	{
+		std::ds_wstring _ret = L"";
+		for(size_t i = 0  ; i < nPackageItem() ; i ++)
+		{
+			if(m_Packages[i].m_Package.failed())
+			{
+				_ret = XReal_RelativePath(_path , m_Packages[i].m_ResDir.c_str() );
+				if(_ret.length() > 0)
+					return _ret;
+			}
+		}
+		return _ret;
 	}
 
 	size_t nPackageItem()

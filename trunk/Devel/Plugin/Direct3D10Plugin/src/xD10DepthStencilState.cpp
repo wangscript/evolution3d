@@ -1,7 +1,7 @@
 #include "xD10DepthStencilState.h"
 #include "xD10ConstLexer.h"
 #include "xDirect3D10API.h"
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xD10ZStencilState  , IDepthStencilState);
 bool xD10ZStencilState::_destory()
@@ -12,7 +12,7 @@ bool xD10ZStencilState::_destory()
 	return true;
 }
 
-void fillStencilOp(D3D10_DEPTH_STENCILOP_DESC& opDesc, xCfgNode* pOpNode)
+void fillStencilOp(D3D10_DEPTH_STENCILOP_DESC& opDesc, xXmlNode* pOpNode)
 {
 	if(pOpNode == NULL)
 	{
@@ -29,7 +29,7 @@ void fillStencilOp(D3D10_DEPTH_STENCILOP_DESC& opDesc, xCfgNode* pOpNode)
 }
 
 
-bool xD10ZStencilState::_load(xCfgNode* node)
+bool xD10ZStencilState::_load(xXmlNode* node)
 {
 	/*
 	<?xml version ="1.0" encoding="unicode" ?>
@@ -54,7 +54,7 @@ bool xD10ZStencilState::_load(xCfgNode* node)
 	fillStencilOp(desc.BackFace  , NULL);
 
 	//----------------------------------
-	xCfgNode* pNode = node->findNode(L"depth");
+	xXmlNode* pNode = node->findNode(L"depth");
 	if(pNode)
 	{
 		desc.DepthEnable             = pNode->bool_value(L"enable");
@@ -69,7 +69,7 @@ bool xD10ZStencilState::_load(xCfgNode* node)
 		desc.StencilEnable            = pNode->bool_value(L"enable");
 		desc.StencilReadMask          = pNode->hex_value(L"readmask");
 		desc.StencilWriteMask         = pNode->hex_value(L"writemask");
-        xCfgNode* pOpNode = pNode->findNode(L"front");
+        xXmlNode* pOpNode = pNode->findNode(L"front");
 		fillStencilOp(desc.FrontFace , pOpNode);
 		pOpNode = pNode->findNode(L"back");
 		fillStencilOp(desc.BackFace  , pOpNode);
@@ -95,7 +95,7 @@ xD10ZStencilState::~xD10ZStencilState()
 
 bool xD10ZStencilState::load(const wchar_t* fileName , unsigned long  arg)
 {
-	xCfgDocument doc;
+	xXmlDocument doc;
 	if(false == doc.load(fileName , true) )
 		return false;
 	return _load(doc.root() );
@@ -105,7 +105,7 @@ bool xD10ZStencilState::load(const wchar_t* fileName , const unsigned int8* buf 
 {
 	if(buf == 0 || bufLen == 0)
 		return load(fileName , arg);
-	xCfgDocument doc;
+	xXmlDocument doc;
 	if(false == doc.load((const wchar_t* )buf, bufLen ,  true) )
 		return false;
 	return _load(doc.root() );

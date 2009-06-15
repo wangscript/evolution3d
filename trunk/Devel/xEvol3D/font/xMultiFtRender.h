@@ -31,6 +31,7 @@ public:
 	eFontFilter       m_Filter;
 	int               m_LinePitch;
 	
+    IMPL_BASE_OBJECT_INTERFACE(xMixedFont);
 public:
 	xMixedFont(IFontRenderDevice* pRenderer);
 	const   xFontInfo& getInfo();

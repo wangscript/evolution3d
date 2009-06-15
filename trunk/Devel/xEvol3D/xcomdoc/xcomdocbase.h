@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __XCOMDOCBASEDEFINE_IMP_H_
 #include "xcomdoc.h"
 BEGIN_NAMESPACE_XEVOL3D
-
+using namespace std;
 class IComDocBase
 {
 public:

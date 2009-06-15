@@ -49,7 +49,7 @@ void  XComDocStreamImp::_set_src_file(const wchar_t* file_name , bool bUseSrcFil
 	}
 }
 
-XComDocStreamImp::XComDocStreamImp(xComDocument* pDoc,const _xcd_int8* buf,size_t buf_len,sCDDataEntryItem* pItem)
+XComDocStreamImp::XComDocStreamImp(xComDocument* pDoc,const _xcd_int8* buf,size_t buf_len,CDDataEntryItemImp* pItem)
 {
 	m_pComDoc = pDoc;
 	m_EntryItem = pItem;
@@ -128,7 +128,7 @@ bool  XComDocStreamImp::_duplicate_data()
 	return m_pWriteBuffer->duplicate_data();
 }
 
-XComDocStreamImp::XComDocStreamImp(xComDocument* pDoc,xcd_rwmode  mode,sCDDataEntryItem* pItem)
+XComDocStreamImp::XComDocStreamImp(xComDocument* pDoc,xcd_rwmode  mode,CDDataEntryItemImp* pItem)
 {
 	m_compresseddata_buf = NULL;
 	m_pComDoc =  pDoc;

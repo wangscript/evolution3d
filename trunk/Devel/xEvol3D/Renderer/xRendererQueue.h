@@ -7,8 +7,8 @@
 #include "xRenderer.h"
 
 BEGIN_NAMESPACE_XEVOL3D
-
 class _XEVOL_BASE_API_ IDrawElement;
+class _XEVOL_BASE_API_ xRenderPass;
 class _XEVOL_BASE_API_ IRenderObjectCmp
 {
 public:
@@ -18,24 +18,42 @@ public:
 
 class _XEVOL_BASE_API_ xRendererQueue
 {
-	IRenderObjectCmp*          m_Cmper;
-	std::vector<IDrawElement*> m_vecElement;
-	bool                       m_bNeedSorted;
-	wchar_t                    m_Name[32];
+
 public:
 	xRendererQueue(bool bOptForSequnce = false);
 	~xRendererQueue();
 	const  wchar_t*  name();
+	int              idName();
 	void             setName(const wchar_t* _name);
 	size_t           size();
 	size_t           capacity();
 	bool             reserve(int maxObject);
-	IDrawElement*    operator[](size_t index);
-	size_t           insert(IDrawElement* drawObject);
+	xRenderPass*     operator[](size_t index);
+	size_t           insert(xRenderPass* drawObject);
     void             clear();
 	bool             setComparer(IRenderObjectCmp* cmp);
 	void             sort();
+	int              priority() const { return m_priority ; }
+	void             setPriority(int p ){ m_priority = p ; }
+
+public:
+	bool operator    < (const xRendererQueue& rhv) 
+	{
+		return  priority() < rhv.priority();
+	}
+public:
+	typedef ds_vector(xRenderPass*)    vRenderPass;
+	protected:
+	IRenderObjectCmp*          m_Cmper;
+	vRenderPass                m_vRenderPass;
+	bool                       m_bNeedSorted;
+	wchar_t                    m_Name[32];
+	int                        m_priority;
 };
+
+
+
+DECL_OBJECT_FACTORY_AND_MGR(IRenderObjectCmp , IRenderObjCmpFactory ,  xRenderObjCmpFactoryMgr , int , int );
 END_NAMESPACE_XEVOL3D
 
 #endif

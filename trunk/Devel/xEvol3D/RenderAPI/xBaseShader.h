@@ -168,7 +168,7 @@ public:
 	virtual ~IGpuProgramParamTable();
 	IGpuProgramParamTable();
 	PUBLIC  virtual IGpuProgram*           getGpuProgram() = 0;
-	PUBLIC  virtual IShaderParamTable*       getShaderParamTab(eShaderType shType) = 0;
+	PUBLIC  virtual IShaderParamTable*     getShaderParamTab(eShaderType shType) = 0;
 
 	/*
 	自动设置渲染API的状态：
@@ -188,7 +188,7 @@ public:
 	PUBLIC  virtual bool                   setTexture(const int texName          , IBaseTexture* pTexture , eShaderType _shader =  eShader_None) = 0;
 	PUBLIC  virtual bool                   setTextureBySlot(const int iSlot      , IBaseTexture* pTexture , eShaderType _shader =  eShader_None) = 0;
 
-    PUBLIC  virtual bool                   load(xCfgNode* pXMLNode) = 0;
+    PUBLIC  virtual bool                   load(xXmlNode* pXMLNode) = 0;
 	PUBLIC  virtual bool                   setParamater(const wchar_t* name , float  _value , eShaderType shType = eShader_None) = 0;
 	PUBLIC  virtual bool                   setParamater(const wchar_t* name , int    _value , eShaderType shType = eShader_None) = 0;
 	PUBLIC  virtual bool                   setParamater(const wchar_t* name , xvec4& _value , eShaderType shType = eShader_None) = 0;

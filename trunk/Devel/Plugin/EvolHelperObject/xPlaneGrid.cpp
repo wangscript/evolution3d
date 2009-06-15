@@ -7,7 +7,6 @@ xPlaneGridDrawable::xPlaneGridDrawable()
 {
 	m_pVertexStream = NULL;
 	m_pIdxBuffer = NULL;
-	memset(&m_InputDesc , 0 , sizeof(xInputLayoutDesc) );
 	m_pAss = NULL;
 	m_pRenderApi = NULL;
 	m_pTexture = NULL;
@@ -15,6 +14,7 @@ xPlaneGridDrawable::xPlaneGridDrawable()
 
 	m_pMaskTexture = NULL;
 	m_pBlendState = NULL;
+    m_RefCount = 1;
 }
 
 xPlaneGridDrawable::~xPlaneGridDrawable()
@@ -96,12 +96,12 @@ bool xPlaneGridDrawable::begin()
 	return true;
 }
 
-void xPlaneGridDrawable::render(unsigned long passedTime)
+bool xPlaneGridDrawable::render(unsigned long passedTime)
 {
 	int nVertex =  (m_nGridY + 1 + m_nGridX + 1) * 2 ;
 	m_pRenderApi->setVertexStream( m_pVertexStream );
 	m_pRenderApi->draw(m_pIdxBuffer , nVertex , 0 , ePrimtiveType_Lines );
-	return ;
+	return true;
 }
 
 bool xPlaneGridDrawable::end()

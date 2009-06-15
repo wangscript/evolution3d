@@ -63,6 +63,11 @@ IPlatform::IPlatform()
 	m_pEventTranslator   = NULL;
 }
 
+IPlatform::~IPlatform()
+{
+
+}
+
 IPlatform* IPlatform::singleton()
 {
 	return g_pPlatformSingleTon;

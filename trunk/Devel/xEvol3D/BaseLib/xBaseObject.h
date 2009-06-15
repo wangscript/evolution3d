@@ -4,10 +4,11 @@
 #include "xEvol3DAPI.h"
 #include "xLogger.h"
 #include "../mem/mem_operator.h"
-
+#include <iostream>
 #define _WIDETEXT_(x)  L ## x
 
 BEGIN_NAMESPACE_XEVOL3D
+
 
 class _XEVOL_BASE_API_  xObjectClassID
 {
@@ -33,26 +34,26 @@ public:
 	virtual int      KillObject() = 0;
 };
 
-template <typename T> bool  XSAFE_KILLOBJECT(T& obj)
+template <typename T> int  XSAFE_KILLOBJECT(T& obj)
 {
 	if(obj)
 	{
-		obj-> KillObject();
+		int refCount = obj->KillObject();
 		obj=NULL;
-		return true;
+		return refCount;
 	}
-	return false;
+	return 0;
 }
 
-template <typename T> bool  XSAFE_RELEASEOBJECT(T& obj)
+template <typename T> int  XSAFE_RELEASEOBJECT(T& obj)
 {
 	if(obj)
 	{
-		obj->ReleaseObject();
+		int refCount = obj->ReleaseObject();
 		obj=NULL;
-		return true;
+		return refCount;
 	}
-	return false;
+	return 0;
 }
 
 template <typename T> bool  XSAFE_UNLOAD(T& obj)
@@ -60,22 +61,21 @@ template <typename T> bool  XSAFE_UNLOAD(T& obj)
 	if(obj)
 	{
 		obj->unload();
-		obj=NULL;
 		return true;
 	}
 	return false;
 }
 
 
-template <typename T> bool  XSAFE_RELEASE(T& obj)
+template <typename T> int  XSAFE_RELEASE(T& obj)
 {
 	if(obj)
 	{
-		obj->Release();
+		int refCount = obj->Release();
 		obj=NULL;
-		return true;
+		return refCount;
 	}
-	return false;
+	return 0;
 }
 
 template <typename T> bool  XSAFE_DELETE(T* & pObj)
@@ -108,6 +108,46 @@ public:
 	virtual const    xObjectClassID&  classID() = 0;
 	virtual void*    queryObject(const xObjectClassID& _id) = 0;
 	virtual bool     isType(const    xObjectClassID& _id) = 0;
+public:
+    IBaseObject();
+    virtual ~IBaseObject();
+    static bool DumpObjectList();
+};
+
+
+enum eStreamSeekDir
+{
+    eSEEK_BEG,
+    eSEEK_END,
+    eSEEK_CUR,
+};
+
+class _XEVOL_BASE_API_ IReadStream : public IRefCountObject
+{
+public:
+    virtual size_t read(char* buf,size_t len) = 0;
+    virtual size_t seek(long offs, std::ios::seekdir _dir) = 0;
+    virtual size_t tell() = 0;
+    virtual int    close() = 0;
+    virtual bool   eof() = 0;
+};
+
+class _XEVOL_BASE_API_  IRWStream : public IRefCountObject
+{
+public:
+	virtual size_t read(char* buf,size_t len) = 0;
+	virtual size_t write(char* buf,size_t len) = 0;
+	virtual size_t seek(long offs, std::ios::seekdir _dir) = 0;
+	virtual size_t tell() = 0;
+	virtual int    close() = 0;
+	virtual bool   eof() = 0;
+};
+
+class _XEVOL_BASE_API_  IStreamObject : public IRefCountObject
+{
+public:
+    virtual bool load(IRWStream* pStream ) = 0;
+    virtual bool save(IRWStream* pStream ) = 0;
 };
 
 
@@ -143,6 +183,8 @@ public:                                   \
 
 
 
+
+
 #define DECL_REFCOUNT_OBJECT_INTERFACE(ClassName)   \
 protected:                                      \
 	int  m_RefCount;                            \
@@ -151,6 +193,14 @@ public:                                         \
 	virtual int                       AddRef()                               ;\
 	virtual int                       ReleaseObject()	                     ;\
 	virtual int                       KillObject()                           ;\
+
+
+#define IMPL_REFCOUNT_OBJECT_FUNCTION(ClassName)   \
+    int      ClassName##::RefCount()	{ return m_RefCount; }\
+    int      ClassName##::AddRef()   { m_RefCount ++;     return m_RefCount; }\
+    int      ClassName##::ReleaseObject()	{ m_RefCount --;  int refCount = m_RefCount;   if(m_RefCount == 0) delete this; return refCount; }\
+    int      ClassName##::KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, "RefCount Object not released class m_RefCount=%d \n" , m_RefCount ) ; m_RefCount = 0 ; delete this; return 0;  }; \
+
 
 //Base Object Class
 //=============================================================================================
@@ -217,6 +267,23 @@ public:                                         \
 
 
 
+
+#define DECL_BASE_OBJECT_DLLSAFE(ClassName)   \
+DECL_BASE_OBJECT_INTERFACE(ClassName)         \
+
+
+#define IMPL_BASE_OBJECT_DLLSAFE(ClassName, BaseClass) \
+      xObjectClassID ClassName::ms_CLASSID = xObjectClassID( _WIDETEXT_(#ClassName) , &BaseClass::ms_CLASSID);    \
+      int      ClassName##::RefCount()	{ return m_RefCount; }\
+      int      ClassName##::AddRef()   { m_RefCount ++;     return m_RefCount; }\
+      int      ClassName##::ReleaseObject()	{ m_RefCount --;  int refCount = m_RefCount;   if(m_RefCount == 0) delete this; return refCount; }\
+      int      ClassName##::KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, "RefCount Object not released class m_RefCount=%d \n" , m_RefCount ) ; m_RefCount = 0 ; delete this; return 0;  }; \
+      const    xObjectClassID&  ClassName##::classID(){ return this->ms_CLASSID; } \
+      void*    ClassName##::queryObject(const xObjectClassID& _id){if( this->ms_CLASSID.isType(_id)){this->AddRef(); return this;} return 0;}\
+      bool     ClassName##::isType(const    xObjectClassID& _id){return classID().isType(_id) ;}\
+
+
+
 template<typename _ChildT , typename _ParentT> bool XEvol_Convert(_ChildT* & _ch , _ParentT* parent)
 {
 	_ChildT* pChild = dynamic_cast<_ChildT*>(parent);
@@ -225,6 +292,22 @@ template<typename _ChildT , typename _ParentT> bool XEvol_Convert(_ChildT* & _ch
 	return true;
 }
 
+
+#define XEVOL_DEFINE_PROPERTY_P(type , name) \
+public:                                      \
+	type* get##name() {return m_##name ; }           \
+void  set##name(type* _v ) {m_##name = _v ;}     \
+protected:                                   \
+      type* m_##name;                            \
+
+
+
+#define XEVOL_DEFINE_PROPERTY(type , name)   \
+public:                                      \
+	type  get##name() {return m_##name ; }       \
+	void  set##name(type* _v ) {m_##name = _v ;} \
+protected:                                   \
+	type  m_##name;                              \
 
 END_NAMESPACE_XEVOL3D
 

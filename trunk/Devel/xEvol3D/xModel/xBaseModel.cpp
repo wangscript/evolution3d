@@ -2,9 +2,11 @@
 #include "../xcomdoc/xdocfstream.h"
 
 BEGIN_NAMESPACE_XEVOL3D
-
+IMPL_BASE_OBJECT_CLASSID(xBaseModel  , IRenderResource);
 xBaseModel::xBaseModel(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr , bool bSysMemCopy)
+:IRenderOtherRes(pRenderApi)
 {
+    m_RefCount   = 1;
 	m_pRenderApi = pRenderApi;
 	m_pTexMgr    = pTexMgr;
 	m_pSkeleton  = NULL;
@@ -80,7 +82,7 @@ unsigned long xBaseModel::memUsage()
 	return 1;
 }
 
-bool xBaseModel::loadModelMeshMateril( xBaseModel::xModelMesh& mesh , xCfgNode* pMeshNode)
+bool xBaseModel::loadModelMeshMateril( xBaseModel::xModelMesh& mesh , xXmlNode* pMeshNode)
 {
 	return false;
 }
@@ -91,16 +93,16 @@ bool xBaseModel::load(xcomdoc& doc , const wchar_t* _dir , unsigned int arg)
 	ds_wstring descName = ds_wstring(_dir) + L"desc.xml";
 	xcomdocstream* pdescstream = doc.open_stream(descName.c_str() );
 	xcdstream  _in(pdescstream);
-	xCfgDocument xml;
+	xXmlDocument xml;
 	xml.load(_in);
 	_in.close();
 	doc.close_stream(pdescstream);
 
 	//XML¼ÓÔØÍê±Ï
-	xCfgNode* pRootNode = xml.root();
+	xXmlNode* pRootNode = xml.root();
 
 	m_name = pRootNode->value(L"name");
-	xCfgNode* pAABBNode = pRootNode->findNode(L"BoundBox");
+	xXmlNode* pAABBNode = pRootNode->findNode(L"BoundBox");
 	m_aabb.m_Min = xvec3(0.0f , 0.0f , 0.0f);
 	m_aabb.m_Max = xvec3(1.0f , 1.0f , 1.0f);
 	if(pAABBNode)
@@ -150,18 +152,18 @@ bool xBaseModel::loadSkeleton(xcomdoc& doc , const wchar_t* _dir)
 	if(pActDescStream != NULL)
 	{
 		xcdstream  _in(pActDescStream);
-		xCfgDocument xml;
+		xXmlDocument xml;
 		xml.load(_in);
 		_in.close();
         ds_wstring actDir = ds_wstring(_dir) + L"skeleton/";
-        xCfgNode* pRootNode = xml.root();
-		xCfgNode::CfgNodes actNodes;
+        xXmlNode* pRootNode = xml.root();
+		xXmlNode::XmlNodes actNodes;
 		pRootNode->findNode(actNodes);
 		for(size_t  i = 0 ;i < actNodes.size() ; i ++)
 		{
 			xCoreAction* pAction = new xCoreAction;
 			pAction->m_nBone = m_pSkeleton->nBone();
-			xCfgNode* pNode = actNodes[i];
+			xXmlNode* pNode = actNodes[i];
 			if(false == pAction->load(pNode , doc , actDir.c_str()) )
 			{
                 delete pAction;
@@ -178,13 +180,13 @@ bool xBaseModel::loadSkeleton(xcomdoc& doc , const wchar_t* _dir)
 	return true;
 }
 
-bool xBaseModel::loadEmbMeshs(xcomdoc& doc , const wchar_t* _dir , xCfgNode* pRootNode)
+bool xBaseModel::loadEmbMeshs(xcomdoc& doc , const wchar_t* _dir , xXmlNode* pRootNode)
 {
-	xCfgNode::CfgNodes meshNodes;
+	xXmlNode::XmlNodes meshNodes;
 	pRootNode->findNode(L"mesh" , meshNodes);
 	for(size_t i = 0 ; i < meshNodes.size() ; i ++)
 	{
-		xCfgNode* pMeshNode = meshNodes[i];
+		xXmlNode* pMeshNode = meshNodes[i];
 		const wchar_t* name = pMeshNode->value(L"name");
 		xCoreMesh* pMesh = new xCoreMesh(m_pRenderApi,m_pTexMgr);
 		ds_wstring meshName = ds_wstring(_dir) + L"/" + name + L"/";
@@ -201,29 +203,29 @@ bool xBaseModel::loadEmbMeshs(xcomdoc& doc , const wchar_t* _dir , xCfgNode* pRo
 	return true;
 }
 
-bool xBaseModel::loadEmbSkinGroup(xcomdoc& doc , const wchar_t* _dir , xCfgNode* pRootNode)
+bool xBaseModel::loadEmbSkinGroup(xcomdoc& doc , const wchar_t* _dir , xXmlNode* pRootNode)
 {
-	xCfgNode::CfgNodes skinGroupNodes;
+	xXmlNode::XmlNodes skinGroupNodes;
 	pRootNode->findNode(L"skinGroup" , skinGroupNodes);
 
 	for(size_t i = 0 ; i < skinGroupNodes.size() ; i ++)
 	{
-		xCfgNode* pSkinGrouNode = skinGroupNodes[i];
+		xXmlNode* pSkinGrouNode = skinGroupNodes[i];
 		const wchar_t* skinGroupName = pSkinGrouNode->value(L"name");
 		xCoreMesh* pMesh = new xCoreMesh(m_pRenderApi,m_pTexMgr);
 		ds_wstring skinGroupDesName = ds_wstring(_dir) + L"/" + skinGroupName + L"/skins.xml";
 		xcomdocstream* pdescstream = doc.open_stream(skinGroupDesName.c_str() );
 		xcdstream  _in(pdescstream);
-		xCfgDocument xml;
+		xXmlDocument xml;
 		xml.load(_in);
 		_in.close();
-		xCfgNode* pRootNode = xml.root();
+		xXmlNode* pRootNode = xml.root();
 
-		xCfgNode::CfgNodes meshNodes;
+		xXmlNode::XmlNodes meshNodes;
 		pRootNode->findNode(L"mesh" , meshNodes);
 		for(size_t i = 0 ; i < meshNodes.size() ; i ++)
 		{
-			xCfgNode* pMeshNode = meshNodes[i];
+			xXmlNode* pMeshNode = meshNodes[i];
 			const wchar_t* name = pMeshNode->value(L"name");
 			xCoreMesh* pMesh = new xCoreMesh(m_pRenderApi,m_pTexMgr);
 			ds_wstring meshName = ds_wstring(_dir) + L"/" + skinGroupName + L"/" + name + L"/" ;

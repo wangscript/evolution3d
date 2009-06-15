@@ -102,7 +102,7 @@ bool xInputLayoutDesc::addElement(wchar_t* semantic ,eShaderVarType veType , siz
 }
 xInputLayoutDesc::xInputLayoutDesc()
 {
-
+	m_vInputElemets.reserve(16);
 }
 xInputLayoutDesc::~xInputLayoutDesc()
 {

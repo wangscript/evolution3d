@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "stdafx.h"
 #include "SetSkinGroupDlg.h"
 #include "SkeletonModelExporter.h"
-#include "xCfgParser.h"
+#include "xXmlDocument.h"
 #include <fstream>
 using namespace std;
 CSkeletonModelExporter::CSkeletonModelExporter(CMaxNodeTree& nodeTree)
@@ -60,11 +60,11 @@ bool CSkeletonModelExporter::__export_header(wstring prefix)
 	//写入已经存在的skin列表
     xcomdocstream* pstream =  m_doc.create_stream((prefix + L"desc.xml").c_str());
 
-	xCfgDocument xml;
-	xCfgNode* rootNode = xml.insertNode(L"model");
+	xXmlDocument xml;
+	xXmlNode* rootNode = xml.insertNode(L"model");
 	rootNode->insertValue(L"type")->setValue(L"skeleton");
 	rootNode->insertValue(L"name")->setValue(m_ExpContex.m_ModelDesc.m_Name);
-	xCfgNode* bbNode = rootNode->insertNode(L"BoundBox");
+	xXmlNode* bbNode = rootNode->insertNode(L"BoundBox");
 	bbNode->insertValue(L"min_x")->setValue(m_Boundbox.m_minx);
 	bbNode->insertValue(L"min_y")->setValue(m_Boundbox.m_miny);
 	bbNode->insertValue(L"min_z")->setValue(m_Boundbox.m_minz);
@@ -74,7 +74,7 @@ bool CSkeletonModelExporter::__export_header(wstring prefix)
 
 	for(size_t i = 0 ; i < skin_groups.size() ; i++)
 	{
-		xCfgNode* skinGroupNode = rootNode->insertNode(L"skinGroup");
+		xXmlNode* skinGroupNode = rootNode->insertNode(L"skinGroup");
 		skinGroupNode->insertValue(L"name")->setValue(skin_groups[i].m_GroupName.c_str());
 	}
 

@@ -134,14 +134,14 @@ bool  CSkeletonExporter::save_hiberarchys(OSTREAM_T& stream)
 	return true;
 }
 
-inline bool  CSkeletonExporter::save_hiberarchys_xml_node(xCfgNode* pRootNode , int rootBoneIndex)
+inline bool  CSkeletonExporter::save_hiberarchys_xml_node(xXmlNode* pRootNode , int rootBoneIndex)
 {
 	sBoneHiberarchy_t& boneH = m_BoneHiberarchys[rootBoneIndex];
 	int nChild = (int)boneH.m_Childrens.size();
 	for(int j = 0 ; j < nChild ; ++j)
 	{
 		int index = boneH.m_Childrens[j];
-		xCfgNode* BoneNode = pRootNode->insertNode(L"bone");
+		xXmlNode* BoneNode = pRootNode->insertNode(L"bone");
 		BoneNode->setValue(L"name"  , INodeName(m_MaxBones[index].m_pNode).c_str() );
 		BoneNode->setValue(L"index" , index);
 		save_hiberarchys_xml_node(BoneNode , index);
@@ -152,27 +152,27 @@ inline bool  CSkeletonExporter::save_hiberarchys_xml_node(xCfgNode* pRootNode , 
 template <typename OSTREAM_T>
 bool  CSkeletonExporter::save_hiberarchys_xml(OSTREAM_T& asciistream)
 {
-	xCfgDocument doc;
+	xXmlDocument doc;
 
 	sSkeletonID_t sid;
 	sid.m_HiWord = m_SkeletonID.m_IDHW ;
 	sid.m_LoWord = m_SkeletonID.m_IDLW;
 
 	int nBone = (int) m_MaxBones.size();
-    xCfgNode* pRootNode = doc.insertNode(L"hiberarchy");
+    xXmlNode* pRootNode = doc.insertNode(L"hiberarchy");
 	pRootNode->setValue(L"nBone" , nBone);
 	pRootNode->setValue(L"scale" , m_fScale);
 	pRootNode->setValue(L"beforeSkelPose" , CMaxEnv::singleton().m_bUseBeforeSkeletonPose );
 
 	//¹Ç¼ÜÀà
-	xCfgNode* pIDNode = pRootNode->insertNode(L"id");
+	xXmlNode* pIDNode = pRootNode->insertNode(L"id");
 	pIDNode->setHex(L"LoID" , m_SkeletonID.m_IDLW);
 	pIDNode->setHex(L"HiID" , m_SkeletonID.m_IDHW);
 
 	for(size_t i = 0 ; i < m_RootHiberarchys.m_Childrens.size() ; i ++)
 	{
 		int index = m_RootHiberarchys.m_Childrens[i];
-		xCfgNode* BoneNode = pRootNode->insertNode(L"bone");
+		xXmlNode* BoneNode = pRootNode->insertNode(L"bone");
 		BoneNode->setValue(L"name"  , INodeName(m_MaxBones[index].m_pNode).c_str() );
 		BoneNode->setValue(L"index" , index);
 		save_hiberarchys_xml_node(BoneNode , index);

@@ -18,7 +18,7 @@ xD10FileTexture::xD10FileTexture(xD3D10RenderApi* pAPI )
 
 xD10FileTexture::~xD10FileTexture()
 {
-
+   unload();
 }
 
 
@@ -96,7 +96,12 @@ bool xD10FileTexture::load(const wchar_t* fileName , unsigned long  arg)
 	fillLoadInfo(loadInfo, false);
 	D3DX10CreateTextureFromFileW( m_pD10Api->d10Device() , fileName ,  &loadInfo, NULL, &pTexture, NULL );
 	if(pTexture)
+    {
+        m_TexInfo.m_ShaderViewFmt = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_RTViewFmt  = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_ResFmt     = DXGI_FORMAT_UNKNOWN;
 		return _load(pTexture);
+    }
 	return __loadImageFile(fileName , NULL , 0 ,arg);
 }
 
@@ -111,8 +116,12 @@ bool xD10FileTexture::load(const wchar_t* fileName , const unsigned int8* buf , 
 	ID3D10Resource* pTexture = NULL;
 	D3DX10CreateTextureFromMemory(m_pD10Api->d10Device() , buf , bufLen , &loadInfo, NULL, &pTexture, NULL );
 	if(pTexture)
-		return _load(pTexture);
-
+    {
+        m_TexInfo.m_ShaderViewFmt = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_RTViewFmt  = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_ResFmt     = DXGI_FORMAT_UNKNOWN;
+        return _load(pTexture);
+    }
 	return __loadImageFile(fileName , buf , bufLen ,arg);
 }
 

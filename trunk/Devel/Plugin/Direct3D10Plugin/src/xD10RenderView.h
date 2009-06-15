@@ -11,17 +11,8 @@ class xD10RenderView : public IRenderView
 {
 	IMPL_BASE_OBJECT_INTERFACE(xD10RenderView)
 protected:
-	ID3D10RenderTargetView*        m_RenderTargetsView[MAX_RENDER_TARGET];
-	IRenderTarget*                 m_RenderTargets[MAX_RENDER_TARGET];
-	xD3D10RenderApi*               m_pD10Api;
-protected:
-	xD10DepthTexture*              m_DepthTexture;
-	IRenderTarget*                 m_DepthBuffer;
-	ID3D10DepthStencilView*        m_pDepthStencilView;
-	int                            m_widht;
-	int                            m_height;
-	xTextureDesc                   m_TextureDesc;
 	ID3D10DepthStencilView*        depthView();
+    bool                           setupDepthView(int w , int h , bool bSetAsDepthBuffer);
 public:
     xD10RenderView(xD3D10RenderApi* pRenderApi);
     virtual ~xD10RenderView();
@@ -43,23 +34,37 @@ public:
 	bool              setRenderTarget(IBaseTexture*  pTexture , size_t rtIdx);
 	bool              setRenderTarget(IRenderTarget* pRenderTarget , size_t rtIdx);
 	bool              setDepthBuffer(IRenderTarget* pDepthBuffer);
+    bool              setDepthBuffer(IBaseTexture* pDepthTexture);
 	int               addRenderTarget(IBaseTexture*  pTexture);
 	int               addRenderTarget(IRenderTarget* pRenderTarget);
 	IRenderTarget*    depthBuffer();
+    bool              depthBufferDesc(xTextureDesc& _desc );
 	IRenderObject*    renderTarget(size_t rtIdx );
+
+protected:
+    ID3D10RenderTargetView*        m_RenderTargetsView[MAX_RENDER_TARGET];
+    IRenderTarget*                 m_RenderTargets[MAX_RENDER_TARGET];
+    xD3D10RenderApi*               m_pD10Api;
+protected:
+    xD10DepthTexture*              m_DepthTexture;
+    IRenderTarget*                 m_DepthBuffer;
+    ID3D10DepthStencilView*        m_pDepthStencilView;
+    int                            m_widht;
+    int                            m_height;
+    xTextureDesc                   m_TextureDesc;
 };
 
 class xD10WindowRenderTarget : public IRenderTarget
 {
     friend class              xD10RenderWindow;
-	xTextureDesc              m_TexDesc;
+	xTextureDesc&             m_TexDesc;
 public:
 	int                       RefCount(){return 1 ; }
 	int                       AddRef() {return 1 ; }
 	int                       ReleaseObject(){return 1 ; }
 	int                       KillObject() {return 1 ; }
 public:
-	xD10WindowRenderTarget(IRenderApi* pRenderApi):IRenderTarget(NULL){}
+	xD10WindowRenderTarget(IRenderApi* pRenderApi , xTextureDesc& _desc):IRenderTarget(pRenderApi) , m_TexDesc(_desc) {}
 	~xD10WindowRenderTarget() {}
 	IBaseTexture* toTexture() {return NULL ; }
 	bool          desc(xTextureDesc& _desc){_desc = m_TexDesc ;  return true;};
@@ -76,6 +81,7 @@ public:
 public:
 	xD10RenderWindow(HWND hWnd , xD3D10RenderApi* pRenderApi);
 	~xD10RenderWindow();
+	bool                    desc(xTextureDesc& _desc);
 	virtual bool            destory();
 	bool                    create(IDXGISwapChain* pSwapChain , int w , int h);
 	bool                    resize(int w , int h);

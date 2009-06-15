@@ -605,15 +605,15 @@ int   XComDoc_DeEncrypot(_xcd_int8* dest_buf,_xcd_int8* src_buf, int src_len);
 
 bool xComDocument::__open_for_read(IReadStream* pStream , int _offset , bool load_to_mem)
 {
-	int old_pos =  pStream->tellg();
+	int old_pos =  (int)pStream->tell();
 	m_FileHeader.m_FileID.m_Magic = 0;
-	pStream->seekg(_offset,ios::beg);
+	pStream->seek(_offset,ios::beg);
 	pStream->read((_xcd_int8*)&m_FileHeader,sizeof(sCDFileHeader));
 	if(pStream->eof()) return false;
 	//fread(&m_FileHeader,1,sizeof(sCDFileHeader),m_FileStream);
 	if(__check_file_header() == false)
 	{
-		pStream->seekg(old_pos,ios::beg);
+		pStream->seek(old_pos,ios_base::beg);
 		return false;
 	}
 
@@ -642,8 +642,6 @@ bool xComDocument::__open_for_read(IReadStream* pStream , int _offset , bool loa
 	{
 		DataEntry& entry = m_DataEntrys[i];
 		pStream->read((_xcd_int8*)&entry.m_DataEntryItem ,sizeof(sCDDataEntryItem));
-		
-
 		//如果是加密的话，就解密EntryItem;
 		//if(isEncrypot)
 		//	XComDoc_DeEncrypot((_xcd_int8*)&entry.m_DataEntryItem,(_xcd_int8*)&entry.m_DataEntryItem,sizeof(sCDDataEntryItem));
@@ -663,7 +661,7 @@ bool xComDocument::__open_for_read(IReadStream* pStream , int _offset , bool loa
 		__recalc_data_hash_index();
 	m_state = xcds_ok;
 	m_WriteBuffer.free();
-	pStream->seekg(old_pos,ios::beg);
+	pStream->seek(old_pos,ios::beg);
 	if(load_to_mem)
 	{
 		m_DataLoc = eDL_MEM;

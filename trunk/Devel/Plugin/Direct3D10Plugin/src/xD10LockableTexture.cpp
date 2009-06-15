@@ -54,7 +54,12 @@ bool xD10LockableTexture::load(const wchar_t* fileName , unsigned long  arg)
 	ID3D10Resource* pTexture = NULL;
 	D3DX10CreateTextureFromFileW( m_pD10Api->d10Device() , fileName ,  &loadInfo , NULL, &pTexture, NULL );
 	if(pTexture)
+    {
+        m_TexInfo.m_ShaderViewFmt    = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_ResFmt        = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_RTViewFmt     = DXGI_FORMAT_UNKNOWN;
 		return _load(pTexture);
+    }
 	return false;
 }
 
@@ -70,7 +75,12 @@ bool xD10LockableTexture::load(const wchar_t* fileName , const unsigned int8* bu
 	ID3D10Resource* pTexture = NULL;
 	D3DX10CreateTextureFromMemory(m_pD10Api->d10Device() , buf , bufLen , &loadInfo, NULL, &pTexture, NULL );
 	if(pTexture)
+    {
+        m_TexInfo.m_ShaderViewFmt    = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_ResFmt        = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_RTViewFmt     = DXGI_FORMAT_UNKNOWN;
 		return _load(pTexture);
+    }
 
 	return false;
 }
@@ -83,7 +93,7 @@ bool  xD10LockableTexture::_create2DTexture()
 	desc.Height           = (UINT)m_TexInfo.m_TexHeight;
 	desc.MipLevels        = (UINT)m_TexInfo.m_MipmapLevel;
 	desc.ArraySize        = (UINT)m_TexInfo.m_ArraySize;
-	desc.Format           = m_TexInfo.m_format ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+	desc.Format           = m_TexInfo.m_ShaderViewFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
 	desc.SampleDesc.Count = 1;
 	desc.BindFlags        = D3D10_BIND_SHADER_RESOURCE  ;//| D3D10_BIND_RENDER_TARGET; 
 	desc.Usage            = D3D10_USAGE_DYNAMIC;
@@ -119,7 +129,9 @@ bool  xD10LockableTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapL
     
 	xD10GIFormatInfo* pFmtInfo = xD10ConstLexer::singleton()->GetPixelFormat(fmt);
 	m_TexInfo.m_ArraySize = arraySize;
-	m_TexInfo.m_format    = pFmtInfo->m_dxfmt;
+    m_TexInfo.m_ShaderViewFmt    = pFmtInfo->m_dxfmt;
+    m_TexInfo.m_ResFmt        = pFmtInfo->m_dxfmt;
+    m_TexInfo.m_RTViewFmt     = pFmtInfo->m_dxfmt;
 	m_TexInfo.m_MemSize   = 0;
 	m_TexInfo.m_MipmapLevel = mipMapLevels;
 	m_TexInfo.m_TexDepth    = 1;
@@ -127,7 +139,7 @@ bool  xD10LockableTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapL
 	m_TexInfo.m_TexWidth    = w;
 	m_TexInfo.m_Type        = RESOURCE_TEXTURE2D;
 	m_TexInfo.m_xfmt        = fmt;
-    m_TexInfo.m_nBytePerPixel = pFmtInfo->m_compont * pFmtInfo->m_byte;
+    m_TexInfo.m_nBytePerPixel = pFmtInfo->m_compont * pFmtInfo->m_bytePerComponent;
 	return _create2DTexture();
 }
 
@@ -140,7 +152,7 @@ bool xD10LockableTexture::_create3DTexture()
 	desc.Height           = (UINT)m_TexInfo.m_TexHeight;
 	desc.MipLevels        = (UINT)m_TexInfo.m_MipmapLevel;
 	desc.Depth            = (UINT)m_TexInfo.m_TexDepth;
-	desc.Format           = m_TexInfo.m_format ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+	desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
 	desc.BindFlags        = D3D10_BIND_SHADER_RESOURCE  ;//| D3D10_BIND_RENDER_TARGET; 
 	desc.Usage            = D3D10_USAGE_DYNAMIC;
 	desc.CPUAccessFlags   = D3D10_CPU_ACCESS_WRITE;
@@ -174,7 +186,9 @@ bool  xD10LockableTexture::create(int w , int h , int depth , ePIXEL_FORMAT fmt,
 
 	xD10GIFormatInfo* pFmtInfo = xD10ConstLexer::singleton()->GetPixelFormat(fmt);
 	m_TexInfo.m_ArraySize = arraySize;
-	m_TexInfo.m_format    = pFmtInfo->m_dxfmt;
+	m_TexInfo.m_ShaderViewFmt    = pFmtInfo->m_dxfmt;
+    m_TexInfo.m_ResFmt        = pFmtInfo->m_dxfmt;
+    m_TexInfo.m_RTViewFmt     = pFmtInfo->m_dxfmt;
 	m_TexInfo.m_MemSize   = 0;
 	m_TexInfo.m_MipmapLevel = mipMapLevels;
 	m_TexInfo.m_TexDepth    = depth;
@@ -182,7 +196,7 @@ bool  xD10LockableTexture::create(int w , int h , int depth , ePIXEL_FORMAT fmt,
 	m_TexInfo.m_TexWidth    = w;
 	m_TexInfo.m_Type        = RESOURCE_TEXTURE2D;
 	m_TexInfo.m_xfmt        = fmt;
-	m_TexInfo.m_nBytePerPixel = pFmtInfo->m_compont * pFmtInfo->m_byte;
+	m_TexInfo.m_nBytePerPixel = pFmtInfo->m_compont * pFmtInfo->m_bytePerComponent;
 	if(depth == 1) return _create2DTexture();
 	else return _create3DTexture();
 }
@@ -302,60 +316,6 @@ bool xD10LockableTexture::unlock(xTextureLockArea& lockInfo)
 	//D3DX10SaveTextureToFileW(m_pTexture,D3DX10_IMAGE_FILE_FORMAT::D3DX10_IFF_PNG , _ABSPATH(L".\\Profile\\test.png") );
 	return true;
 }
-
-
-/*
-bool xD10LockableTexture::_load(ID3D10Resource* pTexture)
-{
-	
-	D3D10_SHADER_RESOURCE_VIEW_DESC srvDesc;
-	D3D10_RESOURCE_DIMENSION type;
-	m_pTexture->GetType( &type );
-	if(type != D3D10_RESOURCE_DIMENSION_TEXTURE2D)
-	{
-		pTexture->Release();
-		return false;
-	}
-
-	m_pTexture = (ID3D10Texture2D*)pTexture;
-	D3D10_TEXTURE2D_DESC desc;
-	m_pTexture->GetDesc( &desc );
-
-	srvDesc.Format = desc.Format;
-	srvDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels       = desc.MipLevels;
-	ID3D10ShaderResourceView *pSRView = NULL;
-	m_pD10Api->d10Device()->CreateShaderResourceView( m_pTexture, &srvDesc, &pSRView );
-	if(pSRView == NULL)
-	{
-		unload();
-		return false;
-	}
-	m_pTextureView = pSRView;
-	//Моід
-	m_TexInfo.m_format      = desc.Format;
-	m_TexInfo.m_ArraySize   = desc.ArraySize;
-	m_TexInfo.m_TexWidth    = desc.Width;
-	m_TexInfo.m_TexHeight   = desc.Height;
-	m_TexInfo.m_TexDepth    = 1;
-	m_TexInfo.m_MipmapLevel = desc.MipLevels;
-	m_TexInfo.m_Type        = RESOURCE_TEXTURE2D;
-	//===================================
-	xD10GIFormatInfo* pFormat = xD10ConstLexer::singleton()->GetPixelFormat( m_TexInfo.m_format );
-	m_TexInfo.m_xfmt = pFormat->m_fmt;
-	unsigned int iPitch = (unsigned int)( m_TexInfo.m_TexWidth  * pFormat->m_compont * pFormat->m_byte );
-	m_TexInfo.m_Pitch = xFloorToPower2( iPitch );
-	m_TexInfo.m_MemSize = int( m_TexInfo.m_Pitch * m_TexInfo.m_ArraySize * m_TexInfo.m_TexDepth * m_TexInfo.m_TexHeight );
-	m_TexInfo.m_nBytePerPixel = pFormat->m_compont * pFormat->m_byte;
-	if(m_bReadable)
-	{
-		m_texBuffer.create(m_TexInfo.m_Pitch , (int)m_TexInfo.m_TexHeight) ;
-	}
-
-	return true;
-}
-*/
 
 IRenderTarget* xD10LockableTexture::toRenderTarget(size_t iSlice  , size_t iMipMapLevel )
 {

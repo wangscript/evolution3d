@@ -418,7 +418,7 @@ namespace std
 		void traceLine(int level , const wchar_t* _text)
 		{
 			 char buf[1024]={0};
-			 XEvol_UnicodeToLocale(_text,buf,1024);
+			 NS_XEVOL3D::XEvol_UnicodeToLocale(_text,buf,1024);
 			 traceLine(level,buf);
 		}
 		//===================================================

@@ -41,7 +41,7 @@ public:
 	void           aabb(xGeomLib::xaabb&     _aabb);
 	void           shpere(xGeomLib::xshpere& _shpere);
 	IRenderApi*    renderApi() { return m_pRenderApi ; }
-	void           render(unsigned long passedTime);
+	bool           render(unsigned long passedTime);
 };
 
 END_NAMESPACE_XEVOL3D

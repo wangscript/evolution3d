@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __WIN32__WINDOW_IMPLEMT_H__
 
 #include <Application/xWindow.h>
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 #include <windows.h>
 
 namespace XEvol3D
@@ -55,7 +55,7 @@ namespace XEvol3D
 		virtual bool      deactiveWindow() ; //Add for Mozilla
 
 	public:
-		bool              __createWindow(WIN_CREATE_STRUCT& cs,const xCfgNode* params);
+		bool              __createWindow(WIN_CREATE_STRUCT& cs,const xXmlNode* params);
 	public :
 		void              saveWindowMsgHandler();
 		void              attach(HWND hWnd);

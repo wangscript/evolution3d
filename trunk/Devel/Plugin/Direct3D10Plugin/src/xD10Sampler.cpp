@@ -1,7 +1,7 @@
 #include "xD10Sampler.h"
 #include "xD10ConstLexer.h"
 #include "xDirect3D10API.h"
-#include <BaseLib/xCfgParser.h>
+#include <BaseLib/xXmlDocument.h>
 BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xD10Sampler  , ISamplerState);
 bool xD10Sampler::_destory()
@@ -13,7 +13,7 @@ bool xD10Sampler::_destory()
 }
 
 
-bool xD10Sampler::_load(xCfgNode* node)
+bool xD10Sampler::_load(xXmlNode* node)
 {
 	/*
 	<?xml version ="1.0" encoding="unicode" ?>
@@ -27,7 +27,7 @@ bool xD10Sampler::_load(xCfgNode* node)
 	m_name = node->value(L"name");
 	D3D10_SAMPLER_DESC desc;
 	//Filter;
-	xCfgNode* pNode = node->findNode(L"filter");
+	xXmlNode* pNode = node->findNode(L"filter");
 	if(pNode)
 	{
 		const wchar_t* min_val = pNode->value(L"min");
@@ -91,7 +91,7 @@ xD10Sampler::~xD10Sampler()
 }
 bool          xD10Sampler::load(const wchar_t* fileName , unsigned long  arg)
 {
-	xCfgDocument doc;
+	xXmlDocument doc;
 	if(false == doc.load(fileName , true) )
 		return false;
 	return _load(doc.root() );
@@ -100,7 +100,7 @@ bool          xD10Sampler::load(const wchar_t* fileName , const unsigned int8* b
 {
 	if(buf == 0 || bufLen == 0)
 		return load(fileName , arg);
-	xCfgDocument doc;
+	xXmlDocument doc;
 	if(false == doc.load((const wchar_t* )buf, bufLen ,  true) )
 		return false;
 	return _load(doc.root() );

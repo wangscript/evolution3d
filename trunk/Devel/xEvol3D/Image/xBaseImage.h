@@ -26,13 +26,13 @@ BEGIN_NAMESPACE_XEVOL3D
 
 enum IMAGE_FILTER
 {
-	FILTER_BOX		  = 0,	// Box, pulse, Fourier window, 1st order (constant) b-spline
-	FILTER_BICUBIC	  = 1,	// Mitchell & Netravali's two-param cubic filter
-	FILTER_BILINEAR   = 2,	// Bilinear filter
-	FILTER_BSPLINE	  = 3,	// 4th order (cubic) b-spline
-	FILTER_CATMULLROM = 4,	// Catmull-Rom spline, Overhauser spline
-	FILTER_LANCZOS3	  = 5,	// Lanczos3 filter
-	FILTER_NONE,
+	eFILTER_BOX		  = 0,	// Box, pulse, Fourier window, 1st order (constant) b-spline
+	eFILTER_BICUBIC	  = 1,	// Mitchell & Netravali's two-param cubic filter
+	eFILTER_BILINEAR   = 2,	// Bilinear filter
+	eFILTER_BSPLINE	  = 3,	// 4th order (cubic) b-spline
+	eFILTER_CATMULLROM = 4,	// Catmull-Rom spline, Overhauser spline
+	eFILTER_LANCZOS3	  = 5,	// Lanczos3 filter
+	eFILTER_NONE,
 };
 
 //----------------------------------------------
@@ -102,9 +102,9 @@ public:
 	virtual const wchar_t* supportExt(bool bSave) = 0;
 	virtual int            byteAlign() = 0;
 	virtual bool           convert(ePIXEL_FORMAT newFmt) = 0;
-	virtual bool           scale(int w , int h , IMAGE_FILTER filter = FILTER_BOX) = 0;
-	virtual bool           scalePOT(IMAGE_FILTER filter = FILTER_BOX) = 0 ; 
-	virtual bool           scaleFit(int w , int h , IMAGE_FILTER filter = FILTER_BOX)  = 0;
+	virtual bool           scale(int w , int h , IMAGE_FILTER filter = eFILTER_BOX) = 0;
+	virtual bool           scalePOT(IMAGE_FILTER filter = eFILTER_BOX) = 0 ; 
+	virtual bool           scaleFit(int w , int h , IMAGE_FILTER filter = eFILTER_BOX)  = 0;
 
 	virtual bool         load(xImageSize size) = 0;
 	virtual bool         load(int w , int h , ePIXEL_FORMAT fmt) = 0;

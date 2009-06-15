@@ -1,7 +1,40 @@
-#include "Stdafx.h"
 #include "vrcSceneNode.h"
 #include "vrcSceneManager.h"
 IMPL_BASE_OBJECT_CLASSID(xVR_SceneNode , IDrawableObject);
+
+bool   loadPlacement(xXmlNode* pXMLNode , xPlacement* placeMent)
+{
+    const wchar_t* _strRot   = pXMLNode->value(L"rotate");
+	const wchar_t* _strTrans = pXMLNode->value(L"trans");
+	if(_strRot)
+	{
+		xquat _quat;
+		swscanf(_strRot , L"[%f,%f,%f,%f]" , &_quat.x , &_quat.y , &_quat.z , &_quat.w);
+		placeMent->setRotate(_quat);
+	}
+   
+	if(_strTrans)
+	{
+		xvec3 _trans;
+		swscanf(_strTrans , L"[%f,%f,%f]"    , &_trans.x , &_trans.y , &_trans.z );
+		placeMent->setPosition(_trans);
+	}
+	return true;
+}
+
+bool   savePlacement(xXmlNode* pXMLNode , xPlacement* placeMent)
+{
+    wchar_t buf[256];
+	xquat& _quat  = placeMent->m_Rotation.m_Quat ;
+	xvec3& _trans = placeMent->m_Position;
+	swprintf_x(buf,256,L"[%f,%f,%f,%f]" ,_quat.x , _quat.y , _quat.z , _quat.w);
+	pXMLNode->setValue(L"rotate" , buf);
+
+	swprintf_x(buf,256,L"[%f,%f,%f]" ,_trans.x , _trans.y , _trans.z);
+	pXMLNode->setValue(L"trans" , buf);
+	return true;
+}
+
 xVR_SceneNode::xVR_SceneNode(XVR_SceneManager* pSceneManager)
 {
 	 m_pRenderApi    = pSceneManager->renderApi();
@@ -52,13 +85,45 @@ bool xVR_SceneNode::update(unsigned long passedTime)
 	}
 	return true;
 }
+bool xVR_SceneNode::save(xXmlNode* pXMLNode)
+{
+	//º”‘ÿPlacement
+	savePlacement(pXMLNode , &m_Placement);
+    for(size_t i = 0 ; i < m_Children.size() ; i ++)
+	{
+		xXmlNode* pChildXML = pXMLNode->insertNode(L"node");
+		m_Children[i]->save(pChildXML);
+	}
+	return true;
+}
 
-void xVR_SceneNode::render(unsigned long passedTime)
+bool xVR_SceneNode::load(xXmlNode* pXMLNode)
+{
+	//º”‘ÿAABB
+
+	//º”‘ÿPlacement
+    loadPlacement(pXMLNode , &m_Placement);
+	xXmlNode::XmlNodes childXmlNodes ;
+	pXMLNode->findNode(L"node" , childXmlNodes);
+	for(size_t i = 0 ; i < childXmlNodes.size() ; i ++)
+	{
+          xXmlNode* pChildXML = childXmlNodes[i];
+		  const wchar_t* _type = pChildXML->value(L"type");
+		  const wchar_t* _name = pChildXML->value(L"name");
+		  xVR_SceneNode* pChildNode = m_pSceneManager->createNode(_type,_name,pChildXML,this);
+		  pChildNode->load(pChildXML);
+		  insertChild(pChildNode);
+	} 
+	return true;
+}
+
+bool xVR_SceneNode::render(unsigned long passedTime)
 {
 	for(int i = 0 ; i < numOfChildren() ; ++i)
 	{
 		m_Children[i]->render(passedTime);
 	}
+	return true;
 }
 
 bool xVR_SceneNode::_invilidateTransMatrix()
@@ -145,10 +210,5 @@ const wchar_t*  xVR_SceneNode::type()
     return L"BaseNode";
 }
 
-bool  xVR_SceneNode::load(xCfgNode * pNode)
-{
-	XEVOL_WARNNING_NOT_IMPLEMENT;
-	return true;
-}
 
 

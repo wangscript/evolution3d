@@ -16,7 +16,7 @@ public:
 	}
 	bool add(size_t  hash_name , T* object)
 	{
-		if(find(hash_name)) return false;
+		if( find(hash_name) ) return false;
 		m_vObjTable.insert( vObjectTable::value_type(hash_name , object));
 		return true;
 	}
@@ -37,7 +37,28 @@ public:
 
 	bool remove(T* object)
 	{
-		return remove(object->hash_name() , object );
+		vObjectTable::iterator pos = m_vObjTable.begin( );
+		for(; pos != m_vObjTable.end()  ; pos ++)
+		{
+			if(object == pos->second )
+			{
+				m_vObjTable.erase(pos);
+				return true;
+			}
+		}	
+		return false;
+	}
+
+	bool remove(const wchar_t* name)
+	{
+		size_t hname = xStringHash(name);
+		vObjectTable::iterator pos = m_vObjTable.find( hname );
+		if(pos != m_vObjTable.end()  )
+		{
+			m_vObjTable.erase(pos);
+			return true;
+		}	
+		return false;
 	}
 
 	bool remove(size_t  hash_name , T* object)
@@ -60,9 +81,11 @@ class xD3D10ObjectManager
 {
 	TD10ObjectTable<xD10InputAssembler> m_InputAssemblerMgr;
 	TD10ObjectTable<IInputBuffer>       m_InputBufferMgr;
+	TD10ObjectTable<ILightingEnv>       m_LightStateMgr;
 public:
 	TD10ObjectTable<xD10InputAssembler>& inputAssemblerMgr(){return m_InputAssemblerMgr ; }
 	TD10ObjectTable<IInputBuffer>&       InputBufferMgr(){return m_InputBufferMgr ;}
+	TD10ObjectTable<ILightingEnv>&       LightEnvMgr(){return m_LightStateMgr ; }
 };
 
 END_NAMESPACE_XEVOL3D

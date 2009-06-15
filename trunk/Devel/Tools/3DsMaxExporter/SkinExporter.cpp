@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "stdafx.h"
 #include "SkinExporter.h"
-#include "xCfgParser.h"
+#include "xXmlDocument.h"
 #include "xExportFunction.h"
 bool CSkinExporter::__remove_exist_mesh(wstring skin_group_dir,MaxMeshs& mesh_in ,MaxMeshs& mesh_out)
 {
@@ -156,11 +156,11 @@ bool CSkinExporter::export_skin_header(wstring skin_group_dir,vector<wstring>& m
 		if(pstream == NULL)
 			return false;
 		
-		xCfgDocument xml;
-		xCfgNode* rootNode = xml.insertNode(L"skins");
+		xXmlDocument xml;
+		xXmlNode* rootNode = xml.insertNode(L"skins");
 		for(size_t i = 0 ; i<mesh_names.size();++i)
 		{
-			xCfgNode* meshNode = rootNode->insertNode(L"mesh");
+			xXmlNode* meshNode = rootNode->insertNode(L"mesh");
 			meshNode->insertValue(L"name")->setValue(mesh_names[i].c_str());
 		}
 
@@ -180,12 +180,12 @@ bool CSkinExporter::export_skin_header(wstring skin_group_dir,vector<wstring>& m
 		char* buf = new char[pstream->data_len() + 1];
 		pstream->read(buf,pstream->data_len());
 		buf[pstream->data_len() ] = 0;
-		xCfgDocument xml;
+		xXmlDocument xml;
 		xml.load( buf,(int)pstream->data_len() ,true);
-		xCfgNode* rootNode = xml.root();
+		xXmlNode* rootNode = xml.root();
 		for(size_t i = 0 ; i<mesh_names.size();++i)
 		{
-			xCfgNode* meshNode = rootNode->insertNode(L"mesh");
+			xXmlNode* meshNode = rootNode->insertNode(L"mesh");
 			meshNode->insertValue(L"name")->setValue(mesh_names[i].c_str());
 		}
 

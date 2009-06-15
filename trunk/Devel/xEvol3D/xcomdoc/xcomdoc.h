@@ -18,27 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#ifndef  __XCOMDOC_API_H__
-#define  __XCOMDOC_API_H__
+#ifndef  __XEVOL_BASE_API_H__
+#define  __XEVOL_BASE_API_H__
 
 
-
-
-#ifdef _WIN32
-#   ifdef   _XEVOL_BUILD_DLL_ 
-#     define  _XCOMDOC_API_  __declspec( dllexport )
-#   else
-#     define  _XCOMDOC_API_  __declspec( dllimport )
-#   endif
-
-#   ifdef _XEVOL_BUILD_STATIC_
-#    undef   _XCOMDOC_API_
-#    define  _XCOMDOC_API_
-#   endif
-#else
-#   undef    _XCOMDOC_API_ 
-#   define   _XCOMDOC_API_ 
-#endif
 
 #ifndef _xcd_int8
 #define _xcd_int8 char
@@ -52,12 +35,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <vector>
 #include <iostream>
 #include <ios>
-using namespace std;
+#include "../BaseLib/xBaseObject.h"
 
-#ifndef BEGIN_NAMESPACE_XEVOL3D
-#define BEGIN_NAMESPACE_XEVOL3D namespace XEvol3D {
-#define END_NAMESPACE_XEVOL3D }
-#endif
+//#ifndef BEGIN_NAMESPACE_XEVOL3D
+//#define BEGIN_NAMESPACE_XEVOL3D namespace XEvol3D {
+//#define END_NAMESPACE_XEVOL3D }
+//#endif
 
 
 BEGIN_NAMESPACE_XEVOL3D
@@ -82,14 +65,10 @@ enum xcd_state
     xcds_ok,
 };
 
-typedef ios_base::seek_dir xcd_seek_dir;
-enum 
-{
-	xcdsd_beg = ios_base::beg,
-	xcdsd_end = ios_base::end,
-	xcdsd_cur = ios_base::cur,
-};
-
+typedef std::ios_base::seek_dir xcd_seek_dir;
+#define xcdsd_beg  std::ios_base::beg
+#define xcdsd_end  std::ios_base::end
+#define xcdsd_cur  std::ios_base::cur
 
 enum eCompressLevel
 {
@@ -112,15 +91,15 @@ enum xcd_data_type
 typedef void*    HXCDFILE ;
 typedef void*    HXCDSTREAM;
 
-class IReadStream
-{
-public:
-    virtual int    read(_xcd_int8* buf, int byte_read) = 0 ;
-    virtual void   seekg(int _offset, ios::seekdir dir) = 0;
-    virtual int    tellg() = 0;
-    virtual void   close() = 0 ;
-    virtual bool   eof() = 0;
-};
+//class IReadStream
+//{
+//public:
+//    virtual int    read(_xcd_int8* buf, int byte_read) = 0 ;
+//    virtual void   seekg(int _offset, ios::seekdir dir) = 0;
+//    virtual int    tellg() = 0;
+//    virtual void   close() = 0 ;
+//    virtual bool   eof() = 0;
+//};
 
 class IWriteBuffer
 {
@@ -131,9 +110,9 @@ public:
     virtual void        free() = 0;
     virtual int         write(const _xcd_int8* buf,int byte_write) = 0;
     virtual int         read(_xcd_int8* buf, int byte_read) = 0;
-    virtual void        seekg(int _offset, ios::seekdir dir) = 0;
+    virtual void        seekg(int _offset, std::ios_base::seekdir dir) = 0;
 
-    virtual void        seekw(int _offset, ios::seekdir dir) = 0;
+    virtual void        seekw(int _offset, std::ios_base::seekdir dir) = 0;
     virtual int         tellg() = 0;
     virtual int         tellw() = 0;
     virtual _xcd_int8*  get_buf() = 0;
@@ -188,10 +167,9 @@ public:
 public:
 };
 
-class _XCOMDOC_API_ xcomdoc
+class _XEVOL_BASE_API_ xcomdoc
 {
     HXCDFILE    m_hFIle;
-	HXCDFILE    m_hDir;
 public:
     xcomdoc();
 	xcomdoc(const xcomdoc& doc);
@@ -245,6 +223,9 @@ public:
 	xcomdocstream*      create_stream(const char* name,xcd_data_type type = xcddt_common,int compressed_rate = 0);
 	xcomdocstream*      create_stream_with_dir(const char* name, xcd_data_type type = xcddt_common,int compressed_rate = 0);
 #endif
+
+	static xcomdoc*     newInstance(const wchar_t* strResName, unsigned long arg);
+	static void         deleteInstance(xcomdoc* pRes);
 
 /**Util helper function*/
     void                add_dir(const wchar_t* bas_dir,int compressed_rate = 0);

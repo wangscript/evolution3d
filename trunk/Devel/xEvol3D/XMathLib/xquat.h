@@ -23,6 +23,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "xmathbasedef.h"
 
 BEGIN_NAMESPACE_XMATHLIB
+
+class _XEVOL_BASE_API_ xeuler : public xvec3
+{
+public:
+	float heading(){return  XM_Rad2Deg(y); }
+	float pitch()  {return  XM_Rad2Deg(x); }
+	float bank()   {return  XM_Rad2Deg(z); }
+	float yAgnle() {return  XM_Rad2Deg(y); }
+	float xAgnle() {return  XM_Rad2Deg(x); }
+	float zAgnle() {return  XM_Rad2Deg(z); }
+
+	void toMatrix(xmat4& mOut);
+	void fromMatrix(xmat4& mIn);
+};
+
 class  _XEVOL_BASE_API_ xquat
 {
 public:
@@ -131,7 +146,8 @@ public:
 	}
 
 public:
-
+	void           fromEuler(xeuler& _euler);
+	void           toEuler(xeuler& _euler);
 	xmat4          toMatrix();
 	void           toMatrix(xmat4& mOut);
 	xquat          operator * (const xquat& q2);

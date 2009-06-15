@@ -123,7 +123,8 @@ public:
     bool              m_bLinearFilter;
 	eFontFilter       m_Filter;
 public:
-	HXFT2FontChar GetFontCharHandle(wchar_t _chr);
+    IMPL_BASE_OBJECT_INTERFACE(xFT2Font);
+	HXFT2FontChar    GetFontCharHandle(wchar_t _chr);
 public:
 	void             createFontCharManager(const wchar_t* managerName);
 	void             setFontChareManager(xFT2FontCharMgr* pMgr);

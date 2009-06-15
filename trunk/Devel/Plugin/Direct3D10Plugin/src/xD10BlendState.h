@@ -15,7 +15,7 @@ class xD10BlendState : public IBlenderState
 	xColor_4f                 m_color;
 	unsigned int               m_mask;
 	bool                      _destory() ; 
-	bool                      _load(xCfgNode* node);
+	bool                      _load(xXmlNode* node);
 public:
 	void*        handle(){ return m_pD10Blend ; }
 	xD10BlendState(xD3D10RenderApi* pAPI  );

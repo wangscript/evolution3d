@@ -800,7 +800,7 @@ bool xGpuProgNameParser::_generateSocketCode(xShaderCodeNodeMgr* pNodeMgr ,xShad
 			//找到对应的参数
 			if(false == retValMgr.find(arg.m_Semantic.c_str() , retVal , arg) )
 			{
-				XEVOL_LOG(eXL_DEBUG_HIGH,"输入参数不匹配\n");
+				XEVOL_LOG(eXL_DEBUG_HIGH,"输入参数不匹配 semantic =: %s \n" , arg.m_Semantic.c_str());
 				return false;
 			}
 			inputArgList += retVal;
@@ -879,7 +879,7 @@ bool xGpuProgNameParser::_generateSocketCode(xShaderCodeNodeMgr* pNodeMgr ,xShad
 			//找到对应的参数
 			if(false == retValMgr.find(arg.m_Semantic.c_str() , retVal , arg) )
 			{
-				XEVOL_LOG(eXL_DEBUG_HIGH,"输入参数不匹配: \n");
+				XEVOL_LOG(eXL_DEBUG_HIGH,"输入参数不匹配 semantic =: %s \n" , arg.m_Semantic.c_str());
 				return false;
 			}
 			assSent = assSent + retVal + "; \n";

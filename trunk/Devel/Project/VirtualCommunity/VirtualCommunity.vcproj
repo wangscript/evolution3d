@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xEvol3D_$(ConfigurationName).lib $(NOINHERIT)"
+				AdditionalDependencies="xEvol3D_$(ConfigurationName).lib VirtualCommunityScene_$(ConfigurationName).lib $(NOINHERIT)"
 				OutputFile="$(OutDir)\$(ProjectName)_$(ConfigurationName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\lib"
@@ -99,7 +99,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
-			ManagedExtensions="2"
+			ManagedExtensions="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xEvol3D_$(ConfigurationName).lib $(NOINHERIT)"
+				AdditionalDependencies="xEvol3D_$(ConfigurationName).lib VirtualCommunityScene_$(ConfigurationName).lib $(NOINHERIT)"
 				OutputFile="$(OutDir)\$(ProjectName)_$(ConfigurationName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\lib"
@@ -197,8 +197,13 @@
 			MinFrameworkVersion="131072"
 		/>
 		<AssemblyReference
+			RelativePath="System.DirectoryServices.dll"
+			AssemblyName="System.DirectoryServices, Version=2.0.0.0, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+			MinFrameworkVersion="131072"
+		/>
+		<AssemblyReference
 			RelativePath="..\..\bin\xEvol3D.Net.dll"
-			AssemblyName="xEvol3D.Net, Version=1.0.3246.36036, processorArchitecture=x86"
+			AssemblyName="xEvol3D.Net, Version=1.0.3250.4171, processorArchitecture=x86"
 			MinFrameworkVersion="131072"
 		/>
 	</References>
@@ -268,6 +273,10 @@
 				RelativePath=".\VirtualCmtyEnv.h"
 				>
 			</File>
+			<File
+				RelativePath=".\xVRCBaseInclude.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -284,52 +293,16 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Scene"
-			>
-			<File
-				RelativePath=".\Scene\vrcDummyNode.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						CompileAsManaged="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Scene\vrcDummyNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Scene\vrcModelNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Scene\vrcModelNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Scene\vrcSceneManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Scene\vrcSceneManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Scene\vrcSceneNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Scene\vrcSceneNode.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Scene.Net"
 			>
+			<File
+				RelativePath=".\Scene.Net\vrcScene.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Scene.Net\vrcScene.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
