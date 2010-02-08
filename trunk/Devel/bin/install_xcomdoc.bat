@@ -1,1 +1,0 @@
-copy xcomdoc.exe c:\windows\

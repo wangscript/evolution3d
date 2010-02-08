@@ -1,4 +1,0 @@
-#include "xMaterialManager.h"
-BEGIN_NAMESPACE_XEVOL3D
-
-END_NAMESPACE_XEVOL3D

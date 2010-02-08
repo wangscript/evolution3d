@@ -1,7 +1,0 @@
-#ifndef _XEVOLUTION3D_SCENE_H_
-#define _XEVOLUTION3D_SCENE_H_
-#include "./BaseLib/xEvol3DBaseInc.h"
-BEGIN_NAMESPACE_XEVOL3D
-
-END_NAMESPACE_XEVOL3D
-#endif
