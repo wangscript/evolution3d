@@ -1,0 +1,39 @@
+// xEvol3DWebViewer.idl : IDL source for xEvol3DWebViewer
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (xEvol3DWebViewer.tlb) and marshalling code.
+
+#include "olectl.h"
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(8E1B0FDB-4F99-4693-B4B7-EF9A00CD6BB2),
+	dual,
+	nonextensible,
+	helpstring("ICxEvol3DViewer Interface"),
+	pointer_default(unique)
+]
+interface ICxEvol3DViewer : IDispatch{
+};
+
+[
+	uuid(C97B9475-C743-47A1-B13D-B2A85602F0C5),
+	version(1.0),
+	helpstring("xEvol3DWebViewer 1.0 Type Library")
+]
+library xEvol3DWebViewerLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(189C05E3-2961-4C64-87C1-886B04F4145B),
+		control,
+		helpstring("CxEvol3DViewer Class")
+	]
+	coclass CxEvol3DViewer
+	{
+		[default] interface ICxEvol3DViewer;
+	};
+};

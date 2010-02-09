@@ -1,0 +1,4 @@
+https://lib3ds.svn.sourceforge.net/svnroot/lib3ds
+
+
+Current Version = lib3ds-20080909;

@@ -1,0 +1,129 @@
+
+设计目标：
+1. Shader由Node构成。
+2. Node可以任意连接。只要符合参数传递规范。
+3. Shader的输入，和最终输出的部分（写入哪些输出寄存器）可以作为Node来添加。
+4. Shader可以由一群Node + BaseSourceCode构成。也可以全部由Node构成。
+5. 如果Shader中有BaseSourceCode ， BaseSourceCode本身应该是一个完整的Shader
+6. Node应该有一个到两个Pin。即输入Pin和输出Pin。
+7. Node之间互联使用的参数，应该有预先定义的Semantic。相同的Semantic才可以匹配。
+
+
+目前问题:
+1. main函数由谁来提供的问题。目前可以由程序动态生成。也可以由BaseSourceCode提供。
+2. Node之间的参数传递时候，参数的semantic和参数的种类的问题。
+
+
+
+
+
+具体问题：
+1. PixelShader里可能有的YUV三通道输入。
+
+
+
+
+
+具体用途：
+1: Shader名字，
+    视频处理.
+          PS=YUVVideoEffect: [YUVMosic,YUVVideoControl,YUVRGB]
+          VS=ScreenQuad
+          
+    普通光照处理:
+          PS=Simple:[PhongLight,Fog,ShadowMap]
+          VS=Simple:[Skin,MorphTarget,PerPixelLightOut]
+          
+    
+          
+
+//视频处理的PS
+sampler2D YTextue;
+sampler2D UTextue;
+sampler2D VTextue;
+
+struct PS_INPUT 
+{
+   float2 Texcoord :        TEXCOORD0;
+};
+
+float4 main( PS_INPUT Input ) : COLOR0
+{      
+   //===采样输入器=====================================
+   float3 yuvColor;
+   yuvColor.x       = tex2D( YTextue, Input.Texcoord ).x;
+   yuvColor.y       = tex2D( UTextue, Input.Texcoord ).x;
+   yuvColor.z       = tex2D( VTextue, Input.Texcoord ).x;
+   //================================================== 
+   
+   //==ColorSpace======================================
+   float3 delYuv    = float3(-16.0/255.0 , -128.0/255.0 , -128.0/255.0);
+   yuvColor += delYuv;
+   float3 matYUVRGB1 = float3(1.164,  2.018 ,   0.0   );
+   float3 matYUVRGB2 = float3(1.164, -0.391 , -0.813  );
+   float3 matYUVRGB3 = float3(1.164,    0.0 ,  1.596  );
+
+   float4 rgbColor;
+   rgbColor.x = dot(yuvColor,matYUVRGB1);
+   rgbColor.y = dot(yuvColor,matYUVRGB2);
+   rgbColor.z = dot(yuvColor,matYUVRGB3);
+   rgbColor.w = 1.0f;
+   //==================================================
+   return rgbColor;
+}
+
+
+ColorSpace ---- Node-------------
+//{{ Section = Description
+InputPin = 
+{
+    float4 yuvColorIn  : YUVCOLOR
+}
+float4 CS_YUV2RGB(float4 yuvColorIn)
+OutpuPin =
+{
+   float4 : COLOR0
+}
+//}}
+
+//{{ Section = Declaration
+float4 CS_YUV2RGB(float4 yuvColorIn);
+//}}
+
+//{{ Section = Code
+float4 CS_YUV2RGB(float4 yuvColorIn)
+{
+   //==ColorSpace======================================
+   float3 delYuv    = float3(-16.0/255.0 , -128.0/255.0 , -128.0/255.0);
+   float3 yuvColor = yuvColorIn.xyz + delYuv;
+   float3 matYUVRGB1 = float3(1.164,  2.018 ,   0.0   );
+   float3 matYUVRGB2 = float3(1.164, -0.391 , -0.813  );
+   float3 matYUVRGB3 = float3(1.164,    0.0 ,  1.596  );
+
+   float4 rgbColor;
+   rgbColor.x = dot(yuvColor,matYUVRGB1);
+   rgbColor.y = dot(yuvColor,matYUVRGB2);
+   rgbColor.z = dot(yuvColor,matYUVRGB3);
+   rgbColor.w = 1.0f;
+   //================================================== 
+   return rgbColor;
+}
+//}}
+
+//组合后
+
+float4 main( PS_INPUT Input ) : COLOR0
+{      
+   //===采样输入器=====================================
+   float4 yuvColor;
+   yuvColor.x       = tex2D( YTextue, Input.Texcoord ).x;
+   yuvColor.y       = tex2D( UTextue, Input.Texcoord ).x;
+   yuvColor.z       = tex2D( VTextue, Input.Texcoord ).x;
+   yuvColor.w = 1.0f;
+   //================================================== 
+   
+   
+   //Dynamic generate
+   return CS_YUV2RGB( float4(yuvColor) );
+
+}

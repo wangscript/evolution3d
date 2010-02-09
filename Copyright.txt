@@ -1,0 +1,5 @@
+Evolution3D(Evol3D) is public under the GNU General Public License¡£as described in the LICENSE file.
+
+
+if you want a commercial permission , please contact me with stanlylee@gmail.com
+

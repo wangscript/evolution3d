@@ -1,0 +1,52 @@
+1. 分类:
+   Shader可重组应该针对不同的Shader部分。
+
+     Vertex Shader端
+      1: VertexModifier --位置，输入纹理坐标等。
+      2: VertexLightingModifier -- 对顶点光照进行修改
+      3: VertexOutput
+     
+     Pixel Shader端
+      1: ColorInput      -- 输入颜色
+      2: Lighting        -- 对像素进行光照计算
+      3: ColorModifier   -- 对输出颜色进行调节。
+    
+     Geometry Shader端
+       未知
+     
+
+
+   每种Modifier都有确定的输入和输出。
+     比如，在视频处理中。
+       PixelShader的ColorInput可以知道它需要输入什么颜色
+     
+     例子------------------------------------------------------------------- 
+        a) 当前正在播放一个RGB视频,需要增加Hue调节,马赛克效果:
+        检测：无YUV->RGB转换模块。
+           马赛克->RGB-YUV->HUE->YUV-RGB->普通RGB输出
+        b) 当前正在播放一个YUV视频,需要增加Hue调节,马赛克效果:
+        检测: 有YUV->RGB转换模块
+           1: 马赛克(call YV12输入) ->HUE->YUV-RGB->普通RGB输出
+           2: pass (1) YV12输入->HUE->YUV-RGB->普通RGB输出->RenderTarget
+              pass (2) 马赛克->普通RGB输出
+     ------------------------------------------------------------------------
+
+    shader.yv12.ps
+    
+    sampler2D YTexture;
+    sampler2D UTexture;
+    sampler2D VTexture;
+
+    export float4 GetInputColor(float2 texCoord);
+    import float4 InputTextureColor(float2 texCoord);
+    import float4 ModifyTextureColor(float4 colorIn);
+
+    float4 main(float2 TexCoordIn : TEXCOORD0)
+    {
+       float4 inColor  = InputTextureColor(TexCoordIn );
+       float4 outColor = ModifyTextureColor(inColor);
+       return outColor;
+    }
+     
+        
+     
