@@ -1,0 +1,74 @@
+<HTML>
+	<HEAD>
+		<TITLE></TITLE>
+		<META NAME="GENERATOR" Content="Microsoft Visual Studio .NET 7.1">
+	</HEAD>
+	<BODY>
+		<P><FONT face="宋体">我们人为的将骨骼动画分成两种．</FONT></P>
+		<P><FONT face="宋体">1: 保存了骨架信息的支持换装的．我们称为骨骼动画角色．<BR>
+				2: 不保存骨架信息的，不支持换装的．我们骨骼动画模型．<BR>
+				<BR>
+				下面介绍它们的区别．<BR>
+				骨骼动画模型: 只保存了需要的骨骼．<BR>
+				没保存骨架．<BR>
+				SkeletonExp在导出的过程中自动生成．不需要专门对话框来配置<BR>
+				<BR>
+				骨骼动画角色：保存了骨架信息．以后可以从骨架里重建导出信息．<BR>
+				保存了没有用到的骨头．如上。<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				SkeletonExp需要专门对话框来配置.自己生成，或者从保存的文件里加载．<BR>
+				<BR>
+			</FONT>
+		</P>
+		<FONT face="宋体">
+			<P>
+				<BR>
+				骨骼动画角色Export的步骤．<BR>
+				<BR>
+				1: Export the sSkeleton<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. export the .xrs 
+				(一个普通的文件，保存skeleton)<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. export the .xrm (一个骨骼角色文件)</P>
+			<P>&nbsp;</P>
+			<P>2: Load the skeleton for skin-mesh export and action export.</P>
+			<P>&nbsp;</P>
+			<P>3: Export the skin-mesh&nbsp; to :<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp; 1: export the .skin&nbsp; (一个普通的skin mesh包，里面包含多个skin 
+				mesh)<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp; 2: export the .xrm&nbsp; (一个包，里面包含动作，骨架，默认的路径是skin/)</P>
+			<P>&nbsp;</P>
+			<P>4: Export the action to:<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;1: export the .action
+				<BR>
+				&nbsp;&nbsp;&nbsp; 2: export the .xrm<BR>
+				<BR>
+				<BR>
+				.xrm<BR>
+				---action : 骨架动作<BR>
+				---skelton: 骨架<BR>
+				---skin/&nbsp; : 存放所有的skin<BR>
+				&nbsp;&nbsp;&nbsp; |<BR>
+				&nbsp;&nbsp;&nbsp; |----Header/ 存放所有归到header一类里的skin mesh<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |---hat.skin&nbsp; 
+				帽子的skin mesh<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				|<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				|==&nbsp; 这里的结构和static mesh相同</P>
+			<P>&nbsp;</P>
+			<P>在骨骼模型和骨骼角色之间最大的区别就是．<BR>
+				&nbsp;&nbsp;&nbsp; 骨骼模型加载skin目录下所有的skin-mesh (由一个ModelDesc控制，这个desc是不可修改的)<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				骨骼角色需要加载的skin由CharactorDesc.xml控制，这个desc可以修改，并可以添加其他<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 的skin搜索路径，这个路径在CharactorDesc.xml里指定．<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CharactorDesc.xml由专门的角色编辑器来编辑<BR>
+				&nbsp;
+			</P>
+			<P>
+				<BR>
+				<BR>
+				&nbsp;</P>
+		</FONT>
+	</BODY>
+</HTML>

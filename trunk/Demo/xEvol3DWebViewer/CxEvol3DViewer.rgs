@@ -1,0 +1,34 @@
+HKCR
+{
+	xEvol3DWebViewer.CxEvol3DViewer.1 = s 'CxEvol3DViewer Class'
+	{
+		CLSID = s '{189C05E3-2961-4C64-87C1-886B04F4145B}'
+	}
+	xEvol3DWebViewer.CxEvol3DViewer = s 'CxEvol3DViewer Class'
+	{
+		CLSID = s '{189C05E3-2961-4C64-87C1-886B04F4145B}'
+		CurVer = s 'xEvol3DWebViewer.CxEvol3DViewer.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {189C05E3-2961-4C64-87C1-886B04F4145B} = s 'CxEvol3DViewer Class'
+		{
+			ProgID = s 'xEvol3DWebViewer.CxEvol3DViewer.1'
+			VersionIndependentProgID = s 'xEvol3DWebViewer.CxEvol3DViewer'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			ForceRemove 'Control'
+			ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 102'
+			'MiscStatus' = s '0'
+			{
+			    '1' = s '%OLEMISC%'
+			}
+			'TypeLib' = s '{C97B9475-C743-47A1-B13D-B2A85602F0C5}'
+			'Version' = s '1.0'
+		}
+	}
+}

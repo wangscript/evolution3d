@@ -1,0 +1,48 @@
+3DsMax骨骼动画导出时候第一帧的计算方法.
+
+
+相信大家如果在使用或者看别人使用3Ds Max做骨骼动画的时候，多多少少应该见过美术做模型的时候，在没有绑定骨骼之前，角色蒙皮的手通常都是平举着的。加上Skin或者Physique修改器后，蒙皮的姿势通常就是第0帧了。那么在Max导出骨骼动画的时候，这个手平举着的姿势是算是第几帧呢？又是对应具体哪些数据呢？这个问题，在我开始做骨骼动画前，问过老宋，不过不知道当时是我稀里糊涂还是老宋稀里糊涂，反正没弄明白，折腾了好久，终于在2005年下半年弄明白了。不过过了这么多年，感觉自己很健忘，今天收拾那个古老而庞大的3Ds Max Exporter，终于又逼我整理了一遍思路，笔记如下。
+  我们知道,3Ds Max 的骨骼动画修改器常用的有两个: Skin和Physique。 
+  在Physique里的IPhyBlendedRigidVertex通过IPhyBlendedRigidVertex::GetOffsetVector能拿到该顶点相对于某块骨骼的偏移位置，通常，我们把这个偏移乘上GetInitNodeTM获得的骨骼矩阵再乘上骨骼权重，并累加，就能得到初始位置。 
+  在Skin修改器里，我们并没有这样的GetOffsetVector，而是只能通过Mesh获得第0帧的数据。
+
+  那么他们的区别在哪里呢？
+  实际上，Physique GetOffsetVector获得的就是角色手平举的时候的蒙皮位置，称为Init Pose。Skin只能直接获得第0帧数据（跟获取Static Mesh一样的方法）.
+  但是，在Physique里我们完全也可以采用跟Skin里同样的方法来提取数据而不需要使用GetOffsetVector。在Skin里也可以计算出Init Pose.那么这个计算过程是怎么样的呢？
+  
+  其实，这个过程跟我们计算骨骼动画的任意一帧的过程是完全一样的，我们假设Init Pose是第i帧。
+  假设，第0帧的时候：位置是v0, 骨骼变换矩阵是TM(0,k)
+  手平举着的时候,    位置是vi, 骨骼变换矩阵式TM(i,k). 
+  TM(i,k) 就是Bone InitTM ,通过Physique::GetBoneInitTM()来获取
+  四个权重对应位置为 W(k);
+
+  在第0帧的时候，顶点相对四个骨骼的的位移应该为 v0 * invTM(0,k). 
+ （这个值在Physique里取出来的就是vtxBlend->GetOffsetVector(j), Skin则只能计算了）
+  所以。其实我们并不需要这个Offset，从第0帧，加上i帧的Bone InitTM就可以算出这个offset）
+  那么从第0帧，算到第i帧（初始帧）, 根据骨骼动画公式。
+  vi = SIGMA【 v0 * invTM(0,k) * TM(i,k) 】 (k = 0, 4).
+
+  那么同理，在Physique里，也可以用同样的方法，得到Init Pose的第i帧的position数据。用这个方法跟通过vtxBlend->GetOffsetVector(j)获取的Init Pose结果基本是一样的（不一样是因为浮点误差）
+
+  对于顶点Position如上处理，那么对于法向量呢？我们知道不管是Physique也好，Skin也好，直接都是无法取到Init Pose的Normal的，如果是Skin，Position取第0帧，Normal也取第0帧，那么刚好。但是如果你用的是Physique，而又是通过vtxBlend->GetOffsetVector(j)来获取Init Pose的Position的，那么对不起，Init Pose的Normal肯定要你自己算了。 这个过程我就不重复了。将 vi的计算公式中的矩阵改成 Inv后再转置就好了，因为法向量的变换矩阵跟顶点变换矩阵的关系就是逆+转置。
+
+  
+  补充说明一点，在导出数据后，顶点Position有两种保存方法：
+  1. 一个顶点保存一个值，比如保存第0帧数据。那么计算第t帧的时候的公式应该是
+    vt = SIGMA【 v0 * invTM(0,k) * TM(t,k) 】 (k = 0, 4)  
+    跟前面的一样的哈。 就是说你还需要把骨骼的InvTM（0，k)给保存下来，并且每次把 TM(t,k)插值好了后乘上去。这个无疑增加了骨骼矩阵混合的计算量。但是它允许你只保存一份顶点数据。
+  2. 一个顶点相对于四个骨骼各保存一份，也就是保存vtxBlend->GetOffsetVector(j)获取回来的值，或者是v0 * invTM(0,k) k=(0,4)。 假设保存下去的这个值是v(0,k), 0就是第0帧啦，k当然是第k根骨头啦。 那么这个时候，你做混合的时候只要
+     vt = SIGMA【 v(0,k) *  TM(t,k) 】 (k = 0, 4) 。计算减少了。但是你要保存的数据多了。嘿嘿，四个顶点位置，还有四个法向量哦，还有四个Tangent呢？哇哈哈。疯了。
+  
+   鉴于保存四个顶点位置开销实在太大，我宁愿在骨架混合的时候多计算，只保存一份顶点位置就好了。
+
+
+   说明：
+   v0 : 第0帧，顶点位置
+   vi : 第i帧，顶点位置
+   vt : t时刻，顶点位置
+   TM(t,k)     : t时刻，影响这个顶点的第k个骨骼的变换矩阵
+   TM(i,k)     : 第i帧，影响这个顶点的第k个骨骼的变换矩阵
+   invTM(0,k)  : 第0帧，影响这个顶点的第k个骨骼的变换矩阵的逆矩阵
+
+

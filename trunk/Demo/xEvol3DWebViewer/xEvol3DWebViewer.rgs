@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		'%APPID%' = s 'xEvol3DWebViewer'
+		'xEvol3DWebViewer.DLL'
+		{
+			val AppID = s '%APPID%'
+		}
+	}
+}
