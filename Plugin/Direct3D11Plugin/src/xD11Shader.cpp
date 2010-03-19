@@ -77,6 +77,7 @@ bool xD11Shader::afterLoad(ID3D10Blob* pShaderCode)
 bool  xD11Shader::unload()
 {
 	XSAFE_RELEASE(m_pShaderReflect);
+    XSAFE_DELETE(m_pConstTable);
 	return true;
 }
 bool xD11Shader::load(const wchar_t* fileName , unsigned long  arg)

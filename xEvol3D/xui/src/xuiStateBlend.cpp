@@ -22,30 +22,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../xuiWindow.h"
 BEGIN_NAMESPACE_XUI
 
-xuiWindowState_t xuiWindowState_t::XUISTATE_HIDE = xuiWindowState_t(L"hide");
-xuiWindowState_t::xuiWindowState_t(const wchar_t* name)
-{
-    memset(this,sizeof(xuiWindowState_t) , 0);
 
-    setName(name);
-    m_color          = xColor_4f(0.0f, 0.0f,0.0f,1.0f);
-    m_textcolor      = xColor_4f(1.0f, 1.0f,1.0f,1.0f);
-    m_border.m_color = xColor_4f(1.0f, 1.0f,1.0f,1.0f);
 
-}
-void xuiWindowState_t::operator = (const xuiWindowState_t& rhv)
-{
-    //²»¿½±´×´Ì¬Ãû×Ö
-    m_color    = rhv.m_color    ;
-    m_textcolor= rhv.m_textcolor;
-    m_border   = rhv.m_border   ;
-    m_Region   = rhv.m_Region   ;
-}
-
-void xuiWindowState_t::setName(const wchar_t* _name)
-{
-    wcsncpy(m_Name,_name,32);
-}
 xuiWindowStateBlender::xuiWindowStateBlender(xuiWindow* pWindow)
 {
     m_time = 0;
@@ -106,7 +84,7 @@ bool xuiWindowStateBlender::update(long passedTime)
     if(sPercent<0.0f)sPercent = 0.0f;
     float ePercent = 1.0f - sPercent;
 
-    xuiWindowState_t _state ;
+    xuiWindowState _state ;
     __lerp(_state.m_color          , m_Start.m_color          , m_End.m_color          , ePercent);
     __lerp(_state.m_textcolor      , m_Start.m_textcolor      , m_End.m_textcolor      , ePercent);
     __lerp(_state.m_border.m_bevel , m_Start.m_border.m_bevel , m_End.m_border.m_bevel , ePercent);
@@ -127,7 +105,7 @@ bool xuiWindowStateBlender::stop()
     m_totalTime = 0;
     return true;
 }
-bool xuiWindowStateBlender::setState(xuiWindowState_t* pStartState , xuiWindowState_t* pEndState , long _time)
+bool xuiWindowStateBlender::setState(xuiWindowState* pStartState , xuiWindowState* pEndState , long _time)
 {
     m_End = *pEndState;
     m_Start = *pStartState;
@@ -135,10 +113,10 @@ bool xuiWindowStateBlender::setState(xuiWindowState_t* pStartState , xuiWindowSt
     return true;
 }
 
-bool xuiWindowStateBlender::setState(xuiWindowState_t* pEndState , long _time)
+bool xuiWindowStateBlender::setState(xuiWindowState* pEndState , long _time)
 {
     m_End = *pEndState;
-    m_Start = m_pWindow->m_state;
+    m_Start = m_pWindow->m_CurState;
     m_totalTime = m_time  = _time; 
     return true;
 }

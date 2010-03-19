@@ -179,6 +179,7 @@ bool xD10InputBuffer::unlock()
 	if(m_pBuffer == NULL)
 		return false;
 	m_pBuffer->Unmap();
+    if(m_pReflection) m_pReflection->setDirty(true);
 	return true;
 }
 
@@ -190,7 +191,8 @@ bool xD10InputBuffer::update(eLockPolicy lockPolicy , void* pData , size_t dataL
     //如果是UsageDefault。则必须用UpdateSubResource啦。
     if(m_buffDesc.Usage == D3D10_USAGE_DEFAULT )
     {
-        m_pD10API->d10Device()->UpdateSubresource(m_pBuffer , 0 , NULL , pData , m_iBufLen , m_iBufLen);
+        m_pD10API->d10Device()->UpdateSubresource(m_pBuffer , 0 , NULL , pData , (UINT)m_iBufLen , (UINT)m_iBufLen);
+        if(m_pReflection) m_pReflection->setDirty(true);
         return true;
     }
 
@@ -201,6 +203,7 @@ bool xD10InputBuffer::update(eLockPolicy lockPolicy , void* pData , size_t dataL
 	{
 		memcpy(pDstData , pData , dataLen);
 		m_pBuffer->Unmap();
+        if(m_pReflection) m_pReflection->setDirty(true);
 		return true;
 	}
 	return false;

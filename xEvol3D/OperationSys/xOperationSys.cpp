@@ -1,8 +1,8 @@
 #include "../xStdPch.h"
 #include "xOperationSys.h"
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64) )
 #include <windows.h>
-extern HANDLE Global_hEvol3DHandle;
+extern HANDLE Global_hModuleHandle;
 #endif
 BEGIN_NAMESPACE_XEVOL3D
 
@@ -111,7 +111,7 @@ xOperationSys::xOperationSys()
     m_ResPath = PATH_DOTSLASH;
 #ifdef _WIN32
 	wchar_t appName[512] = {0};
-    getModuleFileName((HMODULE)Global_hEvol3DHandle , appName , 512);
+    getModuleFileName((HMODULE)Global_hModuleHandle , appName , 512);
 	m_AppPath = _GetFilePath(appName);
     m_ResPath = m_AppPath;
 #endif

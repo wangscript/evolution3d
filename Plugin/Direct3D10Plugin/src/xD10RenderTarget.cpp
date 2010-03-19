@@ -13,12 +13,10 @@ IMPL_BASE_OBJECT_CLASSID(xD10RenderTexture  , xD10UnkwonTexture);
 
 IMPL_BASE_OBJECT_CLASSID(xD10DepthBuffer   , xD10BaseRenderTarget);
 IMPL_BASE_OBJECT_CLASSID(xD10DepthTexture  , xD10UnkwonTexture);
-xD10RenderTarget::xD10RenderTarget(xD3D10RenderApi* pAPI):xD10BaseRenderTarget(pAPI)
+xD10RenderTarget::xD10RenderTarget(xD3D10RenderApi* pAPI , int arraySlice , int mipmapLevel):xD10BaseRenderTarget(pAPI , arraySlice , mipmapLevel)
 {
 	m_RefCount = 1;
 	m_pRenderTargetView = NULL;
-	m_arraySlice = 0;
-	m_mipLevel   = 0;
 }
 int xD10RenderTarget::RefCount()
 {
@@ -77,11 +75,12 @@ bool xD10RenderTarget::saveToFile(const wchar_t* fileName)
 
 bool xD10RenderTarget::create(ID3D10Resource* pTexture , xD10TexInfo& TexInfo, DXGI_SAMPLE_DESC& sampleDesc ,int iSlice , int mipLevel )
 {
-	if(m_pRenderTargetView && m_arraySlice == iSlice && m_mipLevel == mipLevel )
+	if(m_pRenderTargetView && m_arraySlice == iSlice && m_mipmapLevel == mipLevel )
 		return true;
+
 	destory();
-	m_arraySlice = iSlice;
-	m_mipLevel   = mipLevel;
+	m_arraySlice    = iSlice;
+	m_mipmapLevel   = mipLevel;
 
 	XSAFE_RELEASE(m_pRenderTargetView);   
 	m_pRenderTargetView = NULL;
@@ -89,21 +88,32 @@ bool xD10RenderTarget::create(ID3D10Resource* pTexture , xD10TexInfo& TexInfo, D
 	D3D10_RENDER_TARGET_VIEW_DESC rtDesc;
 	rtDesc.Format = TexInfo.m_RTViewFmt;
 
-	if(TexInfo.m_ArraySize > 1)
-	{
-		rtDesc.Texture2DArray.MipSlice = 0;
-		rtDesc.Texture2DArray.FirstArraySlice = 0;
-		rtDesc.Texture2DArray.ArraySize       = (UINT)TexInfo.m_ArraySize;
-		rtDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2DARRAY;
-	}
-	else if(TexInfo.m_ArraySize == 1)
-	{
-		if(sampleDesc.Count > 1)
-		    rtDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2DMS;
-		else
-		    rtDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2D;
-		rtDesc.Texture2D.MipSlice = 0;
-	}
+    if(TexInfo.m_TexDepth == 1)
+    {
+        if(TexInfo.m_ArraySize > 1)
+        {
+            rtDesc.Texture2DArray.MipSlice = m_mipmapLevel;
+            rtDesc.Texture2DArray.FirstArraySlice = 0;
+            rtDesc.Texture2DArray.ArraySize       = (UINT)TexInfo.m_ArraySize;
+            rtDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2DARRAY;
+        }
+        else if(TexInfo.m_ArraySize == 1)
+        {
+            if(sampleDesc.Count > 1)
+                rtDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2DMS;
+            else
+                rtDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2D;
+            rtDesc.Texture2D.MipSlice = m_mipmapLevel;
+        }
+    }
+    else
+    {
+        rtDesc.Texture3D.MipSlice = m_mipmapLevel;
+        rtDesc.Texture3D.FirstWSlice = iSlice ;
+        rtDesc.Texture3D.WSize = (UINT)(TexInfo.m_TexDepth - iSlice);
+        rtDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE3D;
+    }
+
 
 	m_pD10Api->d10Device()->CreateRenderTargetView( pTexture, &rtDesc, &m_pRenderTargetView );
 	return m_pRenderTargetView != NULL;
@@ -127,7 +137,7 @@ int xD10DynamicRenderTarget::KillObject()
 
 
 //用于Depth Buffer的 DepthTexture;
-xD10DepthBuffer::xD10DepthBuffer(xD3D10RenderApi* pAPI) : xD10BaseRenderTarget(pAPI) 
+xD10DepthBuffer::xD10DepthBuffer(xD3D10RenderApi* pAPI , int arraySlice , int mipmapLevel) : xD10BaseRenderTarget(pAPI , arraySlice , mipmapLevel) 
 { 
 	m_pDepthView = NULL ; 
 	m_RefCount = 1;
@@ -205,10 +215,10 @@ bool xD10DepthBuffer::create(ID3D10Resource* pTexture , xD10TexInfo& TexInfo , D
 
 //=======可渲染的Texture=============================================
 xD10RenderTexture::xD10RenderTexture(bool lockAble ,  bool canUseTexture , xD3D10RenderApi* pRenderApi, DXGI_SAMPLE_DESC SampleDesc)
-:xD10UnkwonTexture(pRenderApi) , m_RenderTarget(pRenderApi)
+:xD10UnkwonTexture(pRenderApi) , m_RenderTarget(pRenderApi , 0 , 0 )
 {
 	 m_bLockable = lockAble;
-	 m_bCanUseTexute = canUseTexture;
+	 m_bCanUseTexture = canUseTexture;
 	 m_pSysTexture   = NULL;
 	 m_RenderTarget.setTexture(this);
 	 m_SampleDesc = SampleDesc;
@@ -225,15 +235,51 @@ xD10RenderTexture::~xD10RenderTexture()
     unload();
 }
 
-bool  xD10RenderTexture::grabRenderTagetData(int x , int y , int w , int h , void* pData)
+bool  xD10RenderTexture::update(void* data  , int dateLen ,int rowPitch , int depthPicth , int mipmapLevel , int arraySlice)
+{
+    UINT lockResource = D3D10CalcSubresource((UINT)mipmapLevel , (UINT)arraySlice, (UINT)m_TexInfo.m_MipmapLevel);
+    m_pD10Api->d10Device()->UpdateSubresource(m_pTexture , lockResource , NULL , data ,rowPitch , depthPicth);   
+    return true;
+}
+
+bool  xD10RenderTexture::grabRenderTagetData(void* pData, int x , int y , int w , int h , int arraySlice , int mipmapLevel)
+{
+    if(m_TexInfo.m_TexDepth == 1)
+        return grabRenderTagetDataTexture2D(pData , x , y , w , h , arraySlice , mipmapLevel);
+    return false;   
+}
+
+bool  xD10RenderTexture::grabRenderTagetDataTexture2D(void* pData, int x , int y , int w , int h , int arraySlice , int mipmapLevel)
 {
 	if(m_bLockable == false || m_pSysTexture == NULL)
 		return false;
 
 	ID3D10Device* pDevice = m_pD10Api->d10Device();
 	pDevice->CopyResource(m_pSysTexture , m_pTexture);
+
+    ID3D10Texture2D* pSys2DTexture = (ID3D10Texture2D*)m_pSysTexture;
+
 	xTextureLockArea lockInfo;
-	lock(eLock_Read , lockInfo);
+    D3D10_MAPPED_TEXTURE2D  mappedTex;
+    mappedTex.pData = NULL;
+    mappedTex.RowPitch = 0;
+    D3D10_MAP  mapType = D3D10_MAP_READ;
+    pDevice->CopyResource(pSys2DTexture , m_pTexture);
+    UINT lockResource = D3D10CalcSubresource((UINT)0 , (UINT)0, m_TexInfo.m_MipmapLevel);
+    lockInfo.m_lockResource = (long)lockResource;
+
+    pSys2DTexture->Map(lockResource , mapType , 0 , &mappedTex);
+    if(mappedTex.pData == NULL)
+        return false;
+    lockInfo.m_width       = (int)m_TexInfo.m_TexWidth;
+    lockInfo.m_height      = (int)m_TexInfo.m_TexHeight;
+    lockInfo.m_depth       = 1;
+    lockInfo.m_picth       = (int)mappedTex.RowPitch ;
+    lockInfo.m_slice_pitch = (int)mappedTex.RowPitch * m_TexInfo.m_TexWidth;
+    lockInfo.m_pixels      = (char*)mappedTex.pData;
+    //---------Lock ok--------------------
+
+
 	const char* pSrcLine = (const char*)lockInfo.m_pixels + x * m_TexInfo.m_nBytePerPixel;
 	pSrcLine += lockInfo.m_picth * y;
 	char*       pDstLine = (char*)pData;
@@ -248,7 +294,8 @@ bool  xD10RenderTexture::grabRenderTagetData(int x , int y , int w , int h , voi
 		pDstLine += dstPitch;
 		pSrcLine += lockInfo.m_picth;
 	}
-	unlock(lockInfo);
+	
+    pSys2DTexture->Unmap(lockInfo.m_lockResource );
 	return true;
 }
 
@@ -260,23 +307,7 @@ bool xD10RenderTexture::lock(eLockPolicy lockPolicy, xTextureLockArea& lockInfo,
 	if(lockPolicy != eLock_Read )
 		return false;
 
-	D3D10_MAPPED_TEXTURE2D mappedTex;
-	mappedTex.pData = NULL;
-	mappedTex.RowPitch = 0;
-	D3D10_MAP  mapType = D3D10_MAP_READ;
-
-	UINT lockResource = D3D10CalcSubresource((UINT)mipmapLevel , (UINT)arraySlice, (UINT)m_TexInfo.m_MipmapLevel);
-	lockInfo.m_lockResource = (long)lockResource;
-	m_pSysTexture->Map( lockResource  , mapType, 0, &mappedTex );
-	if(mappedTex.pData == NULL)
-		return false;
-	lockInfo.m_width       = (int)m_TexInfo.m_TexWidth;
-	lockInfo.m_height      = (int)m_TexInfo.m_TexHeight;
-	lockInfo.m_depth       = 1;
-	lockInfo.m_picth       = (int)mappedTex.RowPitch ;
-	lockInfo.m_slice_pitch = (int)(lockInfo.m_picth * m_TexInfo.m_TexHeight);
-	lockInfo.m_pixels      = (char*)mappedTex.pData;
-    return true;
+    return false;
 }
 
 bool xD10RenderTexture::unlock(xTextureLockArea& lockInfo)
@@ -284,101 +315,122 @@ bool xD10RenderTexture::unlock(xTextureLockArea& lockInfo)
 	if(m_bLockable == false || m_pSysTexture == NULL)
 		return false;
 
-	m_pSysTexture->Unmap( lockInfo.m_lockResource);
-	return true;
+	return false;
 }
 
-bool xD10RenderTexture::__createSysTexture(int w , int h , DXGI_FORMAT fmt)
+bool xD10RenderTexture::__createSysTexture()
 {
-	D3D10_TEXTURE2D_DESC desc;
-	ZeroMemory( &desc, sizeof(desc) );
-	desc.Width            = (UINT)w;
-	desc.Height           = (UINT)h;
-	desc.MipLevels        = (UINT)1;
-	desc.ArraySize        = (UINT)1;
-	desc.Format           = fmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
-	desc.SampleDesc       = m_SampleDesc;
-	desc.BindFlags        =  0; 
-	desc.Usage            = D3D10_USAGE_STAGING;
-	desc.CPUAccessFlags   = D3D10_CPU_ACCESS_READ | D3D10_CPU_ACCESS_WRITE;
-	ID3D10Texture2D* pTexture = NULL;
-	m_pD10Api->d10Device()->CreateTexture2D( &desc, NULL, &m_pSysTexture );
+    if(m_TexInfo.m_TexDepth == 1)
+    {
+        D3D10_TEXTURE2D_DESC desc;
+        ZeroMemory( &desc, sizeof(desc) );
+        desc.Width            = (UINT)m_TexInfo.m_TexWidth;
+        desc.Height           = (UINT)m_TexInfo.m_TexHeight;
+        desc.MipLevels        = (UINT)m_TexInfo.m_MipmapLevel;
+        desc.ArraySize        = (UINT)m_TexInfo.m_ArraySize;
+        desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+        desc.SampleDesc       = m_SampleDesc;
+        desc.BindFlags        =  0; 
+        desc.Usage            = D3D10_USAGE_STAGING;
+        desc.CPUAccessFlags   = D3D10_CPU_ACCESS_READ | D3D10_CPU_ACCESS_WRITE;
+        ID3D10Texture2D* pTexture = NULL;
+        m_pD10Api->d10Device()->CreateTexture2D( &desc, NULL, &pTexture );
+        m_pSysTexture= pTexture;
+    }
+    else
+    {
+        D3D10_TEXTURE3D_DESC desc;
+        ZeroMemory( &desc, sizeof(desc) );
+        desc.Width            = (UINT)m_TexInfo.m_TexWidth;
+        desc.Height           = (UINT)m_TexInfo.m_TexHeight;
+        desc.MipLevels        = (UINT)m_TexInfo.m_MipmapLevel;
+        desc.Depth            = (UINT)m_TexInfo.m_TexDepth;
+        desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+        desc.BindFlags        =  0; 
+        desc.Usage            = D3D10_USAGE_STAGING;
+        desc.CPUAccessFlags   = D3D10_CPU_ACCESS_READ | D3D10_CPU_ACCESS_WRITE;
+        ID3D10Texture3D* pTexture = NULL;
+        m_pD10Api->d10Device()->CreateTexture3D( &desc, NULL, &pTexture );
+        m_pSysTexture= pTexture;
+    }
     return m_pSysTexture != NULL;
 }
 
-bool xD10RenderTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevels , int arraySize )
+bool xD10RenderTexture::create(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData, int nInitData)
 {
-	unload();
-	xD10GIFormatInfo* pFmtInfo = xD10ConstLexer::singleton()->GetPixelFormat(fmt);
+    unload();
+    int w             = initDesc.m_TextureDesc.m_width;
+    int h             = initDesc.m_TextureDesc.m_height;
+    int mipMapLevels  = initDesc.m_nMipmap;
+    int arraySize     = initDesc.m_TextureDesc.m_nArraySize;
+    ePIXEL_FORMAT fmt = initDesc.m_TextureDesc.m_fmt;
+    int depth         = initDesc.m_TextureDesc.m_depth;
+
+
+    xD10GIFormatInfo* pFmtInfo = xD10ConstLexer::singleton()->GetPixelFormat(fmt);
     m_TexInfo.m_RTViewFmt = pFmtInfo->m_dxfmt;
     m_TexInfo.m_ResFmt    = pFmtInfo->m_dxfmt;
     m_TexInfo.m_ShaderViewFmt= pFmtInfo->m_dxfmt;
 
-	D3D10_TEXTURE2D_DESC desc;
-	ZeroMemory( &desc, sizeof(desc) );
-	desc.Width            = (UINT)w;
-	desc.Height           = (UINT)h;
-	desc.MipLevels        = (UINT)mipMapLevels;
-	desc.ArraySize        = (UINT)arraySize;
-	desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
-	desc.SampleDesc       = m_SampleDesc;
-	desc.BindFlags        =  D3D10_BIND_RENDER_TARGET; 
-	if(m_bCanUseTexute)
-		desc.BindFlags |= D3D10_BIND_SHADER_RESOURCE;
-	desc.Usage            = D3D10_USAGE_DEFAULT;
-	desc.CPUAccessFlags   = 0;
-	m_TexInfo.m_Usage     = desc.Usage;
-
-	ID3D10Texture2D* pTexture = NULL;
-	m_pD10Api->d10Device()->CreateTexture2D( &desc, NULL, &pTexture );
-	if(pTexture == NULL)
-		return false;
-	m_pTextureView = NULL;
-	_load(pTexture , m_bCanUseTexute );
-	m_TexInfo.m_xfmt = fmt;
-
-	if(m_bLockable)
-	{
-		return __createSysTexture(w , h , desc.Format);
-	}
-	return true;
-}
-
-bool xD10RenderTexture::create(int w , int h , int depth , ePIXEL_FORMAT fmt, int mipMapLevels , int arraySize)
-{
 	if(depth == 1)
-		return create(w , h , fmt , mipMapLevels , arraySize);
+    {
+        D3D10_TEXTURE2D_DESC desc;
+        ZeroMemory( &desc, sizeof(desc) );
+        desc.Width            = (UINT)w;
+        desc.Height           = (UINT)h;
+        desc.MipLevels        = (UINT)mipMapLevels;
+        desc.ArraySize        = (UINT)arraySize;
+        desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+        desc.SampleDesc       = m_SampleDesc;
+        desc.BindFlags        =  D3D10_BIND_RENDER_TARGET; 
+        if(m_bCanUseTexture)
+            desc.BindFlags |= D3D10_BIND_SHADER_RESOURCE;
+        desc.Usage            = D3D10_USAGE_DEFAULT;
+        desc.CPUAccessFlags   = 0;
+        m_TexInfo.m_Usage     = desc.Usage;
 
-	unload();
-	xD10GIFormatInfo* pFmtInfo = xD10ConstLexer::singleton()->GetPixelFormat(fmt);
-    m_TexInfo.m_RTViewFmt = pFmtInfo->m_dxfmt;
-    m_TexInfo.m_ResFmt    = pFmtInfo->m_dxfmt;
-    m_TexInfo.m_ShaderViewFmt= pFmtInfo->m_dxfmt;
-	D3D10_TEXTURE3D_DESC desc;
-	ZeroMemory( &desc, sizeof(desc) );
-	desc.Width            = (UINT)w;
-	desc.Height           = (UINT)h;
-	desc.MipLevels        = (UINT)mipMapLevels;
-	desc.Depth            = (UINT)depth;
-	desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
-	desc.BindFlags        = D3D10_BIND_RENDER_TARGET; 
-	if(m_bCanUseTexute)
-		desc.BindFlags |= D3D10_BIND_SHADER_RESOURCE;
-	desc.Usage            = D3D10_USAGE_DEFAULT;
-	desc.CPUAccessFlags   = 0;
-	m_TexInfo.m_Usage     = desc.Usage;
+        ID3D10Texture2D* pTexture = NULL;
+        m_pD10Api->d10Device()->CreateTexture2D( &desc, NULL, &pTexture );
+        if(pTexture == NULL)
+            return false;
+        m_pTextureView = NULL;
+        _load(pTexture , m_bCanUseTexture );
+        m_TexInfo.m_xfmt = fmt;
 
-	ID3D10Texture3D* pTexture = NULL;
-	m_pD10Api->d10Device()->CreateTexture3D( &desc, NULL, &pTexture );
-	if(pTexture == NULL)
-		return false;
-	m_pTextureView = NULL;
-	_load(pTexture , m_bCanUseTexute);
-	m_TexInfo.m_xfmt = fmt;
-	if(m_bLockable)
-	{
-		return __createSysTexture(w , h , desc.Format);
-	}
+        if(m_bLockable)
+        {
+            return __createSysTexture();
+        }
+    }
+    else
+    {
+        D3D10_TEXTURE3D_DESC desc;
+        ZeroMemory( &desc, sizeof(desc) );
+        desc.Width            = (UINT)w;
+        desc.Height           = (UINT)h;
+        desc.MipLevels        = (UINT)mipMapLevels;
+        desc.Depth            = (UINT)depth;
+        desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+        desc.BindFlags        = D3D10_BIND_RENDER_TARGET; 
+        if(m_bCanUseTexture)
+            desc.BindFlags |= D3D10_BIND_SHADER_RESOURCE;
+        desc.Usage            = D3D10_USAGE_DEFAULT;
+        desc.CPUAccessFlags   = 0;
+        m_TexInfo.m_Usage     = desc.Usage;
+
+        ID3D10Texture3D* pTexture = NULL;
+        m_pD10Api->d10Device()->CreateTexture3D( &desc, NULL, &pTexture );
+        if(pTexture == NULL)
+            return false;
+        m_pTextureView = NULL;
+        _load(pTexture , m_bCanUseTexture);
+        m_TexInfo.m_xfmt = fmt;
+        if(m_bLockable)
+        {
+            return __createSysTexture();
+        }
+    }
+
 	return true;
 }
 bool xD10RenderTexture::isSameInstance(IRenderTarget* pRenderTarget)
@@ -399,7 +451,7 @@ IRenderTarget* xD10RenderTexture::toRenderTarget(size_t iSlice , size_t iMipMapL
 	}
 	else
 	{
-		xD10DynamicRenderTarget* pRenderTarget = new xD10DynamicRenderTarget(m_pD10Api);
+		xD10DynamicRenderTarget* pRenderTarget = new xD10DynamicRenderTarget(m_pD10Api , (int)iSlice , (int)iMipMapLevel);
 		pRenderTarget->setTexture(this);
 		pRenderTarget->create(m_pTexture,m_TexInfo  , m_SampleDesc , (int)iSlice , (int)iMipMapLevel);
         AddRef();
@@ -410,7 +462,7 @@ IRenderTarget* xD10RenderTexture::toRenderTarget(size_t iSlice , size_t iMipMapL
 
 //===========可渲染的深度纹理
 xD10DepthTexture::xD10DepthTexture(bool lockAble ,  bool canUseTexture , xD3D10RenderApi* pRenderApi, DXGI_SAMPLE_DESC SampleDes) 
-:xD10UnkwonTexture(pRenderApi) , m_RenderTarget(pRenderApi)
+:xD10UnkwonTexture(pRenderApi) , m_RenderTarget(pRenderApi , 0 , 0)
 {
 	m_bLockable     = lockAble;
 	m_bCanUseTexute = canUseTexture;
@@ -431,9 +483,16 @@ xD10DepthTexture::~xD10DepthTexture()
     XSAFE_RELEASE(m_pTexture);
 }
 
-bool xD10DepthTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevels  , int arraySize)
+
+bool xD10DepthTexture::create(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData , int nInitData)
 {
 	unload();
+    int w             = initDesc.m_TextureDesc.m_width;
+    int h             = initDesc.m_TextureDesc.m_height;
+    int mipMapLevels  = initDesc.m_nMipmap;
+    int arraySize     = initDesc.m_TextureDesc.m_nArraySize;
+    ePIXEL_FORMAT fmt = initDesc.m_TextureDesc.m_fmt;
+
 	xD10GIFormatInfo* pFmtInfo = xD10ConstLexer::singleton()->GetPixelFormat(fmt);
 	D3D10_TEXTURE2D_DESC desc;
 	ZeroMemory(&desc , sizeof(desc) );

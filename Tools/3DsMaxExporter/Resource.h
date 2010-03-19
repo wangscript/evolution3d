@@ -132,6 +132,8 @@
 #define IDC_CREATE_SKINGROUP            2056
 #define IDC_CREATE_SKINGROUP2           2057
 #define IDC_REFLESH                     2057
+#define IDC_ADD_BONES2                  2057
+#define IDC_ADD_BONE_H                  2057
 #define IDC_ALL_NODES                   2058
 #define IDC_FMODELSCALE                 2059
 #define IDC_UTILE                       2060

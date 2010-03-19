@@ -146,7 +146,7 @@ bool xD11InputBuffer::create(size_t nElement , size_t bytePerVertex , const xInp
 	ID3D11Device* pD10Device = m_pD11RenderAPI->d11Device();
 
 	m_buffDesc.ByteWidth = (UINT)m_iBufLen ; 
-	m_buffDesc.StructureByteStride = bytePerVertex;
+	m_buffDesc.StructureByteStride = (UINT)bytePerVertex;
 	conv( *pDesc , m_buffDesc);
 	pD10Device->CreateBuffer(&m_buffDesc , pInitData , &m_pBuffer);
 	return m_pBuffer != NULL;
@@ -181,6 +181,7 @@ bool xD11InputBuffer::unlock()
 		return false;
 	UINT subResource = 0;
 	m_pD11RenderAPI->d11DeviceContext()->Unmap(m_pBuffer , subResource);
+    if(m_pReflection) m_pReflection->setDirty(true);
 	return true ;
 }
 
@@ -193,7 +194,8 @@ bool xD11InputBuffer::update(eLockPolicy lockPolicy , void* pSrcData , size_t da
 	//如果是UsageDefault。则必须用UpdateSubResource啦。
 	if(m_buffDesc.Usage == D3D11_USAGE_DEFAULT )
 	{
-		m_pD11RenderAPI->d11DeviceContext()->UpdateSubresource(m_pBuffer , 0 , NULL , pSrcData , m_iBufLen , m_iBufLen);
+		m_pD11RenderAPI->d11DeviceContext()->UpdateSubresource(m_pBuffer , 0 , NULL , pSrcData , (UINT)m_iBufLen , (UINT)m_iBufLen);
+        if(m_pReflection) m_pReflection->setDirty(true);
 		return true;
 	}
 
@@ -204,6 +206,7 @@ bool xD11InputBuffer::update(eLockPolicy lockPolicy , void* pSrcData , size_t da
 	{
 		memcpy(MapSubRes.pData , pSrcData , dataLen);
 		m_pD11RenderAPI->d11DeviceContext()->Unmap(m_pBuffer , subResource);
+        if(m_pReflection) m_pReflection->setDirty(true);
 		return true;
 	}
 	return false;

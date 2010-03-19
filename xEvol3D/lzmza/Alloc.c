@@ -3,7 +3,7 @@
 Igor Pavlov
 Public domain */
 
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64) )
 #include <windows.h>
 #endif
 #include <stdlib.h>

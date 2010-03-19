@@ -148,8 +148,10 @@ public:
     IBaseShader(IRenderApi* pOwner);
 	virtual ~IBaseShader();
 	PRIVATE virtual IShaderParamTable*     createShaderParamTable() = 0;
+    PRIVATE virtual void                   setName(const wchar_t* name) = 0;
 	PUBLIC  virtual bool                   load(const wchar_t* fileName , unsigned long  arg) = 0;
 	PUBLIC  virtual bool                   load(const wchar_t* fileName , const unsigned int8* buf , size_t bufLen, unsigned long arg) = 0;
+    PUBLIC  virtual const wchar_t*         name() = 0;    
 	PUBLIC  virtual void                   commitParamTable() = 0;
 	PUBLIC  virtual bool                   isLoaded()  = 0;
 	PUBLIC  virtual bool                   unload() = 0;
@@ -216,6 +218,8 @@ public:
 	PUBLIC virtual bool                    unload() = 0;
 	PUBLIC virtual unsigned long           memUsage() = 0;
 	PUBLIC virtual eResourceType           res_type(){ return RESOURCE_SHADER ; }
+    PUBLIC virtual IBaseShader*            getShader(eShaderType) = 0;
+    PUBLIC virtual void                    getName(xGpuProgNameParser& _name) = 0;
 public:
 	/*
 	GpuProgramConstTableµÄ¹ÜÀí

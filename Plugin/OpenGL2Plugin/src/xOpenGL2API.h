@@ -207,8 +207,8 @@ public:
 	IRasterizerState*     getRasterizerState() ;
 	IDepthStencilState*   getDepthStencilState();
 public:
-	IBaseTexture*        createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg = 0);
-	IBaseTexture*        createFileTexture(const wchar_t* extFile);
+	IBaseTexture*        createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg = 0, const xTextureInitDesc* texInitDesc = NULL);
+	IBaseTexture*        createFileTexture(const wchar_t* extFile, const xTextureInitDesc* texInitDesc = NULL);
 	IBaseTexture*        createLockableTexture(int w , int h , int depth , ePIXEL_FORMAT fmt , bool bReadable ,  int nMipMap = 1, int nArraySize = 1 ) ;
 	IBaseTexture*        createLockableTexture(int w , int h , ePIXEL_FORMAT fmt , bool bReadable ,  int nMipMap, int nArraySize)
 	{

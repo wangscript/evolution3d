@@ -49,8 +49,9 @@ struct xD3DShaderConstReflection : public IShaderConstantReflection
 {
 	eD3DResourceBindType    m_bindType;
 	xD3DInputBufReflection* m_pBufferReflection;
+    std::wstring            m_Name;
 public:
-	xD3DShaderConstReflection();
+	xD3DShaderConstReflection(const wchar_t* _name);
 	~xD3DShaderConstReflection();
 	bool setData(int _offset , void* _data , int dataLen);
 	bool setData(void* _data , int dataLen);
@@ -69,7 +70,7 @@ public:
 	size_t                       nConstant();
 	IShaderConstantReflection*   constantDesc(size_t idx);
 	//void                         addConstant(xD3DShaderConstReflection* cd);
-	xD3DShaderConstReflection*   addConstant();
+	xD3DShaderConstReflection*   addConstant(const wchar_t* _name);
     void*                        systemBuffer();
 	void                         setDirty(bool bDirty = true) {m_bDirty = bDirty; }
 public:

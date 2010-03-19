@@ -133,22 +133,22 @@ bool xuiWindow::hasSeperatedKBFocus()
 
 void xuiWindow::startHideBlend()
 {
-    xuiWindowState_t* pHideState = findState(L"hide");
+    xuiWindowState* pHideState = findState(L"hide");
     if(pHideState)
     {
-        m_stateBlend->setState(pHideState, 200);
+        m_pStateBlend->setState(pHideState, 200);
     }
     else
     {
-        xuiWindowState_t _startState = xuiWindowState_t::XUISTATE_HIDE;
-        _startState.m_Region = m_state.m_Region;
-        m_stateBlend->setState(&_startState, 200);
+        xuiWindowState _startState = xuiWindowState::XUISTATE_HIDE;
+        _startState.setRegion(m_CurState.region());
+        m_pStateBlend->setState(&_startState, 200);
     }
-    m_state.setName(L"normal");
+    m_CurState.setName(L"normal");
 }
 xuiWindowStateBlender*    xuiWindow::getStateBlender()
 {
-    return m_stateBlend;
+    return m_pStateBlend;
 }
 
 xuiWindowTransBlender*xuiWindow::getTransBlender()
@@ -156,20 +156,27 @@ xuiWindowTransBlender*xuiWindow::getTransBlender()
     return m_transBlend;
 }
 
+bool xuiWindow::isCurrentState(xuiWindowState* pState)
+{
+    if(pState == &m_CurState)
+        return true;
+    return false;
+}
+
 void xuiWindow::startShowBlend()
 {
-    xuiWindowState_t* pHideState = findState(L"hide");
+    xuiWindowState* pHideState = findState(L"hide");
     if(pHideState)
     {
-        m_stateBlend->setState(pHideState , &m_vStates[0] , 200);
+        m_pStateBlend->setState(pHideState , &m_vStates[0] , 200);
     }
     else
     {
-        xuiWindowState_t _startState = xuiWindowState_t::XUISTATE_HIDE;
-        _startState.m_Region = m_state.m_Region;
-        m_stateBlend->setState(&_startState , &m_vStates[0] , 200);
+        xuiWindowState _startState = xuiWindowState::XUISTATE_HIDE;
+        _startState.setRegion( m_CurState.region() );
+        m_pStateBlend->setState(&_startState , &m_vStates[0] , 200);
     }
-    m_state.setName(L"normal");
+    m_CurState.setName(L"normal");
 }
 
 bool xuiWindow::hide()
@@ -250,9 +257,9 @@ bool xuiWindow::notify(eXUIWinNotifyEvent _event, xuiWindow* pWndSender , int pa
 xuiWindow::~xuiWindow()
 {
     if(m_transBlend) delete m_transBlend;
-    if(m_stateBlend) delete m_stateBlend;
+    if(m_pStateBlend) delete m_pStateBlend;
 
-    m_stateBlend = NULL;
+    m_pStateBlend = NULL;
     m_transBlend = NULL;
     if(m_wndParent) m_wndParent->removeChild(this);
 
@@ -270,14 +277,8 @@ xuiWindow::xuiWindow(xuiWindow* parent , xuiWindowManager* pMgr)
     m_pWindowMgr = pMgr;
     m_bVisable = false;
     m_transBlend = new xuiWindowTransBlender(this);
-    m_stateBlend = new xuiWindowStateBlender(this);
+    m_pStateBlend = new xuiWindowStateBlender(this);
     m_zValue.m_zValue = m_pWindowMgr->getTime();
-
-    m_state.m_color     = xColor_4f(0.6f,0.6f,0.6f,1.0f);
-    m_state.m_textcolor = xColor_4f(0.0f,0.0f,0.0f,1.0f);
-    m_state.m_border.m_color = xColor_4f(0.0f,0.0f,0.0f,1.0f);
-    m_state.m_border.m_size  = 0;//has no border
-
 
     if(m_wndParent) m_wndParent->addChild(this);
 }
@@ -320,24 +321,24 @@ const wchar_t* xuiWindow::name()
 
 xuiRegion& xuiWindow::getRegion()
 {
-    return m_state.m_Region;
+    return m_CurState.region();
 }
 
 void xuiWindow::setPosition(xuiPoint& pos)
 {
     //Move All State;
-    float dx = (float)pos.x - m_vStates[0].m_Region.Rect2D().x;
-    float dy = (float)pos.y - m_vStates[0].m_Region.Rect2D().y;
+    float dx = (float)pos.x - m_vStates[0].region().Rect2D().x;
+    float dy = (float)pos.y - m_vStates[0].region().Rect2D().y;
 
 	size_t _nStates = m_vStates.size();
     for(size_t i = 0 ; i <  _nStates; ++i)
     {
-        m_vStates[0].m_Region.Rect2D().x += dx;
-        m_vStates[0].m_Region.Rect2D().y += dy;
+        m_vStates[0].region().Rect2D().x += dx;
+        m_vStates[0].region().Rect2D().y += dy;
     }
 
-    m_state.m_Region.Rect2D().x = (float)pos.x ;
-    m_state.m_Region.Rect2D().y = (float)pos.y ;
+    m_CurState.region().Rect2D().x = (float)pos.x ;
+    m_CurState.region().Rect2D().y = (float)pos.y ;
 }
 
 xuiPoint   xuiWindow::getAbsPosition(xuiPoint& pos)
@@ -360,8 +361,8 @@ xuiRect    xuiWindow::getAbsRect(xuiRect& _rect)
 xuiPoint xuiWindow::getWndAbsPos()
 {
     xuiPoint pos ;
-    pos.x = m_state.m_Region.Rect2D().x;
-    pos.y = m_state.m_Region.Rect2D().y;
+    pos.x = m_CurState.region().Rect2D().x;
+    pos.y = m_CurState.region().Rect2D().y;
     if(m_wndParent == NULL)
         return pos;
     else
@@ -377,42 +378,19 @@ xuiRect xuiWindow::getWndAbsRect()
 {
     if(m_wndParent == NULL) 
     {
-        return m_state.m_Region.Rect();
+        return m_CurState.region().Rect();
     }
     else
     {
         //求出父窗口的实际区域
         xuiRect _baseRect = m_wndParent->getWndAbsRect();
-        xuiRect _ret = m_pWindowMgr->clipRect(_baseRect, m_state.m_Region.Rect() );
+        xuiRect _ret = m_pWindowMgr->clipRect(_baseRect, m_CurState.region().Rect() );
         return _ret;
     }
 }
 
 //===============================
-bool xuiWindow::__loadBorder(xuiWindowBorder_t& border ,xXmlNode* pNode)
-{
-    border.m_size =  0;
-    border.m_color = xColor_4f(1.0f,1.0f,1.0f,1.0f);
-    if(pNode == NULL)
-    {
-        XEVOL_LOG(eXL_DEBUG_TIPS,"not find border node\n");
-        return false;
-    }
-    if(pNode->findValue(L"color"))
-    {
-        string2Color(pNode->findValue(L"color")->value() , border.m_color);
-    }
-    if(pNode->findValue(L"size"))
-    {
-        border.m_size = pNode->findValue(L"size")->int_value();
-    }
 
-    if(pNode->findValue(L"bevel"))
-    {
-        string2Bevel(pNode->findValue(L"bevel")->value(), border.m_bevel);
-    }
-    return true;
-}
 
 bool xuiWindow::load(xXmlNode* pCfgNode)
 {
@@ -429,13 +407,13 @@ bool xuiWindow::load(xXmlNode* pCfgNode)
     {
         if(pAttrNode->findValue(L"region"))
         {
-            string2Region(pAttrNode->findValue(L"region")->value() , m_state.m_Region);
+            string2Region(pAttrNode->findValue(L"region")->value() , m_CurState.region() );
         }
         load(pCommCtrlNode);
     }
 
-    __loadState(m_state, pAttrNode);
-    m_state.setName(L"init");
+    m_CurState.load(pAttrNode , this);
+    m_CurState.setName(L"init");
     //Read caption
     xXmlValue* pStyleValue = pAttrNode->findValue(L"style");
     if(pStyleValue) 
@@ -503,7 +481,7 @@ eXUIWinHitState xuiWindow::hitTest(int x , int y)
 }
 bool xuiWindow::drawWindow()
 {
-    xuiWindowTransform_t _winTrans;
+    xuiWindowTransform _winTrans;
     if(m_transBlend && m_transBlend->getTrans(_winTrans) )
     {
         _winTrans.begin();
@@ -516,139 +494,27 @@ bool xuiWindow::drawWindow()
         return draw();
     }
 }
+
 bool xuiWindow::draw()
 {
-    return drawBorder();
-}
-
-bool xuiWindow::drawBorder()
-{
-    if(m_state.m_border.m_size)
+    m_CurState.draw(this);
+    size_t _nChildren  = m_Children.size();
+    for(size_t i = 0 ; i < _nChildren ; i ++)
     {
-        xuiRegion region;
-        region._type = m_state.m_Region._type;
-        region.Rect() = getWndAbsRect();
-        return _drawRect(region.Rect() , m_state.m_border.m_color, m_state.m_border.m_bevel);
+        xuiWindow* pChild = m_Children[i];
+        pChild->draw();
     }
-    return false;
-}
-bool xuiWindow::_drawRect(xMathLib::xvec4& _rect , xColor_4f& _cl)
-{
-    //xLineHelper _line[4];
-    //xHelperRenderer* hlpRenderer = IRenderSystem::singleton()->getHelperRender();
-
-    //_line[0].m_color = _cl;
-    //_line[0].m_Point[0] = xvec3(_rect.x , _rect.y, 0.0f);
-    //_line[0].m_Point[1] = xvec3(_rect.x , _rect.y + _rect.h, 0.0f );
-
-    //_line[1].m_color = _cl;
-    //_line[1].m_Point[0] = xvec3(_rect.x , _rect.y, 0.0f);
-    //_line[1].m_Point[1] = xvec3(_rect.x + _rect.w, _rect.y , 0.0f );
-
-    //_line[2].m_color = _cl;
-    //_line[2].m_Point[0] = xvec3(_rect.x + _rect.w, _rect.y + _rect.h , 0.0);
-    //_line[2].m_Point[1] = xvec3(_rect.x + _rect.w, _rect.y , 0.0f );
-
-    //_line[3].m_color = _cl;
-    //_line[3].m_Point[0] = xvec3(_rect.x + _rect.w , _rect.y + _rect.h , 0.0);
-    //_line[3].m_Point[1] = xvec3(_rect.x , _rect.y + _rect.h, 0.0f );
-
-    //hlpRenderer->BeginRender();
-    //hlpRenderer->Draw(4 , _line);
-    //hlpRenderer->EndRender();
     return true;
 }
 
-bool xuiWindow::_drawRect(xMathLib::xvec4& _rect , xColor_4f& _cl , xuiBevel& bevel)
-{
-    if(bevel.isBevel() == false)
-        return _drawRect(_rect,_cl);
 
-    //xLineHelper _line[8];
-    //xHelperRenderer* hlpRenderer = IRenderSystem::singleton()->getHelperRender();
-
-    //_line[0].m_color = _cl;
-    //_line[0].m_Point[0] = xvec3(_rect.left()           , _rect.top() + bevel.tl , 0.0f);
-    //_line[0].m_Point[1] = xvec3(_rect.left() + bevel.tl, _rect.top()            , 0.0f);
-
-    //_line[1].m_color = _cl;
-    //_line[1].m_Point[0] = xvec3(_rect.left()  + bevel.tl, _rect.top()           , 0.0f);
-    //_line[1].m_Point[1] = xvec3(_rect.right() - bevel.tr, _rect.top()           , 0.0f);
-
-    //_line[2].m_color = _cl;
-    //_line[2].m_Point[0] = xvec3(_rect.right() - bevel.tr, _rect.top()           , 0.0f);
-    //_line[2].m_Point[1] = xvec3(_rect.right()           , _rect.top() + bevel.tr, 0.0f);
-
-    //_line[3].m_color = _cl;
-    //_line[3].m_Point[0] = xvec3(_rect.right()           , _rect.top()    + bevel.tr, 0.0f);
-    //_line[3].m_Point[1] = xvec3(_rect.right()           , _rect.bottom() - bevel.br, 0.0f);
-
-
-    //_line[4].m_color = _cl;
-    //_line[4].m_Point[0] = xvec3(_rect.right()           , _rect.bottom() - bevel.br, 0.0f);
-    //_line[4].m_Point[1] = xvec3(_rect.right() - bevel.br, _rect.bottom()           , 0.0f);
-
-
-    //_line[5].m_color = _cl;
-    //_line[5].m_Point[0] = xvec3(_rect.right() - bevel.br, _rect.bottom()           , 0.0f);
-    //_line[5].m_Point[1] = xvec3(_rect.left()  + bevel.bl, _rect.bottom()           , 0.0f);
-
-    //_line[6].m_color = _cl;
-    //_line[6].m_Point[0] = xvec3(_rect.left()  + bevel.bl, _rect.bottom()           , 0.0f);
-    //_line[6].m_Point[1] = xvec3(_rect.left()            , _rect.bottom() - bevel.bl, 0.0f);
-
-    //_line[7].m_color = _cl;
-    //_line[7].m_Point[0] = xvec3(_rect.left()            , _rect.bottom() - bevel.bl, 0.0f);
-    //_line[7].m_Point[1] = xvec3(_rect.left()            , _rect.top()    + bevel.tl, 0.0f);
-
-    //hlpRenderer->BeginRender();
-    //hlpRenderer->Draw(8 , _line);
-    //hlpRenderer->EndRender();
-    return true;
-}
-
-bool xuiWindow::_drawRegion(xuiRegion& _region, xColor_4f& _cl)
-{
-    _drawRect(_region.Rect(),_cl);
-    return true;
-
-}
-
-bool xuiWindow::__loadState(xuiWindowState_t& _state, xXmlNode* pAttrNode)
-{
-    if(pAttrNode->findValue(L"region"))
-    {
-        string2Region(pAttrNode->findValue(L"region")->value() , _state.m_Region);
-    }
-    if(pAttrNode->findValue(L"textcolor"))
-    {
-        string2Color(pAttrNode->findValue(L"textcolor")->value() , _state.m_textcolor);
-    }
-    if(pAttrNode->findValue(L"color"))
-    {
-        string2Color(pAttrNode->findValue(L"color")->value() , _state.m_color);
-    }
-
-    if(&_state != &m_state)
-    {
-        if(pAttrNode->findValue(L"name") == NULL)
-        {
-            XEVOL_LOG(eXL_DEBUG_TIPS,"xuiButton Control's state must has a name\n");
-            return false;
-        }
-        _state.setName(pAttrNode->findValue(L"name")->value());
-    }
-    __loadBorder(_state.m_border,pAttrNode->findNode(L"border"));
-
-    return true;
-}
 bool xuiWindow::__loadAllStates(xXmlNode* pCfgNode)
 {
     xXmlNode::XmlNodes stateNodes;
     pCfgNode->findNode(L"state",stateNodes);
     if(m_vStates.size( ) == 0)
     {
-        m_vStates.push_back(m_state);
+        m_vStates.push_back(m_CurState);
         m_vStates[0].setName( L"normal" );
     }
 
@@ -658,16 +524,16 @@ bool xuiWindow::__loadAllStates(xXmlNode* pCfgNode)
         xXmlNode* pAttrNode = stateNodes[i]; 
 
         const wchar_t* _name = pAttrNode->value(L"name");
-        xuiWindowState_t* pState = findState(_name);
+        xuiWindowState* pState = findState(_name);
         if(pState)//If we have same state in the state list , modify it
         {
-            __loadState(*pState, pAttrNode);
+            pState->load(pAttrNode , this);
         }
         else
         {
-            xuiWindowState_t _state = m_state ;
-            __loadState(_state, pAttrNode);
-            m_vStates.push_back(_state);
+            xuiWindowState _state = m_CurState ;
+            _state.load(pAttrNode , this);
+            m_vStates.push_back(_state );
         }
     }
     return true;
@@ -680,7 +546,7 @@ bool xuiWindow::updateFrame(int passedTime , unsigned int thisTime)
     {
         m_Children[i]->updateFrame(passedTime , thisTime);
     }
-    return m_stateBlend->update((long)passedTime);
+    return m_pStateBlend->update((long)passedTime);
 }
 
 bool xuiWindow::setMouseFocus(bool bFocus)
@@ -730,12 +596,12 @@ bool xuiWindow::onHide()
     return false;
 }
 
-void xuiWindow::setState(xuiWindowState_t* pState , bool bBlend)
+void xuiWindow::setState(xuiWindowState* pState , bool bBlend)
 {
     if(pState)
     {
-        if(m_stateBlend && bBlend) 
-            m_stateBlend->setState(pState,200);
+        if(m_pStateBlend && bBlend) 
+            m_pStateBlend->setState(pState,200);
         else
         {
             __setState(pState);
@@ -748,21 +614,21 @@ void xuiWindow::setState(xuiWindowState_t* pState , bool bBlend)
     }
 }
 
-void xuiWindow::__setState(xuiWindowState_t* pState)
+void xuiWindow::__setState(xuiWindowState* pState)
 {
     if(pState)
     {
-        m_state  =   *pState ;
+        m_CurState  =   *pState ;
     }
 }
 
-xuiWindowState_t* xuiWindow::findState(const wchar_t* _stateName)
+xuiWindowState* xuiWindow::findState(const wchar_t* _stateName)
 {
-    xuiWindowState_t* _defState = NULL;
+    xuiWindowState* _defState = NULL;
 	size_t _nStates = m_vStates.size();
 	for(size_t i = 0 ; i <  _nStates; ++i)
     {
-        if(m_vStates[i].m_Name == wstring(_stateName) )
+        if(m_vStates[i].name() == wstring(_stateName) )
         {
             _defState = &m_vStates[i];
             return _defState;
@@ -773,8 +639,8 @@ xuiWindowState_t* xuiWindow::findState(const wchar_t* _stateName)
 
 void xuiWindow::setState(const wchar_t* _stateName, bool bBlend)
 {
-    xuiWindowState_t* _defState = findState(_stateName);
-    m_state.setName(_stateName);
+    xuiWindowState* _defState = findState(_stateName);
+    m_CurState.setName(_stateName);
     setState(_defState,bBlend);
 
 }

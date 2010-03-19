@@ -25,6 +25,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include FT_FREETYPE_H
 #include <freetype/freetype.h>
 #include <freetype/ftglyph.h>
+#include <freetype/ftoutln.h>
+#include <freetype/ftimage.h>
+#include <freetype/fttrigon.h>
+#include <freetype/ftbitmap.h>
 #include "xFontManager.h"
 #define _FONT_FULL_TEXTURE_
 
@@ -34,6 +38,8 @@ class   xFT2FontCharLoader;
 class   xFT2FontChar;
 typedef TResHandle <xFT2FontChar, wchar_t, xFT2FontCharLoader >  HXFT2FontChar;
 typedef TLRUPolicyResMgr<xFT2FontChar , wchar_t , xFT2FontCharLoader >  xFT2FontCharMgr;
+int GetBoldenSize(bool bBold , int w );
+int GetBoldenStrength(bool bBold , int w );
 
 class xFT2IndexManager
 {

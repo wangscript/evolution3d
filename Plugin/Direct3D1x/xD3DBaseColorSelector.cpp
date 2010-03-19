@@ -55,6 +55,16 @@ bool xPixelSelectIDConstBinderU::updateConstant(IShaderConstantReflection* pCons
 }
 
 
+bool xPixelSelectIDConstBinderF16::updateConstant(IShaderConstantReflection* pConst)
+{
+    float colorid[4];
+    colorid[0] = m_id[0].uLoWord/65535.0f;
+    colorid[1] = m_id[0].uHiWord/65535.0f;
+    colorid[2] = m_id[1].uLoWord/65535.0f;
+    colorid[3] = m_id[1].uHiWord/65535.0f;
+    pConst->setData(colorid , 4 * sizeof(float) ); //2 * sizeof(xPixelSelID) );
+    return true;
+}
 bool xD3DBaseColorSelector::setRenderObjectID(int id1 , int id2)
 {
 	m_SelectID[0]._id = id1;
@@ -81,6 +91,7 @@ xD3DBaseColorSelector::xD3DBaseColorSelector(IRenderApi* pD10Api) : IColorSelect
 	m_pRenderApi = pD10Api;
 	m_ColorSelBinderS.setID(m_SelectID);
 	m_ColorSelBinderU.setID(m_SelectID);
+    m_ColorSelBinderF16.setID(m_SelectID);
 	m_pRenderApi->registeShaderConstBinder(L"colorID"   , &m_ColorSelBinderS);
 	m_pRenderApi->registeShaderConstBinder(L"ColorID"   , &m_ColorSelBinderS);
 	m_pRenderApi->registeShaderConstBinder(L"SelectID"  , &m_ColorSelBinderS);
@@ -92,6 +103,12 @@ xD3DBaseColorSelector::xD3DBaseColorSelector(IRenderApi* pD10Api) : IColorSelect
 	m_pRenderApi->registeShaderConstBinder(L"uSelectID" , &m_ColorSelBinderU);
 	m_pRenderApi->registeShaderConstBinder(L"uselectID" , &m_ColorSelBinderU);
 	m_pRenderApi->registeShaderConstBinder(L"ucolor_id" , &m_ColorSelBinderU);
+
+    m_pRenderApi->registeShaderConstBinder(L"fcolorID"  , &m_ColorSelBinderF16);
+    m_pRenderApi->registeShaderConstBinder(L"fColorID"  , &m_ColorSelBinderF16);
+    m_pRenderApi->registeShaderConstBinder(L"fSelectID" , &m_ColorSelBinderF16);
+    m_pRenderApi->registeShaderConstBinder(L"fuselectID", &m_ColorSelBinderF16);
+    m_pRenderApi->registeShaderConstBinder(L"fcolor_id" , &m_ColorSelBinderF16);
 
 	m_SelectRenderView = NULL;
 	m_ColorSelBlender = NULL;
@@ -123,6 +140,8 @@ bool xD3DBaseColorSelector::create(xXmlNode* pSelNode)
 	m_SelectRenderView->createRenderTarget(1, fmt , true ,false);
 	m_Format = fmt;
 	m_hColorSelShader = m_pRenderApi->createShader(pColorShader, eShader_PixelShader);
+    IBaseShader* pBaseShader = m_hColorSelShader.getResource();
+
 	m_ColorSelBlender = m_pRenderApi->createBlendState(L"ColorSel");
 	return true;
 }
@@ -161,7 +180,7 @@ bool xD3DBaseColorSelector::getSelectID(int x , int y , int w , int h, void* _da
 	IRenderTarget* pRenderTarget = (IRenderTarget*)m_SelectRenderView->renderTarget(0);
 	if(pRenderTarget == NULL)
 		return false;
-	pRenderTarget->grabRenderTagetData(x , y , w , h , _data);
+	pRenderTarget->grabRenderTagetData(_data , x , y , w , h);
 	return true;
 }
 

@@ -460,16 +460,22 @@ bool xPropertySet::load(const wchar_t* fileName , const int8* buf , size_t len )
 bool xPropertySet::load(xXmlDocument* pXml)
 {
      xXmlNode* pNode = pXml->root();
-	 if(pNode == NULL)
-		 return false;
-	 xXmlNode::XmlNodes propertyNodes;
-	 pNode->findNode(L"property" , propertyNodes);
-	 size_t nNodes = propertyNodes.size();
-	 for(size_t i = 0 ; i <  nNodes; i ++)
-	 {
-          add(propertyNodes[i] , this);
-	 }
+	 return load(pNode);
 	 return true;
+}
+
+bool xPropertySet::load(xXmlNode* pNode)
+{
+    if(pNode == NULL)
+        return false;
+    xXmlNode::XmlNodes propertyNodes;
+    pNode->findNode(L"property" , propertyNodes);
+    size_t nNodes = propertyNodes.size();
+    for(size_t i = 0 ; i <  nNodes; i ++)
+    {
+        add(propertyNodes[i] , this);
+    }
+    return true;
 }
 
 bool xPropertySet::add(xXmlNode* pXmlNode , xPropertyItem* pParent)

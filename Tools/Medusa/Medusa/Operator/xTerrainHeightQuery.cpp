@@ -76,7 +76,7 @@ bool xTerrainHeightSelector::getSelectID(int x , int y , int w , int h, void* _d
 	IRenderTarget* pRenderTarget = (IRenderTarget*)m_SelectRenderView->renderTarget(0);
 	if(pRenderTarget == NULL)
 		return false;
-	pRenderTarget->grabRenderTagetData(x , y , w , h , _data);
+	pRenderTarget->grabRenderTagetData(_data , x , y , w , h);
 	return true;
 }
 

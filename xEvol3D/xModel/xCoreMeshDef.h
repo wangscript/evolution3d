@@ -29,7 +29,7 @@ public:
 struct xMeshTexture
 {
 	ds_wstring   m_TexName;
-	int          m_iChannel;
+	int32        m_iChannel;
 	HBaseTexture m_hTexture;
 };
 
@@ -63,7 +63,7 @@ struct xSkinMeshVertex
 	xMathLib::xvec4 m_Diffuse;
 	xMathLib::xvec4 m_Tangent;
 	float           m_weight[4];
-	unsigned int32  m_windex[4];
+	unsigned short  m_windex[4];
 	
 
 	//==========================
@@ -89,6 +89,8 @@ struct xBoneTrans
 	//Bone的平移向量
 	xMathLib::xvec3    m_Trans;
 	xMathLib::xvec3    m_Scale;
+public:
+    void toMatrix(xMathLib::xmat4& mat);
 };
 
 struct xBoneData
@@ -99,6 +101,14 @@ struct xBoneData
 	xBoneTrans            m_BoneTrans;
 	//相对父节点的．
 	xMathLib::xmat4       m_LocaleTM;
+
+public:
+    void fromBoneTrans(xBoneTrans& trans ,const xMathLib::xmat4& wsMat , const xMathLib::xmat4& InitTMInv)
+    {
+        m_BoneTrans = trans;
+        trans.toMatrix(m_LocaleTM);
+        xMathLib::XM_Mul(InitTMInv , wsMat , m_Matrix);
+    }
 };
 
 struct xSkinBone
@@ -106,12 +116,12 @@ struct xSkinBone
 	//Bone的Name
 	wchar_t          m_BoneName[32];
 	union{
-	int              m_ParentIndex;//导出后，这个是ParentIndex
-	int              m_UC4AddStart;
+	int32            m_ParentIndex;//导出后，这个是ParentIndex
+	int32            m_UC4AddStart;
 	};
 
-	int              m_ParentBoneID; //导出前，这个是ParentID;
-	int              m_BoneID;
+	int32            m_ParentBoneID; //导出前，这个是ParentID;
+	int32            m_BoneID;
 	//初始矩阵
 	xMathLib::xmat4  m_InitMT;
 	xMathLib::xmat4  m_InitMTInv;
@@ -126,16 +136,17 @@ enum eActionType
 
 	 eActType_Keyframe      = 2,
 	 eActType_Frame         = 3,
-	 eActType_Blend         = 4,//两个动作混合
+	 eActType_Blend         = 4,//两个动作融合(两个动作的按比例融合)
 	 eActType_Transition    = 5,//两个动作过渡
+	 eActType_Mix           = 6,//多个动作的混合
 };
 
 struct xActionInfo
 {
-	long              m_lTime;         //动作延续时间长短
-	int               m_iFirstFrame;   //动作第一帧
-	int               m_iLastFrame;    //动作最后一帧
-	int               m_nFrame;
+	int32             m_lTime;         //动作延续时间长短
+	int32             m_iFirstFrame;   //动作第一帧
+	int32             m_iLastFrame;    //动作最后一帧
+	int32             m_nFrame;
 	eActionType       m_eActType;
 
 };

@@ -138,8 +138,7 @@ static eShaderVarType toParamClass (eShaderVarDataType dataType , D3D10_SHADER_V
 		XEVOL_LOG(eXL_DEBUG_HIGH,L"Shader Class 为 D3D10_SVC_OBJECT , 不支持\n" );
 		return SHADERVARTYPE_Unkown;
 	case  D3D10_SVC_STRUCT:
-		XEVOL_LOG(eXL_DEBUG_HIGH,L"Shader Class 为 D3D10_SVC_STRUCT , 不支持\n" );
-		return SHADERVARTYPE_Unkown;
+		return SHADERVARTYPE_STRUCT;
 	}
 	return SHADERVARTYPE_Unkown;
 }
@@ -374,18 +373,22 @@ bool xD11ShaderParamTable::createBufferVarList(ID3D11ShaderReflectionConstantBuf
 		wchar_t varName[32]={0};
 		XEvol_LocaleToUnicode(varDesc.Name , varName , 32);
 
-		xD3DShaderConstReflection* constDesc = cbSlot.m_pReflection->addConstant();
+		xD3DShaderConstReflection* constDesc = cbSlot.m_pReflection->addConstant(varName);
 		constDesc->m_bufOffset = varDesc.StartOffset;
 		eShaderVarDataType dataType  = toParamDataType(varTypeDesc.Type ) ;
-
+        eShaderVarType     varType   = toParamClass(dataType , varTypeDesc.Class , varTypeDesc.Rows , varTypeDesc.Columns );
 		constDesc->m_element   = varTypeDesc.Elements;
 		constDesc->m_strName   = varName;
 		constDesc->m_hashName  = xStringHash(varName);
-		constDesc->m_varType   = toParamClass(dataType , varTypeDesc.Class , varTypeDesc.Rows , varTypeDesc.Columns );
+		constDesc->m_varType   = varType;
         constDesc->m_bindType  = cbSlot.m_bindType;
 		
 		xShaderVarInfo info;
-		SHADER_VAR_PARSER()->shaderVarInfo(constDesc->m_varType , info);
+		SHADER_VAR_PARSER()->shaderVarInfo(varType , info);
+        if(info.m_bytePerComponent == 0 && varDesc.Size != 0) 
+        {
+            info.m_nCol = 1 ; info.m_nRow = 1 ; info.m_bytePerComponent = varDesc.Size ; 
+        }
 		constDesc->m_semantic     = xShaderSemanticTable::singleton().parser(  varName );
 		constDesc->m_pBinder      = m_pD10Shader->renderApi()->getShaderConstBinder( varName );
 		constDesc->m_pBufferReflection = cbSlot.m_pReflection;

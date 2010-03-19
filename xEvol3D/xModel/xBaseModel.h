@@ -44,7 +44,7 @@ public:
 	bool                   setupAnimation();
 	bool                   setupAnimation(xCoreActionFrame* pAcFrame);
 	bool                   confirmMesh();
-	xCoreAction*           coreAction(size_t idx );
+	xBaseAction*           coreAction(size_t idx );
 	size_t                 nAction();
 
 	bool                   attachMesh(HCoreMesh hMesh);
@@ -59,7 +59,7 @@ public:
 	void                   setName(const wchar_t* _name);
 
 public:	
-	typedef ds_vector(xCoreAction*) vCoreActions;
+	typedef ds_vector(xBaseAction*) vCoreActions;
 	typedef ds_map(int , int)       mapMeshNameToIdx;
 protected:
 	xGeomLib::xaabb   m_aabb;

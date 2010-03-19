@@ -38,7 +38,7 @@ float4  xposure(float4 _color , float gray , float ex)
 //============================================
 
 
-//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simpleMesh.pixel.hlsl
+//Insert Node Declaration Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simpleMesh.pixel.hlsl
 
 cbuffer TransformBuffer
 {
@@ -70,7 +70,7 @@ struct PS_INPUT
 
 //============================================
 
-//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.texture.hlsl
+//Insert Node Code Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.texture.hlsl
 
 float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , Texture2D _texture )
 {

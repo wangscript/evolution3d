@@ -42,11 +42,9 @@ xD3D10RenderApi::xD3D10RenderApi(ID3D10Device* pDevice , HWND hWnd , int w , int
       m_hMainWnd = NULL;
        m_hInst    = NULL;
       m_driverType = D3D10_DRIVER_TYPE_HARDWARE;	
-      memset(&m_swapChainDesc , 0 , sizeof(DXGI_SWAP_CHAIN_DESC) );
       m_pDef2DRect    = NULL;
       m_pDef2DRectEnv  = NULL;
       m_driverType        = D3D10_DRIVER_TYPE_NULL;
-      m_pSwapChain        = NULL;
       m_pD3DDevice      = NULL;
 
       m_pD3DDevice      = pDevice;
@@ -54,6 +52,9 @@ xD3D10RenderApi::xD3D10RenderApi(ID3D10Device* pDevice , HWND hWnd , int w , int
       m_Width             = w;
       m_Height            = h;
       m_DebugDevice       = false;
+      m_RenderCaps.setValue(L"MaxGpuBone" , 256 );
+
+      m_RenderWindow = NULL;
 
 }
 
@@ -69,8 +70,10 @@ ID3D10Device*  xD3D10RenderApi::d10Device()
 
 bool xD3D10RenderApi::GetDXGISampleDesc(DXGI_SAMPLE_DESC& SampleDesc)
 {
-    SampleDesc = m_swapChainDesc.SampleDesc;
-    return true;
+    if(m_RenderWindow == NULL)
+        return false;
+
+    return m_RenderWindow->GetDXGISampleDesc(SampleDesc);
 }
 
 bool xD3D10RenderApi::uninit( )
@@ -153,6 +156,13 @@ bool xD3D10RenderApi::onResize(int width , int height)
       return pRenderView->install();
 }
 
+int xD3D10RenderApi::intCapsValue(const wchar_t* cfgName , int defValue)
+{
+    xXmlValue* pValue = m_RenderCaps.findValue(cfgName);
+    if(pValue == NULL) return defValue;
+    return pValue->int_value();
+}
+
 bool xD3D10RenderApi::__needResize(int width , int height)
 {
       if(width == 0 || height == 0)
@@ -166,7 +176,7 @@ bool xD3D10RenderApi::__needResize(int width , int height)
       {
             return false;
       }
-      if(m_swapChainDesc.BufferDesc.Width == width && m_swapChainDesc.BufferDesc.Height == height)
+      if( m_RenderWindow->NeedResize(width , height ) == false)
       {
             return false;
       }
@@ -236,17 +246,18 @@ bool xD3D10RenderApi::__createD10Device(DXGI_SAMPLE_DESC sampleDesc)
 
       m_Width   = width;
       m_Height  = height;
-      ZeroMemory( &m_swapChainDesc, sizeof(m_swapChainDesc) );
-      m_swapChainDesc.BufferCount = 1;
-      m_swapChainDesc.BufferDesc.Width = width;
-      m_swapChainDesc.BufferDesc.Height = height;
-      m_swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-      m_swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-      m_swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-      m_swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-      m_swapChainDesc.OutputWindow = m_hMainWnd;
-      m_swapChainDesc.SampleDesc = sampleDesc;
-      m_swapChainDesc.Windowed = TRUE;
+      DXGI_SWAP_CHAIN_DESC swapChainDesc;
+      ZeroMemory( &swapChainDesc, sizeof(swapChainDesc) );
+      swapChainDesc.BufferCount = 1;
+      swapChainDesc.BufferDesc.Width = width;
+      swapChainDesc.BufferDesc.Height = height;
+      swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+      swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+      swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+      swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+      swapChainDesc.OutputWindow = m_hMainWnd;
+      swapChainDesc.SampleDesc = sampleDesc;
+      swapChainDesc.Windowed = TRUE;
 
       //Find all Adapter
       IDXGIAdapter * pAdapter;
@@ -254,12 +265,12 @@ bool xD3D10RenderApi::__createD10Device(DXGI_SAMPLE_DESC sampleDesc)
       IDXGIFactory* pDXGIFactory = NULL;
        hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pDXGIFactory) );
 
-      while(pDXGIFactory->EnumAdapters(vAdapters.size(), &pAdapter) != DXGI_ERROR_NOT_FOUND)
+      while(pDXGIFactory->EnumAdapters((UINT)vAdapters.size(), &pAdapter) != DXGI_ERROR_NOT_FOUND)
       {
             vAdapters.push_back(pAdapter);
       }
 
-
+      IDXGISwapChain* pSwapChain = NULL;
 	  size_t _nAdapters = vAdapters.size() ;
       for(size_t i = 0 ; i < _nAdapters ; i ++)
       {
@@ -269,7 +280,7 @@ bool xD3D10RenderApi::__createD10Device(DXGI_SAMPLE_DESC sampleDesc)
 
             std::vector<IDXGIOutput*> vOutputers;
             IDXGIOutput* pOutputer = NULL;
-            while(pAdapter->EnumOutputs(vOutputers.size(), &pOutputer) != DXGI_ERROR_NOT_FOUND)
+            while(pAdapter->EnumOutputs((UINT)vOutputers.size(), &pOutputer) != DXGI_ERROR_NOT_FOUND)
             {
                   vOutputers.push_back(pOutputer);
                   DXGI_OUTPUT_DESC odesc;
@@ -289,15 +300,15 @@ RECREATE:
 					UINT _Quality = 0;
 					while(_Quality == 0)
 					{
-						m_pD3DDevice->CheckMultisampleQualityLevels(m_swapChainDesc.BufferDesc.Format , m_swapChainDesc.SampleDesc.Count , &_Quality);
+						m_pD3DDevice->CheckMultisampleQualityLevels(swapChainDesc.BufferDesc.Format , swapChainDesc.SampleDesc.Count , &_Quality);
 						if(_Quality > 0)
 							break;
-						m_swapChainDesc.SampleDesc.Count --;
+						swapChainDesc.SampleDesc.Count --;
 					}
 
-					if(m_swapChainDesc.SampleDesc.Quality > (_Quality - 1) )
+					if(swapChainDesc.SampleDesc.Quality > (_Quality - 1) )
 					{
-						m_swapChainDesc.SampleDesc.Quality = (_Quality - 1) ;
+						swapChainDesc.SampleDesc.Quality = (_Quality - 1) ;
 					}
 
 					IDXGIDevice * pDXGIDevice = NULL;
@@ -310,7 +321,7 @@ RECREATE:
 					pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pIDXGIFactory);
 
 
-					hr = pIDXGIFactory->CreateSwapChain(m_pD3DDevice , &m_swapChainDesc  , &m_pSwapChain);
+					hr = pIDXGIFactory->CreateSwapChain(m_pD3DDevice , &swapChainDesc  , &pSwapChain);
 					XSAFE_RELEASE(pIDXGIFactory);
 					XSAFE_RELEASE(pDXGIAdapter);
 					XSAFE_RELEASE(pDXGIDevice);
@@ -324,7 +335,7 @@ RECREATE:
 				createDeviceFlags = 0;
 				goto RECREATE;
 			}
-            if(m_pD3DDevice && m_pSwapChain)
+            if(m_pD3DDevice && pSwapChain)
             {
                   break;
             }
@@ -337,7 +348,7 @@ RECREATE:
 
 
       m_RenderWindow = new xD10RenderWindow(m_hMainWnd , this);
-      m_RenderWindow->create(m_pSwapChain , width , height);
+      m_RenderWindow->create(pSwapChain , width , height);
       __resetViewPort();
       setRenderView(m_RenderWindow);
 
@@ -371,7 +382,6 @@ RECREATE:
 bool xD3D10RenderApi::__destory()
 {
       XSAFE_RELEASEOBJECT(m_RenderWindow);
-      XSAFE_RELEASE(m_pSwapChain);
       XSAFE_RELEASE(m_pD3DDevice);
       XSAFE_RELEASE(m_defDepthStencilState);
       XSAFE_RELEASE(m_defBlendState);
@@ -399,7 +409,7 @@ bool xD3D10RenderApi::__initByDevice()
 bool xD3D10RenderApi::swapBuffer()
 {
       TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
-      m_pSwapChain->Present( 0, 0 );
+      m_RenderWindow->Present( 0, 0 );
       unlock();
       return true;
 }
@@ -852,7 +862,7 @@ bool xD3D10RenderApi::isTextureSupport(ePIXEL_FORMAT fmt , bool lockable)
       return true;
 }
 
-IBaseTexture* xD3D10RenderApi::createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg)
+IBaseTexture* xD3D10RenderApi::createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg, const xTextureInitDesc* texInitDesc)
 {
       xD10FileTexture* pTex = new xD10FileTexture(this);
       if(pTex->load(texFile , buf , bufLen , arg ) )
@@ -868,15 +878,17 @@ const wchar_t* xD3D10RenderApi::texCoordStyle()
      return L"Direct3D";
 }
 
-IBaseTexture*  xD3D10RenderApi::createFileTexture(const wchar_t* extFile)
+IBaseTexture*  xD3D10RenderApi::createFileTexture(const wchar_t* extFile, const xTextureInitDesc* texInitDesc)
 {
       return new xD10FileTexture(this);
 }
 
-IBaseTexture* xD3D10RenderApi::createLockableTexture(int w , int h , int depth , ePIXEL_FORMAT fmt , bool bReadable , int nMipMap, int nArraySize)
+
+IBaseTexture* xD3D10RenderApi::createTexture(const xTextureInitDesc& initDesc , xTextureInitData* pInitData , int nInitData )
 {
+      bool bReadable =  initDesc.m_bReadable ;
       xD10LockableTexture* pTexture = new xD10LockableTexture(this , bReadable);
-      if(pTexture->create(w , h , depth , fmt , nMipMap , nArraySize) )
+      if(pTexture->create(initDesc , pInitData , nInitData) )
       {
             return pTexture;
       }
@@ -896,7 +908,15 @@ IBaseTexture *xD3D10RenderApi::createRenderableTexture(int w , int h , int depth
             bReadable = false;
       }
       xD10RenderTexture* pRenderTexture = new xD10RenderTexture(bReadable , true , this , GetDXGISampleDesc(sampleQulity)  );
-      if( false == pRenderTexture->create(w , h , depth , fmt) )
+      
+      xTextureInitDesc  initDesc(w , h , fmt , depth);
+      initDesc.m_bReadable = bReadable;
+      initDesc.m_access = RESOURCE_ACCESS_NONE;
+      initDesc.m_nMipmap = nMipMap;
+      initDesc.m_TextureDesc.m_nArraySize = nArraySize;
+      initDesc.m_usage = RESOURCE_USAGE_DEFAULT;
+      initDesc.m_bindType = eResourceBindType (BIND_AS_RENDER_TARGET | BIND_AS_SHADER_RESOURCE);
+      if( false == pRenderTexture->create(initDesc , NULL , 0) )
       {
             delete pRenderTexture;
             return NULL;
@@ -907,7 +927,9 @@ IBaseTexture *xD3D10RenderApi::createRenderableTexture(int w , int h , int depth
 IRenderTarget* xD3D10RenderApi::createRenderTarget(int w , int h , ePIXEL_FORMAT fmt , bool bLockable, bool bAsTexture , const xRTSampleDesc& sampleQulity)
 {
       xD10RenderTexture* pRenderTexture = new xD10RenderTexture(bLockable , bAsTexture , this , GetDXGISampleDesc(sampleQulity) );
-      if( false == pRenderTexture->create(w , h , fmt) )
+      xTextureInitDesc initDesc(w , h , fmt);
+      initDesc.m_bReadable = bLockable;
+      if( false == pRenderTexture->create(initDesc , NULL , 0) )
       {
             delete pRenderTexture;
             return NULL;
@@ -925,7 +947,9 @@ IRenderTarget* xD3D10RenderApi::createRenderTarget(int w , int h , ePIXEL_FORMAT
 IRenderTarget* xD3D10RenderApi::createDepthBuffer(int w  , int h , ePIXEL_FORMAT fmt , bool bLockable, bool bAsTexture , const xRTSampleDesc& sampleQulity)
 {
       xD10DepthTexture* pDepthTexture = new xD10DepthTexture(bLockable , bAsTexture , this ,  GetDXGISampleDesc(sampleQulity)  );
-      if( false == pDepthTexture->create(w , h , fmt) )
+       xTextureInitDesc initDesc(w , h , fmt);
+       initDesc.m_bReadable = bLockable;
+      if( false == pDepthTexture->create(initDesc , NULL , 0 ) )
       {
             delete pDepthTexture;
             return NULL;
@@ -969,12 +993,13 @@ IRenderView* xD3D10RenderApi::createRenderView(int w , int h , bool bCreateDepth
 
       return pRenderView;
 }
+
 void xD3D10RenderApi::getRTSampleDesc(xRTSampleDesc& _desc)
 {
-	DXGI_SWAP_CHAIN_DESC swap_desc;
-	m_pSwapChain->GetDesc(&swap_desc);
-	_desc.m_SampleCount = swap_desc.SampleDesc.Count;
-	_desc.m_SampleQulity= swap_desc.SampleDesc.Quality;
+    if(m_RenderWindow == NULL)
+        return ;
+
+	m_RenderWindow->getRTSampleDesc(_desc);
 }
 
 DXGI_SAMPLE_DESC xD3D10RenderApi::GetDXGISampleDesc(const xRTSampleDesc& sampleDesc)

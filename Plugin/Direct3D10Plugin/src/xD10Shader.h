@@ -42,7 +42,8 @@ public:
 	virtual bool           installShaderConstTable(IShaderParamTable* pShaderParamBuffer) = 0;
     IShaderParamTable*     getShaderParamTable();
 	void                   commitParamTable();
-
+    virtual void           setName(const wchar_t* name) { m_Name = name ; }
+    const wchar_t*         name() { return m_Name.c_str() ; }
 public:
 	virtual bool           load(const wchar_t* fileName , const unsigned int8* buf , size_t bufLen, unsigned long arg)=0;
 	virtual bool           unload() ;

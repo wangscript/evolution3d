@@ -9,8 +9,8 @@
 #include "RenderAPI/xMatrixContext.h"
 #include "xD3D2DRect.h"
 #include "xD3DBaseColorSelector.h"
-
-#define RENDER_NAME L"Direct3D11"
+#define  MAX_SHASER_RES_SLOT 64
+#define  RENDER_NAME L"Direct3D11"
 
 BEGIN_NAMESPACE_XEVOL3D
 class xD11RenderView;
@@ -28,6 +28,7 @@ public:
 	xD3D11RenderApi(ID3D11Device* pDevice , HWND hWnd , int w , int h);
 	~xD3D11RenderApi();
     eFeatureLevel              featureLevel();
+    int                        intCapsValue(const wchar_t* cfgName , int defValue);
 	bool                       uninit( );
 	bool                       init(xXmlNode* pSysNode);
 	bool                       create(DXGI_SAMPLE_DESC sampleDes);
@@ -71,19 +72,15 @@ public:
 
 	bool                       setShaderResource(eShaderType _st , int iSlot , IBaseTexture* pTexture);
 	bool                       setShaderResource(eShaderType _st , int iSlot ,IInputBuffer* pBuffer , ePIXEL_FORMAT fmt);
-
+    bool                       setRenderWindow(IRenderView* pRenderWindow);
 	//Resource Function
 	bool                       isTextureSupport(ePIXEL_FORMAT fmt , bool lockable);
-	IBaseTexture*              createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg);
+	IBaseTexture*              createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg, const xTextureInitDesc* texInitDesc);
 	const wchar_t*             texCoordStyle();
-	IBaseTexture*              createFileTexture(const wchar_t* extFile);
-	IBaseTexture*              createLockableTexture(int w , int h , int depth , ePIXEL_FORMAT fmt , bool bReadable , int nMipMap, int nArraySize);
-	IBaseTexture*              createLockableTexture(int w , int h , ePIXEL_FORMAT fmt , bool bReadable ,  int nMipMap, int nArraySize)
-	{
-		return createLockableTexture(w , h , 1 , fmt , bReadable , nMipMap , nArraySize);
-	}
+	IBaseTexture*              createFileTexture(const wchar_t* extFile, const xTextureInitDesc* texInitDesc);
+	IBaseTexture*              createTexture(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData = NULL, int nInitData = 0);
 
-	IRenderCamera*             createCamera(const wchar_t* cameraName);
+    IRenderCamera*             createCamera(const wchar_t* cameraName);
     IBaseTexture *             createRenderableTexture(int w , int h , int depth , ePIXEL_FORMAT fmt , bool bReadable ,  int nMipMap, int nArraySize , const xRTSampleDesc& sampleDesc);
 	IRenderTarget*             createRenderTarget(int w , int h , ePIXEL_FORMAT fmt , bool bLockable, bool bAsTexture , const xRTSampleDesc& sampleDesc);
 	IRenderTarget*             createDepthBuffer(int w  , int h , ePIXEL_FORMAT fmt , bool bLockable, bool bAsTexture , const xRTSampleDesc& sampleDesc);
@@ -115,19 +112,25 @@ protected:
 public:
 	wchar_t*             name(){ return RENDER_NAME ; }
 protected:
-	ID3D11Device*           m_pD3DDevice;
-	ID3D11DeviceContext*    m_pD3DDeviceContext;
-	D3D_FEATURE_LEVEL       m_FeatureLevel;
+	ID3D11Device*             m_pD3DDevice;
+	ID3D11DeviceContext*      m_pD3DDeviceContext;
+	D3D_FEATURE_LEVEL         m_FeatureLevel;
 	//设备属性和参数
-	HINSTANCE               m_hInst;
-	D3D_DRIVER_TYPE         m_driverType;	
-	IDXGISwapChain*         m_pSwapChain ;
-	xD11RenderWindow*       m_RenderWindow;
-	DXGI_SWAP_CHAIN_DESC    m_swapChainDesc;
-	//2D绘制
-	xD3D2DRect*             m_pDef2DRect;
-	xD3D2DRectEnv*          m_pDef2DRectEnv;
+	HINSTANCE                 m_hInst;
+	D3D_DRIVER_TYPE           m_driverType;	
+
+    bool                      m_DebugDevice;
+    xXmlNode                  m_RenderCaps;
+    xD11RenderWindow*         m_RenderWindow;
+    ID3D11ShaderResourceView* m_vShaderResourceViews[MAX_SHASER_RES_SLOT * eShader_Max];
 protected:
+
+    xD11RenderWindow*        m_DefRenderWindow;
+    //2D绘制
+    xD3D2DRect*              m_pDef2DRect;
+    xD3D2DRectEnv*           m_pDef2DRectEnv;
+
+  
 	ID3D11DepthStencilState* m_defDepthStencilState;
 	ID3D11RasterizerState*   m_defpRasState;
 	ID3D11BlendState*        m_defBlendState;
@@ -135,11 +138,11 @@ protected:
 	ID3D11BlendState*        m_pBlendStateNoBlend;
 	ID3D11RasterizerState*	 m_pRasterizerStateNoCull;
 
-
 	float                    m_DefBlendFactor[4];
 	UINT                     m_DefSampleMask;
 	UINT                     m_DefStencilRef;
-    bool                     m_DebugDevice;
+
+
 
 };
 

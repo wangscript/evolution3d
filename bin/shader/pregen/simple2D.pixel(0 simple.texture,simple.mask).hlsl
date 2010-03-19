@@ -4,7 +4,7 @@
 //============================================
 
 
-//Insert Node Declaration Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simple2D.pixel.hlsl
+//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simple2D.pixel.hlsl
 
 SamplerState DefaultSampler : register(s0);
 Texture2D    DiffuseTexture : register(t0);
@@ -16,21 +16,21 @@ struct PS_INPUT
       float4 Color    : COLOR;
 };
 
-//Insert Node Declaration Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.mask.hlsl
+//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.mask.hlsl
 
 Texture2D    Texture1       : register(t1);;
 //==================================================
 
 //============================================
 
-//Insert Node Code Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.texture.hlsl
+//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.texture.hlsl
 
 float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , Texture2D _texture )
 {
       return _texture.Sample(_sampler, texCoord.xy) * _Color ;
 }
 
-//Insert Node Code Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.mask.hlsl
+//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.mask.hlsl
 
 float4 CM_Mask(float4 vDiffuse , float2 texCoord , SamplerState _sampler)
 {

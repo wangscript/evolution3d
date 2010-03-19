@@ -254,13 +254,13 @@ __FORCE_INLINE__ xvec4 _XEVOL_BASE_API_  operator *(const xvec4& v,const xmat4& 
 //	×ªÖÃ
 __FORCE_INLINE__ void _XEVOL_BASE_API_ XM_Transpos(const xmat4&m , xmat4& mOut)
 {
-	for(int r = 0 ;  r < 4 ; r ++)
-	{
-		mOut.m[0][r] = m.m[r][0];
-		mOut.m[1][r] = m.m[r][1];
-		mOut.m[2][r] = m.m[r][2];
-		mOut.m[3][r] = m.m[r][3];
-	}
+    for(int i = 0 ; i < 4 ; i ++)
+    {
+        for(int j = 0 ; j < 4 ; j ++)
+        {
+            mOut.m[j][i] = m.m[i][j];
+        }
+    }
 	return;
 }
 

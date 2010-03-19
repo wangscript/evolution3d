@@ -8,6 +8,8 @@
 #include <Userenv.h>
 #pragma  comment(lib,"Userenv.lib")
 BEGIN_NAMESPACE_XEVOL3D
+
+
 std::ds_wstring xOperationSys::getUserProfileFolder()
 {
 	HANDLE hToken=0;

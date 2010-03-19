@@ -13,12 +13,10 @@ IMPL_BASE_OBJECT_CLASSID(xD11RenderTexture  , xD11UnkwonTexture);
 
 IMPL_BASE_OBJECT_CLASSID(xD11DepthBuffer   , xD11BaseRenderTarget);
 IMPL_BASE_OBJECT_CLASSID(xD11DepthTexture  , xD11UnkwonTexture);
-xD11RenderTarget::xD11RenderTarget(xD3D11RenderApi* pAPI):xD11BaseRenderTarget(pAPI)
+xD11RenderTarget::xD11RenderTarget(xD3D11RenderApi* pAPI , int arraySlice , int mipmapLevel):xD11BaseRenderTarget(pAPI , arraySlice , mipmapLevel)
 {
 	m_RefCount = 1;
 	m_pRenderTargetView = NULL;
-	m_arraySlice = 0;
-	m_mipLevel   = 0;
 }
 int xD11RenderTarget::RefCount()
 {
@@ -77,11 +75,11 @@ bool xD11RenderTarget::saveToFile(const wchar_t* fileName)
 
 bool xD11RenderTarget::create(ID3D11Resource* pTexture , xD11TexInfo& TexInfo , DXGI_SAMPLE_DESC& sampleDesc , int iSlice , int mipLevel)
 {
-	if(m_pRenderTargetView && m_arraySlice == iSlice && m_mipLevel == mipLevel )
+	if(m_pRenderTargetView && m_arraySlice == iSlice && m_mipmapLevel == mipLevel )
 		return true;
 	destory();
-	m_arraySlice = iSlice;
-	m_mipLevel   = mipLevel;
+	m_arraySlice    = iSlice;
+	m_mipmapLevel   = mipLevel;
 
 	XSAFE_RELEASE(m_pRenderTargetView);   
 	m_pRenderTargetView = NULL;
@@ -89,21 +87,31 @@ bool xD11RenderTarget::create(ID3D11Resource* pTexture , xD11TexInfo& TexInfo , 
 	D3D11_RENDER_TARGET_VIEW_DESC rtDesc;
 	rtDesc.Format = TexInfo.m_RTViewFmt;
 
-	if(TexInfo.m_ArraySize > 1)
-	{
-		rtDesc.Texture2DArray.MipSlice = 0;
-		rtDesc.Texture2DArray.FirstArraySlice = 0;
-		rtDesc.Texture2DArray.ArraySize       = (UINT)TexInfo.m_ArraySize;
-		rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
-	}
-	else if(TexInfo.m_ArraySize == 1)
-	{
-		if(sampleDesc.Count > 1)
-			rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-		else
-		    rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		rtDesc.Texture2D.MipSlice = 0;
-	}
+    if(TexInfo.m_TexDepth == 1)
+    {
+        if(TexInfo.m_ArraySize > 1)
+        {
+            rtDesc.Texture2DArray.MipSlice = m_mipmapLevel;
+            rtDesc.Texture2DArray.FirstArraySlice = 0;
+            rtDesc.Texture2DArray.ArraySize       = (UINT)TexInfo.m_ArraySize;
+            rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+        }
+        else if(TexInfo.m_ArraySize == 1)
+        {
+            if(sampleDesc.Count > 1)
+                rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+            else
+                rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+            rtDesc.Texture2D.MipSlice = m_mipmapLevel;
+        }
+    }
+    else
+    {
+        rtDesc.Texture3D.MipSlice = m_mipmapLevel;
+        rtDesc.Texture3D.FirstWSlice = iSlice ;
+        rtDesc.Texture3D.WSize = (UINT)(TexInfo.m_TexDepth - iSlice);
+        rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
+    }
 
 	m_pD11RenderApi->d11Device()->CreateRenderTargetView( pTexture, &rtDesc, &m_pRenderTargetView );
 	return m_pRenderTargetView != NULL;
@@ -127,7 +135,7 @@ int xD11DynamicRenderTarget::KillObject()
 
 
 //用于Depth Buffer的 DepthTexture;
-xD11DepthBuffer::xD11DepthBuffer(xD3D11RenderApi* pAPI) : xD11BaseRenderTarget(pAPI) 
+xD11DepthBuffer::xD11DepthBuffer(xD3D11RenderApi* pAPI , int arraySlice , int mipmapLevel) : xD11BaseRenderTarget(pAPI,arraySlice , mipmapLevel) 
 { 
 	m_pDepthView = NULL ; 
 	m_RefCount = 1;
@@ -207,7 +215,7 @@ bool xD11DepthBuffer::create(ID3D11Resource* pTexture , xD11TexInfo& TexInfo , D
 
 //=======可渲染的Texture=============================================
 xD11RenderTexture::xD11RenderTexture(bool lockAble ,  bool canUseTexture , xD3D11RenderApi* pRenderApi , DXGI_SAMPLE_DESC SampleDesc )
-:xD11UnkwonTexture(pRenderApi) , m_RenderTarget(pRenderApi)
+:xD11UnkwonTexture(pRenderApi) , m_RenderTarget(pRenderApi , 0 , 0)
 {
 	 m_bLockable = lockAble;
 	 m_bCanUseTexute = canUseTexture;
@@ -226,16 +234,38 @@ xD11RenderTexture::~xD11RenderTexture()
 	m_RenderTarget.destory();
     unload();
 }
-
-bool  xD11RenderTexture::grabRenderTagetData(int x , int y , int w , int h , void* pData)
+bool  xD11RenderTexture::update(void* data  , int dateLen ,int rowPitch , int depthPicth , int mipmapLevel , int arraySlice)
+{
+    UINT lockResource = D3D11CalcSubresource((UINT)mipmapLevel , (UINT)arraySlice, (UINT)m_TexInfo.m_MipmapLevel);
+    m_pD11RenderApi->d11DeviceContext()->UpdateSubresource(m_pTexture , lockResource , NULL , data ,rowPitch , depthPicth);   
+    return true;
+}
+bool  xD11RenderTexture::grabRenderTagetData(void* pData , int x , int y , int w , int h , int arraySlice , int mipmapLevel)
 {
 	if(m_bLockable == false || m_pSysTexture == NULL)
 		return false;
 
+    //---------Lock for Read-----------------
 	ID3D11DeviceContext* pDeviceContext = m_pD11RenderApi->d11DeviceContext();
-	//pDeviceContext->CopyResource(m_pSysTexture , m_pTexture);
 	xTextureLockArea lockInfo;
-	lock(eLock_Read , lockInfo);
+    D3D11_MAPPED_SUBRESOURCE mappedTex;
+    mappedTex.pData = NULL;
+    mappedTex.RowPitch = 0;
+    D3D11_MAP  mapType = D3D11_MAP_READ;
+    pDeviceContext->CopyResource(m_pSysTexture , m_pTexture);
+    UINT lockResource = D3D11CalcSubresource((UINT)0 , (UINT)0, m_TexInfo.m_MipmapLevel);
+    lockInfo.m_lockResource = (long)lockResource;
+
+    pDeviceContext->Map(m_pSysTexture , lockResource , mapType , 0 , &mappedTex);
+    if(mappedTex.pData == NULL)
+        return false;
+    lockInfo.m_width       = (int)m_TexInfo.m_TexWidth;
+    lockInfo.m_height      = (int)m_TexInfo.m_TexHeight;
+    lockInfo.m_depth       = 1;
+    lockInfo.m_picth       = (int)mappedTex.RowPitch ;
+    lockInfo.m_slice_pitch = (int)mappedTex.DepthPitch;
+    lockInfo.m_pixels      = (char*)mappedTex.pData;
+    //---------Lock ok--------------------
 	const char* pSrcLine = (const char*)lockInfo.m_pixels + x * m_TexInfo.m_nBytePerPixel;
 	pSrcLine += lockInfo.m_picth * y;
 	char*       pDstLine = (char*)pData;
@@ -250,145 +280,134 @@ bool  xD11RenderTexture::grabRenderTagetData(int x , int y , int w , int h , voi
 		pDstLine += dstPitch;
 		pSrcLine += lockInfo.m_picth;
 	}
-	unlock(lockInfo);
+
+	pDeviceContext->Unmap(m_pSysTexture , lockInfo.m_lockResource );
 	return true;
 }
 
 bool xD11RenderTexture::lock(eLockPolicy lockPolicy, xTextureLockArea& lockInfo, int mipmapLevel, int arraySlice)
 {
-	if(m_bLockable == false || m_pSysTexture == NULL)
-		return false;
-
-	if(lockPolicy != eLock_Read )
-		return false;
-
-	ID3D11DeviceContext* pDeviceContext = m_pD11RenderApi->d11DeviceContext();
-	if(lockPolicy != eLock_WriteDiscard)
-	{
-		pDeviceContext->CopyResource(m_pSysTexture , m_pTexture);
-	}
-	D3D11_MAPPED_SUBRESOURCE mappedTex;
-	mappedTex.pData = NULL;
-	mappedTex.RowPitch = 0;
-	D3D11_MAP  mapType = D3D11_MAP_READ;
-
-	UINT lockResource = D3D11CalcSubresource((UINT)mipmapLevel , (UINT)arraySlice, (UINT)m_TexInfo.m_MipmapLevel);
-	lockInfo.m_lockResource = (long)lockResource;
-
-	pDeviceContext->Map(m_pSysTexture , lockResource , (D3D11_MAP)lockPolicy , 0 , &mappedTex);
-	if(mappedTex.pData == NULL)
-		return false;
-	lockInfo.m_width       = (int)m_TexInfo.m_TexWidth;
-	lockInfo.m_height      = (int)m_TexInfo.m_TexHeight;
-	lockInfo.m_depth       = 1;
-	lockInfo.m_picth       = (int)mappedTex.RowPitch ;
-	lockInfo.m_slice_pitch = (int)mappedTex.DepthPitch;
-	lockInfo.m_pixels      = (char*)mappedTex.pData;
-    return true;
+    return false;
 }
 
 bool xD11RenderTexture::unlock(xTextureLockArea& lockInfo)
 {
-	if(m_bLockable == false || m_pSysTexture == NULL)
-		return false;
-
-	ID3D11DeviceContext* pDeviceContext = m_pD11RenderApi->d11DeviceContext();
-    pDeviceContext->Unmap(m_pSysTexture , lockInfo.m_lockResource );
-	pDeviceContext->CopyResource(m_pTexture , m_pSysTexture );
-	return true;
+	return false;
 }
 
-bool xD11RenderTexture::__createSysTexture(int w , int h , DXGI_FORMAT fmt)
+bool xD11RenderTexture::__createSysTexture()
 {
-	XD3D11_TEXTURE2D_DESC desc;
-	ZeroMemory( &desc, sizeof(desc) );
-	desc.Width            = (UINT)w;
-	desc.Height           = (UINT)h;
-	desc.MipLevels        = (UINT)1;
-	desc.ArraySize        = (UINT)1;
-	desc.Format           = fmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
-	desc.SampleDesc       = m_SampleDesc;
-	desc.BindFlags        =  0; 
-	desc.Usage            = D3D11_USAGE_STAGING;
-	desc.CPUAccessFlags   = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-	ID3D11Texture2D* pTexture = NULL;
-	m_pD11RenderApi->d11Device()->CreateTexture2D( &desc, NULL, &m_pSysTexture );
+    if(m_TexInfo.m_TexDepth == 1)
+    {
+        XD3D11_TEXTURE2D_DESC desc;
+        ZeroMemory( &desc, sizeof(desc) );
+        desc.Width            = (UINT)m_TexInfo.m_TexWidth;
+        desc.Height           = (UINT)m_TexInfo.m_TexHeight;
+        desc.MipLevels        = (UINT)m_TexInfo.m_MipmapLevel;
+        desc.ArraySize        = (UINT)m_TexInfo.m_ArraySize;
+        desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+        desc.SampleDesc       = m_SampleDesc;
+        desc.BindFlags        =  0; 
+        desc.Usage            = D3D11_USAGE_STAGING;
+        desc.CPUAccessFlags   = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+        ID3D11Texture2D* pTexture = NULL;
+        m_pD11RenderApi->d11Device()->CreateTexture2D( &desc, NULL, &pTexture );
+        m_pSysTexture= pTexture;
+    }
+    else
+    {
+        D3D11_TEXTURE3D_DESC desc;
+        ZeroMemory( &desc, sizeof(desc) );
+        desc.Width            = (UINT)m_TexInfo.m_TexWidth;
+        desc.Height           = (UINT)m_TexInfo.m_TexHeight;
+        desc.MipLevels        = (UINT)m_TexInfo.m_MipmapLevel;
+        desc.Depth            = (UINT)m_TexInfo.m_TexDepth;
+        desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+        desc.BindFlags        =  0; 
+        desc.Usage            = D3D11_USAGE_STAGING;
+        desc.CPUAccessFlags   = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+        ID3D11Texture3D* pTexture = NULL;
+        m_pD11RenderApi->d11Device()->CreateTexture3D( &desc, NULL, &pTexture );
+        m_pSysTexture= pTexture;
+    }
     return m_pSysTexture != NULL;
 }
 
-bool xD11RenderTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevels , int arraySize )
+bool xD11RenderTexture::create(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData, int nInitData)
 {
+    int w             = initDesc.m_TextureDesc.m_width;
+    int h             = initDesc.m_TextureDesc.m_height;
+    int mipMapLevels  = initDesc.m_nMipmap;
+    int arraySize     = initDesc.m_TextureDesc.m_nArraySize;
+    ePIXEL_FORMAT fmt = initDesc.m_TextureDesc.m_fmt;
+    int depth         = initDesc.m_TextureDesc.m_depth;
+
 	unload();
 	xD11GIFormatInfo* pFmtInfo = xD11ConstLexer::singleton()->GetPixelFormat(fmt);
     m_TexInfo.m_RTViewFmt = pFmtInfo->m_dxfmt;
     m_TexInfo.m_ResFmt    = pFmtInfo->m_dxfmt;
     m_TexInfo.m_ShaderViewFmt= pFmtInfo->m_dxfmt;
 
-	XD3D11_TEXTURE2D_DESC desc;
-	ZeroMemory( &desc, sizeof(desc) );
-	desc.Width            = (UINT)w;
-	desc.Height           = (UINT)h;
-	desc.MipLevels        = (UINT)mipMapLevels;
-	desc.ArraySize        = (UINT)arraySize;
-	desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
-	desc.SampleDesc       = m_SampleDesc;
-	desc.BindFlags        =  D3D11_BIND_RENDER_TARGET; 
-	if(m_bCanUseTexute)
-		desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
-	desc.Usage            = D3D11_USAGE_DEFAULT;
-	desc.CPUAccessFlags   = 0;
-	m_TexInfo.m_Usage     = desc.Usage;
+    if(depth == 1)
+    {
+        XD3D11_TEXTURE2D_DESC desc;
+        ZeroMemory( &desc, sizeof(desc) );
+        desc.Width            = (UINT)w;
+        desc.Height           = (UINT)h;
+        desc.MipLevels        = (UINT)mipMapLevels;
+        desc.ArraySize        = (UINT)arraySize;
+        desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+        desc.SampleDesc       = m_SampleDesc;
+        desc.BindFlags        =  D3D11_BIND_RENDER_TARGET; 
+        if(m_bCanUseTexute)
+            desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+        desc.Usage            = D3D11_USAGE_DEFAULT;
+        desc.CPUAccessFlags   = 0;
+        m_TexInfo.m_Usage     = desc.Usage;
 
-	ID3D11Texture2D* pTexture = NULL;
-	m_pD11RenderApi->d11Device()->CreateTexture2D( &desc, NULL, &pTexture );
-	if(pTexture == NULL)
-		return false;
-	m_pTextureView = NULL;
-	_load(pTexture , m_bCanUseTexute );
-	m_TexInfo.m_xfmt = fmt;
+        ID3D11Texture2D* pTexture = NULL;
+        m_pD11RenderApi->d11Device()->CreateTexture2D( &desc, NULL, &pTexture );
+        if(pTexture == NULL)
+            return false;
+        m_pTextureView = NULL;
+        _load(pTexture , m_bCanUseTexute );
+        m_TexInfo.m_xfmt = fmt;
 
-	if(m_bLockable)
-	{
-		return __createSysTexture(w , h , desc.Format);
-	}
-	return true;
-}
+        if(m_bLockable)
+        {
+            return __createSysTexture();
+        }
+        return true;
+    }
+    else
+    {
+        D3D11_TEXTURE3D_DESC desc;
+        ZeroMemory( &desc, sizeof(desc) );
+        desc.Width            = (UINT)w;
+        desc.Height           = (UINT)h;
+        desc.MipLevels        = (UINT)mipMapLevels;
+        desc.Depth            = (UINT)depth;
+        desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+        desc.BindFlags        = D3D11_BIND_RENDER_TARGET; 
+        if(m_bCanUseTexute)
+            desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+        desc.Usage            = D3D11_USAGE_DEFAULT;
+        desc.CPUAccessFlags   = 0;
+        m_TexInfo.m_Usage     = desc.Usage;
 
-bool xD11RenderTexture::create(int w , int h , int depth , ePIXEL_FORMAT fmt, int mipMapLevels , int arraySize)
-{
-	if(depth == 1)
-		return create(w , h , fmt , mipMapLevels , arraySize);
+        ID3D11Texture3D* pTexture = NULL;
+        m_pD11RenderApi->d11Device()->CreateTexture3D( &desc, NULL, &pTexture );
+        if(pTexture == NULL)
+            return false;
+        m_pTextureView = NULL;
+        _load(pTexture , m_bCanUseTexute);
+        m_TexInfo.m_xfmt = fmt;
+        if(m_bLockable)
+        {
+            return __createSysTexture();
+        }
+    }
 
-	unload();
-	xD11GIFormatInfo* pFmtInfo = xD11ConstLexer::singleton()->GetPixelFormat(fmt);
-    m_TexInfo.m_RTViewFmt = pFmtInfo->m_dxfmt;
-    m_TexInfo.m_ResFmt    = pFmtInfo->m_dxfmt;
-    m_TexInfo.m_ShaderViewFmt= pFmtInfo->m_dxfmt;
-	D3D11_TEXTURE3D_DESC desc;
-	ZeroMemory( &desc, sizeof(desc) );
-	desc.Width            = (UINT)w;
-	desc.Height           = (UINT)h;
-	desc.MipLevels        = (UINT)mipMapLevels;
-	desc.Depth            = (UINT)depth;
-	desc.Format           = m_TexInfo.m_ResFmt ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
-	desc.BindFlags        = D3D11_BIND_RENDER_TARGET; 
-	if(m_bCanUseTexute)
-		desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
-	desc.Usage            = D3D11_USAGE_DEFAULT;
-	desc.CPUAccessFlags   = 0;
-	m_TexInfo.m_Usage     = desc.Usage;
-
-	ID3D11Texture3D* pTexture = NULL;
-	m_pD11RenderApi->d11Device()->CreateTexture3D( &desc, NULL, &pTexture );
-	if(pTexture == NULL)
-		return false;
-	m_pTextureView = NULL;
-	_load(pTexture , m_bCanUseTexute);
-	m_TexInfo.m_xfmt = fmt;
-	if(m_bLockable)
-	{
-		return __createSysTexture(w , h , desc.Format);
-	}
 	return true;
 }
 bool xD11RenderTexture::isSameInstance(IRenderTarget* pRenderTarget)
@@ -409,7 +428,7 @@ IRenderTarget* xD11RenderTexture::toRenderTarget(size_t iSlice , size_t iMipMapL
 	}
 	else
 	{
-		xD11DynamicRenderTarget* pRenderTarget = new xD11DynamicRenderTarget(m_pD11RenderApi);
+		xD11DynamicRenderTarget* pRenderTarget = new xD11DynamicRenderTarget(m_pD11RenderApi , (int)iSlice , (int)iMipMapLevel);
 		pRenderTarget->setTexture(this);
 		pRenderTarget->create(m_pTexture,m_TexInfo , m_SampleDesc , (int)iSlice , (int)iMipMapLevel );
         AddRef();
@@ -420,7 +439,7 @@ IRenderTarget* xD11RenderTexture::toRenderTarget(size_t iSlice , size_t iMipMapL
 
 //===========可渲染的深度纹理
 xD11DepthTexture::xD11DepthTexture(bool lockAble ,  bool canUseTexture , xD3D11RenderApi* pRenderApi ,  DXGI_SAMPLE_DESC SampleDes) 
-:xD11UnkwonTexture(pRenderApi) , m_RenderTarget(pRenderApi)
+:xD11UnkwonTexture(pRenderApi) , m_RenderTarget(pRenderApi , 0 , 0)
 {
 	m_bLockable     = lockAble;
 	m_bCanUseTexute = canUseTexture;
@@ -441,9 +460,15 @@ xD11DepthTexture::~xD11DepthTexture()
     XSAFE_RELEASE(m_pTexture);
 }
 
-bool xD11DepthTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevels  , int arraySize)
+bool xD11DepthTexture::create(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData, int nInitData)
 {
 	unload();
+    int w             = initDesc.m_TextureDesc.m_width;
+    int h             = initDesc.m_TextureDesc.m_height;
+    int mipMapLevels  = initDesc.m_nMipmap;
+    int arraySize     = initDesc.m_TextureDesc.m_nArraySize;
+    ePIXEL_FORMAT fmt = initDesc.m_TextureDesc.m_fmt;
+
 	xD11GIFormatInfo* pFmtInfo = xD11ConstLexer::singleton()->GetPixelFormat(fmt);
 	XD3D11_TEXTURE2D_DESC desc;
     ZeroMemory(&desc , sizeof(desc) );

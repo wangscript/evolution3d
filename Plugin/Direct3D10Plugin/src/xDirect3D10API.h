@@ -31,6 +31,7 @@ public:
 	xD3D10RenderApi(ID3D10Device* pDevice , HWND hWnd , int w , int h);
 	~xD3D10RenderApi();
     eFeatureLevel              featureLevel() { return eFeature_ShaderModel4 ; }
+    int                        intCapsValue(const wchar_t* cfgName , int defValue);
 	bool                       uninit( );
 	bool                       init(xXmlNode* pSysNode);
 	bool                       create(DXGI_SAMPLE_DESC SampleDes);
@@ -75,14 +76,10 @@ public:
 
 	//Resource Function
 	bool                       isTextureSupport(ePIXEL_FORMAT fmt , bool lockable);
-	IBaseTexture*              createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg);
+	IBaseTexture*              createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg, const xTextureInitDesc* texInitDesc = NULL);
 	const wchar_t*             texCoordStyle();
-	IBaseTexture*              createFileTexture(const wchar_t* extFile);
-	IBaseTexture*              createLockableTexture(int w , int h , int depth , ePIXEL_FORMAT fmt , bool bReadable , int nMipMap, int nArraySize);
-	IBaseTexture*              createLockableTexture(int w , int h , ePIXEL_FORMAT fmt , bool bReadable ,  int nMipMap, int nArraySize)
-	{
-		return createLockableTexture(w , h , 1 , fmt , bReadable , nMipMap , nArraySize);
-	}
+	IBaseTexture*              createFileTexture(const wchar_t* extFile, const xTextureInitDesc* texInitDesc = NULL);
+	IBaseTexture*              createTexture(const xTextureInitDesc& initDesc , xTextureInitData* pInitData = NULL, int nInitData = 0);
 
 	IRenderCamera*             createCamera(const wchar_t* cameraName);
     IBaseTexture *             createRenderableTexture(int w , int h , int depth , ePIXEL_FORMAT fmt , bool bReadable ,  int nMipMap, int nArraySize  , const xRTSampleDesc& sampleQulity);
@@ -117,9 +114,7 @@ protected:
 	//设备属性和参数
 	HINSTANCE               m_hInst;
 	D3D10_DRIVER_TYPE       m_driverType;	
-	IDXGISwapChain*         m_pSwapChain ;
 	xD10RenderWindow*       m_RenderWindow;
-	DXGI_SWAP_CHAIN_DESC    m_swapChainDesc;
 	//2D绘制
 	xD3D2DRect*             m_pDef2DRect;
 	xD3D2DRectEnv*          m_pDef2DRectEnv;
@@ -132,6 +127,7 @@ protected:
 	UINT                     m_DefSampleMask;
 	UINT                     m_DefStencilRef;
     bool                     m_DebugDevice;
+    xXmlNode                 m_RenderCaps;
 
 };
 

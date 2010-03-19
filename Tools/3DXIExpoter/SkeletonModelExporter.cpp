@@ -34,6 +34,7 @@ CSkeletonModelExporter::CSkeletonModelExporter(CMaxNodeTree& nodeTree)
 	//m_Skeleton.build_modifiers(m_FinalSelNodes);
 	CBuildSkinGroup               SkinGroupBuilder;
 	m_SkinGroupBuilder.BuildContex(m_FinalSelNodes);
+    m_Skeleton.ensureHiberarchys();
 	m_ExpContex.m_pSkeleton = &m_Skeleton;
     //m_ExpContex.m_SkinDir = "def_skin/main/";
 }

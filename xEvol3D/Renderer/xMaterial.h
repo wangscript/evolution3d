@@ -18,19 +18,20 @@ public:
 public:
 	xMaterial(IBaseRenderer* pRenderer);
 	~xMaterial();
-	const wchar_t*     name(){return m_Name;}
-	int                name_id(){return m_iName;}
+	const wchar_t*       name(){return m_Name;}
+	int                  name_id(){return m_iName;}
 public:
 	//Resource ID;
-	virtual bool       load(const wchar_t* matName , const int8* buf , int len);
-	virtual bool       isLoad();
-	virtual int        getResSize();
-	virtual void       unload();
+	virtual bool         load(const wchar_t* matName , const int8* buf , int len);
+	virtual bool         isLoad();
+	virtual int          getResSize();
+	virtual void         unload();
 public:
-	virtual bool       begin(IGpuProgramParamTable* pConstTable = NULL);
-	virtual bool       end(IGpuProgramParamTable* pConstTable = NULL);
-
-	virtual bool       render(IDrawElement* pObject ,unsigned long passedTime);
+	virtual bool         begin(IGpuProgramParamTable* pConstTable = NULL);
+	virtual bool         end(IGpuProgramParamTable* pConstTable = NULL);
+	virtual bool         render(IDrawElement* pObject ,unsigned long passedTime);
+    virtual IGpuProgram* gpuProgram() ;
+    virtual bool         setGpuProgram(xGpuProgramName& _name);
              
 };
 

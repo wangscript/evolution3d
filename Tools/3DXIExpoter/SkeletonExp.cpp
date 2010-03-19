@@ -112,7 +112,62 @@ bool CSkeletonExporter::InitMaxScene()
     G_MaxEnv().InitSceneBoneID();
     return true;
 }
+void CSkeletonExporter::ensureHiberarchys()
+{
+    checkBoneLinked( CMaxEnv::Inst().m_pInterace->GetRootNode() );
+}
 
+bool CSkeletonExporter::isChildInSkeleton(INode* pNode)
+{
+    int nChild = pNode->NumberOfChildren();
+
+    //没有子节点
+    if(nChild == 0)
+        return false;
+
+    for(int i = 0 ; i < nChild ; i ++)
+    {
+        INode* pChild = pNode->GetChildNode(i);
+        //某个子节点正在使用。返回TRUE;
+        if(this->find_bone(pChild) != -1 )
+            return true;
+    }
+
+    for(int i = 0 ; i < nChild ; i ++)
+    {
+        INode* pChild = pNode->GetChildNode(i);
+        if(isChildInSkeleton(pChild) == true)
+            return true;
+    }
+    return false;     
+}
+
+bool CSkeletonExporter::isParentInSkeleton(INode* pNode)
+{
+    INode* pParent = pNode->GetParentNode();
+    if(pParent == NULL)
+        return false;
+
+    //如果父节点在使用，直接返回.
+    if(this->find_bone(pParent) != -1 )
+        return true;
+
+    return isParentInSkeleton(pParent);
+}
+
+void CSkeletonExporter::checkBoneLinked(INode* pBone)
+{
+    if( isChildInSkeleton(pBone) && isParentInSkeleton(pBone) )
+    {
+        this->push_bone(pBone);
+    }
+    int nChild = pBone->NumberOfChildren();
+    for(int i = 0 ; i < nChild ; i ++)
+    {
+        INode* pChild = pBone->GetChildNode(i);
+        checkBoneLinked(pChild);
+    }
+}
 int   CSkeletonExporter::find_bone(INode* pBone)
 {
     size_t nBone = m_MaxBones.size() ; 

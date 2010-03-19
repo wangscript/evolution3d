@@ -233,7 +233,7 @@ int xR_VideoControl::get_pos()
 {
 	if(m_pVideoRender)
 	{
-		return m_pVideoRender->get_pos() * 1000;
+		return (int)(m_pVideoRender->get_pos() * 1000);
 	}
 	return 0;
 }
@@ -681,17 +681,17 @@ bool xR_VideoTexture::onCreate(int Width,int Height, VideoImageFormat vifmt)
 	m_Height = Height;
 	if(m_fmt == VIF_RGBA)
 	{
-		m_p2DTexture = m_pRenderApi->createLockableTexture(Width , Height , PIXELFORMAT_R8G8B8A8,false);
+		m_p2DTexture = m_pRenderApi->createTexture(Width , Height , PIXELFORMAT_R8G8B8A8,false);
 	}
 	else if(m_fmt == VIF_YV12)
 	{
-		m_pYUVTexture[0] = m_pRenderApi->createLockableTexture(Width   , Height   , PIXELFORMAT_LUMINANCE8,false);
-		m_pYUVTexture[1] = m_pRenderApi->createLockableTexture(Width/2 , Height/2 , PIXELFORMAT_LUMINANCE8,false);
-		m_pYUVTexture[2] = m_pRenderApi->createLockableTexture(Width/2 , Height/2 , PIXELFORMAT_LUMINANCE8,false);
+		m_pYUVTexture[0] = m_pRenderApi->createTexture(Width   , Height   , PIXELFORMAT_LUMINANCE8,false);
+		m_pYUVTexture[1] = m_pRenderApi->createTexture(Width/2 , Height/2 , PIXELFORMAT_LUMINANCE8,false);
+		m_pYUVTexture[2] = m_pRenderApi->createTexture(Width/2 , Height/2 , PIXELFORMAT_LUMINANCE8,false);
 	}
 	else if(m_fmt == VIF_YUY2)
 	{
-		m_pYUVTexture[0] = m_pRenderApi->createLockableTexture(Width , Height , PIXELFORMAT_R8G8B8A8,false);
+		m_pYUVTexture[0] = m_pRenderApi->createTexture(Width , Height , PIXELFORMAT_R8G8B8A8,false);
 	}
 	return TRUE;
 }

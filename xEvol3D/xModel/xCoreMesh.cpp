@@ -2,12 +2,13 @@
 #include "xCoreMesh.h"
 #include "xCoreAction.h"
 #include "../xcomdoc/xdocfstream.h"
+#include "xCoreSkeleton.h"
 using namespace xMathLib;
 BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xCoreMesh  , IBaseResource);
 
 
-xCoreMesh::xCoreMesh(xBaseTextureMgr* pTexMgr , bool bSusMemCopy)
+xCoreMesh::xCoreMesh(xBaseTextureMgr* pTexMgr , xCoreSkeleton* pSkeleton)
 :IRenderOtherRes(NULL)
 {
     m_RefCount = 1;
@@ -15,8 +16,13 @@ xCoreMesh::xCoreMesh(xBaseTextureMgr* pTexMgr , bool bSusMemCopy)
 	m_pTexMgr    = pTexMgr;
 	m_pInputAss = NULL;
 	m_pVertexStream = NULL;
+    m_pSkeleton = pSkeleton;
     //目前从DirectX 10开始支持GPU Skin
-    m_bGpuSkin = m_pRenderApi->featureLevel() >= IRenderApi::eFeature_ShaderModel4;
+    m_bGpuSkin = true;
+    if(m_pSkeleton)
+    {
+        m_bGpuSkin =  m_pRenderApi->intCapsValue(L"MaxGpuBone" , 256) >= m_pSkeleton->nBone();// m_pRenderApi->featureLevel() >= IRenderApi::eFeature_ShaderModel3;
+    }
     m_pSkinVertexData = NULL;
     m_pStaticVertexData = NULL;
 }
@@ -104,7 +110,7 @@ IInputAssembler* xCoreMesh::CreateInputAssembler(int nUVChanel , IRenderApi* pRe
 		InputDesc.addElement(SHADER_SEMANTIC_COLOR        , SHADERVARTYPE_FLOAT4 , 0 , BuffIdx);
 		InputDesc.addElement(SHADER_SEMANTIC_TANGENT      , SHADERVARTYPE_FLOAT4 , 0 , BuffIdx);
 		InputDesc.addElement(SHADER_SEMANTIC_WEIGHT       , SHADERVARTYPE_FLOAT4 , 0 , BuffIdx);
-		InputDesc.addElement(SHADER_SEMANTIC_BLENDINDICES , SHADERVARTYPE_INT4   , 0 , BuffIdx);		
+		InputDesc.addElement(SHADER_SEMANTIC_BLENDINDICES , SHADERVARTYPE_SHORT4 , 0 , BuffIdx);		
 		for(int j = 0 ; j < nUVChanel ; j ++)
 		{
 			InputDesc.addElement(SHADER_SEMANTIC_TEXCOORD , SHADERVARTYPE_FLOAT2 , j , BuffIdx);
@@ -308,8 +314,8 @@ bool xCoreMesh::load(xcomdoc& doc , const wchar_t* _dir , unsigned int arg)
 	//读入所有的面
     for(int i = 0 ; i < m_nSubMesh ; i ++)
 	{
-		int nFace ;
-		int iMatIdx;
+		int32 nFace ;
+		int32 iMatIdx;
 		pFaceStream->read(nFace);
 		pFaceStream->read(iMatIdx);
 		xvec3ui* pData = new xvec3ui [nFace];
@@ -357,7 +363,7 @@ bool xCoreMesh::readSingleFrame(xcomdoc& doc , const wchar_t* _dir , unsigned in
 		swprintf(uvName , L"uv_%d" , i);
 		ds_wstring faceName     = ds_wstring(_dir) + uvName;
 		pUVStream[i] = doc.open_stream( faceName.c_str() );
-		int nVertex = 0;
+		int32 nVertex = 0;
 		pUVStream[i]->read(nVertex);
 	}
     m_nFrame = 1;
@@ -369,7 +375,7 @@ bool xCoreMesh::readSingleFrame(xcomdoc& doc , const wchar_t* _dir , unsigned in
 	m_pVertexStream = m_pInputAss->createVertexStream();
 
 	void* pInitData = NULL; 
-	int nVertex = 0;
+	int32 nVertex = 0;
 	pNormalStream->read(nVertex);
 	pTangentStream->read(nVertex);
 	pDiffuseStream->read(nVertex);
@@ -411,7 +417,7 @@ bool xCoreMesh::readSingleFrame(xcomdoc& doc , const wchar_t* _dir , unsigned in
 			pDiffuseStream->read(cl);
 			pVertex->m_Position = xvec4(wv.m_InitPos.x , wv.m_InitPos.y , wv.m_InitPos.z , 1.0f);
 			m_aabb.AddPoint(wv.m_InitPos);
-			for(int iBone = 0 ; iBone < wv.m_nEffBone ; iBone ++)
+			for(int32 iBone = 0 ; iBone < wv.m_nEffBone ; iBone ++)
 			{
 				pVertex->m_weight[iBone] = wv.m_Weight[iBone].m_fWeight;
 				pVertex->m_windex[iBone] = wv.m_Weight[iBone].m_BoneIndex ;
@@ -532,7 +538,7 @@ bool xCoreMesh::readAnimationFrame(xcomdoc& doc , const wchar_t* _dir , unsigned
 	m_pVertexStream = m_pInputAss->createVertexStream();
 
 	void* pInitData = NULL; 
-	int nVertex = 0;
+	int32 nVertex = 0;
 	pNormalStream->read(nVertex);
 	pTangentStream->read(nVertex);
 	pDiffuseStream->read(nVertex);
@@ -587,6 +593,8 @@ bool xCoreMesh::readAnimationFrame(xcomdoc& doc , const wchar_t* _dir , unsigned
 
 bool xCoreMesh::draw(xCoreSkeleton* pSkeleton , xCoreActionFrame* pActionFrame)
 {
+    if(pSkeleton == NULL) pSkeleton = m_pSkeleton;
+
     if(m_bGpuSkin == false) 
     {
         doSkin(pSkeleton , pActionFrame);
@@ -596,7 +604,7 @@ bool xCoreMesh::draw(xCoreSkeleton* pSkeleton , xCoreActionFrame* pActionFrame)
 	for(int i = 0 ; i < m_nSubMesh ; i ++)
 	{
         int matidx = m_SubMeshs[i].m_iMatIdx;
-        if(matidx >= m_Materials.size() ) matidx = m_Materials.size() - 1;
+        if( matidx >= (int)m_Materials.size() ) matidx = (int)m_Materials.size() - 1;
 
 		xMeshMaterial& mat = m_Materials[ matidx ];
 		size_t nTex = mat.m_vTextures.size() ;
@@ -624,51 +632,62 @@ bool xCoreMesh::doSkin(xCoreSkeleton* pSkeleton , xCoreActionFrame* pActionFrame
     xCoreActionFrame& actionFrame = *pActionFrame;
     int  nSkinVertSize   = sizeof(xSkinMeshVertex)   + (m_nUVMaps - 1) * sizeof(xvec2);
     int  nStaticVertSize = sizeof(xStaticMeshVertex) + (m_nUVMaps - 1) * sizeof(xvec2);
-    for(int i = 0 ; i < m_nVertex ; ++i )
-    {
-        xStaticMeshVertex* pStaticVertex = (xStaticMeshVertex*)(m_pStaticVertexData + nStaticVertSize * i );
-        xSkinMeshVertex*   pSkinedVertex = (xSkinMeshVertex*)  (m_pSkinVertexData   + nSkinVertSize   * i );
+
+	unsigned __int64 startTime  = __rdtsc();
+    #pragma omp parallel
+    #pragma omp for 
+
+		for(int i = 0 ; i < m_nVertex ; ++i )
+		{
+			xStaticMeshVertex* pStaticVertex = (xStaticMeshVertex*)(m_pStaticVertexData + nStaticVertSize * i );
+			xSkinMeshVertex*   pSkinedVertex = (xSkinMeshVertex*)  (m_pSkinVertexData   + nSkinVertSize   * i );
 
 
-        xvec4&  v   = pStaticVertex->m_Position;
-        xvec4&  nrm = pStaticVertex->m_Normal;
-        xvec4&  tg  = pStaticVertex->m_Tangent;
+			xvec4&  v   = pStaticVertex->m_Position;
+			xvec4&  nrm = pStaticVertex->m_Normal;
+			xvec4&  tg  = pStaticVertex->m_Tangent;
 
-        xvec4&  nrm_init  = pSkinedVertex->m_Normal;
-        xvec4&  tg_init   = pSkinedVertex->m_Tangent;
+			xvec4&  nrm_init  = pSkinedVertex->m_Normal;
+			xvec4&  tg_init   = pSkinedVertex->m_Tangent;
 
-        v   = xvec4(0.0f,0.0f,0.0f);
-        nrm = xvec4(0.0f,0.0f,0.0f);
-        tg  = xvec4(0.0f,0.0f,0.0f);
-        xvec4& initPos = pSkinedVertex->m_Position;
-        for(int iw = 0 ; iw < 4 ; ++iw)
-        {
-            xvec4   temp;
-            int boneIndex = pSkinedVertex->m_windex[iw];
-            float fWeight = pSkinedVertex->m_weight[iw];
-            xmat4& m = actionFrame.operator[](boneIndex);
+			v   = xvec4(0.0f,0.0f,0.0f);
+			nrm = xvec4(0.0f,0.0f,0.0f);
+			tg  = xvec4(0.0f,0.0f,0.0f);
+			xvec4& initPos = pSkinedVertex->m_Position;
+			for(int iw = 0 ; iw < 4 ; ++iw)
+			{
+				xvec4   temp;
+				int boneIndex = pSkinedVertex->m_windex[iw];
+				float fWeight = pSkinedVertex->m_weight[iw];
+                if(fWeight <= 0.00000000001f)
+                    break;
 
-            //计算法向量
-            m.transform_l_3x3(nrm_init,temp);
-            temp *= fWeight;
-            XM_Add(nrm,temp,nrm);
-            //计算tangent
-            m.transform_l_3x3(tg_init,temp);
-            temp *= fWeight;
-            XM_Add(tg,temp,tg);
+				xmat4& m = actionFrame.operator[](boneIndex);
 
-            //计算顶点位置
-            XM_Mul(initPos,m,temp);
-            temp *= fWeight;
-            XM_Add(v,temp,v);
+				//计算法向量
+				m.transform_l_3x3(nrm_init,temp);
+				temp *= fWeight;
+				XM_Add(nrm,temp,nrm);
+				//计算tangent
+				m.transform_l_3x3(tg_init,temp);
+				temp *= fWeight;
+				XM_Add(tg,temp,tg);
 
-        }
-        //v = initPos;
-        //nrm = nrm_init;
-        nrm.normalize();
-        tg.normalize();
-        v.w = nrm.w = tg.w = 1.0f;
-    }
+				//计算顶点位置
+				XM_Mul(initPos,m,temp);
+				temp *= fWeight;
+				XM_Add(v,temp,v);
+
+			}
+			//v = initPos;
+			//nrm = nrm_init;
+			nrm.normalize();
+			tg.normalize();
+			v.w = nrm.w = tg.w = 1.0f;
+		}
+	
+	unsigned __int64  endTime  = __rdtsc();
+	//XEVOL_LOG(eXR_LOG_LEVEL::eXL_DEBUG_HIGH , "Skin time=%d" , endTime - startTime);
     m_VertexBuffers[0]->update(eLock_WriteDiscard , m_pStaticVertexData , m_nVertex * nStaticVertSize);
     return true;
 }

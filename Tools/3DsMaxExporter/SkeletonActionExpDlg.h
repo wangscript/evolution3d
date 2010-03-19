@@ -60,4 +60,7 @@ public:
 protected:
 	CListCtrl m_ctrlActionList;
 	CEdit     m_ctrlActionName;
+public:
+    afx_msg void OnBnClickedActionLoad();
+    afx_msg void OnBnClickedActionSave();
 };

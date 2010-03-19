@@ -32,7 +32,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 class CNodeViewDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CNodeViewDlg)
-
+public:
+    BOOL m_bSelected;
 public:
 	CNodeViewDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CNodeViewDlg();
@@ -40,7 +41,7 @@ public:
 	void BuildSelNodeTree();
 	CMaxNodeTree& getBuiledNodeTree(){return m_MaxNodeTree;}
 	void ReleaseTree();
-	void InsertNode(HTREEITEM parentItem , CMaxNodeTreeItem& Node);
+	void InsertNode(HTREEITEM parentItem , CMaxNodeTreeItem& Node , BOOL bSelect);
 // 对话框数据
 	enum { IDD = IDD_NODE_VIEW };
    
@@ -57,4 +58,5 @@ public:
     afx_msg void OnNMClickNodeTree(NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg void OnBnClickedOk();
     afx_msg void OnDestroy();
+    afx_msg void OnTvnItemChangedNodeTree(NMHDR *pNMHDR, LRESULT *pResult);
 };

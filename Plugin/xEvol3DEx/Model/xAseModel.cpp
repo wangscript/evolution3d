@@ -12,7 +12,7 @@ IMPL_BASE_OBJECT_CLASSID(xAseMesh  , xCoreMesh );
 IMPL_OBJECT_FACTORY(xAseModel , xBaseModel , xAseModelCreator , xBaseModelCreator , xBaseModelCreatorMgr , L"ase"    , L"ase model" , xBaseTextureMgr* , bool)
 //IMPL_OBJECT_FACTORY(xAseModel , xBaseModel , x3DsModelCreator , xBaseModelCreator , xBaseModelCreatorMgr , L"3ds"    , L"3ds model" , xBaseTextureMgr* , bool)
 
-xAseMesh::xAseMesh(xBaseTextureMgr* pTexMgr , bool bSysMemCopy) : xCoreMesh(pTexMgr , bSysMemCopy)
+xAseMesh::xAseMesh(xBaseTextureMgr* pTexMgr , bool bSysMemCopy) : xCoreMesh(pTexMgr , NULL)
 {
 
 }

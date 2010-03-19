@@ -49,6 +49,23 @@ extern "C" _declspec(dllexport) IPluginObject* PLUGIN_ENTRYPOINT()
 	static xTerrainSystemPlugin gPluginObject;
 	return &gPluginObject;
 }
+#ifdef _WIN32
+HANDLE Global_hModuleHandle = NULL;
+BOOL WINAPI DllMain(HANDLE  hDllHandle,   DWORD   dwReason,    LPVOID  lpreserved     )
+{
+        if (dwReason == DLL_PROCESS_ATTACH)
+        {
+        /*
+         * The /GS security cookie must be initialized before any exception
+         * handling targetting the current image is registered.  No function
+         * using exception handling can be called in the current image until
+         * after __security_init_cookie has been called.
+         */
+            Global_hModuleHandle = hDllHandle;
+        }
+        return TRUE;
+}
+#endif
 #else
 
 #endif

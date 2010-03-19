@@ -211,8 +211,8 @@ xuiWindowManager::xuiWindowManager(IRenderApi* pRenderApi , xBaseTextureMgr* pTe
 		m_p2DRectObject->setUVChanel(0);
 	}
     m_GpuProgram[0] = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel"                               , NULL).getResource();
-    m_GpuProgram[1] = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel<0:simple.texture>"             , NULL).getResource();
-    m_GpuProgram[2] = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel<0:simple.texture,simple.mask>" , NULL).getResource();
+    m_GpuProgram[1] = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel(0:simple.texture)"             , NULL).getResource();
+    m_GpuProgram[2] = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel(0:simple.texture,simple.mask)" , NULL).getResource();
 
 }
 

@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "stdafx.h"
 #include "SkeletonExp.h"
 #include "xStringHash.h"
-
+#include "MaxEnv.h"
 CSkeletonExporter& GetRoleSkeletonExp()
 {
     static CSkeletonExporter gs_SkelExp;
@@ -38,6 +38,14 @@ void CSkeletonExporter::__findSkinMeshModifers(INode* pNode)
     }
     return ;
 }
+void CSkeletonExporter::setUniform(BOOL bUniform)
+{
+    for(int i = 0 ; i  < (int)m_MaxBones.size() ; i ++)
+    {
+        sMaxBoneNode_t& maxBoneNode = m_MaxBones[i];
+        CMaxEnv::singleton().SetBipedUniform(maxBoneNode.m_pNode , bUniform);
+    }
+}
 
 int CSkeletonExporter::__findBonePhysiqueIndex(INode* pNode)
 {
@@ -50,6 +58,65 @@ int CSkeletonExporter::__findBonePhysiqueIndex(INode* pNode)
             return (int)i;
     }
     return -1;
+}
+
+void CSkeletonExporter::ensureHiberarchys()
+{
+    checkBoneLinked( CMaxEnv::singleton().m_pInterace->GetRootNode() );
+}
+
+bool CSkeletonExporter::isChildInSkeleton(INode* pNode)
+{
+    int nChild = pNode->NumberOfChildren();
+
+    //没有子节点
+    if(nChild == 0)
+        return false;
+
+    for(int i = 0 ; i < nChild ; i ++)
+    {
+        INode* pChild = pNode->GetChildNode(i);
+        //某个子节点正在使用。返回TRUE;
+        if(this->find_bone(pChild) != -1 )
+            return true;
+    }
+
+    for(int i = 0 ; i < nChild ; i ++)
+    {
+        INode* pChild = pNode->GetChildNode(i);
+        if(isChildInSkeleton(pChild) == true)
+            return true;
+    }
+    return false;     
+}
+
+bool CSkeletonExporter::isParentInSkeleton(INode* pNode)
+{
+    INode* pParent = pNode->GetParentNode();
+    if(pParent == NULL)
+        return false;
+
+    //如果父节点在使用，直接返回.
+    if(this->find_bone(pParent) != -1 )
+        return true;
+
+    return isParentInSkeleton(pParent);
+}
+
+void CSkeletonExporter::checkBoneLinked(INode* pBone)
+{
+    if( isChildInSkeleton(pBone) && isParentInSkeleton(pBone) && find_bone(pBone) == -1 )
+    {
+        std::wstring nodeName = INodeName(pBone);
+        XEVOL_LOG(eXL_DEBUG_HIGH , "{Tips} Node [%s] 's parent and child all in skeleton , include this bone\n" , pBone->NodeName() );
+        this->push_bone(pBone);
+    }
+    int nChild = pBone->NumberOfChildren();
+    for(int i = 0 ; i < nChild ; i ++)
+    {
+        INode* pChild = pBone->GetChildNode(i);
+        checkBoneLinked(pChild);
+    }
 }
 
 int CSkeletonExporter::__findBoneSkinIndex(INode* pNode)
@@ -196,6 +263,8 @@ int   CSkeletonExporter::push_bone(INode* pBone)
       BoneData.m_pNode     = pBone;
       
 
+      CMaxEnv::singleton().SetBipedUniform(pBone , TRUE);
+
 	  //SkinInitMT，可以认为是动画模型没有加Skin修改器前的那个姿势。
 	  //因为这个矩阵，我们会用到。
 	  //当从Physique里取出来的数据时候，我们得到的是应用修改后的姿势，就是手已经不是平举着的了。
@@ -226,6 +295,7 @@ int   CSkeletonExporter::push_bone(INode* pBone)
           BoneData.m_Bone.m_InitMTInv = conv_type<sMatrix4x3_t,Matrix3>(Inverse(BoneData.m_InitNodeTM0));
       }
 
+      CMaxEnv::singleton().SetBipedUniform(pBone , FALSE);
 	  wcsncpy( BoneData.m_Bone.m_BoneName ,  INodeName(BoneData.m_pNode).c_str() ,32);
       m_MaxBones.push_back(BoneData);
       return nBone;

@@ -36,11 +36,13 @@ ENUMCLASS(enum)  eShaderVarDataType
 	SEDT_TEXTURE     = MAKE_2BYTE_TO_SHORT(10,0),
 	SEDT_TEXTURE1D   = MAKE_2BYTE_TO_SHORT(11,0),
 	SEDT_TEXTURE2D   = MAKE_2BYTE_TO_SHORT(12,0),
-	SEDT_TEXTURE3D   = MAKE_2BYTE_TO_SHORT(13,0),
-	SEDT_TEXTURECUBE = MAKE_2BYTE_TO_SHORT(14,0),
-	SEDT_SAMPLER     = MAKE_2BYTE_TO_SHORT(15,0),
+	SEDT_TEXTURE2DA  = MAKE_2BYTE_TO_SHORT(13,0),
+    SEDT_TEXTURE3D   = MAKE_2BYTE_TO_SHORT(14,0),
+	SEDT_TEXTURECUBE = MAKE_2BYTE_TO_SHORT(15,0),
+	SEDT_SAMPLER     = MAKE_2BYTE_TO_SHORT(16,0),
 	SEDT_BOOL        = MAKE_2BYTE_TO_SHORT(17,1),
-	SEDT_ANY         = MAKE_2BYTE_TO_SHORT(16,0),
+    SEDT_STRUCT      = MAKE_2BYTE_TO_SHORT(18,0),
+	SEDT_ANY         = MAKE_2BYTE_TO_SHORT(19,0),
 };
 
 #define MAKE_SHADER_VAR_TYPPE( dt , nCol , nRow )  ( (dt)<<16 | (nCol)<<8 | (nRow) )
@@ -94,13 +96,17 @@ ENUMCLASS(enum)  eShaderVarType
 	SHADERVARTYPE_Matrix3x4   = MAKE_SHADER_VAR_TYPPE(SEDT_FLOAT32   , 4  , 3 ),
 
 	//Object
-	SHADERVARTYPE_Sampler     = MAKE_SHADER_VAR_TYPPE(SEDT_SAMPLER      , 0 , 1  ),
+	SHADERVARTYPE_Sampler     = MAKE_SHADER_VAR_TYPPE(SEDT_SAMPLER    , 0 , 1  ),
 	SHADERVARTYPE_Texture     = MAKE_SHADER_VAR_TYPPE(SEDT_TEXTURE    , 0 , 1   ),
 	SHADERVARTYPE_Texture1D   = MAKE_SHADER_VAR_TYPPE(SEDT_TEXTURE1D  , 0 , 1   ),
 	SHADERVARTYPE_Texture2D   = MAKE_SHADER_VAR_TYPPE(SEDT_TEXTURE2D  , 0 , 2   ),
+    SHADERVARTYPE_TextureArray= MAKE_SHADER_VAR_TYPPE(SEDT_TEXTURE2DA , 0 , 2   ),
 	SHADERVARTYPE_Texture3D   = MAKE_SHADER_VAR_TYPPE(SEDT_TEXTURE3D  , 0 , 3   ),
 	SHADERVARTYPE_TextureCube = MAKE_SHADER_VAR_TYPPE(SEDT_TEXTURECUBE, 0 , 6   ),
 
+
+
+    SHADERVARTYPE_STRUCT      = MAKE_SHADER_VAR_TYPPE(SEDT_STRUCT , 0 , 0),
 	//=================
 	SHADERVARTYPE_Unkown      = MAKE_SHADER_VAR_TYPPE(SEDT_ANY , 0 , 0)
 };
@@ -144,9 +150,9 @@ ENUMCLASS(enum)  ePrimtiveType
 
 ENUMCLASS(enum)   eTextureState
 {
-	Texture_Stage0 , Texture_Diffuse = 0 ,
-	Texture_Stage1 , Texture_Mask    = 1 ,
-	Texture_Stage2,
+	Texture_Stage0  = 0 , Texture_Diffuse = 0 ,
+	Texture_Stage1  = 1 , Texture_Mask    = 1 ,
+	Texture_Stage2  = 2,
 	Texture_Stage3,
 	Texture_Stage4,
 	Texture_Stage5,
@@ -181,13 +187,15 @@ ENUMCLASS(enum)  eResourceBindType
 };
 
 
-ENUMCLASS(enum)  eResourceAccessFlage
+enum
 {
-	RESOURCE_ACCESS_NONE = 0,
+	RESOURCE_ACCESS_NONE      = 0,
 	RESOURCE_ACCESS_READ      = 0x10000L, 
 	RESOURCE_ACCESS_WRITE     = 0x20000L, 
 	RESOURCE_ACCESS_READWRITE = 0x30000L,
 };
+
+typedef int eResourceAccessFlage;
 
 ENUMCLASS(enum)  eResourceUsage
 {

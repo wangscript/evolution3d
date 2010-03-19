@@ -138,7 +138,7 @@ eShaderVarType toParamClass (eShaderVarDataType dataType , GL2_SHADER_VARIABLE_C
 		return SHADERVARTYPE_Unkown;
 	case  GL2_SVC_STRUCT:
 		XEVOL_LOG(eXL_DEBUG_HIGH,L"Shader Class 为 GL2_SVC_STRUCT , 不支持\n" );
-		return SHADERVARTYPE_Unkown;
+		return SHADERVARTYPE_STRUCT;
 	}
 	return SHADERVARTYPE_Unkown;
 }

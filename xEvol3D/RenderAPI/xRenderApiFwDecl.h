@@ -42,6 +42,9 @@ struct xShaderVarInfo;
 struct xInputBufferDesc;
 struct xTextureLockArea;
 struct xTextureDesc;
+struct xTextureInitData;
+struct xTextureInitDesc;
+
 class _XEVOL_BASE_API_  IBaseShader;
 class _XEVOL_BASE_API_  IGpuProgram;
 class _XEVOL_BASE_API_  IGpuProgramParamTable;
@@ -65,6 +68,8 @@ class _XEVOL_BASE_API_  xGpuProgNameParser;
 class _XEVOL_BASE_API_  xGpuProgramName;
 class _XEVOL_BASE_API_  IShaderConstantReflection;
 class _XEVOL_BASE_API_  IShaderCodeGenerator;
+struct _XEVOL_BASE_API_ xShaderSocketInfo;
+class _XEVOL_BASE_API_  xShaderName;
 
 typedef TResHandle   <IGpuProgram, xGpuProgramName , xGpuProgramManager > HGpuProgram;
 typedef TSimpleResMgr<IGpuProgram, xGpuProgramName , xGpuProgramManager > xGpuProgramMgrImp;
@@ -83,7 +88,7 @@ enum eShaderVarSemantic;
 enum eShaderVarDataType;
 enum eShaderVarType;
 enum eInputPerVertUsage;
-enum eResourceAccessFlage;
+typedef int eResourceAccessFlage;
 enum eResourceUsage;
 
 
@@ -97,8 +102,8 @@ enum eResourceUsage;
 #define SHADER_SEMANTIC_TEXCOORD      (wchar_t*)L"TEXCOORD"
 #define SHADER_SEMANTIC_COLOR         (wchar_t*)L"COLOR"
 #define SHADER_SEMANTIC_ANY           (wchar_t*)L"ANY"
-
-
+#define SHADER_SEMANTIC_TESSFACTOR    (wchar_t*)L"TESSFACTOR"
+#define SHADER_SEMANTIC_POINTSIZE     (wchar_t*)L"POINTSIZE"
 #include "xRenderApiEnum.h"
 
 END_NAMESPACE_XEVOL3D

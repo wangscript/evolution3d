@@ -18,7 +18,8 @@ public:
 	virtual bool begin(IGpuProgramParamTable* pConstTable = NULL);
 	virtual bool end(IGpuProgramParamTable* pConstTable = NULL);
 	virtual bool load(const wchar_t* matName , const int8* buf , int len);
-
+    IGpuProgram* gpuProgram() ;
+    bool         setGpuProgram(xGpuProgramName& _name);
 public:
 	virtual bool load(xXmlNode* pNode);
 protected:

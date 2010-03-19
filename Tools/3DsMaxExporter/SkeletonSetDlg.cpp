@@ -64,6 +64,7 @@ BEGIN_MESSAGE_MAP(CSkeletonSetDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON3, OnBnClickedSaveSkeleton)
 	ON_BN_CLICKED(IDC_ALL_BONES, OnBnClickedAllBones)
 	ON_BN_CLICKED(IDC_ADD_BONES, &CSkeletonSetDlg::OnBnClickedAddBones)
+    ON_BN_CLICKED(IDC_ADD_BONE_H, &CSkeletonSetDlg::OnBnClickedAddBoneH)
 END_MESSAGE_MAP()
 
 
@@ -236,6 +237,7 @@ void CSkeletonSetDlg::OnBnClickedAddBones()
 {
 	// TODO: Add your control notification handler code here
 	CNodeViewDlg dlg;
+    dlg.m_bSelected = FALSE;
 	dlg.BuildRootNodeTree();
 	if(IDOK == dlg.DoModal() )
 	{  
@@ -270,4 +272,10 @@ void CSkeletonSetDlg::OnBnClickedAddBones()
 			m_pSkeleton->push_bones(bones);
 		}
 	}
+}
+
+void CSkeletonSetDlg::OnBnClickedAddBoneH()
+{
+    m_pSkeleton->ensureHiberarchys();
+    // TODO: Add your control notification handler code here
 }

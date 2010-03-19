@@ -44,6 +44,19 @@ string  ToAnsi(const std::wstring& pStr)
 	return aStr;
 }
 
+bool IsBipedBone(INode *pNode)
+{
+    // check for invalid and root nodes
+    if((pNode == 0) || pNode->IsRootNode()) return false;
+
+    // check for biped nodes
+    Control *pControl;
+    pControl = pNode->GetTMController();
+    if((pControl->ClassID() == BIPSLAVE_CONTROL_CLASS_ID) || (pControl->ClassID() == BIPBODY_CONTROL_CLASS_ID)) return true;
+
+    return false;
+}
+
 wstring INodeName(INode* pNode)
 {
 	wchar_t nName[512] = {0};
@@ -116,6 +129,72 @@ float CMaxEnv::getFps()
 	return 1000.0/CMaxEnv::singleton().m_pIGameScene->GetSceneTicks() ;
 }
 
+
+//----------------------------------------------------------------------------//
+// Set/Unset biped uniform scale                                              //
+//----------------------------------------------------------------------------//
+
+void CMaxEnv::SetBipedUniform(INode *pNode, BOOL bUniform)
+{
+    if(IsBipedBone(pNode))
+    {
+        // get the TM controller of the node
+        Control *pControl;
+        pControl = pNode->GetTMController();
+
+        // get the biped export interface
+        IBipedExport *pBipedExport;
+        pBipedExport = (IBipedExport *)pControl->GetInterface(I_BIPINTERFACE);
+
+        // remove/add uniform scale
+        pBipedExport->RemoveNonUniformScale(bUniform);
+
+        // notify all dependents
+        Control *pMasterControl;
+        pMasterControl = (Control *)pControl->GetInterface(I_MASTER);
+        pMasterControl->NotifyDependents(FOREVER, PART_TM, REFMSG_CHANGE);
+        pControl->ReleaseInterface(I_MASTER, pMasterControl);
+
+        // release the biped export interface
+        pControl->ReleaseInterface(I_BIPINTERFACE, pBipedExport);
+    }
+}
+
+//----------------------------------------------------------------------------//
+// Convert ticks to seconds                                                   //
+//----------------------------------------------------------------------------//
+
+float CMaxEnv::TicksToSeconds(TimeValue ticks)
+{
+    return (float)ticks / (float)TIME_TICKSPERSEC;
+}
+TimeValue CMaxEnv::SecondsToTicks(float sec)
+{
+    return (TimeValue)(sec * (float)TIME_TICKSPERSEC);
+}
+
+bool  CMaxEnv::get_saved_filename(wchar_t* file_name, const wchar_t* extern_string , const wchar_t* ext_name,const wchar_t* strTile)
+{
+    OPENFILENAMEW ofn; 
+    ZeroMemory(&ofn, sizeof(OPENFILENAME));
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = GetActiveWindow();
+    ofn.lpstrTitle = strTile;
+    ofn.lpstrFile = file_name;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.lpstrFilter = extern_string;
+    ofn.nFilterIndex = 1;
+    ofn.lpstrFileTitle = NULL;
+    ofn.lpstrDefExt = ext_name;
+    ofn.nMaxFileTitle = 0;
+    ofn.lpstrInitialDir = NULL;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+    if(GetSaveFileNameW(&ofn) == FALSE)
+    {
+        return false;
+    }
+    return true;
+}
 void CMaxEnv::start(Interface* pInterface , HWND hPannel)
 {
 	m_pIGameScene = GetIGameInterface();

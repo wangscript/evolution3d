@@ -82,13 +82,13 @@ enum eCompressLevel
 	XCOMDOC_COMPRESS_ULTRA   = 15
 };
 
-enum xcd_data_type
+enum 
 {
 	xcddt_common            = 0x00000000,//CommonType not set any flag , so it is a common flag , 
     xcddt_dir_flag          = 0x80000000,//dir flag, if this bit is set , the data stream will contains nothing but only a dir. 
 	xcddt_forced32bit       = 0xffffffff,
 };
-
+typedef int32    xcd_data_type;
 typedef void*    HXCDFILE ;
 typedef void*    HXCDSTREAM;
 

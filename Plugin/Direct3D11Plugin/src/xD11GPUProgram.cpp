@@ -331,4 +331,18 @@ bool xD11GpuProgram::setTextureBySlot(const int iSlot      , IBaseTexture* pText
 {
 	 return getParamTable()->setTextureBySlot(iSlot , pTexture , _shader);
 }
+
+IBaseShader*  xD11GpuProgram::getShader(eShaderType _type)
+{
+    return m_pShader[_type];
+}
+
+void  xD11GpuProgram::getName(xGpuProgNameParser& _name)
+{
+    for(size_t i = 0 ; i < eShader_Max ;  i ++)
+    {
+        if(m_pShader[i]) _name.setShaderName( eShaderType(i) , m_pShader[i]->name() );
+    }
+}
+
 END_NAMESPACE_XEVOL3D

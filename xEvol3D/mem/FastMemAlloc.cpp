@@ -31,7 +31,7 @@ using namespace std;
 #endif
 #include <assert.h>
 
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64) )
 #include <windows.h>
 #endif
 #include "MemState.h"

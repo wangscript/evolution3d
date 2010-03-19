@@ -5,7 +5,8 @@
 #include "RenderAPI/xTextureManager.h"
 #include "XMathLib/xGeomLib.h"
 #include "XMathLib/xcamera.h"
-
+#include "BaseLib/xBaseMath.h"
+#include "RenderAPI/xRenderAPI.h"
 BEGIN_NAMESPACE_XEVOL3D
 
 class _XEVOL_BASE_API_ IPlatform;
@@ -16,7 +17,8 @@ class _XEVOL_BASE_API_ xXmlNode;
 class _XEVOL_BASE_API_ IApplication;
 class _XEVOL_BASE_API_ ISceneGraph;
 class _XEVOL_BASE_API_ IBaseRenderer;
-class _XEVOL_BASE_API_ xEvol3DEngine
+
+class _XEVOL_BASE_API_ xEvol3DEngine : public IRenderApiDeviceLostListener
 {
 protected:
 	xXmlDocument*             m_cfgDocument;
@@ -54,6 +56,7 @@ public:
 	const wchar_t*   sysValue(const wchar_t* sector , const wchar_t* _value, const wchar_t* defValue);
 	float            sysValue(const wchar_t* sector , const wchar_t* _value, float defValue);     
 	bool             sysValue(const wchar_t* sector , const wchar_t* _value, bool defValue);
+    void             onDeviceReset(bool bNewDevice , eResetAction _Action);
 protected:
 	xXmlNode*        sysCfgNode(const wchar_t* sector , bool bCreated = false);
 }; 

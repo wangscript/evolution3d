@@ -18,7 +18,8 @@ IBaseTexture*  xVideoTextureLoader::loadTexture(IRenderApi* pApi , const wchar_t
 	if( xFileSystem::singleton()->fileExist(_fileName) == false )
 		return NULL;
 
-	xR_VideoTexture * pXRVTexture = new xR_VideoTexture(pApi , true, _texName.m_fmt == PIXELFORMAT_YV12 , _texName.m_fmt == PIXELFORMAT_YVY2);
+    const xTextureDesc& textDesc = _texName.m_InitDesc.m_TextureDesc;
+	xR_VideoTexture * pXRVTexture = new xR_VideoTexture(pApi , true, textDesc.m_fmt == PIXELFORMAT_YV12 , textDesc.m_fmt == PIXELFORMAT_YVY2);
 	IBaseTexture* pVideoTexture  =  dynamic_cast<IBaseTexture*>(pXRVTexture);
 
 	IVideoTextureCtrl* pDecoder =( IVideoTextureCtrl* )pVideoTexture->queryObject( IVideoTextureCtrl::ms_CLASSID );
@@ -68,7 +69,8 @@ IBaseTexture*  xVideoCaptureTextureLoader::loadTexture(IRenderApi* pApi , const 
 	if( xFileSystem::singleton()->fileExist(_fileName) == false )
 		return NULL;
 
-	xR_VideoTexture * pXRVTexture = new xR_VideoTexture(pApi , false , _texName.m_fmt == PIXELFORMAT_YV12 , _texName.m_fmt == PIXELFORMAT_YVY2);
+     const xTextureDesc& textDesc = _texName.m_InitDesc.m_TextureDesc;
+	xR_VideoTexture * pXRVTexture = new xR_VideoTexture(pApi , false , textDesc.m_fmt == PIXELFORMAT_YV12 , textDesc.m_fmt == PIXELFORMAT_YVY2);
 	IBaseTexture* pVideoTexture  =  dynamic_cast<IBaseTexture*>(pXRVTexture);
 
 	IVideoTextureCtrl* pDecoder =( IVideoTextureCtrl* )pVideoTexture->queryObject( IVideoTextureCtrl::ms_CLASSID );

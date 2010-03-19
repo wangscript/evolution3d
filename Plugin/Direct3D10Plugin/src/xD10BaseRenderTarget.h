@@ -15,13 +15,17 @@ class xD10BaseRenderTarget : public IRenderTarget
 protected:
 	xD3D10RenderApi*          m_pD10Api;
 	IBaseTexture*             m_pBaseTexture;
+    int                       m_arraySlice ;
+    int                       m_mipmapLevel;
+
 	IMPL_REFCOUNT_OBJECT_INTERFACE(xD10BaseRenderTarget);
+
 public:
-	xD10BaseRenderTarget(xD3D10RenderApi* pD10Api);
+	xD10BaseRenderTarget(xD3D10RenderApi* pD10Api, int arraySlice , int mipmapLevel);
 	virtual ~xD10BaseRenderTarget();
 	IBaseTexture* toTexture(){return m_pBaseTexture ; }
 	bool          desc(xTextureDesc& desc){return m_pBaseTexture->desc(desc) ; }
-	bool          grabRenderTagetData(int x , int y , int w , int h , void* pData);
+	bool          grabRenderTagetData(void* pData , int x , int y , int w , int h);
 	void          setTexture(IBaseTexture* pTexture);
 	bool          saveResourceToFile(const wchar_t* fileName , ID3D10Resource* pRes); 
 };

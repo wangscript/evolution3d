@@ -62,7 +62,7 @@ Lib3DsSubMesh& AddSubMesh(vLib3DsSubMesh& subMeshList , int matIdx)
 	return subMeshList[nSubMesh];
 }
 
-x3dsMesh::x3dsMesh(xBaseTextureMgr* pTexMgr , bool bSysMemCopy) : xCoreMesh(pTexMgr , bSysMemCopy)
+x3dsMesh::x3dsMesh(xBaseTextureMgr* pTexMgr , bool bSysMemCopy) : xCoreMesh(pTexMgr , NULL)
 {
     m_nFrame = 1;
 }

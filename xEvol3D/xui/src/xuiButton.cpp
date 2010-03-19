@@ -95,10 +95,9 @@ bool xuiButton::load(xXmlNode* pCfgNode )
 
 bool xuiButton::draw()
 {
-
-    xuiRect _rect = m_wndParent->getAbsRect( m_state.m_Region.Rect() ) ;// getWndAbsRect();
-    m_pWindowMgr->drawRectf(0 , NULL, _rect.v , m_state.m_color);
-    m_hFont->drawTextOneLine(m_text.c_str(),_rect, m_state.m_textcolor,xFontRender::eAlign_Center,xFontRender::eAlign_Center);
+    xuiRect _rect = m_wndParent->getAbsRect( m_CurState.m_Region.Rect() ) ;// getWndAbsRect();
+    m_pWindowMgr->drawRectf(0 , NULL, _rect.v , m_CurState.m_color);
+    m_hFont->drawTextOneLine(m_text.c_str(),_rect, m_CurState.m_textcolor,xFontRender::eAlign_Center,xFontRender::eAlign_Center);
     xuiWindow::draw();
     return true;
 }

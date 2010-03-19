@@ -61,6 +61,10 @@ private:
 	double m_realEndX;
 	double m_realEndY;
 
+	// 管理器为其分配的Tile ID
+	int _TileX;
+	int _TileY;
+
 	// 数据精度（每个采样点所换算的真实长度，单位：米）
 	xvec3 m_vScale;
 
@@ -90,6 +94,9 @@ private:
 
 public:
 
+	inline 	int GetTileX() const { return _TileX; }
+	inline 	int GetTileY() const { return _TileY; }
+
 	inline double getRealStartX() {return m_realStartX;}
 	inline double getRealStartY() {return m_realStartY;}
 	inline double getRealEndX() {return m_realEndX;}
@@ -117,9 +124,12 @@ public:
 		return 0.0f;
 	}
 
+	float	getAcceptableData(double x, double y);
+
 public:
 
 	void _format(unsigned int Xinlevel, unsigned int Yinlevel, double setStartX, double setStartY);
+	void _clearupEdges(xTerrainData* px, xTerrainData* pX, xTerrainData* py, xTerrainData* pY);
 	// 查询采样点
 	// 查询表面纹理
 	// 一个地形数据集由多块地形Patch渲染，因此每个地形Patch只是View了这个数据集中的一小块。
@@ -170,6 +180,7 @@ public:
 	// 查询某点的高度（这里的X,Y是指真实位置）
 	float getHeightReal( double x, double y);
 
+	void GetSideTerrain(xTerrainData* pSource, xTerrainData** ppx, xTerrainData** ppX, xTerrainData** ppy, xTerrainData** ppY);
 public:
 
 	bool load(xXmlNode* pNode);

@@ -256,6 +256,10 @@ namespace XEvol3D
         operator bool() const { return isHandle(); }
 	};
 
+	template<typename T , typename THandle> T resource_cast(THandle& h)
+	{
+		return dynamic_cast<T>( h.getResource() );
+	}
 	//------------------------------------------------------
 	//Resource Manager的接口，
 	//所有的不同类型的Resource Manager都可以用这个接口来进行

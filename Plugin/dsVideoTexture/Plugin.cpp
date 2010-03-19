@@ -9,24 +9,6 @@
 #pragma comment(lib,"VideoRender.lib")
 #endif
 
-#ifdef _WIN32
-HANDLE Global_hPluginHandle = NULL;
-BOOL WINAPI DllMain(HANDLE  hDllHandle,   DWORD   dwReason,    LPVOID  lpreserved     )
-{
-        if (dwReason == DLL_PROCESS_ATTACH)
-        {
-        /*
-         * The /GS security cookie must be initialized before any exception
-         * handling targetting the current image is registered.  No function
-         * using exception handling can be called in the current image until
-         * after __security_init_cookie has been called.
-         */
-            Global_hPluginHandle = hDllHandle;
-        }
-        return TRUE;
-}
-#endif
-
 USING_NS_XEVOL3D
 xVideoTextureLoader*        m_VideoTextureLoader;
 xVideoCaptureTextureLoader* m_CapTextureLoader;
@@ -76,6 +58,23 @@ extern "C" _declspec(dllexport) IPluginObject* PLUGIN_ENTRYPOINT()
 	static xDsVideoTexturePlugin gPluginObject;
 	return &gPluginObject;
 }
+#ifdef _WIN32
+HANDLE Global_hModuleHandle = NULL;
+BOOL WINAPI DllMain(HANDLE  hDllHandle,   DWORD   dwReason,    LPVOID  lpreserved     )
+{
+        if (dwReason == DLL_PROCESS_ATTACH)
+        {
+        /*
+         * The /GS security cookie must be initialized before any exception
+         * handling targetting the current image is registered.  No function
+         * using exception handling can be called in the current image until
+         * after __security_init_cookie has been called.
+         */
+            Global_hModuleHandle = hDllHandle;
+        }
+        return TRUE;
+}
+#endif
 #else
 bool InitDsVideoTexturePlugin()
 {

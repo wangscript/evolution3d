@@ -14,7 +14,34 @@
 
 BEGIN_NAMESPACE_XEVOL3D
 
+struct _XEVOL_BASE_API_ xShaderSocketInfo
+{
+    //可以使用Name也可以使用idx
+    ds_wstring              m_name;//使用idx时候m_name = ""
+    int                     m_idx;//使用name时候m_idx= -1;
+    std::ds_wstring_vector  m_attachNodes;
+};
 
+typedef ds_vector(xShaderSocketInfo)  xShaderSocketInfos;
+class _XEVOL_BASE_API_  xShaderName
+{
+public:
+    xShaderSocketInfo*  findSocket(const wchar_t* socketName);
+    xShaderSocketInfo*  findSocket(const size_t   socketIdx);
+    void                toName(ds_wstring& strName);
+    xShaderSocketInfo*  addSocket(int idx , const wchar_t* socketName);
+    void                addSocket(const xShaderSocketInfo& Socket);
+    bool                parse(const wchar_t* name);
+    const wchar_t*      mainNodeName();
+    void                setMainNode(const wchar_t* _name) { m_strMainNodeName = _name ; }
+    bool                isNull();
+    int                 nSokects(){ return  (int)m_Sokects.size() ; }
+    bool                removeNode(const wchar_t* nodeName);
+    xShaderName();
+private:
+    ds_wstring         m_strMainNodeName;
+    xShaderSocketInfos m_Sokects; 
+};
 
 class _XEVOL_BASE_API_  xGpuProgramName
 {
@@ -72,10 +99,6 @@ inline size_t hash_value(const xGpuProgramName& _Keyval)
 class _XEVOL_BASE_API_  xGpuProgNameParser
 {
 public:
-	struct xShaderSocketInfo;
-	struct xShaderName;
-	typedef ds_vector(xShaderSocketInfo)  xShaderSocketInfos;
-public:
 	xGpuProgNameParser(xGpuProgramName& _name);
 	xGpuProgNameParser();
 	//===========================================
@@ -88,22 +111,6 @@ public:
 	bool          generateCode(eShaderType _shaderType  , xShaderCodeNodeMgr* pNodeMgr , ds_string& _code);
 	xShaderName*  getShaderName(eShaderType _shaderType){return _getShader(_shaderType) ; }
 
-public:
-	struct xShaderSocketInfo
-	{
-		//可以使用Name也可以使用idx
-		ds_wstring              m_name;//使用idx时候m_name = ""
-		int                     m_idx;//使用name时候m_idx= -1;
-		std::ds_wstring_vector  m_attachNodes;
-	};
-	struct xShaderName
-	{
-		ds_wstring         m_strName;
-		xShaderSocketInfos m_Sokects; 
-		xShaderSocketInfo* findSocket(const wchar_t* socketName);
-		xShaderSocketInfo* findSocket(const size_t   socketIdx);
-		void               toName(ds_wstring& strName);
-	};
 protected:
 	xShaderName*  _getShader(eShaderType _shaderType);
 	bool          _generateDecl(HShaderCodeNode hCodeNode , ds_string& _code);
@@ -113,9 +120,7 @@ protected:
 
 
 protected:
-	xShaderName m_VertexShader;
-	xShaderName m_PixelShader;
-	xShaderName m_GeomShader;
+	xShaderName    m_ShaderNames[eShader_Max];
 };
 
 

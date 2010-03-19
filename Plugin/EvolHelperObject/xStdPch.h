@@ -36,7 +36,7 @@
 #ifdef _MSC_VER
 #include <hash_map>
 #endif
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64) )
 #include <windows.h>
 #endif
 #endif

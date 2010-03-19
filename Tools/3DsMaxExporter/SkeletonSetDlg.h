@@ -65,4 +65,5 @@ public:
 	float m_fScale;
 	afx_msg void OnBnClickedAllBones();
 	afx_msg void OnBnClickedAddBones();
+    afx_msg void OnBnClickedAddBoneH();
 };

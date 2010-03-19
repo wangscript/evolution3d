@@ -216,6 +216,7 @@ public:
 	template <typename T> void         setValue(const T& _v , int _offset = 0)   {  if(m_pValue) { m_pValue->setValulePtr(&_v , sizeof(T) , _offset) ; }  }
 	void                               setValue(const wchar_t* _v , int _offset = 0);
 	void                               setValue(const void* _v , size_t dataLen , int _offset = 0)  ;
+    IPropertyValue*                    getValueObject(){ return m_pValue ; }
 	virtual        bool                onValueChange(){ return true ;}
 protected:
 
@@ -341,6 +342,7 @@ public:
 	~xPropertySet();
 	bool load(const wchar_t* fileName , const int8* buf , size_t len ) ;
 	bool load(xXmlDocument* pXml);
+    bool load(xXmlNode* pNode);
 	bool add(xXmlNode* pXmlNode, xPropertyItem* pParent);
 	bool unload();
 };

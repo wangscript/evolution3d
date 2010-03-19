@@ -5,16 +5,17 @@
 #include "../BaseLib/xI18N.h"
 #include "xCoreMesh.h"
 using namespace xMathLib;
-BEGIN_NAMESPACE_XEVOL3D
-IMPL_BASE_OBJECT_CLASSID(xCoreAction          , IBaseObject);
-IMPL_BASE_OBJECT_CLASSID(xTransitionAction    , xCoreAction);
+BEGIN_NAMESPACE_XEVOL3D 
+IMPL_BASE_OBJECT_CLASSID(xBaseAction          , IBaseObject);
+IMPL_BASE_OBJECT_CLASSID(xCoreAction          , xBaseAction);
 IMPL_BASE_OBJECT_CLASSID(xEmbAction           , xCoreAction);
 //骨架的一个Frame
 xCoreActionFrame::xCoreActionFrame()
 {
     m_nBone = 0;
-    m_FrameMat = NULL;
-    m_WSMats   = NULL;
+    m_FrameMat   = NULL;
+    m_WSMats     = NULL;
+    m_vBoneTrans = NULL;
 }
 
 xCoreActionFrame::~xCoreActionFrame()
@@ -41,13 +42,21 @@ xMathLib::xmat4&  xCoreActionFrame::wsMat(int index)
     return m_WSMats[index];
 }
 
-bool xCoreActionFrame::load(int nBone)
+xBoneTrans&  xCoreActionFrame::boneTrans(int index)
+{
+    assert(index < m_nBone);
+    assert(index >= 0);
+    return m_vBoneTrans[index];
+}
+
+bool xCoreActionFrame::load(int _nBone)
 {
     unload();
-    m_FrameMat = new xMathLib::xmat4[nBone];
-    m_WSMats   = new xMathLib::xmat4[nBone];
+    m_FrameMat   = new xMathLib::xmat4[_nBone];
+    m_WSMats     = new xMathLib::xmat4[_nBone];
+    m_vBoneTrans = new xBoneTrans[_nBone];
     assert(m_FrameMat);
-    m_nBone = nBone;
+    m_nBone = _nBone;
     return m_FrameMat != NULL;
 }
 
@@ -55,8 +64,88 @@ void xCoreActionFrame::unload()
 {
     XSAFE_DELETE_ARRAY(m_FrameMat);
     XSAFE_DELETE_ARRAY(m_WSMats);
+    XSAFE_DELETE_ARRAY(m_vBoneTrans);
 }
 
+//////////////////////////////////////////////////////////////////////////
+void xCoreActionAttr::init(int nBone , int Attri )
+{
+	m_BoneAttribtes.resize(nBone);
+	for(int i = 0 ; i < nBone ; i ++)
+	{
+		m_BoneAttribtes[i] = Attri;
+	}
+}
+
+bool xCoreActionAttr::boneUsed(int boneIndex)
+{
+	return m_BoneAttribtes[boneIndex] == eBoneInclude;
+}
+
+void xCoreActionAttr::setBoneAttribute(int attr )
+{
+	size_t nBone = m_BoneAttribtes.size();
+	for(size_t i = 0 ; i < nBone ; i ++) m_BoneAttribtes[i] = attr;
+}
+
+void xCoreActionAttr::setBoneAttribute(int attr , int idx)
+{
+	m_BoneAttribtes[idx] = attr;
+}
+
+void xCoreActionAttr::setBoneAttribute(int* pAttributes , int nAttr , int iStart)
+{
+	for(int i = iStart ; i < iStart + nAttr ; i ++)
+	{
+		m_BoneAttribtes[i] = pAttributes[i - iStart];
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+float xBaseAction::_getBlendFrameLoop(const xActionInfo* pInfo ,long _time_in_ms, int& frame1 , int& frame2)
+{
+    long t = _time_in_ms % pInfo->m_lTime;
+
+    int nFrame = pInfo->m_iLastFrame - pInfo->m_iFirstFrame + 1;
+    float fFrame = nFrame *  t / float( pInfo->m_lTime); 
+
+    frame1 = (int)fFrame;
+    frame2 = frame1 + 1;
+    if(frame2 >= nFrame)
+    {
+        frame2 = frame2%nFrame;
+    }
+    if(frame1 > nFrame)
+    {
+        frame1 = frame1%nFrame;
+    }
+    return fFrame - frame1;
+}
+
+float xBaseAction::_getBlendFrameClamp(const xActionInfo* pInfo ,long _time_in_ms, int& frame1 , int& frame2)
+{
+    if(_time_in_ms > pInfo->m_lTime) _time_in_ms = pInfo->m_lTime;
+    long t = _time_in_ms ;//tt % m_Info.m_lTime;
+
+    int nFrame = pInfo->m_iLastFrame - pInfo->m_iFirstFrame + 1;
+    float lTime = float( pInfo->m_lTime); 
+    if(lTime == 0.0f ) lTime = 30.0f;
+    float fFrame = nFrame *  t / float( pInfo->m_lTime); 
+
+    frame1 = (int)fFrame;
+    frame2 = frame1 + 1;
+    if(frame2 >= nFrame)
+    {
+        frame2 = nFrame - 1;//frame2%nFrame;
+    }
+    if(frame1 >= nFrame)
+    {
+        frame1 = nFrame - 1; //frame1%nFrame;
+    }
+    return fFrame - frame1;
+}
+
+//////////////////////////////////////////////////////////////////////////
 xCoreAction::xCoreAction()
 {
     m_RefCount = 1;
@@ -66,49 +155,21 @@ xCoreAction::~xCoreAction()
 {
 
 }
+
 bool xCoreAction::setTime(float _time)
 {
 	m_Info.m_lTime = 1000 * _time;
 	return true;
 }
-float xCoreAction::_getBlendFrameLoop(long _time_in_ms, int& frame1 , int& frame2)
+
+float xCoreAction::getDurTime()
 {
-	long t = _time_in_ms % m_Info.m_lTime;
-
-	int nFrame = m_Info.m_iLastFrame - m_Info.m_iFirstFrame + 1;
-	float fFrame = nFrame *  t / float(m_Info.m_lTime); 
-
-	frame1 = (int)fFrame;
-	frame2 = frame1 + 1;
-	if(frame2 >= nFrame)
-	{
-		frame2 = frame2%nFrame;
-	}
-	if(frame1 > nFrame)
-	{
-		frame1 = frame1%nFrame;
-	}
-	return fFrame - frame1;
+    return m_Info.m_lTime/1000.0f;
 }
-float xCoreAction::_getBlendFrameClamp(long _time_in_ms, int& frame1 , int& frame2)
+
+const wchar_t* xCoreAction::typeID() const
 {
-	if(_time_in_ms > m_Info.m_lTime) _time_in_ms = m_Info.m_lTime;
-	long t = _time_in_ms ;//tt % m_Info.m_lTime;
-
-	int nFrame = m_Info.m_iLastFrame - m_Info.m_iFirstFrame + 1;
-	float fFrame = nFrame *  t / float(m_Info.m_lTime); 
-
-	frame1 = (int)fFrame;
-	frame2 = frame1 + 1;
-	if(frame2 >= nFrame)
-	{
-		frame2 = nFrame - 1;//frame2%nFrame;
-	}
-	if(frame1 >= nFrame)
-	{
-		frame1 = nFrame - 1; //frame1%nFrame;
-	}
-	return fFrame - frame1;
+	return L"xra";
 }
 
 bool xCoreAction::blend(long _time_in_ms, xCoreActionFrame* _skeletonFrame , xCoreSkeleton* pSkeleton)
@@ -119,11 +180,11 @@ bool xCoreAction::blend(long _time_in_ms, xCoreActionFrame* _skeletonFrame , xCo
 	float tfloat = 0.0f;
     if(m_bLoopAction)
 	{
-		tfloat = _getBlendFrameLoop(_time_in_ms , frame1 , frame2);
+		tfloat = _getBlendFrameLoop(info() , _time_in_ms , frame1 , frame2);
 	}
 	else
 	{
-		tfloat = _getBlendFrameClamp(_time_in_ms , frame1 , frame2);
+		tfloat = _getBlendFrameClamp(info() ,_time_in_ms , frame1 , frame2);
 	}
     pSkeleton->blendSlerp(this,skeletonFrame,tfloat,frame1,frame2);
     return true;
@@ -134,9 +195,11 @@ int xCoreAction::memUsage()
 	return m_nBone * m_Info.m_nFrame * sizeof(xBoneData);
 }
 
-xBoneData& xCoreAction::getBoneData(int boneIndex, int frame)
+xBoneData* xCoreAction::getBoneData(int boneIndex, int frame)
 {
-    return m_BoneFrame[boneIndex][frame];
+	if(frame == -1 || frame >= m_Info.m_nFrame) 
+		frame = m_Info.m_nFrame - 1;
+	return &m_BoneFrame[boneIndex][frame];
 }
 
 bool  xCoreAction::load(xXmlNode* pCfgNode )
@@ -172,6 +235,7 @@ bool  xCoreAction::load(const wchar_t * _name , istream& stream)
 	dim[1] = m_Info.m_nFrame;
 
 	m_BoneFrame.create(dim);
+	m_ActionAttr.init(m_nBone);
 	for(int iFrame = 0 ; iFrame < nFrame ; iFrame ++ )
 	{
 		for(int iBone = 0 ; iBone < m_nBone ; iBone++)
@@ -198,6 +262,7 @@ bool xCoreAction::load(const wchar_t * _name , xcomdocstream* stream)
     dim[1] = nFrame;
 
     m_BoneFrame.create(dim);
+	m_ActionAttr.init(m_nBone);
     for(int iFrame = 0 ; iFrame < nFrame ; iFrame ++ )
     {
         for(int iBone = 0 ; iBone < m_nBone ; iBone++)
@@ -285,71 +350,4 @@ void xEmbAction::unload()
 {
 
 }
-
-
-
-//两个动作之间做插值的过渡动作
-xTransitionAction::xTransitionAction()
-{
-	m_Info.m_eActType = eActType_Transition;
-	m_Info.m_iFirstFrame = 0;
-	m_Info.m_iLastFrame = 1;
-	m_Info.m_lTime = 500; //0.5秒
-	m_Info.m_nFrame = 2;
-}
-
-xTransitionAction::~xTransitionAction()
-{
-
-}
-
-void xTransitionAction::setTransitTime(float _time)
-{
-   m_Info.m_lTime = _time * 1000;//毫秒记
-}
-
-bool xTransitionAction::setAction(xCoreAction* pStart , xCoreAction* pEnd , float _time)
-{
-    int nBone = pStart->nBone(); //
-	if(pStart->skeletonID() != pEnd->skeletonID())
-		return false;
-
-	m_Info.m_lTime = _time * 1000;
-	m_nBone = pStart->nBone();
-	int dim[2];
-	dim[0] = m_nBone;
-	dim[1] = m_Info.m_nFrame;
-
-	m_SkeID = pStart->skeletonID();
-	m_Name  = MakeName(pStart->name() , pEnd->name() );
-	m_nBone = pStart->nBone();
-	m_BoneFrame.create(dim);
-	int nLastFrame = pStart->info().m_nFrame - 1;
-	for(int iBone = 0 ; iBone < m_nBone ; iBone++)
-	{
-		xBoneData& boneData = m_BoneFrame[iBone][0];
-		m_BoneFrame[iBone][0] = pStart->getBoneData(iBone , nLastFrame) ; //第一帧就是前一个动作的最后一帧。
-		m_BoneFrame[iBone][1] = pEnd->getBoneData(iBone,0)           ; //第二帧就是后一个动作的第一帧
-	}
-	return true;
-}
-
-bool xTransitionAction::IsTransitionName(const std::ds_wstring& _name , std::ds_wstring& _first , std::ds_wstring& _second)
-{
-	if(_name.find(L"->") == std::ds_wstring::npos)
-		return false;
-	int pos = (int)_name.find(L"->");
-	wchar_t buf[1024] = {0};
-	wcsncpy(buf , _name.c_str() , 1024);
-	buf[pos] = 0;
-    _first = buf;
-	_second = buf + pos + 2;
-	return true;
-}
-
-std::ds_wstring  xTransitionAction::MakeName(const wchar_t* _first , const wchar_t* _second)
-{
-	return std::ds_wstring(_first) + L"->" + _second;
-}
-
 END_NAMESPACE_XEVOL3D

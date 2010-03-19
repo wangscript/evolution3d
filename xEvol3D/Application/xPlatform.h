@@ -107,6 +107,7 @@ public:
 	//处理消息
 	virtual bool            dispatchMsg(xWindowMsg & msg) = 0;
 	virtual bool            setMessageTranslator(ISysEventTranslator* pTranslator) = 0;
+	virtual IKeyboard*      getKeyboard() = 0;
 
 	//设置当前有效果的应用．
 	bool                    setApplication(IApplication* pApp);

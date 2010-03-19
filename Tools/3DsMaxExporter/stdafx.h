@@ -35,15 +35,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 #ifndef _WIN32_WINNT		// Allow use of features specific to Windows NT 4 or later.
-#define _WIN32_WINNT 0x0400	// Change this to the appropriate value to target Windows 2000 or later.
+#define _WIN32_WINNT 0x0500	// Change this to the appropriate value to target Windows 2000 or later.
 #endif						
 
 #ifndef _WIN32_WINDOWS		// Allow use of features specific to Windows 98 or later.
-#define _WIN32_WINDOWS 0x0410 // Change this to the appropriate value to target Windows Me or later.
+#define _WIN32_WINDOWS 0x0510 // Change this to the appropriate value to target Windows Me or later.
 #endif
 
 #ifndef _WIN32_IE			// Allow use of features specific to IE 4.0 or later.
-#define _WIN32_IE 0x0400	// Change this to the appropriate value to target IE 5.0 or later.
+#define _WIN32_IE 0x0700	// Change this to the appropriate value to target IE 5.0 or later.
 #endif
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit

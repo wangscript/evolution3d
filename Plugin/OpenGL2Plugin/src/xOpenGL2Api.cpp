@@ -1307,7 +1307,7 @@ void xGL2RenderApi::registeShaderConstBinder(eShaderParamSemantic _semantic , IS
       return ;
 }
 
-IBaseTexture* xGL2RenderApi::createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg)
+IBaseTexture* xGL2RenderApi::createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen, unsigned int arg, const xTextureInitDesc* texInitDesc)
 {
       xGL2FileTexture* pTex = new xGL2FileTexture(this);
       if(pTex->load(texFile , buf , bufLen , arg ) )
@@ -1318,7 +1318,7 @@ IBaseTexture* xGL2RenderApi::createFileTexture(const wchar_t* texFile , const un
       return NULL;
 }
 
-IBaseTexture* xGL2RenderApi::createFileTexture(const wchar_t* extFile)
+IBaseTexture* xGL2RenderApi::createFileTexture(const wchar_t* extFile, const xTextureInitDesc* texInitDesc)
 {
       return new xGL2FileTexture(this);
 }

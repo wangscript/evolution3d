@@ -19,8 +19,8 @@ protected:
 	ID3D10Texture3D*          m_3DTexture;
 protected:
 	//bool                     _load(ID3D10Resource* pTexture);
-	bool                     _create2DTexture();
-	bool                     _create3DTexture();
+	bool                     _create2DTexture(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData = NULL, int nInitData = 0);
+	bool                     _create3DTexture(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData = NULL, int nInitData = 0);
 
 	bool                     _lockreadAble(eLockPolicy lockPolicy, xTextureLockArea& lockInfo, int mipmapLevel = 0 , int arraySlice = 0 );
 	bool                     _unlockreadAble(xTextureLockArea& lockInfo);
@@ -36,9 +36,10 @@ public:
 
 	virtual bool           update(void* data  , int dateLen , int rowPitch , int depthPicth =0 , int mipmapLevel = 0 , int arraySlice = 0);
 	virtual bool           lock(eLockPolicy lockPolicy, xTextureLockArea& lockInfo, int mipmapLevel = 0 , int arraySlice = 0 );
-	virtual bool           unlock(xTextureLockArea& lockInfo);
-	virtual bool           create(int w , int h , ePIXEL_FORMAT fmt , int mipMapLevels = 1 , int arraySize = 1);
-	virtual bool           create(int w , int h , int depth , ePIXEL_FORMAT fmt , int mipMapLevels = 1 , int arraySize = 1);
+
+    void MapTexture( UINT lockResource, D3D10_MAP mapType, xTextureLockArea &lockInfo );
+    virtual bool           unlock(xTextureLockArea& lockInfo);
+	virtual bool           create(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData = NULL, int nInitData = 0);
 	virtual IRenderTarget* toRenderTarget(size_t iSlice = 0 , size_t iMipMapLevel = 0);
 };
 

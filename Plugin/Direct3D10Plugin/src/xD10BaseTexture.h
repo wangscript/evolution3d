@@ -17,11 +17,11 @@ struct xD10TexInfo
 	DXGI_FORMAT   m_ShaderViewFmt;
     DXGI_FORMAT   m_ResFmt;
     DXGI_FORMAT   m_RTViewFmt;
-	size_t        m_TexWidth;
-	size_t        m_TexHeight;
-	size_t        m_TexDepth;
-	size_t        m_MipmapLevel;
-	size_t        m_ArraySize;
+	int           m_TexWidth;
+	int           m_TexHeight;
+	int           m_TexDepth;
+	int           m_MipmapLevel;
+	int           m_ArraySize;
 	eResourceType m_Type;
 	ePIXEL_FORMAT m_xfmt;
 	int           m_MemSize;
@@ -65,7 +65,7 @@ public:
 	virtual ePIXEL_FORMAT   format(){ return m_TexInfo.m_xfmt ; }
 	virtual bool            validate(){return true; }
 	virtual bool            desc(xTextureDesc& _desc);
-	virtual bool            grabRenderTagetData(int x , int y , int w , int h , void* pData) { return false ; }
+	virtual bool            grabRenderTagetData(void* pData , int x , int y , int w , int h , int arraySlice , int mipmapLevel) { return false ; }
     virtual bool            unload();
 	virtual bool            saveToFile(const wchar_t* fileName);
 	virtual ID3D10Resource* GetD10Resource();

@@ -49,6 +49,10 @@ typedef _XEVOL_BASE_API_ TVec4<float>         xvec4;
 typedef _XEVOL_BASE_API_ TVec4<unsigned int>  xvec4ui;
 typedef _XEVOL_BASE_API_ TVec4<int>           xvec4i;
 
+typedef xvec4  float4;
+typedef xvec4i int4;
+typedef xmat4  float4x4;
+
 class xquat;
 
 const double XM_PI = 3.141592653589;

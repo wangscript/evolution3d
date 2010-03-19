@@ -100,6 +100,7 @@ void AppandSkins(sSkinGroups_t& groups,xcomdocstream* pDescStream)
 bool On_ExportSkinToSignleFile(wchar_t *skin_file,CSkeletonExporter& skeExporter)
 {
 	CNodeViewDlg dlg;
+    dlg.m_bSelected = FALSE;
 	dlg.BuildSelNodeTree();
 	if(IDOK == dlg.DoModal() )
 	{  
@@ -161,6 +162,7 @@ bool On_ExportSkin(HWND hDlg,WPARAM wParam,LPARAM lParam)
 
 	//如果导出到一个.xrm或者一个.xsg文件里。说明是把一个mesh追加进去。所以不需要删除
 	CNodeViewDlg dlg;
+    dlg.m_bSelected = FALSE;
 	dlg.BuildSelNodeTree();
 	if(IDOK == dlg.DoModal() )
 	{  

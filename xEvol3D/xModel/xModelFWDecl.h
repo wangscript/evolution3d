@@ -7,6 +7,7 @@ BEGIN_NAMESPACE_XEVOL3D
 class  _XEVOL_BASE_API_ xCoreActionFrame;
 class  _XEVOL_BASE_API_ xBoneHiberarchy;
 class  _XEVOL_BASE_API_ xCoreSkeleton;
+class  _XEVOL_BASE_API_ xBaseAction;
 class  _XEVOL_BASE_API_ xCoreAction;
 class  _XEVOL_BASE_API_ xCoreActionLoader;
 class  _XEVOL_BASE_API_ xCoreActionName;
@@ -20,8 +21,8 @@ class _XEVOL_BASE_API_ xCoreMeshLoader;
 
 typedef std::vector<xCoreMesh*   , dllsafe_alloc<xCoreMesh*>   > vCoreMeshs;
 
-typedef TResHandle<xCoreAction , xCoreActionName , xCoreActionLoader>          HCoreAction;
-typedef TLRUPolicyResMgr<xCoreAction , xCoreActionName , xCoreActionLoader>    xCoreActionMgr;
+typedef TResHandle<xBaseAction , xCoreActionName , xCoreActionLoader>          HCoreAction;
+typedef TLRUPolicyResMgr<xBaseAction , xCoreActionName , xCoreActionLoader>    xCoreActionMgr;
 
 typedef TResHandle<xBaseModel , std::ds_wstring , xBaseModelLoader>          HBaseModel;
 typedef TLRUPolicyResMgr<xBaseModel , std::ds_wstring , xBaseModelLoader>    xBaseModelMgr;
