@@ -42,6 +42,38 @@ public:
 	static D3D11_CULL_MODE            GetCullMode(const wchar_t* _blen);
 	static D3D11_STENCIL_OP           GetStencilOp(const wchar_t* _op);
 	static D3DX11_IMAGE_FILE_FORMAT   GetDX11ImageFileFormat(const wchar_t* fileName);
+
+    static D3D11_USAGE                Usage(eResourceUsage usage)
+    {
+        if(usage == RESOURCE_USAGE_DEFAULT    ) return D3D11_USAGE_DEFAULT  ;
+        if(usage == RESOURCE_USAGE_IMMUTABLE  ) return D3D11_USAGE_IMMUTABLE;
+        if(usage == RESOURCE_USAGE_DYNAMIC    ) return D3D11_USAGE_DYNAMIC  ;
+        if(usage == RESOURCE_USAGE_STAGING    ) return D3D11_USAGE_STAGING  ;
+        return D3D11_USAGE_DYNAMIC;
+    }
+
+    static D3D11_CPU_ACCESS_FLAG     AccessFlag(eResourceAccessFlage flag)
+    {
+        if(flag == RESOURCE_ACCESS_NONE      )  return D3D11_CPU_ACCESS_FLAG(0);
+        if(flag == RESOURCE_ACCESS_READ      )  return D3D11_CPU_ACCESS_READ;
+        if(flag == RESOURCE_ACCESS_WRITE     )  return D3D11_CPU_ACCESS_WRITE;
+        if(flag == RESOURCE_ACCESS_READWRITE )  return D3D11_CPU_ACCESS_FLAG(D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE);
+        return D3D11_CPU_ACCESS_WRITE;
+    }
+
+    static D3D11_BIND_FLAG          BindFlag (eResourceBindType bindType)
+    {
+        D3D11_BIND_FLAG outFlag = D3D11_BIND_FLAG(0);
+        if(bindType & BIND_AS_CONSTANT_BUFFER       )  outFlag =  (D3D11_BIND_FLAG)(outFlag |D3D11_BIND_CONSTANT_BUFFER);
+        if(bindType & BIND_AS_INDEX_BUFFER          )  outFlag =  (D3D11_BIND_FLAG)(outFlag |D3D11_BIND_INDEX_BUFFER   );
+        if(bindType & BIND_AS_CONSTANT_BUFFER       )  outFlag =  (D3D11_BIND_FLAG)(outFlag |D3D11_BIND_CONSTANT_BUFFER);
+        if(bindType & BIND_AS_SHADER_RESOURCE       )  outFlag =  (D3D11_BIND_FLAG)(outFlag |D3D11_BIND_SHADER_RESOURCE);
+        if(bindType & BIND_AS_STREAM_OUTPUT         )  outFlag =  (D3D11_BIND_FLAG)(outFlag |D3D11_BIND_STREAM_OUTPUT  );
+        if(bindType & BIND_AS_RENDER_TARGET         )  outFlag =  (D3D11_BIND_FLAG)(outFlag |D3D11_BIND_RENDER_TARGET  );
+        return outFlag;
+
+    }
+
 };
 END_NAMESPACE_XEVOL3D
 

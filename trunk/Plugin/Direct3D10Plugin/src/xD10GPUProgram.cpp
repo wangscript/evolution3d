@@ -390,4 +390,19 @@ bool xD10GpuProgram::setTextureBySlot(const int iSlot      , IBaseTexture* pText
 {
 	 return getParamTable()->setTextureBySlot(iSlot , pTexture , _shader);
 }
+
+IBaseShader* xD10GpuProgram::getShader(eShaderType _type)
+{
+    if(_type == eShader_PixelShader ) return m_pPixelShader;
+    if(_type == eShader_VertexShader)  return m_pVertexShader;
+    if(_type == eShader_GeometryShader) return m_pGeomShader;
+    return NULL;
+}
+
+void xD10GpuProgram::getName(xGpuProgNameParser& _name)
+{
+    if(m_pPixelShader ) _name.setShaderName(eShader_PixelShader    , m_pPixelShader->name()  ) ; 
+    if(m_pVertexShader) _name.setShaderName(eShader_VertexShader   , m_pVertexShader->name() ) ; 
+    if(m_pGeomShader  ) _name.setShaderName(eShader_GeometryShader , m_pGeomShader->name()   ) ; 
+}
 END_NAMESPACE_XEVOL3D

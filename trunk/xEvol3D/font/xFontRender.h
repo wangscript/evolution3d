@@ -57,14 +57,14 @@ class _XEVOL_BASE_API_ IFontRenderDevice
 public:
       virtual I2DRectObject*  get2DObject()= 0;
       virtual bool            setUVLayer(int nUVLayer)= 0;
-      virtual bool            setShaderProgram(IGpuProgram* pProgram)= 0;
+      virtual bool            setShaderProgram(HGpuProgram pProgram)= 0;
       virtual bool            init() = 0;
       virtual bool            setFontFilter(eFontFilter filter) = 0;
       virtual bool            beginFontRender() = 0;
       virtual bool            endFontRender() = 0;
       virtual bool            drawRectf(IBaseTexture* pTexture, float vDestRect[4] , const xColor_4f& color) = 0;
       virtual bool            drawRectf(IBaseTexture* pTexture, float vDestRect[4] ,float vSrcRect[4]  ,const xColor_4f& color) = 0;
-      virtual IBaseTexture*   createLockableTexture(int w , int h , ePIXEL_FORMAT fmt ,bool bReadable , int nMipMap = 1, int nArraySize = 1 ) = 0;
+      virtual IBaseTexture*   createTexture(int w , int h , ePIXEL_FORMAT fmt ,bool bReadable , eResourceUsage usage = RESOURCE_USAGE_DYNAMIC ,   int nMipMap = 1, int nArraySize = 1 ) = 0;
       virtual bool            isTextureSupport(ePIXEL_FORMAT fmt , bool lockable = true) = 0;
       virtual IRenderApi*     renderApi() = 0;
 };

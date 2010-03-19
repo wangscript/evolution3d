@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
 #include "stdafx.h"
+#include <CommCtrl.h>
 #include "resource.h"
 #include "XEvolMaxExporter.h"
 #include "NodeViewDlg.h"
@@ -37,7 +38,7 @@ CNodeViewDlg::CNodeViewDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CNodeViewDlg::IDD, pParent),
     m_MaxNodeTree(&m_TreeNodes)
 {
-	
+	m_bSelected = TRUE;
 }
 
 CNodeViewDlg::~CNodeViewDlg()
@@ -54,7 +55,7 @@ void CNodeViewDlg::BuildSelNodeTree()
     m_MaxNodeTree.BuildSelectTree();
 }
 
-void CNodeViewDlg::InsertNode(HTREEITEM parentItem , CMaxNodeTreeItem& Node)
+void CNodeViewDlg::InsertNode(HTREEITEM parentItem , CMaxNodeTreeItem& Node , BOOL bSelect)
 {
 	INode* pNode = Node.m_pMaxNode;
 
@@ -73,10 +74,10 @@ void CNodeViewDlg::InsertNode(HTREEITEM parentItem , CMaxNodeTreeItem& Node)
         type = IMAGE_DUMMY;
     }
     Node.m_TreeItem = m_TreeNodes.InsertItem(INodeNameA(pNode),type,type,parentItem);
-    m_TreeNodes.SetCheck(Node.m_TreeItem,TRUE);
+    m_TreeNodes.SetCheck(Node.m_TreeItem,bSelect);
     for(size_t i = 0 ; i < Node.m_ChildNodes.size(); i ++)
 	{
-       InsertNode(Node.m_TreeItem,Node.m_ChildNodes[i]);
+       InsertNode(Node.m_TreeItem,Node.m_ChildNodes[i] , m_bSelected);
 	}
     m_TreeNodes.Expand(parentItem,TVE_EXPAND);
 }
@@ -98,6 +99,7 @@ BEGIN_MESSAGE_MAP(CNodeViewDlg, CDialog)
     ON_NOTIFY(NM_CLICK, IDC_NODE_TREE, OnNMClickNodeTree)
     ON_BN_CLICKED(IDOK, OnBnClickedOk)
     ON_WM_DESTROY()
+    ON_NOTIFY(TVN_ITEMCHANGED, IDC_NODE_TREE, &CNodeViewDlg::OnTvnItemChangedNodeTree)
 END_MESSAGE_MAP()
 
 
@@ -113,7 +115,7 @@ BOOL CNodeViewDlg::OnInitDialog()
 	size_t nSize = m_MaxNodeTree.m_MaxNodeTreeRoot.size();
 	for(size_t i =0 ; i < nSize; i++)
 	{
-		InsertNode(TVI_ROOT,m_MaxNodeTree.m_MaxNodeTreeRoot[i]);
+		InsertNode(TVI_ROOT,m_MaxNodeTree.m_MaxNodeTreeRoot[i] , m_bSelected);
 	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -148,4 +150,11 @@ void CNodeViewDlg::OnDestroy()
     CDialog::OnDestroy();
    
     // TODO: Add your message handler code here
+}
+
+void CNodeViewDlg::OnTvnItemChangedNodeTree(NMHDR *pNMHDR, LRESULT *pResult)
+{
+    NMTVITEMCHANGE *pNMTVItemChange = reinterpret_cast<NMTVITEMCHANGE*>(pNMHDR);
+    // TODO: Add your control notification handler code here
+    *pResult = 0;
 }

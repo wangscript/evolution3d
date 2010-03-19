@@ -21,6 +21,8 @@ class _XEVOL_BASE_API_  xRenderApiImp : public IRenderApi
 public:
 	xRenderApiImp();
 	virtual ~xRenderApiImp();
+    virtual void          AddDeviceLostListener(IRenderApiDeviceLostListener* pResource){return ; }
+    virtual void          RemoveDeviceLostListener(IRenderApiDeviceLostListener* pResource){return ; }
     void                  addRenderObject(IRenderApiObject* pObject)     {return m_pRenderObjectSets->addRenderObject(pObject)    ; } 
 	void                  removeRenderObject(IRenderApiObject* pObject)  {return m_pRenderObjectSets->removeRenderObject(pObject) ; }
 	void                  dumpRenderObject()  {return m_pRenderObjectSets->dumpRenderObject() ; } 
@@ -30,6 +32,9 @@ public:
 	HFontRender           findFont(const wchar_t* fontName);
 	IFontRenderDevice*    fontRenderDevice();
 	IRenderObjectSets*    renderObjects(){return m_pRenderObjectSets ; }
+    virtual IBaseTexture* createTexture(int w , int h , ePIXEL_FORMAT fmt ,  bool bLockable  , int nMipMap , int nArraySize  , eResourceUsage usage  , eResourceAccessFlage access, eResourceBindType bindType);
+    virtual IBaseTexture* createTexture(int w , int h , int depth , ePIXEL_FORMAT fmt ,  bool bLockable  , int nMipMap , int nArraySize , eResourceUsage usage , eResourceAccessFlage access, eResourceBindType bindType);
+    virtual int           intCapsValue(const wchar_t* cfgName , int defValue) { return defValue ; }
 protected:
 	void                  __updateTextureLoaders();
 	xFontManager          m_FontManager;
@@ -54,6 +59,46 @@ protected:
 	TextureLoaderMap              m_TextureLoaderMap;
 };
 
+template <typename T> class TConstantValueBinder : public IShaderConstBinder
+{
+    IMPL_NONE_REFCOUNT_OBJECT_INTERFACE(TConstantValueBinder);
+public:
+    void     setDirty(){m_bDirty = true ;}
+    TConstantValueBinder(const T& _value) : m_ConstantValue(_value) {};
+    //返回true，表示变量被更新了
+    bool     updateConstant(IShaderConstantReflection* pConst)
+    {
+        return pConst->setData( (void*)&m_ConstantValue , sizeof(m_ConstantValue) );
+    }
+    IShaderConstBinder*   createInstance()
+    {
+        return this;
+    }
+protected:
+    const T&              m_ConstantValue;
+    bool                  m_bDirty;
+};
+
+class _XEVOL_BASE_API_ xConstantValueDataBinder : public IShaderConstBinder
+{
+    IMPL_NONE_REFCOUNT_OBJECT_INTERFACE(xConstantValueDataBinder);
+public:
+    void     setDirty(){m_bDirty = true ;}
+    xConstantValueDataBinder(void* pData , int dataLen) : m_ConstantValue(pData)  , m_DataLen(dataLen) {};
+    //返回true，表示变量被更新了
+    bool     updateConstant(IShaderConstantReflection* pConst)
+    {
+        return pConst->setData( m_ConstantValue , m_DataLen );
+    }
+    IShaderConstBinder*   createInstance()
+    {
+        return this;
+    }
+protected:
+    void*                 m_ConstantValue;
+    int                   m_DataLen;
+    bool                  m_bDirty;
+};
 
 class _XEVOL_BASE_API_ xRenderApiBase : public xRenderApiImp
 {
@@ -166,6 +211,8 @@ public:
 	virtual bool                        popDepthStencilState();
 	virtual bool                        setEventCallback(IRenderApiEventCallback* pCallback) { m_pCallback = pCallback ; return true; }
 	virtual IRenderApiEventCallback*    getEventCallback(){return m_pCallback ; }
+    void                                registeShaderConstBinder(const wchar_t* _name , void* pData , int dataLen);
+    void                                registeShaderConstBinder(const wchar_t* _name , const wchar_t* _alisName);
 	//D3D10RenderApi特有的
 public:
 	virtual bool                        removeLightingState(const wchar_t* _name);
@@ -205,7 +252,7 @@ protected:
 
 	xObjectStack<IRenderView>           m_RenderView;
 	//资源
-	xRenderApiObjectManager         m_objManager;
+	xRenderApiObjectManager            m_objManager;
 	xGpuProgramMgrImp                  m_GpuProgramMgr;
 	xBaseShaderMgr                     m_ShaderManager;
 	xRenderStateObjMgr                 m_StateObjMgr;
@@ -224,6 +271,8 @@ protected:
 	IRasterizerState*                  m_RasterizerState;  
 	IDepthStencilState*                m_DepthStencilState;
 	IRenderApiEventCallback*           m_pCallback;
+    //xPropertySet                       m_RenderProperty;
+    std::vector<IShaderConstBinder*>   m_vShaderConstBinders;
 
 };
 

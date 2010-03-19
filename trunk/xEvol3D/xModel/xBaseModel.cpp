@@ -4,6 +4,7 @@
 #include "xCoreSkeleton.h"
 #include "xBaseModel.h"
 #include "xCoreMeshMgr.h"
+#include "../RenderAPI/xBaseShader.h"
 using namespace xMathLib;
 BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xBaseModel  , IRenderApiResource);
@@ -147,11 +148,12 @@ bool xBaseModel::detachMesh(xCoreMesh* pMesh)
 bool  xBaseModel::createBoneFrameBuffer()
 {
       m_pBoneFrameBuffer = m_pRenderApi->findInputBuffer(L"BoneFrame");
-	  if(m_pBoneFrameBuffer == NULL)
-	  {
-		  m_pBoneFrameBuffer = m_pRenderApi->createConstBuffer( sizeof(xvec4) * 1024); 
-		  m_pRenderApi->setInputBuffer(L"BoneFrame" , m_pBoneFrameBuffer);
-	  }
+      if(m_pBoneFrameBuffer )
+          return true;
+
+      m_pBoneFrameBuffer = m_pRenderApi->createConstBuffer( sizeof(xvec4) * 1024); 
+	  m_pRenderApi->setInputBuffer(L"BoneFrame" , m_pBoneFrameBuffer);
+	
 	  xmat4 matList[256];
 	  for(int i  = 0 ; i < 256 ; i ++)
 	  {
@@ -180,7 +182,7 @@ bool xBaseModel::setAction(size_t idx)
 	 return true;
 }
 
-xCoreAction*  xBaseModel::coreAction(size_t idx )
+xBaseAction*  xBaseModel::coreAction(size_t idx )
 {
 	return m_Actions[idx];
 }
@@ -234,10 +236,11 @@ bool xBaseModel::setupAnimationTime(int actIdx , float actTime)
 	if(m_pSkeleton)
 		return true;
 
-	xCoreAction* _action = m_Actions[actIdx];
-	float frameTime = _action->info().m_lTime /(float) _action->info().m_nFrame;
+	xBaseAction* _action = m_Actions[actIdx];
+    const xActionInfo* pActInfo = _action->info();
+	float frameTime = pActInfo->m_lTime /(float) pActInfo->m_nFrame;
 	int frame = (int)(actTime/frameTime);
-	frame = frame % _action->info().m_nFrame;
+	frame = frame % pActInfo->m_nFrame;
 
 	size_t _nMeshs = m_Meshs.size();
 	for(size_t i = 0 ; i <  _nMeshs; i ++)

@@ -95,7 +95,8 @@ bool xD11RenderView::setRenderTarget(IRenderTarget* pRenderTarget , size_t rtIdx
 }
 bool xD11RenderView::setupDepthView(int w , int h , bool bSet)
 {
-    if( false == m_DepthTexture->create(w , h , PIXELFORMAT_DEPTH32) )
+    xTextureInitDesc initDesc(w , h , PIXELFORMAT_DEPTH32);
+    if( false == m_DepthTexture->create( initDesc , NULL , 0 ) )
     {
         return false;
     }
@@ -418,9 +419,9 @@ bool xD11RenderWindow::desc(xTextureDesc& _desc)
 bool xD11RenderWindow::create(IDXGISwapChain* pSwapChain , int width , int height)
 {
 	m_pSwapChain = pSwapChain;
-	DXGI_SWAP_CHAIN_DESC _desc;
-	m_pSwapChain->GetDesc(&_desc);
-	xD11GIFormatInfo* pFmtInfo = xD11ConstLexer::singleton()->GetPixelFormat(_desc.BufferDesc.Format);
+	m_pSwapChain->GetDesc(&m_SwapChainDesc);
+    m_DXGISampleDesc = m_pD11RenderApi->GetDXGISampleDesc(m_RTSampleDesc);
+	xD11GIFormatInfo* pFmtInfo = xD11ConstLexer::singleton()->GetPixelFormat(m_SwapChainDesc.BufferDesc.Format);
 	if(pFmtInfo == NULL)
 	{
 		m_WindowRT.m_TexDesc.m_fmt = PIXELFORMAT_R8G8B8A8;
@@ -446,6 +447,31 @@ bool  xD11RenderWindow::destory()
 	m_RenderTargets[0] = NULL;
 	XSAFE_RELEASE(m_RenderTargetsView[0]);
 	return xD11RenderView::destory();
+}
+
+bool xD11RenderWindow::NeedResize(int width , int height )
+{
+    if(m_SwapChainDesc.BufferDesc.Width == width && m_SwapChainDesc.BufferDesc.Height == height)
+    {
+        return false;
+    }
+    return true;
+}
+bool xD11RenderWindow::Present(UINT syncInterval , UINT Flags)
+{
+    m_pSwapChain->Present( 0, 0 );
+    return true;
+}
+
+bool xD11RenderWindow::GetSwapChainDesc( DXGI_SWAP_CHAIN_DESC& swap_desc)
+{
+    m_pSwapChain->GetDesc(&swap_desc);
+    return true;
+}
+
+DXGI_SWAP_CHAIN_DESC& xD11RenderWindow::SwapChainDesc()
+{
+    return m_SwapChainDesc;
 }
 
 END_NAMESPACE_XEVOL3D

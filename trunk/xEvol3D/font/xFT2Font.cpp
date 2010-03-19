@@ -24,6 +24,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "xFT2Font.h"
 #include "xFontRender.h"
 #include "../BaseLib/xI18N.h"
+
+#ifndef FT_PIX_FLOOR
+#define FT_PIX_FLOOR( x )     ( (x) & ~63 )
+#define FT_PIX_ROUND( x )     FT_PIX_FLOOR( (x) + 32 )
+#define FT_PIX_CEIL( x )      FT_PIX_FLOOR( (x) + 63 )
+#endif
+
 #ifdef _WIN32
 #ifndef _WIN32_WCE
 #pragma comment(lib , "freetype.lib")
@@ -36,6 +43,18 @@ BEGIN_NAMESPACE_XEVOL3D
 
 
 static FT_Library g_FT2Lib;
+
+int GetBoldenSize(bool bBold , int w )
+{
+	if(bBold == false ) return w ;
+	return w * 1.5f;
+}
+
+int GetBoldenStrength(bool bBold , int w )
+{
+	if(bBold == false ) return 0 ;
+	return w * 0.5f;
+}
 
 void xFT2IndexManager::setMaxIndex(int maxIndex)
 {
@@ -167,6 +186,255 @@ xFT2FontCharLoader::~xFT2FontCharLoader()
 
 }
 
+/*
+// 就是FT_Outline_Embolden
+FT_Error Old_FT_Outline_Embolden( FT_Outline*  outline, FT_Pos strength )
+{
+	FT_Vector*    points;
+	FT_Vector     v_prev, v_first, v_next, v_cur;
+	FT_Angle      rotate, angle_in, angle_out;
+	FT_Int        c, n, first;
+	FT_Int        orientation;
+
+	if ( !outline )
+		return FT_Err_Invalid_Argument;
+
+	strength /= 2;
+	if ( strength == 0 )
+		return FT_Err_Ok;
+
+	orientation = FT_Outline_Get_Orientation( outline );
+	if ( orientation == FT_ORIENTATION_NONE )
+	{
+		if ( outline->n_contours )
+			return FT_Err_Invalid_Argument;
+		else
+			return FT_Err_Ok;
+	}
+
+	if ( orientation == FT_ORIENTATION_TRUETYPE )
+		rotate = -FT_ANGLE_PI2;
+	else
+		rotate = FT_ANGLE_PI2;
+
+	points = outline->points;
+
+	first = 0;
+	for ( c = 0; c < outline->n_contours; c++ )
+	{
+		int  last = outline->contours[c];
+
+		v_first = points[first];
+		v_prev  = points[last];
+		v_cur   = v_first;
+
+		for ( n = first; n <= last; n++ )
+		{
+			FT_Vector    in, out;
+			FT_Angle    angle_diff;
+			FT_Pos        d;
+			FT_Fixed    scale;
+
+			if ( n < last )
+				v_next = points[n + 1];
+			else
+				v_next = v_first;
+
+			// compute the in and out vectors 
+			in.x = v_cur.x - v_prev.x;
+			in.y = v_cur.y - v_prev.y;
+
+			out.x = v_next.x - v_cur.x;
+			out.y = v_next.y - v_cur.y;
+
+			angle_in   = FT_Atan2( in.x, in.y );
+			angle_out  = FT_Atan2( out.x, out.y );
+			angle_diff = FT_Angle_Diff( angle_in, angle_out );
+			scale      = FT_Cos( angle_diff / 2 );
+
+			if ( scale < 0x4000L && scale > -0x4000L )
+				in.x = in.y = 0;
+			else
+			{
+				d = FT_DivFix( strength, scale );
+
+				FT_Vector_From_Polar( &in, d, angle_in + angle_diff / 2 - rotate );
+			}
+
+			outline->points[n].x = v_cur.x + strength + in.x;
+			//伀偙傟傪僐儊儞僩傾僂僩偟偨偩偗
+			//outline->points[n].y = v_cur.y + strength + in.y;
+
+			v_prev = v_cur;
+			v_cur  = v_next;
+		}
+
+		first = last + 1;
+	}
+
+	return FT_Err_Ok;
+}
+*/
+
+// 垂直加粗
+FT_Error FT_Outline_Embolden_Vert( FT_Outline*  outline, FT_Pos strength )
+{
+	FT_Vector*    points;
+	FT_Vector    v_prev, v_first, v_next, v_cur;
+	FT_Angle    rotate, angle_in, angle_out;
+	FT_Int        c, n, first;
+	FT_Int        orientation;
+
+	if ( !outline )
+		return FT_Err_Invalid_Argument;
+
+	strength /= 2;
+	if ( strength == 0 )
+		return FT_Err_Ok;
+
+	orientation = FT_Outline_Get_Orientation( outline );
+	if ( orientation == FT_ORIENTATION_NONE )
+	{
+		if ( outline->n_contours )
+			return FT_Err_Invalid_Argument;
+		else
+			return FT_Err_Ok;
+	}
+
+	if ( orientation == FT_ORIENTATION_TRUETYPE )
+		rotate = -FT_ANGLE_PI2;
+	else
+		rotate = FT_ANGLE_PI2;
+
+	points = outline->points;
+
+	first = 0;
+	for ( c = 0; c < outline->n_contours; c++ )
+	{
+		int  last = outline->contours[c];
+
+		v_first = points[first];
+		v_prev  = points[last];
+		v_cur   = v_first;
+
+		for ( n = first; n <= last; n++ )
+		{
+			FT_Vector    in, out;
+			FT_Angle    angle_diff;
+			FT_Pos        d;
+			FT_Fixed    scale;
+
+			if ( n < last )
+				v_next = points[n + 1];
+			else
+				v_next = v_first;
+
+			/**//* compute the in and out vectors */
+			in.x = v_cur.x - v_prev.x;
+			in.y = v_cur.y - v_prev.y;
+
+			out.x = v_next.x - v_cur.x;
+			out.y = v_next.y - v_cur.y;
+
+			angle_in   = FT_Atan2( in.x, in.y );
+			angle_out  = FT_Atan2( out.x, out.y );
+			angle_diff = FT_Angle_Diff( angle_in, angle_out );
+			scale      = FT_Cos( angle_diff / 2 );
+
+			if ( scale < 0x4000L && scale > -0x4000L )
+				in.x = in.y = 0;
+			else
+			{
+				d = FT_DivFix( strength, scale );
+
+				FT_Vector_From_Polar( &in, d, angle_in + angle_diff / 2 - rotate );
+			}
+
+			//outline->points[n].x = v_cur.x + strength + in.x;
+			//仾偙傟傪僐儊儞僩傾僂僩偟偨偩偗
+			outline->points[n].y = v_cur.y + strength + in.y;
+
+			v_prev = v_cur;
+			v_cur  = v_next;
+		}
+
+		first = last + 1;
+	}
+
+	return FT_Err_Ok;
+}
+
+// 新的加粗函数
+FT_Error FT2_Outline_Embolden( FT_Outline*  outline, FT_Pos str_h, FT_Pos str_v )
+{
+	if ( !outline ) return FT_Err_Invalid_Argument;
+	int orientation = FT_Outline_Get_Orientation( outline );
+	if ( orientation == FT_ORIENTATION_NONE )
+		if ( outline->n_contours ) return FT_Err_Invalid_Argument;
+	FT_Outline_Embolden_Vert( outline, str_v );
+	FT_Outline_Embolden( outline, str_h );
+	return FT_Err_Ok;
+}
+
+// 让一个字体槽加粗，并且填充其他的大小属性
+void FT2_GlyphSlot_Embolden( FT_GlyphSlot  slot , FT_Pos xEmbolden , FT_Pos yEmbolden)
+{
+	if(xEmbolden == 0 && yEmbolden == 0)
+		return;
+	FT_Library  library = slot->library;
+	FT_Face     face    = slot->face;
+	FT_Error    error;
+	FT_Pos      xstr = xEmbolden; 
+	FT_Pos      ystr = yEmbolden;
+
+
+	if ( slot->format != FT_GLYPH_FORMAT_OUTLINE &&
+		slot->format != FT_GLYPH_FORMAT_BITMAP )
+		return;
+
+	if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
+	{
+		FT_BBox oldBox;
+		FT_Outline_Get_CBox(&slot->outline , &oldBox);
+		error = FT2_Outline_Embolden( &slot->outline, xstr , ystr);
+		if ( error )
+			return;
+
+		FT_BBox newBox;
+		FT_Outline_Get_CBox(&slot->outline , &newBox);
+		xstr = (newBox.xMax - newBox.xMin) - (oldBox.xMax - oldBox.xMin);
+		ystr = (newBox.yMax - newBox.yMin) - (oldBox.yMax - oldBox.yMin);
+	}
+	else if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
+	{
+		xstr = FT_PIX_FLOOR( xstr );
+		if ( xstr == 0 )
+			xstr = 1 << 6;
+		ystr = FT_PIX_FLOOR( ystr );
+
+		error = FT_Bitmap_Embolden( library, &slot->bitmap, xstr, ystr );
+		if ( error )
+			return;
+	}
+
+	if ( slot->advance.x )
+		slot->advance.x += xstr;
+
+	if ( slot->advance.y )
+		slot->advance.y += ystr;
+
+	slot->metrics.width        += xstr;
+	slot->metrics.height       += ystr;
+	slot->metrics.horiBearingY += ystr;
+	slot->metrics.horiAdvance  += xstr;
+	slot->metrics.vertBearingX -= xstr / 2;
+	slot->metrics.vertBearingY += ystr;
+	slot->metrics.vertAdvance  += ystr;
+
+	if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
+		slot->bitmap_top += ystr >> 6;
+}
+
 bool xFT2FontCharLoader::load_font(const wchar_t* font_file , int _w , int _h)
 {
 	char strFontFile[1024] = {0};
@@ -222,7 +490,13 @@ bool xFT2FontCharLoader::_loadResource(wchar_t& _char , xFT2FontChar*& pRes, int
 	glyph_index = FT_Get_Char_Index( m_FT_Face, _char );
 	/* load glyph image into the slot (erase previous one) */
 	int error = FT_Load_Glyph( m_FT_Face, glyph_index, FT_LOAD_DEFAULT );
-
+    
+	if(m_bBold)
+	{
+		int xStrenth = GetBoldenStrength(m_bBold , m_w);
+		int yStrenth = GetBoldenStrength(m_bBold , m_h);
+		FT2_GlyphSlot_Embolden(m_FT_Face->glyph , xStrenth , yStrenth );
+	}
 	if(m_bAntilias)
 	{
 		error = FT_Render_Glyph( m_FT_Face->glyph, FT_RENDER_MODE_NORMAL );
@@ -272,11 +546,11 @@ bool xFT2FontCharLoader::_loadResource(wchar_t& _char , xFT2FontChar*& pRes, int
 
 	if(m_pRenderer->isTextureSupport( PIXELFORMAT_ALPHA8 ) )
 	{
-		pRes->m_pTexture = m_pRenderer->createLockableTexture(  width,height, PIXELFORMAT_ALPHA8   , false);//Alpha8);
+		pRes->m_pTexture = m_pRenderer->createTexture(  width,height, PIXELFORMAT_ALPHA8   , false);//Alpha8);
 	}																		 						
 	else																	 						
 	{																		 						
-		pRes->m_pTexture = m_pRenderer->createLockableTexture(  width,height, PIXELFORMAT_B8G8R8A8 , false);//RGBA);
+		pRes->m_pTexture = m_pRenderer->createTexture(  width,height, PIXELFORMAT_B8G8R8A8 , false);//RGBA);
 	}
 	
 	if(pRes->m_pTexture == NULL)
@@ -413,19 +687,22 @@ void xFT2FontCharLoader::setCacheSize(int maxSize , int maxFontW , int maxFontH)
 #ifdef _FONT_FULL_TEXTURE_
 	m_nCharOfRow = (int) ( sqrt( (float)maxSize ) );
 	
-	int tex_w = m_nCharOfRow * ( m_w * FONTSIZE_SCALE);
-	int tex_h = m_nCharOfRow * ( m_h * FONTSIZE_SCALE);
+	int xStrenth = GetBoldenStrength(m_bBold , m_w);
+	int yStrenth = GetBoldenStrength(m_bBold , m_h);
+
+	int tex_w = m_nCharOfRow * ( GetBoldenSize(m_bBold , m_w)* FONTSIZE_SCALE);
+	int tex_h = m_nCharOfRow * ( GetBoldenSize(m_bBold , m_h) * FONTSIZE_SCALE);
 	m_tex_w = tex_w;
 	m_tex_h = tex_h;
 	if( m_pTexture ) m_pTexture->KillObject();
 	m_idxManager.setMaxIndex(  m_nCharOfRow * m_nCharOfRow );
 	if( m_pRenderer->isTextureSupport(PIXELFORMAT_ALPHA8) )
 	{
-		m_pTexture = m_pRenderer->createLockableTexture( tex_w , tex_h , PIXELFORMAT_ALPHA8   , true);
+		m_pTexture = m_pRenderer->createTexture( tex_w , tex_h , PIXELFORMAT_ALPHA8   , true);
 	}																	 					
 	else																 					
 	{																	 					
-		m_pTexture = m_pRenderer->createLockableTexture(  tex_w , tex_h ,PIXELFORMAT_B8G8R8A8 ,  true);
+		m_pTexture = m_pRenderer->createTexture(  tex_w , tex_h ,PIXELFORMAT_B8G8R8A8 ,  true);
 	}
 	//m_pTexture->setFlipY( !m_pTexture->isFlipY() );
 #endif
@@ -597,8 +874,8 @@ bool xFT2Font::init( xXmlNode* pFontNode)
 	m_Info.bItalic    = fi.italic;
 	m_Info.bUnderLine = fi.underline;
 
-	m_Info.nMaxWidth  = fi.width;
-	m_Info.nMaxHeight = fi.height;
+	m_Info.nMaxWidth  = GetBoldenSize(fi.bold,fi.width );
+	m_Info.nMaxHeight = GetBoldenSize(fi.bold,fi.height);
 	wcsncpy(m_Info.strFamilly , famillyName , 32);
 	wcsncpy(m_Info.strName    , pFontName,         16);
 	m_Info.nHeight =  fi.height;

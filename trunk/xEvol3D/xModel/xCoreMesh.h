@@ -7,7 +7,7 @@ class _XEVOL_BASE_API_ xCoreMesh : public IRenderOtherRes
 {
 	IMPL_BASE_OBJECT_INTERFACE(xCoreMesh);
 public:
-	xCoreMesh(xBaseTextureMgr* pTexMgr, bool bSusMemCopy = false);
+	xCoreMesh(xBaseTextureMgr* pTexMgr, xCoreSkeleton* pSkeleton/* = NULL*/);
 	bool                    load(const wchar_t* fileName , unsigned long  arg);
 	bool                    load(const wchar_t* fileName , const unsigned int8* buf , size_t bufLen, unsigned long arg);
 	bool                    isLoaded();
@@ -19,7 +19,7 @@ public:
     virtual bool            draw(xCoreSkeleton* pSkeleton , xCoreActionFrame* pActionFrame);
 	virtual bool            setCurrentFrame(int iFrame);
     static IInputAssembler* CreateInputAssembler(int nUVChanel , IRenderApi* pRenderapi , bool bSkin);
-protected:
+ protected:
 	bool                    loadMaterial(xcomdoc& doc ,const wchar_t* _dir);
 	bool                    readSingleFrame(xcomdoc& doc , const wchar_t* _dir , unsigned int arg , bool bInvertVCoord);
 
@@ -59,6 +59,7 @@ protected:
     //只有GpuSkin为false的时候，这两个Buffer才有内容
     char*             m_pSkinVertexData;
     char*             m_pStaticVertexData;
+    xCoreSkeleton*    m_pSkeleton;
 protected:
 	xBaseTextureMgr*  m_pTexMgr;
 };

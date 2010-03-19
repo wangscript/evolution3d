@@ -8,39 +8,31 @@ BEGIN_NAMESPACE_XEVOL3D
 xTextureName::xTextureName()
 {
 	m_Name       = L"";
-	m_Width      = 0 ;
-	m_Height     = 0 ;
-	m_Depth      = 0 ;
-	m_fmt        = PIXELFORMAT_None;
-	m_ArraySize  = 1;
-	m_bR2Texture = false;
+    m_InitDesc.m_TextureDesc.m_fmt        = PIXELFORMAT_None;
 	m_Type       = RESOURCE_TEXTURE;
 }
 
 xTextureName::xTextureName(const wchar_t* fileName)
 {
 	m_Name       = fileName;
-	m_Width      = 0 ;
-	m_Height     = 0 ;
-	m_Depth      = 0 ;
-	m_fmt        = PIXELFORMAT_None;
-	m_ArraySize  = 1;
-	m_bR2Texture = false;
+	m_InitDesc.m_TextureDesc.m_fmt        = PIXELFORMAT_None;
 	m_Type       = RESOURCE_TEXTURE;
-	m_bLockable  = false;
 }
 
 xTextureName::xTextureName(const wchar_t* _Name , ePIXEL_FORMAT fmt , eResourceType type ,bool rtt, bool bLockable , int w , int h , int depth , int arraySize)
 {
 	m_Name       = _Name;
-	m_Width      = w ;
-	m_Height     = h ;
-	m_Depth      = depth ;
-	m_fmt        = fmt;
-	m_ArraySize  = arraySize;
-	m_bR2Texture = rtt;
+	m_InitDesc.m_TextureDesc.m_width      = w ;
+	m_InitDesc.m_TextureDesc.m_height     = h ;
+	m_InitDesc.m_TextureDesc.m_depth      = depth ;
+	m_InitDesc.m_TextureDesc.m_fmt        = fmt;
+    m_InitDesc.m_bReadable = bLockable;
+    if(type == RESOURCE_TEXTURECube)
+    {
+        m_InitDesc.m_TextureDesc.m_nArraySize = eTextureArray_CubeMap;
+    }
 	m_Type       = type;
-	m_bLockable  = bLockable;
+
 }
 
 xBaseTextureLoader::xBaseTextureLoader()
@@ -70,18 +62,11 @@ HBaseTexture  xBaseTextureLoader::loadTexture(const wchar_t* texName, bool bLoad
 	return load(_name ,bLoadImm , arg);
 }
 
-HBaseTexture  xBaseTextureLoader::loadTexture(const wchar_t* texName , ePIXEL_FORMAT fmt , int w , int h , int depth , eResourceType type, int arraySize, bool rtt, bool bLockable) 
+HBaseTexture  xBaseTextureLoader::loadTexture(const wchar_t* texName , xTextureInitDesc& initDesc , eResourceType type) 
 {
      xTextureName _name(texName);
-	 _name.m_ArraySize = arraySize;
-	 _name.m_bR2Texture = rtt;
-	 _name.m_Depth = depth;
-	 _name.m_fmt = fmt;
-	 _name.m_Height = h;
-	 _name.m_Name = texName;
+	 _name.m_InitDesc = initDesc;
 	 _name.m_Type = type;
-	 _name.m_Width = w;
-	 _name.m_bLockable = bLockable;
 	 return load(_name,true , 0);
 }
 
@@ -90,7 +75,7 @@ IBaseTexture*   xBaseTextureLoader::_loadTexture(const  xTextureName& _texName ,
 	const wchar_t* _extName = xFileSystem::singleton()->getFileExtName(_texName.m_Name.c_str() );
 	ITextureLoader* pTextureLoader = xTextureLdrMgr::singleton()->findTextureLoader(_extName);
 	if(pTextureLoader == NULL)
-		return m_pRenderApi->createFileTexture( fileName , buf,bufLen,arg );
+		return m_pRenderApi->createFileTexture( fileName , buf,bufLen,arg , &_texName.m_InitDesc);
 	return pTextureLoader->loadTexture(m_pRenderApi , fileName , buf , bufLen , _texName);
 
 }
@@ -177,27 +162,31 @@ bool  xBaseTextureLoader::_loadTexture(const xTextureName& _texName, IBaseTextur
 
 bool  xBaseTextureLoader::_loadResource(const xTextureName& strResName   , IBaseTexture* & pRes , int& ResSize, unsigned int arg)
 {
+    bool bReadable = (strResName.m_InitDesc.m_access & RESOURCE_ACCESS_READ) != 0 ;
+    const xTextureDesc& textDesc = strResName.m_InitDesc.m_TextureDesc;
+
 	if(strResName.m_Type == RESOURCE_TEXTURE)
 	{
 		return _loadTexture(strResName.m_Name.c_str() , pRes , ResSize , arg);        
 	}
 	else if(strResName.m_Type == RESOURCE_TEXTURE2D)
 	{
-		if(strResName.m_bR2Texture == false)
-		   pRes = m_pRenderApi->createLockableTexture(strResName.m_Width , strResName.m_Height , strResName.m_fmt , strResName.m_bLockable );
+        if(strResName.m_InitDesc.m_bindType & BIND_AS_RENDER_TARGET)
+            pRes = m_pRenderApi->createRenderableTexture(textDesc.m_width , textDesc.m_height , textDesc.m_depth , textDesc.m_fmt , bReadable); 
 		else
-		   pRes = m_pRenderApi->createRenderableTexture(strResName.m_Width , strResName.m_Height , strResName.m_Depth , strResName.m_fmt , strResName.m_bLockable); 
+            pRes = m_pRenderApi->createTexture(strResName.m_InitDesc , NULL , 0);
+		   
 		return pRes != NULL;
 	}
 	else if(strResName.m_Type == RESOURCE_RENDERTARGET)
 	{
-		IRenderTarget* pRT = m_pRenderApi->createRenderTarget(strResName.m_Width , strResName.m_Height , strResName.m_fmt , false , true);
+		IRenderTarget* pRT = m_pRenderApi->createRenderTarget(textDesc.m_width , textDesc.m_height ,  textDesc.m_fmt , false , true);
 		pRes = pRT->toTexture();
 		return pRes != NULL;
 	}
 	else if(strResName.m_Type == RESOURCE_DEPTHBUFFER)
 	{
-		IRenderTarget* pRT = m_pRenderApi->createDepthBuffer(strResName.m_Width , strResName.m_Height , strResName.m_fmt , false , false);
+		IRenderTarget* pRT = m_pRenderApi->createDepthBuffer(textDesc.m_width , textDesc.m_height ,  textDesc.m_fmt , false , false);
 		pRes = pRT->toTexture();
 		return pRes != NULL;
 	}

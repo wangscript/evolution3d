@@ -30,18 +30,79 @@ using namespace std;
 #include "xWindowImp.h"
 BEGIN_NAMESPACE_XEVOL3D
 
-
+#define MAPVKEY(x)   (x)
+#define UNMAPVKEY(x) (x)
 
 
 //Platform 里保存了所有为该Platform创建的窗口类．
+
+class CKeyBoardInput  : public IKeyboard 
+{
+public:
+	CKeyBoardInput()
+	{
+		memset(m_key, 0, sizeof(m_key));
+	}
+
+	~CKeyBoardInput()
+	{
+
+	}
+
+	bool          isKeyPressed(VIRTUAL_KEY vKey) 
+	{
+		::GetKeyboardState(m_key);	
+		int sysVKey = UNMAPVKEY(vKey);
+		return m_key[sysVKey]&0x80;
+	}
+
+	bool          isCharKey(VIRTUAL_KEY vKey)
+	{
+		::GetKeyboardState(m_key);	
+		unsigned short charCode;
+		int nSysVKey = UNMAPVKEY(vKey);
+		UINT nScanCode = MapVirtualKey(nSysVKey , 0);
+		int nChar = ToAscii(nSysVKey , nScanCode, m_key ,&charCode,0);
+		return nChar > 0;
+
+	}
+
+	bool          isKeyToggle(VIRTUAL_KEY vKey)
+	{
+		::GetKeyboardState(m_key);	
+		int sysVKey = UNMAPVKEY(vKey);
+		return m_key[sysVKey]&0x01;
+	}
+
+	unsigned short convert2Char(VIRTUAL_KEY vKey)
+	{
+		::GetKeyboardState(m_key);	
+		unsigned short charCode;
+		int nSysVKey = UNMAPVKEY(vKey);
+		UINT nScanCode = MapVirtualKey(nSysVKey , 0);
+		int nChar = ToAscii(nSysVKey , nScanCode, m_key ,&charCode,0);
+		if(nChar == 0) charCode = 0;
+		return charCode;
+	}
+
+	unsigned char getSysVirtualKey(VIRTUAL_KEY vKey)
+	{
+		return UNMAPVKEY(vKey);
+	}
+private:
+	BYTE   m_key[256];
+	WPARAM m_mouse_Key;
+};
+
 class PlatformWin32 : public  IPlatform
 {
 	IMPL_BASE_OBJECT_INTERFACE(PlatformWin32);
 protected:
-	int                  m_FrameTime;
-	int                  m_startTickt;
+	int                       m_FrameTime;
+	int                       m_startTickt;
 public:
-	IWindow*             m_pWindowInCreating;
+	IWindow*                  m_pWindowInCreating;
+    std::vector<std::wstring> m_vRegistedClass;
 public:
 	PlatformWin32();
 	~PlatformWin32();
@@ -88,7 +149,7 @@ public:
 	//处理消息
 	bool            dispatchMsg(xWindowMsg & msg);
 	bool            setMessageTranslator(ISysEventTranslator* pTranslator);
-
+	IKeyboard*      getKeyboard(){return &m_Keyboard ; }
 private:
 	bool            insertWindow(IWindow*);
 	bool            insertWindow(IWindow* , HWND hWnd);
@@ -103,16 +164,11 @@ public:
 public:
 	static    LONG CALLBACK windowProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam); 
 private:
-
+    CKeyBoardInput  m_Keyboard;
 	static bool     m_bKeyPressed[256];
-
 	typedef         map<HWND,IWindow*> WindowMap;
-
-
-	WindowMap       m_Windows;
-
-	HINSTANCE       m_hInstance;
-
+	WindowMap              m_Windows;
+	HINSTANCE              m_hInstance;
 	static Win32WindowImp* m_inCreatingWnd;
 };
 

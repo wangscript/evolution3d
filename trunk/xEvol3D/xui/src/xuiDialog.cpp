@@ -259,30 +259,22 @@ bool xuiDialog::draw()
 {
     if(m_bIconize == false)
     {
-        m_pWindowMgr->drawRectf(0,NULL,m_state.m_Region.Rect().v, m_state.m_color);
+        xuiWindow::draw();
         //Draw userdef content
         onDraw();
+        //int nCtrl  = (int)m_vControls.size();
+        //for(int i = 0 ; i < nCtrl ; ++i)
+        //{
+        //    xuiControl* pControl = m_vControls[i];
+        //    pControl->draw();
+        //}
+        ////Draw Caption
+        //if(m_pCaption) m_pCaption->draw();
 
-        int nCtrl  = (int)m_vControls.size();
-        for(int i = 0 ; i < nCtrl ; ++i)
-        {
-            xuiControl* pControl = m_vControls[i];
-            pControl->draw();
-        }
-
-        //Draw Caption
-        if(m_pCaption) m_pCaption->draw();
-
-        xuiWindow::draw();
     }
-    else
+    else if(m_pCaption) 
     {
-        if(m_pCaption) m_pCaption->draw();
-        if(m_state.m_border.m_size > 0)
-        {
-            xuiRect _rect = m_pCaption->getWndAbsRect();
-            this->_drawRect(_rect , m_state.m_border.m_color, m_state.m_border.m_bevel);
-        }
+        m_pCaption->draw();
     }
 
     return true;

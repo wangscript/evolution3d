@@ -51,7 +51,14 @@ bool xMaterial::render(IDrawElement* pObject ,unsigned long passedTime)
      return  pObject->render(passedTime);
 }
 
-
+IGpuProgram*  xMaterial::gpuProgram() 
+{
+    return NULL;
+}
+bool  xMaterial::setGpuProgram(xGpuProgramName& _name)
+{
+    return false;
+}
 IRenderEffect::IRenderEffect( IBaseRenderer* pRenderer)
 :IRenderObject(pRenderer)
 {

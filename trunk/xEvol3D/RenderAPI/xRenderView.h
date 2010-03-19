@@ -23,7 +23,7 @@ public:
 	virtual ~IRenderTarget();
 	virtual IBaseTexture* toTexture() = 0;
 	virtual bool          desc(xTextureDesc& desc) = 0;
-	virtual bool          grabRenderTagetData(int x , int y , int w , int h , void* pData) = 0;
+	virtual bool          grabRenderTagetData(void* pData , int x , int y , int w , int h) = 0;
 	virtual bool          saveToFile(const wchar_t* fileName) = 0;
 };
 

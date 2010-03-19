@@ -183,7 +183,7 @@ public:
 		const wchar_t * pBase = p;
 		text.clear();
 		assert( p );
-		while( p && *p &&	( *p != '<' && *p !=' ' && *p !='\t' && *p != 0x0a  && *p != 0x0d)  )
+		while( p && *p &&	( *p != '(' && *p !=' ' && *p !='\t' && *p != 0x0a  && *p != 0x0d)  )
 		{
 			p += GetCStyleChar(p , text);
 		}
@@ -209,7 +209,8 @@ public:
 
 static xGpuProgNameParserLexer gs_Lexer;
 
-xGpuProgNameParser::xShaderSocketInfo* xGpuProgNameParser::xShaderName::findSocket(const wchar_t* socketName)
+//=================================
+xShaderSocketInfo* xShaderName::findSocket(const wchar_t* socketName)
 {
 	size_t nSockets = m_Sokects.size() ;
 	for(size_t  i =0 ; i < nSockets ;  i ++)
@@ -220,7 +221,7 @@ xGpuProgNameParser::xShaderSocketInfo* xGpuProgNameParser::xShaderName::findSock
 	return NULL;
 }
 
-xGpuProgNameParser::xShaderSocketInfo* xGpuProgNameParser::xShaderName::findSocket(const size_t   socketIdx)
+xShaderSocketInfo* xShaderName::findSocket(const size_t   socketIdx)
 {
 	size_t nSockets = m_Sokects.size() ;
 	for(size_t  i =0 ; i < nSockets ;  i ++)
@@ -230,17 +231,34 @@ xGpuProgNameParser::xShaderSocketInfo* xGpuProgNameParser::xShaderName::findSock
 	}
 	return NULL;
 }
-
-void xGpuProgNameParser::xShaderName::toName(ds_wstring& strName)
+bool xShaderName::removeNode(const wchar_t* nodeName)
 {
-	strName = m_strName;
+    size_t nSockets = m_Sokects.size() ;
+    for(size_t  i =0 ; i < nSockets ;  i ++)
+    {
+        xShaderSocketInfo& socketInfo = m_Sokects[i];
+        std::ds_wstring_vector::iterator pos = socketInfo.m_attachNodes.begin();
+        for(; pos != socketInfo.m_attachNodes.end() ; pos ++)
+        {
+            if(*pos == nodeName)
+            {
+                socketInfo.m_attachNodes.erase( pos );
+                return true;
+            }
+        }
+    }
+    return false;
+}
+void xShaderName::toName(ds_wstring& strName)
+{
+	strName = m_strMainNodeName;
 	if(m_Sokects.size() == 0)
 		return ;
-	strName += '<';
+	strName += '(';
 	size_t nSockets = m_Sokects.size() ;
 	for(size_t  i =0 ; i < nSockets ;  i ++)
 	{
-		xGpuProgNameParser::xShaderSocketInfo& Socket = m_Sokects[i];
+		xShaderSocketInfo& Socket = m_Sokects[i];
 		if(Socket.m_attachNodes.size() == 0)
 			continue;
 		if(Socket.m_idx == -1)
@@ -261,29 +279,167 @@ void xGpuProgNameParser::xShaderName::toName(ds_wstring& strName)
 		}
 		strName += ';';
 	}
-	strName += '>';
+	strName += ')';
 	return ;
+}
+
+xShaderSocketInfo* xShaderName::addSocket(int idx , const wchar_t* socketName)
+{
+    xShaderSocketInfo info;
+    info.m_name = idx >= 0 ? L"" : socketName;
+    info.m_idx = idx;
+    m_Sokects.push_back(info);
+    xShaderSocketInfo* pSocketInfo = & m_Sokects[ m_Sokects.size() - 1 ];
+    return pSocketInfo;
+}
+
+void xShaderName::addSocket(const xShaderSocketInfo& Socket)
+{
+    m_Sokects.push_back(Socket);
+}
+
+const wchar_t* xShaderName::mainNodeName() 
+{ 
+    return m_strMainNodeName.c_str() ; 
+}
+
+bool xShaderName::isNull()
+{ 
+    return m_strMainNodeName.length() == 0 ; 
+}
+
+xShaderName::xShaderName()
+{
+    m_strMainNodeName = L"";
 }
 
 static int StringToIdx(const wchar_t* idx)
 {
-	for(size_t i = 0 ; i < wcslen(idx) ; i ++)
-	{
-		if( (idx[i]<'0')||(idx[i]>'9') )
-			return -1;
-	}
-	return _wtoi(idx);
+    for(size_t i = 0 ; i < wcslen(idx) ; i ++)
+    {
+        if( (idx[i]<'0')||(idx[i]>'9') )
+            return -1;
+    }
+    return _wtoi(idx);
 }
+
+
+bool xShaderName::parse(const wchar_t* _shaderName)
+{
+    m_Sokects.clear();
+    ds_wstring _shaderFile;
+    const wchar_t* _code = _shaderName;
+
+    //或者Shader的主文件名
+    _code += gs_Lexer.getFileName(_code , _shaderFile);
+    if(_shaderFile.length() == 0 )
+        return false;
+
+    //设置主节点的名字
+    m_strMainNodeName = _shaderFile;
+    //开始检测括号里的数据
+    _code += gs_Lexer.skipWhiteSpace(_code);
+    if(*_code != '(' )//没有加Node
+        return true;
+
+    _code += 1;
+
+    while(*_code != 0 && *_code !=')')
+    {
+        //开始读取socket名字
+        _code += gs_Lexer.skipWhiteSpace(_code);
+        ds_wstring socketName;
+        _code += gs_Lexer.getNodeSocketName(_code  , socketName);
+        if(socketName.length() == 0 )
+            return true;
+
+        //Socket名字后面应该接:字符
+        _code += gs_Lexer.skipWhiteSpace(_code);
+        if(*_code != ':' )//没有加Node
+        {
+            XEVOL_LOG(eXL_DEBUG_NORMAL,"Shader标准Name中的socket=%s后未接:符号\n",socketName.c_str() );
+            return true;
+        }
+        _code ++ ;
+        _code += gs_Lexer.skipWhiteSpace(_code);
+
+        //创建ShaderSokect;
+
+        int idx = StringToIdx(socketName.c_str() );
+        xShaderSocketInfo* pSocketInfo = NULL;
+        if(idx == -1)
+        {
+            pSocketInfo = findSocket(socketName.c_str() );
+        }
+        else
+        {
+            pSocketInfo = findSocket( idx );
+        }
+        if(pSocketInfo == NULL)
+        {
+            pSocketInfo = addSocket(idx , socketName.c_str() );
+        }
+
+        //Socket信息读取完了。加入到Socket列表里了。
+        //现在来读取第一个Node名字
+        while(*_code != 0 && *_code != ';' &&  *_code != ')')
+        {
+            ds_wstring _nodeName;
+            _code += gs_Lexer.getNodeSocketName(_code  , _nodeName);
+            if(socketName.length() == 0 )
+                continue;
+            _code += gs_Lexer.skipWhiteSpace(_code );
+            pSocketInfo->m_attachNodes.push_back(_nodeName.c_str() );
+
+
+            _code += gs_Lexer.skipWhiteSpace(_code);
+
+            if(*_code == ',' )
+            {
+                _code ++ ;
+                _code += gs_Lexer.skipWhiteSpace(_code);
+                continue;
+            }
+            else if(*_code == ')')
+            {
+                return true;
+            }
+            else if(*_code == ';')
+            {
+                _code ++ ;
+                _code += gs_Lexer.skipWhiteSpace(_code);
+                break;
+            }
+            else
+            {
+                XEVOL_LOG(eXL_DEBUG_NORMAL,"Shader标准Name中的Node=%s后的字符位置\n",_nodeName.c_str() );
+                return true;
+            }
+        }
+
+    }
+    return true;
+
+}
+//===================
 
 
 xGpuProgNameParser::xGpuProgNameParser(xGpuProgramName& _name)
 {
+    for(size_t i = 0 ; i < eShader_Max ; i ++)
+    {
+        m_ShaderNames[i].setMainNode( L"" ); 
+    }
+
 	parse(_name);
 }
 
 xGpuProgNameParser::xGpuProgNameParser()
 {
-
+    for(size_t i = 0 ; i < eShader_Max ; i ++)
+    {
+        m_ShaderNames[i].setMainNode(L""); 
+    }
 }
 
 bool xGpuProgNameParser::parse(const xGpuProgramName& _name)
@@ -309,125 +465,26 @@ void xGpuProgNameParser::toName(xGpuProgramName& _name)
 {
 	_name.clear();
 	_name.m_bLoadFromFile = false;
-	ds_wstring _strVS = L"";
-	ds_wstring _strPS = L"";
-	ds_wstring _strGS = L"";
-	if(m_VertexShader.m_strName.length() > 0)
-	{
-		m_VertexShader.toName(_strVS);		
-	}
-	if(m_PixelShader.m_strName.length() > 0)
-	{
-		m_PixelShader.toName(_strPS);		
-	}
-	if(m_GeomShader.m_strName.length() > 0)
-	{
-		m_GeomShader.toName(_strGS);		
-	}
-	_name.set(_strVS.c_str() , _strPS.c_str() , _strGS.c_str() );
+	ds_wstring _strShaderName[eShader_Max]  ;
+    const wchar_t* shaderName[eShader_Max] = {NULL};
+    for(int i = 0 ; i  < eShader_Max  ; i ++)
+    {
+        shaderName[i] = NULL;
+        if( !m_ShaderNames[i].isNull() )
+        {
+           m_ShaderNames[i].toName(_strShaderName[i]);
+           shaderName[i] = _strShaderName[i].c_str();
+        }
+    }
+    _name.set(shaderName);
 	return ;
 }
 
 bool xGpuProgNameParser::setShaderName(eShaderType _shaderType , const wchar_t* _shaderName)
 {
 	xShaderName* pShaderName = _getShader(_shaderType);
-	ds_wstring _shaderFile;
-	const wchar_t* _code = _shaderName;
-
-	//或者Shader的主文件名
-	_code += gs_Lexer.getFileName(_code , _shaderFile);
-	if(_shaderFile.length() == 0 )
-		return false;
-
-	pShaderName->m_strName = _shaderFile;
-	//开始检测括号里的数据
-	_code += gs_Lexer.skipWhiteSpace(_code);
-	if(*_code != '<' )//没有加Node
-		return true;
-
-	_code += 1;
-
-	while(*_code != 0 && *_code !='>')
-	{
-		//开始读取socket名字
-		_code += gs_Lexer.skipWhiteSpace(_code);
-		ds_wstring socketName;
-		_code += gs_Lexer.getNodeSocketName(_code  , socketName);
-		if(socketName.length() == 0 )
-			return true;
-
-		//Socket名字后面应该接:字符
-		_code += gs_Lexer.skipWhiteSpace(_code);
-		if(*_code != ':' )//没有加Node
-		{
-			XEVOL_LOG(eXL_DEBUG_NORMAL,"Shader标准Name中的socket=%s后未接:符号\n",socketName.c_str() );
-			return true;
-		}
-		_code ++ ;
-		_code += gs_Lexer.skipWhiteSpace(_code);
-
-		//创建ShaderSokect;
-
-		int idx = StringToIdx(socketName.c_str() );
-		xShaderSocketInfo* pSocketInfo = NULL;
-		if(idx == -1)
-		{
-			pSocketInfo = pShaderName->findSocket(socketName.c_str() );
-		}
-		else
-		{
-			pSocketInfo = pShaderName->findSocket( idx );
-		}
-		if(pSocketInfo == NULL)
-		{
-			xShaderSocketInfo info;
-			info.m_name = idx >= 0 ? L"" : socketName;
-			info.m_idx = idx;
-			pShaderName->m_Sokects.push_back(info);
-			pSocketInfo = & pShaderName->m_Sokects[ pShaderName->m_Sokects.size() - 1 ];
-		}
-
-		//Socket信息读取完了。加入到Socket列表里了。
-		//现在来读取第一个Node名字
-		while(*_code != 0 && *_code != ';' && *_code != '>')
-		{
-			ds_wstring _nodeName;
-			_code += gs_Lexer.getNodeSocketName(_code  , _nodeName);
-			if(socketName.length() == 0 )
-				continue;
-			_code += gs_Lexer.skipWhiteSpace(_code );
-			pSocketInfo->m_attachNodes.push_back(_nodeName.c_str() );
-
-
-			_code += gs_Lexer.skipWhiteSpace(_code);
-
-			if(*_code == ',' )
-			{
-				_code ++ ;
-				_code += gs_Lexer.skipWhiteSpace(_code);
-				continue;
-			}
-			else if(*_code == '>')
-			{
-				return true;
-			}
-			else if(*_code == ';')
-			{
-				_code ++ ;
-				_code += gs_Lexer.skipWhiteSpace(_code);
-				break;
-			}
-			else
-			{
-				XEVOL_LOG(eXL_DEBUG_NORMAL,"Shader标准Name中的Node=%s后的字符位置\n",_nodeName.c_str() );
-				return true;
-			}
-		}
-
-	}
-
-
-	return true;
+    if(pShaderName == NULL) return false;
+   return pShaderName->parse(_shaderName);
 }
 
 void xGpuProgNameParser::addShaderNode(eShaderType _shaderType , const wchar_t* _nodeName, const wchar_t* _socketName )
@@ -446,33 +503,17 @@ void xGpuProgNameParser::addShaderNode(eShaderType _shaderType , const wchar_t* 
 	}
 	if(pSocketInfo == NULL)
 	{
-		xShaderSocketInfo info;
-		info.m_name = idx >= 0 ? L"" : _socketName;
-		info.m_idx = idx;
-		pShaderName->m_Sokects.push_back(info);
-		pSocketInfo = & pShaderName->m_Sokects[ pShaderName->m_Sokects.size() - 1 ];
-	}
+		pSocketInfo = pShaderName->addSocket( idx , _socketName);
+    }
 	pSocketInfo->m_attachNodes.push_back( _nodeName );
 	return ;
 }
 
-xGpuProgNameParser::xShaderName* xGpuProgNameParser::_getShader(eShaderType _shaderType)
+xShaderName* xGpuProgNameParser::_getShader(eShaderType _shaderType)
 {
-	xShaderName* pShaderName = NULL;
-	switch(_shaderType)
-	{
-	case eShader_PixelShader:
-		pShaderName = &m_PixelShader;
-		break;
-	case eShader_VertexShader:
-		pShaderName = &m_VertexShader;
-		break;
-	case eShader_GeometryShader:
-		pShaderName = &m_GeomShader;
-		break;
-	}
-	return pShaderName;
+	return &m_ShaderNames[_shaderType];
 }
+
 void xGpuProgNameParser::addShaderNode(eShaderType _shaderType , const wchar_t* _nodeName , size_t _socketIdx )
 {
 	xShaderName* pShaderName = _getShader(_shaderType);
@@ -480,11 +521,7 @@ void xGpuProgNameParser::addShaderNode(eShaderType _shaderType , const wchar_t* 
 	xShaderSocketInfo* pSocketInfo = pShaderName->findSocket( idx );
 	if(pSocketInfo == NULL)
 	{
-		xShaderSocketInfo info;
-		info.m_name =  L"" ;
-		info.m_idx  = idx;
-		pShaderName->m_Sokects.push_back(info);
-		pSocketInfo = & pShaderName->m_Sokects[ pShaderName->m_Sokects.size() - 1 ];
+		pSocketInfo = pShaderName->addSocket( idx , L"");
 	}
 	pSocketInfo->m_attachNodes.push_back( _nodeName );
 	return ;
@@ -513,7 +550,7 @@ bool xGpuProgNameParser::generateCode(eShaderType _shaderType  , xShaderCodeNode
 	xShaderName* pShaderName = _getShader(_shaderType);
 
 	//如果Main Code 没有找到，则返回错误
-	HShaderCodeNode hMainCode = pNodeMgr->add(pShaderName->m_strName.c_str() , 0 , true);
+	HShaderCodeNode hMainCode = pNodeMgr->add(pShaderName->mainNodeName() , 0 , true);
 	if(hMainCode.getResource() == NULL)
 		return false;
 
@@ -528,7 +565,7 @@ bool xGpuProgNameParser::generateCode(eShaderType _shaderType  , xShaderCodeNode
 	}
 
 	//如果没有附加任何Node，则调用主Node本身生成默认的 code。
-	if(pShaderName->m_Sokects.size() == 0)
+	if(pShaderName->nSokects() == 0)
 	{
 		AddImportLib(_code, vLibImportSet, pNodeMgr);
 		hMainCode->generateCode(_code);
@@ -538,7 +575,7 @@ bool xGpuProgNameParser::generateCode(eShaderType _shaderType  , xShaderCodeNode
 	if(hMainCode->isSkeletonNode() == false)
 	{
 		XEVOL_LOG(eXL_DEBUG_HIGH,"Shader Node 不能作为主节点使用node name=");
-		XEVOL_LOG(eXL_DEBUG_HIGH,pShaderName->m_strName.c_str() );
+		XEVOL_LOG(eXL_DEBUG_HIGH,pShaderName->mainNodeName() );
 		XEVOL_LOG(eXL_DEBUG_HIGH,"\n");
 		AddImportLib(_code, vLibImportSet, pNodeMgr);
 		hMainCode->generateCode(_code);
@@ -549,14 +586,15 @@ bool xGpuProgNameParser::generateCode(eShaderType _shaderType  , xShaderCodeNode
 	//对于那些不存在的Socket，我们要去掉，并给出提示
 
 	//从传入的ShaderName构造一个新的规范的ShaderName
-	xShaderName shaderName ;
-	shaderName.m_strName = pShaderName->m_strName;
-	xShaderSocketInfos& sockets = shaderName.m_Sokects;
-	size_t _nSockets = pShaderName->m_Sokects.size() ;
+	xShaderName newShaderName ;
+	newShaderName.setMainNode ( pShaderName->mainNodeName() ) ;
+	size_t _nSockets = pShaderName->nSokects() ; // m_Sokects.size() ;
 	for(size_t i = 0 ; i < _nSockets;  i ++)
 	{
-		ds_wstring& socketName = pShaderName->m_Sokects[i].m_name;
-		int         socketIdx  = pShaderName->m_Sokects[i].m_idx;
+        xShaderSocketInfo* pSocketInfo = pShaderName->findSocket(i);
+
+		ds_wstring& socketName = pSocketInfo->m_name ; // pShaderName->m_Sokects[i].m_name;
+		int         socketIdx  = pSocketInfo->m_idx  ; // pShaderName->m_Sokects[i].m_idx;
 		xShaderNodeSocket* pSocket = hMainCode->findSocket(socketIdx , socketName.c_str() );
 		if(pSocket == NULL)
 		{
@@ -566,20 +604,21 @@ bool xGpuProgNameParser::generateCode(eShaderType _shaderType  , xShaderCodeNode
 		}
 		else
 		{
-			sockets.push_back( pShaderName->m_Sokects[i]) ;
+			newShaderName.addSocket( *pSocketInfo ) ;//.push_back( pShaderName->m_Sokects[i]) ;
 		}
 
 	}
 
 	//如果附加了Code，则先要先找出所有的Node, 并且，这个Node一定要是Slot类型的
 	vHShaderCodeNodes _nodes;
-	_nSockets = sockets.size() ;
+    _nSockets = newShaderName.nSokects();
 	for(size_t i = 0 ; i < _nSockets;  i ++)
 	{
-		size_t nAttachNodes = sockets[i].m_attachNodes.size();
+        xShaderSocketInfo* pSocketInfo = newShaderName.findSocket(i);
+		size_t nAttachNodes = pSocketInfo->m_attachNodes.size();
 		for(size_t j = 0 ; j < nAttachNodes ; j ++ )
 		{
-			ds_wstring& nodeName = sockets[i].m_attachNodes[j];
+			ds_wstring& nodeName = pSocketInfo->m_attachNodes[j];
 			HShaderCodeNode hCodeNode = pNodeMgr->add(nodeName.c_str() , 0 , true);
 			if(hCodeNode.getResource() == NULL)
 			{
@@ -664,8 +703,8 @@ bool xGpuProgNameParser::generateCode(eShaderType _shaderType  , xShaderCodeNode
 			//如果是默认代码，则要判断这个section指定的sockt上有没有绑定Node
 			const wchar_t* socketName = pSection->name();
 			const int      socketIdx  = hMainCode->findSocketIdx( socketName );
-			xShaderSocketInfo* pSocketInfo = shaderName.findSocket(socketName);
-			if(pSocketInfo == NULL) pSocketInfo = shaderName.findSocket( socketIdx );
+			xShaderSocketInfo* pSocketInfo = newShaderName.findSocket(socketName);
+			if(pSocketInfo == NULL) pSocketInfo = newShaderName.findSocket( socketIdx );
 			//所在的Socket上没有绑定任何Node
 			if(pSocketInfo == NULL || pSocketInfo->m_attachNodes.size() == 0)
 			{
@@ -677,8 +716,8 @@ bool xGpuProgNameParser::generateCode(eShaderType _shaderType  , xShaderCodeNode
 			//如果是默认代码，则要判断这个section指定的sockt上有没有绑定Node
 			const wchar_t* socketName = pSection->name();
 			const int      socketIdx  = hMainCode->findSocketIdx( socketName );
-			xShaderSocketInfo* pSocketInfo = shaderName.findSocket(socketName);
-			if(pSocketInfo == NULL) pSocketInfo = shaderName.findSocket( socketIdx );
+			xShaderSocketInfo* pSocketInfo = newShaderName.findSocket(socketName);
+			if(pSocketInfo == NULL) pSocketInfo = newShaderName.findSocket( socketIdx );
 			//所在的Socket上绑定了Node
 			if(pSocketInfo && pSocketInfo->m_attachNodes.size() != 0)
 			{

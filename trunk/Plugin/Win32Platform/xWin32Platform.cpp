@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define new XNEW_OP
 
 #pragma  comment(lib,"winmm.lib")
-
+extern HANDLE Global_hModuleHandle;
 
 #define WIN32PLATFORM  L"Win32"
 
@@ -44,7 +44,10 @@ IMPL_BASE_OBJECT_CLASSID(PlatformWin32 , IPlatform)
 bool     PlatformWin32::m_bKeyPressed[256]={0};
 
 
+
 bool ConvertToXEvolMsg(xWindowMsg& WinMsg , HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam);
+
+
 
 /*-------------------------------------------------------------
 工厂类．创建Platform
@@ -85,7 +88,7 @@ PlatformWin32::PlatformWin32()
 	//得到命令行参数．
 	CoInitialize(NULL);
 	//得到当前工作路径
-	m_hInstance = ::GetModuleHandle(NULL);
+	m_hInstance = (HINSTANCE)Global_hModuleHandle;
 
 }
 
@@ -123,12 +126,18 @@ bool PlatformWin32::close()
 		len = m_Windows.size();
 	}
 	m_pCurrentApplication = NULL;
+    HINSTANCE hExeInstance = GetModuleHandle(NULL);
+    for(size_t i = 0 ; i < m_vRegistedClass.size() ; i ++)
+    {
+        UnregisterClassW(m_vRegistedClass[i].c_str() , hExeInstance );
+    }
 	CoUninitialize();
 	return true;
 }
 
 bool PlatformWin32::_registerWindow(WIN_CREATE_STRUCT& createStruct)
 {
+    HINSTANCE hExeInstance = GetModuleHandle(NULL);
 	WNDCLASSEX  wndclass ;
 	wndclass.cbSize        = sizeof (wndclass) ;
 
@@ -136,7 +145,7 @@ bool PlatformWin32::_registerWindow(WIN_CREATE_STRUCT& createStruct)
 	wndclass.lpfnWndProc   = PlatformWin32::windowProc;
 	wndclass.cbClsExtra    = 0 ;
 	wndclass.cbWndExtra    = 0 ;
-	wndclass.hInstance     = getInstance();//hInstance ;
+	wndclass.hInstance     = hExeInstance;//hInstance ;
 	wndclass.hIcon         = LoadIcon(NULL,IDI_APPLICATION) ;// (wndclass.hInstance, MAKEINTRESOURCE(IDI_DGE) ) ;
 	wndclass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
 	LOGBRUSH longBrush =
@@ -152,6 +161,7 @@ bool PlatformWin32::_registerWindow(WIN_CREATE_STRUCT& createStruct)
 
 	// Register the class
 	RegisterClassEx(&wndclass);
+    m_vRegistedClass.push_back(wndclass.lpszClassName);
 	return true;
 }
 
@@ -221,9 +231,36 @@ IWindow*        PlatformWin32::createWindow(WIN_CREATE_STRUCT& createStruct  , c
 	return pWindow;
 }
 
+IRenderApiCreator* GetRenderApiCreate(const wchar_t* renderApiName)
+{
+	if(renderApiName == NULL ) renderApiName = L"Auto";
+	if(renderApiName == std::wstring(L"Auto"))
+	{
+		OSVERSIONINFOW _version;
+		ZeroMemory(&_version , sizeof(_version) );
+		_version.dwOSVersionInfoSize = sizeof(_version);
+		GetVersionExW(&_version);
+		if(_version.dwMajorVersion >=6 && _version.dwMinorVersion >= 1) //Win7
+		{
+			renderApiName = L"Direct3D11";
+		}
+		else if(_version.dwMajorVersion ==6 && _version.dwMinorVersion == 0 ) //Win Vista
+		{
+			renderApiName = L"Direct3D10";
+		}
+		else 
+		{
+			renderApiName = L"Direct3D9";
+		}
+	}
+	return  xRendererAPIManager::findAPICreator(renderApiName);
+}
+
+
+
 IRenderApi*   PlatformWin32::createRenderApi(int iWnd , const wchar_t* RenderApi , const xXmlNode* params)
 {
-	IRenderApiCreator * pCreator = xRendererAPIManager::findAPICreator(RenderApi);
+	IRenderApiCreator * pCreator = GetRenderApiCreate(RenderApi);
 	
 	if(pCreator == NULL)
 	{
@@ -239,6 +276,10 @@ IRenderApi*   PlatformWin32::createRenderApi(int iWnd , const wchar_t* RenderApi
 	int w = 0;//params?params->int_value(L"Backbuffer.Width")  : 0;
 	int h = 0;//params?params->int_value(L"Backbuffer.Height") : 0;
 	IRenderApi* pOutRenderApi = pCreator->createRenderApi(iWnd , NULL , w , h , params );
+
+	if(pOutRenderApi == NULL && RenderApi != std::wstring(L"Direct3D9"))
+		return createRenderApi(iWnd , L"Direct3D9" , params);
+
 	return pOutRenderApi;
 }
 
@@ -246,16 +287,22 @@ IWindow*   PlatformWin32::createRenderWindow(IRenderApi** pOutRenderApi ,  WIN_C
 {
      IWindow* pWindow = createWindow(createStruct , params);
 	 if(pWindow == NULL) return NULL;
-	 IRenderApiCreator * pCreator = xRendererAPIManager::findAPICreator(RenderApi);
+	 IRenderApiCreator * pCreator = GetRenderApiCreate(RenderApi);
 	 if(pCreator == NULL)
 	 {
 		 *pOutRenderApi = NULL;
 		 return pWindow;
 	 }
 
+
 	 int w = params?params->int_value(L"Backbuffer.Width")  : 0;
 	 int h = params?params->int_value(L"Backbuffer.Height") : 0;
-	 *pOutRenderApi = pCreator->createRenderApi(pWindow , NULL , w , h , params);
+
+	 IRenderApi* pNewRenderApi =  pCreator->createRenderApi(pWindow , NULL , w , h , params);
+	 if(pNewRenderApi == NULL && RenderApi != std::wstring(L"Direct3D9"))
+		 return createRenderWindow(pOutRenderApi , createStruct , L"Direct3D9" , params);
+
+	 *pOutRenderApi = pNewRenderApi;
 	 return pWindow;
 }
 //-------------------------------------------------------------------

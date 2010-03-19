@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="XEvol3D::ID3D9DeviceLostListener" Collapsed="true">
+    <Position X="3.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xDirect3D9APIResource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xDeviceLostResManager" Collapsed="true">
+    <Position X="12" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAABAAAAAAACAAAIAAAAgAAQAAAA=</HashCode>
+      <FileName>src\xDirect3D9APIResource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::TD3D9DeviceLostListener&lt;TResource&gt;" Collapsed="true">
+    <Position X="3.5" Y="14.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAIAAIAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xDirect3D9APIResource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9ConstLexer" Collapsed="true">
+    <Position X="19" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QACAAQAAAAUEAAAAAJASAAAAAQABCAAAIIAABAggIAI=</HashCode>
+      <FileName>src\xD3D9ConstLexer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9InputAssembler" Collapsed="true">
+    <Position X="17.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAEAAABBACAAKAAgEFAAkBkAABCAAJAAABACgA=</HashCode>
+      <FileName>src\xD3D9InputAssembler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9VertexBuffer" Collapsed="true">
+    <Position X="13.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAoAIEACBBEAAICAAgEgAACBAGAABAAJTQABGCAA=</HashCode>
+      <FileName>src\xD3D9InputBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9IndexBuffer" Collapsed="true">
+    <Position X="15.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAIEAChBEAAICAAgEgAACBAOAABAAJTQABGCAA=</HashCode>
+      <FileName>src\xD3D9InputBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9RenderView" Collapsed="true">
+    <Position X="9" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAACAhDIgBACBghUAAGgFAEAJAAQoBAqBCCAA=</HashCode>
+      <FileName>src\xD3D9RenderView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9WindowRenderTarget" Collapsed="true">
+    <Position X="15.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAACgDBAAAAAAAgEAgAAAEAABAAAAKAAAAAAA=</HashCode>
+      <FileName>src\xD3D9RenderView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9RenderWindow" Collapsed="true">
+    <Position X="9" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAACACIJAAASAAAAAaAQBAEAJAAQJAAAAACAA=</HashCode>
+      <FileName>src\xD3D9RenderView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9RenderApi" Collapsed="true">
+    <Position X="11.5" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>yUJCWI0fGZlBdrFiCIAhwECACYocKEIQEBhBQWQyEAI=</HashCode>
+      <FileName>src\xDirect3D9API.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9RenderApiCreator" Collapsed="true">
+    <Position X="13.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAQAEAQAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xDirect3D9APICreator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9ConstantBuffer" Collapsed="true">
+    <Position X="15.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAIAIEAABBEGAACAAgEgAACBAEAABAAJSQAAGCAA=</HashCode>
+      <FileName>src\xD3D9ConstantBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9ShaderConstReflection" Collapsed="true">
+    <Position X="17.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAEAAAAAAAAAAAAAAIkAAAICAAAAAAAAEABAAgAAAAA=</HashCode>
+      <FileName>src\xD3D9ConstantBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9ConstBufferReflection" Collapsed="true">
+    <Position X="17.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQUAAAAUAAABBAgAACAEwHAAAAFABAAAAAJgAAAgCIA=</HashCode>
+      <FileName>src\xD3D9ConstantBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9GpuProgParamTable" Collapsed="true">
+    <Position X="11.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QAAAAQAEAoABhAAAACAAgMEAAIFAAAAgAAJAAAAQCAg=</HashCode>
+      <FileName>src\xD3D9GPUProgram.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9GpuProgram" Collapsed="true">
+    <Position X="13.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UJAEAAgEgIEFBAAAACAAiEAAAABAAAAoAOIEAAABSAA=</HashCode>
+      <FileName>src\xD3D9GPUProgram.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9ShaderParamTable" Collapsed="true">
+    <Position X="19" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QoCABQCEAYABBRgAACAAgFEAAEBAABCgAAIgAAAASAg=</HashCode>
+      <FileName>src\xD3D9ParamBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9Shader" Collapsed="true">
+    <Position X="6.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIAACAAAAoABBQAACCBoiEAAAIBFAEBAAAIAAAIBCAA=</HashCode>
+      <FileName>src\xD3D9Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9VertexShader" Collapsed="true">
+    <Position X="5.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gIAAAAAAAAAAAAAAACAACAQAAQBBAEAAAAIAgAAACAA=</HashCode>
+      <FileName>src\xD3D9Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9PixelShader" Collapsed="true">
+    <Position X="7.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AJAAAAAAAAAEAAAAACAACAQAAABBAEAIAAIAAAAACAA=</HashCode>
+      <FileName>src\xD3D9Shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9BlendState" Collapsed="true">
+    <Position X="13.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FIAAAAhAAJEBRAAEACBEiEAGAIBBAAAAgAICACgLDAA=</HashCode>
+      <FileName>src\xD3D9BlendState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9ZStencilState" Collapsed="true">
+    <Position X="17.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIEAAAAAAIABJAAEACBCiEBAAABAAQAAAAICEIADCAA=</HashCode>
+      <FileName>src\xD3D9DepthStencilState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9RazState" Collapsed="true">
+    <Position X="19" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EJBAAEAABIEBBAAEACBAyUAAAABAAAAAAAICAAADCAA=</HashCode>
+      <FileName>src\xD3D9RazState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9Sampler" Collapsed="true">
+    <Position X="15.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIAAABAAAKABBAAEACBCqEIAAABAABgAAAICAAADCAA=</HashCode>
+      <FileName>src\xD3D9Sampler.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xPixelSelectIDConstBinder" Collapsed="true">
+    <Position X="3" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAEAAABBAAAAAAAhEAAAAAAAAQAAAAAAAIACAA=</HashCode>
+      <FileName>e:\Projects\SVN\Evol3D\xEvolEngine\Plugin\Direct3D1x\xD3DBaseColorSelector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xPixelSelectIDConstBinderS" Collapsed="true">
+    <Position X="0.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>e:\Projects\SVN\Evol3D\xEvolEngine\Plugin\Direct3D1x\xD3DBaseColorSelector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xPixelSelectIDConstBinderU" Collapsed="true">
+    <Position X="3" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>e:\Projects\SVN\Evol3D\xEvolEngine\Plugin\Direct3D1x\xD3DBaseColorSelector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xPixelSelectIDConstBinderF16" Collapsed="true">
+    <Position X="5.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>e:\Projects\SVN\Evol3D\xEvolEngine\Plugin\Direct3D1x\xD3DBaseColorSelector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3DBaseColorSelector" Collapsed="true">
+    <Position X="19" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAABBIAQAEAgkGAQAgAgEAQAkUBIAAEQAgA=</HashCode>
+      <FileName>e:\Projects\SVN\Evol3D\xEvolEngine\Plugin\Direct3D1x\xD3DBaseColorSelector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD1xLightingEnv" Collapsed="true">
+    <Position X="11.5" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>EIgAAAAAAAABBAAAACAAgEAAAEBkgAACABIAIQAACAA=</HashCode>
+      <FileName>e:\projects\svn\evol3d\xevolengine\plugin\direct3d1x\xd3dtlenviroment.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9BaseRenderTarget" Collapsed="true">
+    <Position X="1.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAIAAABDBAAIAABAgEAAAAEAEABgAAAIAABAEEA=</HashCode>
+      <FileName>src\xD3D9BaseRenderTarget.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9TextureBuffer" Collapsed="true">
+    <Position X="11.5" Y="7" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AICAAAAAAAQAAAAAAIAAAAAAAAAAAoAQAAhAAEAAAAA=</HashCode>
+      <FileName>src\xD3D9BaseTexture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9BaseTexture" Collapsed="true">
+    <Position X="4" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIAIAIAAEIABBIEAAABIiEggAAAgEEBAABAKAABHAAA=</HashCode>
+      <FileName>src\xD3D9BaseTexture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9FileTexture" Collapsed="true">
+    <Position X="7.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAEAAACACAAAAAgBAMgAAAAJAAAAASAA=</HashCode>
+      <FileName>src\xD3D9FileTexture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9RenderTarget" Collapsed="true">
+    <Position X="0.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAABBIAAgDAAgEAgAABAEAAAAAJCAAQACAA=</HashCode>
+      <FileName>src\xD3D9RenderTarget.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9DynamicRenderTarget" Collapsed="true">
+    <Position X="0.5" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABBAAAACAAgEAAAABAAAAAAIIAAAAACAA=</HashCode>
+      <FileName>src\xD3D9RenderTarget.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9DepthBuffer" Collapsed="true">
+    <Position X="2.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAABBIABAGAAgEAgAABQEADAAAJCAAAACAA=</HashCode>
+      <FileName>src\xD3D9RenderTarget.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9Texture2D" Collapsed="true">
+    <Position X="0.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AMAAAIACEIAAAAAgACAACAACAgJgMAAAADJKAQAEKAA=</HashCode>
+      <FileName>src\xD3D9Texture2D.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9Texture3D" Collapsed="true">
+    <Position X="3" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAIABEoAAgAAgACAACEACAgJgEAACACJCAAAEKAA=</HashCode>
+      <FileName>src\xD3D9Texture3D.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XEvol3D::xD3D9TextureCube" Collapsed="true">
+    <Position X="5.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAIAEEIAAAAAgACAACEICAgJgcAAAAAJKAAAEKAA=</HashCode>
+      <FileName>src\xD3D9TextureCube.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="xDirect3D9Plugin" Collapsed="true">
+    <Position X="13.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAgAgAAAAAAAAAAAgAAAAQAAAAQAAAAA=</HashCode>
+      <FileName>xDirect3D9Plugin.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="XEvol3D::xD3D9GIFormatInfo" Collapsed="true">
+    <Position X="19" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAEAAAgAAEAAAAAAAAAAAAAAAAAAAQg=</HashCode>
+      <FileName>src\xD3D9ConstLexer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::cLightState" Collapsed="true">
+    <Position X="12" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAQAACAAAAAAAMAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ParamBuffer.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::xD3D9TextureBinding" Collapsed="true">
+    <Position X="15.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAAAAIAgAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ParamBuffer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::xD3D9SamplerBinding" Collapsed="true">
+    <Position X="12" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ParamBuffer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::xD3D9BufferBinding" Collapsed="true">
+    <Position X="17.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIgAAIAAAAgAAAAAQIkAAAAAEAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>src\xD3D9ParamBuffer.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::xStencilOp" Collapsed="true">
+    <Position X="19" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAiAAAAAAAAAAAAAEAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9DepthStencilState.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::xStencilArg" Collapsed="true">
+    <Position X="17.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAABAAAAgAAAEAAABEAAAAAAAAAAAAAI=</HashCode>
+      <FileName>src\xD3D9DepthStencilState.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::xD1xLightEnvBuffer" Collapsed="true">
+    <Position X="15.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>e:\projects\svn\evol3d\xevolengine\plugin\direct3d1x\xd3dtlenviroment.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::xD3D9TexInfo" Collapsed="true">
+    <Position X="13.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAIAAAAAAICAAAAIBACAAAAgAAAAAEAACAACAAAIA=</HashCode>
+      <FileName>src\xD3D9BaseTexture.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="XEvol3D::D3DX_IMAGE_LOAD_INFO" Collapsed="true">
+    <Position X="13.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAABAAAAAAAAAAAAEAEABgACAAgQAAABAAAAAA=</HashCode>
+      <FileName>src\xD3D9FileTexture.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="XEvol3D::MapsDXGIToIndex" Collapsed="true">
+    <Position X="13.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ConstLexer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="XEvol3D::MapsXEvolToIndex" Collapsed="true">
+    <Position X="15.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ConstLexer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="XEvol3D::vecD3D9ShaderConstantDescs" Collapsed="true">
+    <Position X="13.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ConstantBuffer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="XEvol3D::mapD3D9ShaderConstantDescs" Collapsed="true">
+    <Position X="12" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ConstantBuffer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="XEvol3D::vD3D9SamplerBindings" Collapsed="true">
+    <Position X="19" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ParamBuffer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="XEvol3D::vD3D9TextureBindings" Collapsed="true">
+    <Position X="12" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ParamBuffer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="XEvol3D::vD3D9BufferBindings" Collapsed="true">
+    <Position X="17.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\xD3D9ParamBuffer.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Microsoft YaHei" Size="9" />
+</ClassDiagram>

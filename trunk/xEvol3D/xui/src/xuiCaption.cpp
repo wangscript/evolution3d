@@ -29,7 +29,7 @@ REG_XUI_CONTROLCREATOR(xuiCaption, true)
 xuiCaption::xuiCaption(xuiWindow* parent,xuiWindowManager* pMgr)
 :xuiControl(parent , pMgr)
 {
-    m_state.m_Region.Rect().setRect(0.0f,0.0f,0.0f,32.0f);
+    m_CurState.m_Region.Rect().setRect(0.0f,0.0f,0.0f,32.0f);
 }
 
 xuiCaption::~xuiCaption()
@@ -68,11 +68,11 @@ bool xuiCaption::load(xXmlNode* pCfgNode)
     }
 
     //得到默认的状态的Region
-    m_state.m_Region.Rect2D().w = m_wndParent->getRegion().Rect2D().w;
+    m_CurState.m_Region.Rect2D().w = m_wndParent->getRegion().Rect2D().w;
 
     if(attribeNode->findValue(L"size"))
     {
-        xuiRect2D _rect = m_state.m_Region.Rect2D();
+        xuiRect2D _rect = m_CurState.m_Region.Rect2D();
         _rect.h = pCfgNode->float_value(L"size");
     }
 
@@ -82,14 +82,14 @@ bool xuiCaption::load(xXmlNode* pCfgNode)
         xXmlNode::XmlNodes stateNodes;
         pCfgNode->findNode(L"state",stateNodes);
 
-        m_vStates[0].m_Region = m_state.m_Region;
+        m_vStates[0].m_Region = m_CurState.m_Region;
 
 		size_t _nStateNodes = stateNodes.size();
         for(size_t i = 0; i <  _nStateNodes; i ++)
         {
-            xuiWindowState_t& _state = m_vStates[i+1];
+            xuiWindowState& _state = m_vStates[i+1];
             xXmlNode* pStateNode = stateNodes[i]; 
-            _state.m_Region = m_state.m_Region;
+            _state.m_Region = m_CurState.m_Region;
             if(pStateNode->findValue(L"size"))
             {
                 _state.m_Region.Rect2D().h = (float)pStateNode->float_value(L"size");
@@ -99,8 +99,8 @@ bool xuiCaption::load(xXmlNode* pCfgNode)
 
 
 
-    float box_w = m_state.m_Region.Rect2D().h - 6.0f;
-    m_CloseBox.Rect2D().x = m_state.m_Region.Rect2D().w - m_state.m_Region.Rect2D().h - 1.0f;
+    float box_w = m_CurState.m_Region.Rect2D().h - 6.0f;
+    m_CloseBox.Rect2D().x = m_CurState.m_Region.Rect2D().w - m_CurState.m_Region.Rect2D().h - 1.0f;
     m_CloseBox.Rect2D().y = 3;
     m_CloseBox.Rect2D().h = m_CloseBox.Rect2D().w = box_w;
     return true;
@@ -108,15 +108,17 @@ bool xuiCaption::load(xXmlNode* pCfgNode)
 
 bool xuiCaption::draw()
 {
-    xuiRect _rect = m_wndParent->getAbsRect( m_state.m_Region.Rect() ) ;// getWndAbsRect();
-    m_pWindowMgr->drawRectf(0,NULL,_rect, m_state.m_color);
-    m_hFont->drawTextOneLine(m_text.c_str(),_rect, m_state.m_textcolor,xFontRender::eAlign_Center,xFontRender::eAlign_Center);
+    xuiWindow::draw();
+
+    //绘制自己特有的东西;
+    xuiRect _rect = m_wndParent->getAbsRect( m_CurState.m_Region.Rect() ) ;// getWndAbsRect();
+    m_hFont->drawTextOneLine(m_text.c_str(),_rect, m_CurState.m_textcolor,xFontRender::eAlign_Center,xFontRender::eAlign_Center);
 
 
-    xColor_4f _closeBoxCl = xColor_4f(1.0,0.0f,0.0f, m_state.m_color.a);
-    xuiRegion _region = m_CloseBox;
-    _region.Rect() = this->getAbsRect(m_CloseBox.Rect() );
-    this->_drawRect(_region.Rect(),_closeBoxCl,xuiBevel(2,2,2,2));
+    //xColor_4f _closeBoxCl = xColor_4f(1.0,0.0f,0.0f, m_CurState.m_color.a);
+    //xuiRegion _region = m_CloseBox;
+    //_region.Rect() = this->getAbsRect(m_CloseBox.Rect() );
+    //this->_drawRect(_region.Rect(),_closeBoxCl,xuiBevel(2,2,2,2));
 
     //Draw Cross
     //xLineHelper _line[2];
@@ -135,7 +137,7 @@ bool xuiCaption::draw()
     //hlpRenderer->Draw(2 , _line);
     //hlpRenderer->EndRender();
 
-    xuiWindow::draw();
+   
     //IRenderSystem::singleton()->drawRect(_rect,xColor_4f(1.0,0.0f,0.0f,1.0f));
     return true;
 }

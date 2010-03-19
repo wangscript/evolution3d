@@ -34,7 +34,7 @@ BEGIN_NAMESPACE_XEVOL3D
 IMPL_BASE_OBJECT_CLASSID(xD3DVertexStream , IVertexStream);
  IMPL_BASE_OBJECT_CLASSID(xD3DInputBufReflection , IInputBufferReflection);
 xD3DVertexStream::xD3DVertexStream(IRenderApi* pRenderApi , IInputAssembler* pAssembler)
-:IVertexStream(pRenderApi),m_pAssembler(pAssembler) //, m_pD11RenderAPI(pRenderApi)
+:IVertexStream(pRenderApi),m_pAssembler(pAssembler) 
 {
      m_RefCount = 1;
 	 m_pAssembler->AddRef();
@@ -114,8 +114,9 @@ bool xD3DVertexStream::setInputBuffer(size_t nSlot , IInputBuffer* pIB)
 
 //描述一个Buffer的Reflection
 //Shander常量的Reflection
-xD3DShaderConstReflection::xD3DShaderConstReflection()
+xD3DShaderConstReflection::xD3DShaderConstReflection(const wchar_t* _name)
 {
+    m_Name = _name;
 	m_pBinder = NULL;
 	m_pBufferReflection = NULL;
 }
@@ -179,9 +180,9 @@ IShaderConstantReflection*   xD3DInputBufReflection::constantDesc(size_t idx)
 }
 
 
-xD3DShaderConstReflection*  xD3DInputBufReflection::addConstant()
+xD3DShaderConstReflection*  xD3DInputBufReflection::addConstant(const wchar_t* _name)
 {
-	xD3DShaderConstReflection* pDesc = new xD3DShaderConstReflection;
+	xD3DShaderConstReflection* pDesc = new xD3DShaderConstReflection(_name);
 	m_vConstant.push_back(pDesc);
 	return pDesc;    
 }

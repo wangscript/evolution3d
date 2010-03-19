@@ -35,8 +35,9 @@ bool xCoreMeshName::operator == (const xCoreMeshName& rhv) const
 	//return (m_pModel->getSkeleton()->getID() == rhv.m_pModel->getSkeleton()->getID() );          
 }
 
-xCoreMeshName::xCoreMeshName(const wchar_t* meshName , const wchar_t* modelName)
+xCoreMeshName::xCoreMeshName(const wchar_t* meshName , const wchar_t* modelName , xCoreSkeleton* pSkeleton)
 {
+    m_pSkeleton = pSkeleton;
 	if(meshName)
 	{
 		m_MeshName = meshName;
@@ -72,7 +73,7 @@ xCoreMeshLoader::~xCoreMeshLoader()
 
 xCoreMesh* xCoreMeshLoader::newInstance(const xCoreMeshName& name)
 {
-	return new xCoreMesh(m_pOwner->getTextureMgr());
+	return new xCoreMesh(m_pOwner->getTextureMgr() , name.m_pSkeleton);
 }
 
 

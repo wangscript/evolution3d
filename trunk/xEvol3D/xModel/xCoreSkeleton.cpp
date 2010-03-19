@@ -45,6 +45,21 @@ xCoreSkeleton::xCoreSkeleton()
     m_RefCount   = 1;
 }
 
+int  xCoreSkeleton::findBoneIndex(const wchar_t* boneName)
+{
+	if(boneName == NULL)
+		return 0;
+	std::wstring _boneName = boneName;
+	for(int i = 0 ; i < m_nBone ; i ++)
+	{
+		if(m_Bones[i].m_BoneName == _boneName)
+		{
+			return i;
+		}
+	}
+	return 0;
+}
+
 xCoreSkeleton::~xCoreSkeleton()
 {
     unload();
@@ -112,7 +127,7 @@ bool xCoreSkeleton::load(xcomdoc& doc,const wchar_t* skeleton_dir)
 bool xCoreSkeleton::loadHiberarchy(std::istream& _in)
 {
     m_BoneHibers.clear();
-    int nRootNode = -1;
+    int32 nRootNode = -1;
     xSkeletonID id ;
     Ts_Read(_in , id);
     Ts_Read(_in,nRootNode );
@@ -148,6 +163,11 @@ bool xCoreSkeleton::loadHiberarchy(std::istream& _in)
         }
     }
     return true;
+}
+
+xBoneHiberarchy&  xCoreSkeleton::boneHiberarchy(int iBone)
+{
+	return m_BoneHibers[iBone];
 }
 
 bool xCoreSkeleton::saveHiberarchy(xcomdocstream* boneinfo_stream)
@@ -239,20 +259,25 @@ bool xCoreSkeleton::loadBoneList(std::istream& _in)
     return true;
 }
 
-bool xCoreSkeleton::blendLerp(xCoreAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2)
+bool xCoreSkeleton::blendLerp(xBaseAction* pAction, xCoreActionAttr* pAttr ,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2)
 {
     for(int boneIndex = 0 ; boneIndex < m_nBone ; boneIndex++)
     {
         xSkinBone* pBone = &m_Bones[boneIndex];
-        xBoneData& bone1 = pAction->getBoneData(boneIndex,frame1);
-        xBoneData& bone2 = pAction->getBoneData(boneIndex,frame2);
-        xmat4& mat = skeletonFrame.m_FrameMat[boneIndex];
-        XM_Lerp(bone1.m_Matrix , bone2.m_Matrix , t , mat);
+        xBoneData* bone1 = pAction->getBoneData(boneIndex,frame1);
+        xBoneData* bone2 = pAction->getBoneData(boneIndex,frame2);
+		if(bone1 == NULL || bone2 == NULL || pAttr->boneUsed(boneIndex) == false )
+		{
+			continue;
+		}
+
+		xmat4& mat = skeletonFrame.m_FrameMat[boneIndex];
+        XM_Lerp(bone1->m_Matrix , bone2->m_Matrix , t , mat);
     }
     return true;
 }
 
-bool xCoreSkeleton::blendHiberarchy(xCoreAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent)
+bool xCoreSkeleton::blendHiberarchy(xBaseAction* pAction, xCoreActionAttr* pAttr , xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent)
 {
     xmat4 parentMT;
     xmat4 parentMTInv;
@@ -275,10 +300,15 @@ bool xCoreSkeleton::blendHiberarchy(xCoreAction* pAction,xCoreActionFrame& skele
         int      boneIndex = boneH.m_Childrens[i];
         xSkinBone* pBone = &m_Bones[boneIndex];
 
-        xBoneData& boneData1 = pAction->getBoneData(boneIndex,frame1);
-        xBoneData& boneData2 = pAction->getBoneData(boneIndex,frame2);
+        xBoneData* boneData1 = pAction->getBoneData(boneIndex,frame1);
+        xBoneData* boneData2 = pAction->getBoneData(boneIndex,frame2);
+		if(boneData1 == NULL || boneData2 == NULL || pAttr->boneUsed(boneIndex) == false )
+		{
+			blendHiberarchy(pAction,pAttr , skeletonFrame,t,frame1,frame2,boneIndex);
+			continue;
+		}
 
-        XM_Lerp(boneData1.m_LocaleTM , boneData2.m_LocaleTM , t , localeMT);
+        XM_Lerp(boneData1->m_LocaleTM , boneData2->m_LocaleTM , t , localeMT);
 
         xmat4& transMat   = skeletonFrame.m_FrameMat[boneIndex];
         xmat4& wsMat      = skeletonFrame.m_WSMats[boneIndex];
@@ -311,32 +341,51 @@ bool xCoreSkeleton::blendHiberarchy(xCoreAction* pAction,xCoreActionFrame& skele
 
         }
 
-        blendHiberarchy(pAction,skeletonFrame,t,frame1,frame2,boneIndex);
+        blendHiberarchy(pAction,pAttr , skeletonFrame,t,frame1,frame2,boneIndex);
     }
     return true;
 }
 
-bool makeLocaleTM(xmat4& mat , xBoneData& boneData1 , xBoneData& boneData2 , float t)
+void xBoneTrans::toMatrix(xMathLib::xmat4& mat)
+{
+    //暂时忽略了缩放
+    xMathLib::xmat4 scaleMat;
+    xMathLib::xmat4 rotMat;
+    m_Rotate.toMatrix(rotMat);
+    scaleMat.identity();
+    scaleMat.scale(m_Scale.x , m_Scale.y , m_Scale.y);
+    XM_Mul(scaleMat , rotMat  , mat);
+    
+    //m_Rotate.toMatrix(mat);
+    //mat.scale(this->m_Scale.x , m_Scale.y , m_Scale.y );
+
+    mat.setTransform(m_Trans.x , m_Trans.y , m_Trans.z);
+    return ;
+}
+
+
+bool makeLocaleTM(xBoneTrans& boneTrans , xmat4& mat , xBoneData& boneData1 , xBoneData& boneData2 , float t)
 {
     //插值旋转
     xquat q1 = boneData1.m_BoneTrans.m_Rotate;
     xquat q2 = boneData2.m_BoneTrans.m_Rotate;
-    xquat q = q1.slerp(t,q2);
-    q.toMatrix(mat);
+    boneTrans.m_Rotate = q1.slerp(t,q2);
 
     //插值平移
     xvec3& t1 = boneData1.m_BoneTrans.m_Trans;
     xvec3& t2 = boneData2.m_BoneTrans.m_Trans;
-    xvec3 tt = t1*(1.0f - t) + t2*t;
+    boneTrans.m_Trans = t1*(1.0f - t) + t2*t;
 
     //插值平移
     xvec3& s1 = boneData1.m_BoneTrans.m_Scale;
     xvec3& s2 = boneData2.m_BoneTrans.m_Scale;
-    xvec3 st = s1*(1.0f - t) + s2*t;
-    mat.setTransform(tt.x,tt.y,tt.z);
+    boneTrans.m_Scale = s1*(1.0f - t) + s2*t;
+
+    boneTrans.toMatrix(mat);
     return true;
 }
-bool makeTransData(xSkinBone*  pBone , xBoneData& boneData)
+
+bool makeTransData(xBoneData& boneData)
 {
      xmat4 wsMat = boneData.m_LocaleTM ; //pBone->m_InitMT * boneData.m_Matrix;
      xeuler _euler;
@@ -344,7 +393,6 @@ bool makeTransData(xSkinBone*  pBone , xBoneData& boneData)
      xquat quat ;
      quat.fromEuler(_euler);
      boneData.m_BoneTrans.m_Rotate.fromEuler(_euler);
-     boneData.m_BoneTrans.m_Rotate.z *= -1.0f;
      boneData.m_BoneTrans.m_Scale = boneData.m_BoneTrans.m_Scale;
      boneData.m_BoneTrans.m_Trans.x = wsMat.m30;
      boneData.m_BoneTrans.m_Trans.y = wsMat.m31;
@@ -352,7 +400,7 @@ bool makeTransData(xSkinBone*  pBone , xBoneData& boneData)
      return true;
 }
 
-bool xCoreSkeleton::blendSlerp(xCoreAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent)
+bool xCoreSkeleton::blendSlerp(xBaseAction* pAction,xCoreActionAttr* pAttr ,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent)
 {
     xmat4 parentMT;
     xmat4 parentMTInv;
@@ -375,14 +423,24 @@ bool xCoreSkeleton::blendSlerp(xCoreAction* pAction,xCoreActionFrame& skeletonFr
         int     boneIndex = boneH.m_Childrens[i];
         xSkinBone*  pBone = &m_Bones[boneIndex];
 
-        xBoneData& boneData1 = pAction->getBoneData(boneIndex,frame1);
-        xBoneData& boneData2 = pAction->getBoneData(boneIndex,frame2);
+        xBoneData* boneData1 = pAction->getBoneData(boneIndex,frame1);
+        xBoneData* boneData2 = pAction->getBoneData(boneIndex,frame2);
 
-        makeLocaleTM(localeMT, boneData1 , boneData2 , t);
 
-        xmat4& transMat   = skeletonFrame.m_FrameMat[boneIndex];
-        xmat4& wsMat      = skeletonFrame.m_WSMats[boneIndex];
-        //      mat = boneData1.m_Matrix;
+		//骨骼不属于这个动作
+        if(boneData1 == NULL || boneData2 == NULL || pAttr->boneUsed(boneIndex) == false )
+		{
+			blendSlerp(pAction, pAttr , skeletonFrame , t,frame1,frame2,boneIndex);
+			continue;
+		}
+
+        xmat4& transMat       = skeletonFrame.m_FrameMat[boneIndex];
+        xmat4& wsMat          = skeletonFrame.m_WSMats[boneIndex];
+        xBoneTrans& boneTrans = skeletonFrame.boneTrans(boneIndex);
+
+        makeLocaleTM(boneTrans , localeMT, *boneData1 , *boneData2 , t);
+
+        //mat = boneData1.m_Matrix;
         //XM_Lerp(boneData1.m_Matrix , boneData2.m_Matrix , t , mat);
 
         if(parent == -1)
@@ -414,10 +472,67 @@ bool xCoreSkeleton::blendSlerp(xCoreAction* pAction,xCoreActionFrame& skeletonFr
             //mat = pBone->m_InitMTInv * wsMat --> wsMat = localeMT * parentWsMT;
 
         }
-        blendSlerp(pAction, skeletonFrame , t,frame1,frame2,boneIndex);
+        blendSlerp(pAction, pAttr , skeletonFrame , t,frame1,frame2,boneIndex);
     }
     return true;
 }
 
+bool xCoreSkeleton::blendSlerp(xBaseAction* pAction, xBaseActionState* _pInputActionState ,xCoreActionFrame& skeletonFrame , int parent)
+{
+    xmat4 parentMT;
+    xmat4 parentMTInv;
+    xBoneHiberarchy* pBoneH = NULL;
+    if(parent != -1)
+    {
+        parentMT = skeletonFrame.m_FrameMat[parent];
+        pBoneH = &m_BoneHibers[parent];
+    }
+    else
+    {
+        parentMT.identity();
+        pBoneH = &m_RootHibers;
+
+    }
+    xmat4 localeMT;
+    float tTime = 0.0f;
+    xBoneHiberarchy& boneH = *pBoneH;
+    for(int i = 0 ; i < boneH.m_nChildren; ++i)
+    {
+        int     boneIndex = boneH.m_Childrens[i];
+        xSkinBone*  pBone = &m_Bones[boneIndex];
+
+
+        xBaseActionState* pActionState = pAction->getActionState(boneIndex , _pInputActionState);
+
+        int frame1 = pActionState->m_Frame1;
+        int frame2 = pActionState->m_Frame2;
+        xBoneData* boneData1 = pAction->getBoneData(boneIndex, frame1);
+        xBoneData* boneData2 = pAction->getBoneData(boneIndex, frame2);
+
+        xmat4& transMat       = skeletonFrame.m_FrameMat[boneIndex];
+        xmat4& wsMat          = skeletonFrame.m_WSMats[boneIndex];
+        xBoneTrans& boneTrans = skeletonFrame.boneTrans(boneIndex);
+
+        makeLocaleTM(boneTrans , localeMT, *boneData1 , *boneData2 , pActionState->m_fTime);
+
+        //      mat = boneData1.m_Matrix;
+        //XM_Lerp(boneData1.m_Matrix , boneData2.m_Matrix , t , mat);
+
+        if(parent == -1)
+        {
+            //使用记录的变量插值
+            wsMat      = localeMT;
+            XM_Mul(pBone->m_InitMTInv , localeMT , transMat);
+        }
+        else
+        {
+            //优化
+            XM_Mul(localeMT , skeletonFrame.m_WSMats[parent] , wsMat);
+            XM_Mul(pBone->m_InitMTInv , wsMat , transMat);
+        }
+        blendSlerp(pAction, _pInputActionState , skeletonFrame ,boneIndex);
+    }
+    return true;
+}
 
 END_NAMESPACE_XEVOL3D

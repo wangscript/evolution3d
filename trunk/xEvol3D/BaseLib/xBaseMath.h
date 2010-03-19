@@ -28,6 +28,11 @@ inline unsigned int xFloorToPower2(unsigned int v)
 	return 1 << ((*(unsigned int*)(&f) >> 23) - 126);
 }
 
+inline int xGetMipLevelSize(int nFullSize , int mipLv)
+{
+    return nFullSize >> mipLv;
+}
+
 #define xIsPower2(x)   ( (x) & (x-1) ? false : true )
 
 END_NAMESPACE_XEVOL3D

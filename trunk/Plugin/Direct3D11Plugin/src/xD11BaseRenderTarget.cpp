@@ -4,18 +4,20 @@
 #include "xD11BaseTexture.h"
 BEGIN_NAMESPACE_XEVOL3D
 
-xD11BaseRenderTarget::xD11BaseRenderTarget(xD3D11RenderApi* pD11Api):IRenderTarget(pD11Api) 
+xD11BaseRenderTarget::xD11BaseRenderTarget(xD3D11RenderApi* pD11Api , int arraySlice , int mipmapLevel):IRenderTarget(pD11Api) 
 {
 	m_pD11RenderApi = pD11Api ; 
 	m_pBaseTexture = NULL;
 	m_RefCount  = 1;
+    m_arraySlice  = arraySlice;
+    m_mipmapLevel = mipmapLevel;
 
 }
 
-bool xD11BaseRenderTarget::grabRenderTagetData(int x , int y , int w , int h , void* pData)
+bool xD11BaseRenderTarget::grabRenderTagetData(void* pData , int x , int y , int w , int h )
 {
 	xD11BaseTexture* pD10Texture = (xD11BaseTexture*)m_pBaseTexture;
-	return pD10Texture->grabRenderTagetData(x , y , w , h , pData);
+	return pD10Texture->grabRenderTagetData(pData , x , y , w , h , m_arraySlice , m_mipmapLevel);
 }
 
 void xD11BaseRenderTarget::setTexture(IBaseTexture* pTexture)

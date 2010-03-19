@@ -51,22 +51,22 @@ struct sCDFileID
 {
 	union 
 	{
-		int                   m_Magic;
+		int32                 m_Magic;
 		unsigned _xcd_int8    m_MagicChar[4];
 	};
-	int       m_Version;
+	int32     m_Version;
 	_xcd_int8 m_Key[64];
 };
 
 
 struct sCDFileHeaderInfo
 {
-	unsigned int m_FileLen;//long  4 - byte :  File Len (Low-Order 4 byte)
-	unsigned int m_FileLenH;//long  4 - byte :  File Len (High-Order 4 byte)
-	unsigned int m_FileFlag;//long  4 - byte :  FileFlag
-	unsigned int m_HashTableSize;//long  4 - byte :  HashTable Size
-	unsigned int m_CDTableSize;//long  4 - byte :  File Entry Table Size
-	unsigned int m_Reserved[4];//long  16 byte :  Reserved Byte
+	unsigned int32 m_FileLen;//long  4 - byte :  File Len (Low-Order 4 byte)
+	unsigned int32 m_FileLenH;//long  4 - byte :  File Len (High-Order 4 byte)
+	unsigned int32 m_FileFlag;//long  4 - byte :  FileFlag
+	unsigned int32 m_HashTableSize;//long  4 - byte :  HashTable Size
+	unsigned int32 m_CDTableSize;//long  4 - byte :  File Entry Table Size
+	unsigned int32 m_Reserved[4];//long  16 byte :  Reserved Byte
 };
 
 struct sCDFileHeader
@@ -93,11 +93,11 @@ enum
 struct sCDHashTableItem
 {
 	/*用来计算HashIndex的索引，这是没有%nHashTableSize前的值 */
-	int m_HashIndex;    /*long 4-byte : INDEX HASH*/
-	int m_HashValue1;	 /*long 4-byte : ID  Hash Value 1 */ 
-	int m_HashValue2;	 /*long 4-byte : ID  Hash Value 2 */
-	int m_Flag;    	 /*long 4-byte : Flag */
-	int m_CDIndex;	 /*long 4-byte : BlockIndex */
+	int32 m_HashIndex;    /*long 4-byte : INDEX HASH*/
+	int32 m_HashValue1;	 /*long 4-byte : ID  Hash Value 1 */ 
+	int32 m_HashValue2;	 /*long 4-byte : ID  Hash Value 2 */
+	int32 m_Flag;    	 /*long 4-byte : Flag */
+	int32 m_CDIndex;	 /*long 4-byte : BlockIndex */
 	sCDHashTableItem()
 	{
 		m_HashIndex = 0;    /*long 4-byte : INDEX HASH*/
@@ -115,14 +115,14 @@ Data Entry . for index the data entry.
 struct sCDDataEntryItem
 {
 public:
-	int            m_StartAddr;           /*long 4 - byte : FileStartAt */
-	xcd_data_type  m_DataType;
-	int            m_DataCompressedSize;	/*long 4 - byte : PackedSize */
-	int            m_DataSize;	        /*long 4 - byte : FileSize-Without packed */
+	int32            m_StartAddr;           /*long 4 - byte : FileStartAt */
+	xcd_data_type    m_DataType;
+	int32            m_DataCompressedSize;	/*long 4 - byte : PackedSize */
+	int32            m_DataSize;	        /*long 4 - byte : FileSize-Without packed */
 
-	int            m_CompressedRate;       /**/
-	int            m_Reserved ;	        /*long 4 - byte : Reserved */
-	unsigned short m_utf16Name[128];
+	int32            m_CompressedRate;       /**/
+	int32            m_Reserved ;	        /*long 4 - byte : Reserved */
+	unsigned short   m_utf16Name[128];
 public:
 	sCDDataEntryItem()
 	{
@@ -161,7 +161,7 @@ public:
 
 template <> class  T_CDDataEntryItemImp<4> : public sCDDataEntryItem
 {
-    unsigned int   m_ucs4DataName[128];
+    unsigned int32   m_ucs4DataName[128];
 public:
     wchar_t*  getDataName()
     {

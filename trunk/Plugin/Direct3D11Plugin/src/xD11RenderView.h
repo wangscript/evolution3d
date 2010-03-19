@@ -69,7 +69,7 @@ public:
 	~xD11WindowRenderTarget() {}
 	IBaseTexture* toTexture() {return NULL ; }
 	bool          desc(xTextureDesc& _desc){_desc = m_TexDesc ;  return true;};
-	bool          grabRenderTagetData(int x , int y , int w , int h , void* pData){return false;}
+	bool          grabRenderTagetData(void* pData , int x , int y , int w , int h ){return false;}
 	bool          saveToFile(const wchar_t* fileName){ return false; }
 };
 
@@ -79,6 +79,7 @@ class xD11RenderWindow : public xD11RenderView
 public:
 	HWND                    m_hWnd;
 	IDXGISwapChain*         m_pSwapChain;
+    DXGI_SWAP_CHAIN_DESC    m_SwapChainDesc;
 	xD11WindowRenderTarget  m_WindowRT;
 public:
 	xD11RenderWindow(HWND hWnd , xD3D11RenderApi* pRenderApi);
@@ -88,6 +89,10 @@ public:
 	bool                    create(IDXGISwapChain* pSwapChain , int w , int h);
 	bool                    resize(int w , int h);
 	int                     startIdx(){ return 1;}
+    bool                    Present(UINT syncInterval , UINT Flags);
+    bool                    NeedResize(int width , int height );
+    bool                    GetSwapChainDesc( DXGI_SWAP_CHAIN_DESC& swap_desc);
+    DXGI_SWAP_CHAIN_DESC&   SwapChainDesc();
 	ID3D11DepthStencilView* GetDepthStencilView(){ return m_pDepthStencilView ; }
 protected:
 	bool                    _createRenderTargets();

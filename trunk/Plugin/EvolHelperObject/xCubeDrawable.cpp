@@ -109,8 +109,8 @@ bool xCubeDrawable::init(xBaseTextureMgr* pTexMgr)
 
 
 	//HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.shader");
-	//HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.vertex" , L"simple.pixel<0:simple.mask,RGBAGray;>" , NULL);
-	//HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.vertex" , L"simple.pixel<0:simple.mask,RGBAGray;>" , NULL);;
+	//HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.vertex" , L"simple.pixel(0:simple.mask,RGBAGray;)" , NULL);
+	//HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.vertex" , L"simple.pixel(0:simple.mask,RGBAGray;)" , NULL);;
 	xGpuProgNameParser _shaderNameParser;
 	xGpuProgramName    _shaderName;
 	_shaderNameParser.setShaderName(eShader_VertexShader , L"simple.vertex" );

@@ -32,6 +32,21 @@ bool xKidBasicMaterial::load(const wchar_t* matName , const int8* buf , int len)
 	return load( doc.root() );
 }
 
+IGpuProgram*  xKidBasicMaterial::gpuProgram() 
+{
+    return m_hGpuPrograme.getResource();
+}
+
+bool  xKidBasicMaterial::setGpuProgram(xGpuProgramName& _name)
+{
+    HGpuProgram hGpuProgram = m_pRenderer->renderApi()->gpuProgramManager()->load(_name);
+    if(hGpuProgram.getResource() == NULL )
+        return false;
+
+    m_hGpuPrograme = hGpuProgram;
+    return true;
+}
+
 bool xKidBasicMaterial::load(xXmlNode* pNode)
 {
 	if(pNode == NULL )
@@ -45,6 +60,16 @@ bool xKidBasicMaterial::load(xXmlNode* pNode)
 	if(pXMLShader)
 	{
 		m_hGpuPrograme = m_pRenderer->renderApi()->gpuProgramManager()->load(pXMLShader->value(L"name"));
+        //if(m_hGpuPrograme.getResource() )
+        //{
+        //    xGpuProgNameParser _parser;
+        //    m_hGpuPrograme->getName( _parser );
+        //    xGpuProgramName _name;
+        //    _parser.toName(_name);
+        //    xShaderName* pShaderName = _parser.getShaderName(eShader_VertexShader);
+
+        //    
+        //}
 	}
 	xXmlNode* pXMLRenderState = pNode->findNode(L"state");
 

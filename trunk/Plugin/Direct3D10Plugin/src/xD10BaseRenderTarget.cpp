@@ -5,18 +5,20 @@
 BEGIN_NAMESPACE_XEVOL3D
 
 
-xD10BaseRenderTarget::xD10BaseRenderTarget(xD3D10RenderApi* pD10Api):IRenderTarget(pD10Api) 
+xD10BaseRenderTarget::xD10BaseRenderTarget(xD3D10RenderApi* pD10Api, int arraySlice , int mipmapLevel):IRenderTarget(pD10Api) 
 {
 	m_pD10Api = pD10Api ; 
 	m_pBaseTexture = NULL;
 	m_RefCount  = 1;
+    m_mipmapLevel = arraySlice;
+    m_arraySlice = mipmapLevel;
 
 }
 
-bool xD10BaseRenderTarget::grabRenderTagetData(int x , int y , int w , int h , void* pData)
+bool xD10BaseRenderTarget::grabRenderTagetData(void* pData, int x , int y , int w , int h )
 {
 	xD10BaseTexture* pD10Texture = (xD10BaseTexture*)m_pBaseTexture;
-	return pD10Texture->grabRenderTagetData(x , y , w , h , pData);
+	return pD10Texture->grabRenderTagetData(pData , x , y , w , h , m_arraySlice , m_mipmapLevel);
 }
 
 void xD10BaseRenderTarget::setTexture(IBaseTexture* pTexture)

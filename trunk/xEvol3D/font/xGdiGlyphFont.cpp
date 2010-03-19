@@ -156,21 +156,23 @@ bool xGdiGlyphFontCharLoader::load_font(const wchar_t* pFont , xFontInfo& info)
     m_hFontDC = ::CreateCompatibleDC( hDesktopDC );
     ReleaseDC(hDesktop , hDesktopDC);
 	m_hGdiFont = NULL;
-	if(pFont)// && wcslen(pFont) > 0)
+	if(pFont == NULL)// && wcslen(pFont) > 0)
 	{
-		LOGFONT lf;
-		memset(&lf,0,sizeof(LOGFONT));
-		lf.lfHeight = -MulDiv(info.nHeight, GetDeviceCaps(m_hFontDC, LOGPIXELSY), 96);
-		lf.lfItalic=info.bItalic;
-		if(info.bBold) lf.lfWeight = FW_BOLD;
-		lf.lfUnderline = info.bUnderLine;
-
-		wcscpy(lf.lfFaceName, pFont );
-
-
-		m_hGdiFont = ::CreateFontIndirect(&lf);
-		::SelectObject(m_hFontDC , m_hGdiFont);
+		pFont = L"";
 	}
+	LOGFONT lf;
+	memset(&lf,0,sizeof(LOGFONT));
+	lf.lfHeight = -MulDiv(info.nHeight, GetDeviceCaps(m_hFontDC, LOGPIXELSY), 96);
+	lf.lfItalic=info.bItalic;
+	if(info.bBold) lf.lfWeight = FW_BOLD;
+	lf.lfUnderline = info.bUnderLine;
+	lf.lfCharSet = DEFAULT_CHARSET;
+
+	wcscpy(lf.lfFaceName, pFont );
+
+	m_hGdiFont = ::CreateFontIndirect(&lf);
+	::SelectObject(m_hFontDC , m_hGdiFont);
+	
 	return true;
 }
 
@@ -184,6 +186,47 @@ bool xGdiGlyphFontCharLoader::_isResLoaded(xGdiGlyphFontChar* pRes)
 	return pRes != NULL;
 }
 #define FONTSIZE_SCALE 1
+
+/*
+以下演示如何获取线条数据
+DWORD returnBytes = GetGlyphOutlineW(dc.GetSafeHdc(), thisChar, GGO_BEZIER, &gm, sizeof(buffer), buffer, &mat2);
+if(returnBytes != GDI_ERROR)
+{
+    TTPOLYGONHEADER* pTTPH = (TTPOLYGONHEADER*)buffer;
+    _ASSERTE(pTTPH->dwType == TT_POLYGON_TYPE);
+    //对闭合路径进行循环
+    while(returnBytes > 0)
+    {
+        dc.MoveTo(pTTPH->pfxStart.x.value, pTTPH->pfxStart.y.value);
+        TTPOLYCURVE* pCurrentCurve = (TTPOLYCURVE*)(pTTPH+1);
+        int remainBytes = pTTPH->cb - sizeof(TTPOLYGONHEADER);
+        while(remainBytes > 0)
+        {
+            switch(pCurrentCurve->wType)
+            {
+            case TT_PRIM_LINE:
+            case TT_PRIM_QSPLINE:
+            case TT_PRIM_CSPLINE:
+                {
+                    for(int i=0; i<pCurrentCurve->cpfx; ++i)
+                    {
+                        dc.LineTo(pCurrentCurve->apfx[i].x.value, pCurrentCurve->apfx[i].y.value);
+                    }
+                }
+                break;
+            }
+            int count = sizeof(TTPOLYCURVE) + (pCurrentCurve->cpfx-1)*sizeof(POINTFX);
+            pCurrentCurve = (TTPOLYCURVE*)((char*)pCurrentCurve + count);
+            remainBytes -= count;
+        }
+        dc.LineTo(pTTPH->pfxStart.x.value, pTTPH->pfxStart.y.value);
+
+        returnBytes -= pTTPH->cb;
+        pTTPH = (TTPOLYGONHEADER*)((char*)pTTPH + pTTPH->cb);
+    }
+}
+*/
+
 bool xGdiGlyphFontCharLoader::_loadResource(wchar_t& _char , xGdiGlyphFontChar*& pRes, int& ResSize,unsigned int arg)
 {
 	//if(FT_Load_Glyph( m_FT_Face, FT_Get_Char_Index( m_FT_Face, _char ), FT_LOAD_DEFAULT ))
@@ -216,10 +259,10 @@ bool xGdiGlyphFontCharLoader::_loadResource(wchar_t& _char , xGdiGlyphFontChar*&
     int bitmap_height = height;
     int bitmap_pitch  = (GlyphMetrics.gmBlackBoxX + 3) & ~3;
 
-	pRes->m_adv_x = GlyphMetrics.gmCellIncX;
-	pRes->m_adv_y = GlyphMetrics.gmCellIncY + GlyphMetrics.gmBlackBoxY;
-	pRes->m_left = (float)GlyphMetrics.gmptGlyphOrigin.x;
-	pRes->m_top  = (float)GlyphMetrics.gmptGlyphOrigin.y;
+	pRes->m_adv_x = (float)GlyphMetrics.gmCellIncX;
+	pRes->m_adv_y = (float)(GlyphMetrics.gmCellIncY + GlyphMetrics.gmBlackBoxY);
+	pRes->m_left  = (float)GlyphMetrics.gmptGlyphOrigin.x;
+	pRes->m_top   = (float)GlyphMetrics.gmptGlyphOrigin.y;
 
 	int   tex_pitch =  0;
 	unsigned char* tex_pixel = NULL;
@@ -237,11 +280,11 @@ bool xGdiGlyphFontCharLoader::_loadResource(wchar_t& _char , xGdiGlyphFontChar*&
 
 	if(m_pRenderer->isTextureSupport( PIXELFORMAT_ALPHA8 ) )
 	{
-		pRes->m_pTexture = m_pRenderer->createLockableTexture(  width,height, PIXELFORMAT_ALPHA8   , false);//Alpha8);
+		pRes->m_pTexture = m_pRenderer->createTexture(  width,height, PIXELFORMAT_ALPHA8   , false);//Alpha8);
 	}																		 						
 	else																	 						
 	{																		 						
-		pRes->m_pTexture = m_pRenderer->createLockableTexture(  width,height, PIXELFORMAT_B8G8R8A8 , false);//RGBA);
+		pRes->m_pTexture = m_pRenderer->createTexture(  width,height, PIXELFORMAT_B8G8R8A8 , false);//RGBA);
 	}
 	
 	if(pRes->m_pTexture == NULL)
@@ -271,7 +314,7 @@ bool xGdiGlyphFontCharLoader::_loadResource(wchar_t& _char , xGdiGlyphFontChar*&
 	pRes->m_tex_h = height;
 
 	xTextureLockArea lockInfo;
-	pTexture->lock(eLock_WriteDiscard , lockInfo);
+	pTexture->lock(eLock_ReadWrite , lockInfo);
 	tex_pixel = (unsigned char*)lockInfo.m_pixels ;
 	tex_pitch = lockInfo.m_picth ;
 	if(pTexture->format() == PIXELFORMAT_B8G8R8A8)
@@ -305,7 +348,7 @@ bool xGdiGlyphFontCharLoader::_loadResource(wchar_t& _char , xGdiGlyphFontChar*&
 				if(x < bitmap_width && y < bitmap_height) 
 				{
 					BYTE Value = lineSrc[x];
-                    _vl = (Value / 64.0f * 255);
+                    _vl = (int)(Value / 64.0f * 255);
                     if(Value > 0)
                     {
                         _vl = (int)(grayScale * _vl);
@@ -403,11 +446,11 @@ void xGdiGlyphFontCharLoader::setCacheSize(int maxSize , int maxFontW , int maxF
 	m_idxManager.setMaxIndex(  m_nCharOfRow * m_nCharOfRow );
 	if( m_pRenderer->isTextureSupport(PIXELFORMAT_ALPHA8) )
 	{
-		m_pTexture = m_pRenderer->createLockableTexture( tex_w , tex_h , PIXELFORMAT_ALPHA8   , true);
+		m_pTexture = m_pRenderer->createTexture( tex_w , tex_h , PIXELFORMAT_ALPHA8   , true , RESOURCE_USAGE_DEFAULT);
 	}																	 					
 	else																 					
 	{																	 					
-		m_pTexture = m_pRenderer->createLockableTexture(  tex_w , tex_h ,PIXELFORMAT_B8G8R8A8 ,  true);
+		m_pTexture = m_pRenderer->createTexture(  tex_w , tex_h ,PIXELFORMAT_B8G8R8A8 ,  true , RESOURCE_USAGE_DEFAULT);
 	}
 	//m_pTexture->setFlipY( !m_pTexture->isFlipY() );
 #endif
@@ -511,6 +554,8 @@ bool xGdiGlyphFont::init( xXmlNode* pFontNode)
 	m_Info.nHeight =  fi.height;
 	m_Info.nWidth  =  fi.width;
 	m_LinePitch = fi.linepitch;
+
+	if(pFont == NULL) pFont = pFontName;
 
     if( pFontCharMgr->load_font(pFont , m_Info) ==false)
     {

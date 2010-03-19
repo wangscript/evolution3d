@@ -126,8 +126,8 @@ xMemStream* xMemStream::createInstance(void* buf , int bufLen)
 }
 size_t xMemStream::read(char* buf,size_t len)
 {
-    int byte_need_read = len;
-    if( m_BufLen - m_iPos < len )
+    int byte_need_read = (int)len;
+    if( m_BufLen - m_iPos < (int)len )
     {
         byte_need_read = m_BufLen - m_iPos;
     }
@@ -140,8 +140,8 @@ size_t xMemStream::read(char* buf,size_t len)
 
 size_t  xMemStream::write(const char* buf,size_t len)
 {
-    int byte_need_write = len;
-    if( m_BufLen - m_iPos < len )
+    int byte_need_write = (int)len;
+    if( m_BufLen - m_iPos < (int)len )
     {
         byte_need_write = m_BufLen - m_iPos;
     }

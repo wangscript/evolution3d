@@ -10,7 +10,7 @@ IMPL_BASE_OBJECT_CLASSID(xDxfModel , xBaseModel);
 IMPL_BASE_OBJECT_CLASSID(xDxfMesh  , xCoreMesh );
 IMPL_OBJECT_FACTORY(xDxfModel , xBaseModel , xDxfModelCreator , xBaseModelCreator , xBaseModelCreatorMgr , L"dxf"    , L"Dxf model" , xBaseTextureMgr* , bool)
 
-xDxfMesh::xDxfMesh(xBaseTextureMgr* pTexMgr , bool bSysMemCopy) : xCoreMesh(pTexMgr , bSysMemCopy)
+xDxfMesh::xDxfMesh(xBaseTextureMgr* pTexMgr , bool bSysMemCopy) : xCoreMesh(pTexMgr , NULL)
 {
 
 }

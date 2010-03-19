@@ -151,8 +151,7 @@ public:
 	bool           lock(eLockPolicy lockPolicy, xTextureLockArea& lockInfo, int mipmapLevel = 0 , int arraySlice = 0);
 	bool           unlock(xTextureLockArea& lockInfo);
     bool           saveToFile(const wchar_t* fileName);
-	bool           create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevels = 1 , int arraySize = 1) {return false; }
-	bool           create(int w , int h , int depth , ePIXEL_FORMAT fmt, int mipMapLevels = 1 , int arraySize = 1) {return false; }
+	bool           create(const xTextureInitDesc& , xTextureInitData* , int ) {return false; }
 	IRenderTarget* toRenderTarget(size_t iSlice = 0 , size_t iMipMapLevel = 0) { return NULL; }
 
 

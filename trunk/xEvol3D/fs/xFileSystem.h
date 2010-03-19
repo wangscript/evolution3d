@@ -68,18 +68,26 @@ class _XEVOL_BASE_API_  xFileSystem
 public:
 
 public:
-	std::ds_wstring     getFileName(const wchar_t* fullName);
-	std::ds_wstring     getPathName(const wchar_t* fullName);
-	const wchar_t*      getFileExtName(const wchar_t* filename );
-	int                 loadFile( unsigned int8*& fileBufer , const wchar_t* fileName);
-	void                unloadFile( unsigned int8*& fileBufer);
-	bool                fileExist(const wchar_t* filename);
-	IStreamIO*          loadFile(const wchar_t* fileStream , bool bWrite = false);
-	bool                loadFile(const wchar_t* fileName , std::ifstream& stream , std::ios::open_mode _mode  = std::ios::in | std::ios::binary );
-	bool                openFile(const wchar_t* fileName , std::fstream& stream , std::ios::open_mode _mode  =  std::ios::binary);
-	static xFileSystem* singleton();
+	std::ds_wstring        getFileName(const wchar_t* fullName);
+	std::ds_wstring        getPathName(const wchar_t* fullName);
+	const wchar_t*         getFileExtName(const wchar_t* filename );
+	int                    loadFile( unsigned int8*& fileBufer , const wchar_t* fileName);
+	void                   unloadFile( unsigned int8*& fileBufer);
+	bool                   fileExist(const wchar_t* filename);
+	IStreamIO*             loadFile(const wchar_t* fileStream , bool bWrite = false);
+	bool                   loadFile(const wchar_t* fileName , std::ifstream& stream , std::ios::open_mode _mode  = std::ios::in | std::ios::binary );
+	bool                   openFile(const wchar_t* fileName , std::fstream& stream , std::ios::open_mode _mode  =  std::ios::binary);
+    static xFileSystem*    singleton();
+    template <typename T>void
+    fileNameWithoutExt(const wchar_t* name , T& out)
+    {
+        for(size_t i = 0 ; i < wcslen(name) ; i ++)
+        {
+            if(name[i] == '.') break;
+            out.push_back( name[i] );
+        }
+    }
 };
-
 
 END_NAMESPACE_XEVOL3D
 

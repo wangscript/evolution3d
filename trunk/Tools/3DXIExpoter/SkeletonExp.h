@@ -104,6 +104,11 @@ public:
 	void        buildHiberarchys();
 
 	void        get_bone_nodes(sMaxNodes_t& bones);
+    void        ensureHiberarchys();
+
+    bool        isChildInSkeleton(INode* pNode);
+    bool        isParentInSkeleton(INode* pNode);
+    void        checkBoneLinked(INode* pBone);
 public:
 	vGameSkinModifiers m_GameSkins;
 	sMaxBoneNodes_t    m_MaxBones;

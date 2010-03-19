@@ -29,7 +29,7 @@ BEGIN_NAMESPACE_XUI
 _XEVOL_BASE_API_ bool  string2Region(const wchar_t* _str , xuiRegion& region);
 _XEVOL_BASE_API_ bool  string2Bevel(const wchar_t* _str , xuiBevel& bevel);
 _XEVOL_BASE_API_ bool  string2Color(const wchar_t* _str , xColor_4f& color);
-
+_XEVOL_BASE_API_ bool  stringToRect(const wchar_t* _str , xuiRect2D& rect);
 END_NAMESPACE_XUI
 
 #endif

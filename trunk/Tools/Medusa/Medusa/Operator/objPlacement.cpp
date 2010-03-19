@@ -2,6 +2,7 @@
 #include "objPlacement.h"
 #include "../resource.h"
 #include "../xEvolEnviroment.h"
+#include "BaseLib/xBaseMath.h"
 USING_NS_MDED;
 xInsertNodeCommand::xInsertNodeCommand(ISceneNode* pParent , ISceneNode* pThis , bool bInsert)
 {
@@ -314,6 +315,7 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 		ISceneNode* pSelNode = NULL;
 		if(val.x > 10000)
 		{
+            //val.x = xRoundToByte(val.x, 4);
 			pSelNode = dynamic_cast<ISceneNode*> ( (IBaseObject*)val.x);
 		}
 
@@ -418,7 +420,7 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 				xvec4 rotateDir = movDir.cp(RotAxis);
 				xvec4 cpAxis = yAxis + xAxis;
 				float factor = rotateDir.dp3(cpAxis);
-				float angle = factor * 90.0f * movPercent;
+				float angle = factor * 90.0f * movPercent * 24.0f;
 				xquat q1 , q2 , q;
 				q1.set( xvec3( 0.0f , 0.0f , 1.0f ) , angle);
 				GetCurSelNode()->placement()->getRotate( q2 );
@@ -434,7 +436,7 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 				xvec4 rotateDir = movDir.cp(RotAxis);
 				xvec4 cpAxis = yAxis + zAxis;
 				float factor = rotateDir.dp3(cpAxis);
-				float angle = factor * 90.0f * movPercent;
+				float angle = factor * 90.0f * movPercent * 24.0f;
 				xquat q1 , q2 , q;
 				q1.set( xvec3(1.0f , 0.0f , 0.0f ) , angle);
 
@@ -451,7 +453,7 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 				xvec4 rotateDir = movDir.cp(RotAxis);
 				xvec4 cpAxis = xAxis + zAxis;
 				float factor = rotateDir.dp3(cpAxis);
-				float angle = factor * 90.0f * movPercent * 4.0f;
+				float angle = factor * 90.0f * movPercent * 24.0f;
 				xquat q1 , q2 , q;
 				q1.set( xvec3( 0.0f  , 1.0f , 0.0f ) , angle);
 				GetCurSelNode()->placement()->getRotate( q2 );

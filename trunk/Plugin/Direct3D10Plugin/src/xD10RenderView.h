@@ -70,7 +70,7 @@ public:
 	~xD10WindowRenderTarget() {}
 	IBaseTexture* toTexture() {return NULL ; }
 	bool          desc(xTextureDesc& _desc){_desc = m_TexDesc ;  return true;};
-	bool          grabRenderTagetData(int x , int y , int w , int h , void* pData){return false;}
+	bool          grabRenderTagetData(void* pData , int x , int y , int w , int h ){return false;}
 	bool          saveToFile(const wchar_t* fileName){ return false; }
 };
 
@@ -81,6 +81,7 @@ public:
 	HWND                    m_hWnd;
 	IDXGISwapChain*         m_pSwapChain;
 	xD10WindowRenderTarget  m_WindowRT;
+    DXGI_SWAP_CHAIN_DESC    m_SwapChainDesc;
 public:
 	xD10RenderWindow(HWND hWnd , xD3D10RenderApi* pRenderApi);
 	~xD10RenderWindow();
@@ -89,6 +90,10 @@ public:
 	bool                    create(IDXGISwapChain* pSwapChain , int w , int h);
 	bool                    resize(int w , int h);
 	int                     startIdx(){ return 1;}
+    bool                    GetDXGISampleDesc(DXGI_SAMPLE_DESC& SampleDesc);
+    void                    getRTSampleDesc(xRTSampleDesc& _desc);
+    bool                    NeedResize(int width , int height );
+    bool                    Present(UINT syncInterval , UINT Flags);
 	ID3D10DepthStencilView* GetDepthStencilView(){ return m_pDepthStencilView ; }
 protected:
 	bool                    _createRenderTargets();

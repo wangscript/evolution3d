@@ -32,7 +32,7 @@ static int FileLen();
 #include "../mem/mem_operator.h"
 #endif
 
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64) )
 #include <windows.h>
 # ifndef _WIN32_WCE
 #include <direct.h>

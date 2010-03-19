@@ -107,8 +107,13 @@ public:
 	int         push_bone(INode* pBone);
 	void        push_bones(sMaxNodes_t Nodes);
 	void        buildHiberarchys();
-
+    void        setUniform(BOOL bUniform);
 	void        get_bone_nodes(sMaxNodes_t& bones);
+    void        ensureHiberarchys();
+
+    bool        isChildInSkeleton(INode* pNode);
+    bool        isParentInSkeleton(INode* pNode);
+    void        checkBoneLinked(INode* pBone);
 public:
 	sPhysiqueExports_t m_PhysiqueExports;
 	sSkins_t           m_SkinModifiers;

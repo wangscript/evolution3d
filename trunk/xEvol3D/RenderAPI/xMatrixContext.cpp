@@ -1,68 +1,45 @@
 #include "../xStdPch.h"
 #include "xMatrixContext.h"
 #include "RenderAPI/xRenderAPI.h"
+#include "RenderAPI/xRenderApiImp.h"
 #include "RenderAPI/xMemBuffer.h"
 BEGIN_NAMESPACE_XEVOL3D
 
 
-xRenderApiMatContext::xRenderApiMatContext(IRenderApi* pRenderApi) :
-m_WorldConstBinder(this),
-m_textureMatBinder(this),
-m_projMatBinder(this),
-m_viewMatBinder(this),
-m_CameraUpBinder(this),
-m_CameraPosBinder(this),
-m_CameraDirBinder(this),
-m_CameraArgBinder(this)
+xRenderApiMatContext::xRenderApiMatContext(IRenderApi* pRenderApi)
 {
 	m_name         = L"TransformBuffer";
 	m_pReflection  = NULL;
 	m_pConstBuffer = NULL;
 
 	//注册变量绑定器
-	//WorldMatrix
-	pRenderApi->registeShaderConstBinder(L"matWorld"       , &m_WorldConstBinder);
-	pRenderApi->registeShaderConstBinder(L"WorldMatrix"    , &m_WorldConstBinder);
-	pRenderApi->registeShaderConstBinder(eSPS_WorldMatrix  , &m_WorldConstBinder);
+    m_pWorldConstBinder  = NULL;
+    m_pViewMatBinder     = NULL;
+    m_pProjMatBinder     = NULL;
+    m_pTextureMatBinder  = NULL;
+    
+    m_pCameraUpBinder   = NULL;
+    m_pCameraPosBinder  = NULL;
+    m_pCameraDirBinder  = NULL;
+    m_pCameraArgBinder  = NULL;
 
-
-	//ViewMatrix
-	pRenderApi->registeShaderConstBinder(L"matView"       , &m_viewMatBinder);
-	pRenderApi->registeShaderConstBinder(L"ViewMatrix"    , &m_viewMatBinder);
-	pRenderApi->registeShaderConstBinder(eSPS_ViewMatrix  , &m_viewMatBinder);
-
-	//ProjectMatrix
-	pRenderApi->registeShaderConstBinder(L"matProj"        , &m_projMatBinder);
-	pRenderApi->registeShaderConstBinder(L"matProject"     , &m_projMatBinder);
-	pRenderApi->registeShaderConstBinder(L"ProjMatrix"     , &m_projMatBinder);
-	pRenderApi->registeShaderConstBinder(L"ProjectMatrix"  , &m_projMatBinder);
-	pRenderApi->registeShaderConstBinder(eSPS_ProjMatrix   , &m_viewMatBinder);
-
-	//Texture Matrix
-	pRenderApi->registeShaderConstBinder(L"matTexture"      , &m_textureMatBinder);
-	pRenderApi->registeShaderConstBinder(L"TextureMatrix"   , &m_textureMatBinder);
-	pRenderApi->registeShaderConstBinder(eSPS_TextureMatrix , &m_textureMatBinder);
-
-
-	pRenderApi->registeShaderConstBinder(L"CameraUp"      , &m_CameraUpBinder );
-	pRenderApi->registeShaderConstBinder(L"CameraPos"     , &m_CameraPosBinder);
-	pRenderApi->registeShaderConstBinder(L"CameraDir"     , &m_CameraDirBinder);
-	pRenderApi->registeShaderConstBinder(L"CameraArg"     , &m_CameraArgBinder);
-
-	pRenderApi->registeShaderConstBinder(L"cameraUp"      , &m_CameraUpBinder );
-	pRenderApi->registeShaderConstBinder(L"cameraPos"     , &m_CameraPosBinder);
-	pRenderApi->registeShaderConstBinder(L"cameraDir"     , &m_CameraDirBinder);
-	pRenderApi->registeShaderConstBinder(L"cameraArg"     , &m_CameraArgBinder);
-
-	pRenderApi->registeShaderConstBinder(eSPS_Camera_Up   , &m_CameraUpBinder);
-	pRenderApi->registeShaderConstBinder(eSPS_Camera_Pos  , &m_CameraPosBinder);
-	pRenderApi->registeShaderConstBinder(eSPS_Camera_Dir  , &m_CameraDirBinder);
-	pRenderApi->registeShaderConstBinder(eSPS_Camera_Arg  , &m_CameraArgBinder);
 }
 
 xRenderApiMatContext::~xRenderApiMatContext()
 {
+    delete m_pWorldConstBinder;
+    //ViewMatrix
+    delete m_pViewMatBinder;
+    //ProjectMatrix
+    delete m_pProjMatBinder;
+    //Texture Matrix
+    delete m_pTextureMatBinder;
 
+    delete m_pCameraUpBinder ;
+    delete m_pCameraPosBinder;
+
+    delete m_pCameraDirBinder;
+    delete m_pCameraArgBinder;
 }
 
 bool xRenderApiMatContext::install()
@@ -102,6 +79,59 @@ bool xRenderApiMatContext::init(IRenderApi* pRenderApi)
 	m_pCameraInfo->m_fFar   = 10000.0f;
 	m_pCameraInfo->m_fFov   = 45.0f;
 	m_pCameraInfo->m_fAspect=16.0f/10.0f;
+
+
+    //注册矩阵和相机位置的绑定器
+    m_pCameraUpBinder   = new xConstantValueDataBinder(m_pCamera->m_Eye.m_Up.v     , sizeof(xvec4) );
+    m_pCameraPosBinder  = new xConstantValueDataBinder(m_pCamera->m_Eye.m_EyePos.v , sizeof(xvec4) );
+    m_pCameraDirBinder  = new xConstantValueDataBinder(m_pCameraInfo->m_EyeDir.v   , sizeof(xvec4) );
+    m_pCameraArgBinder  = new xConstantValueDataBinder(m_pCameraInfo->m_CameraArg  , sizeof(xvec4) );
+
+    pRenderApi->registeShaderConstBinder(L"CameraUp"      , m_pCameraUpBinder );
+    pRenderApi->registeShaderConstBinder(L"CameraPos"     , m_pCameraPosBinder);
+    pRenderApi->registeShaderConstBinder(L"cameraUp"      , m_pCameraUpBinder );
+    pRenderApi->registeShaderConstBinder(L"cameraPos"     , m_pCameraPosBinder);
+    pRenderApi->registeShaderConstBinder(eSPS_Camera_Up   , m_pCameraUpBinder);
+    pRenderApi->registeShaderConstBinder(eSPS_Camera_Pos  , m_pCameraPosBinder);
+
+    pRenderApi->registeShaderConstBinder(L"CameraDir"     , m_pCameraDirBinder);
+    pRenderApi->registeShaderConstBinder(L"CameraArg"     , m_pCameraArgBinder);
+    pRenderApi->registeShaderConstBinder(L"cameraDir"     , m_pCameraDirBinder);
+    pRenderApi->registeShaderConstBinder(L"cameraArg"     , m_pCameraArgBinder);
+    pRenderApi->registeShaderConstBinder(eSPS_Camera_Dir  , m_pCameraDirBinder);
+    pRenderApi->registeShaderConstBinder(eSPS_Camera_Arg  , m_pCameraArgBinder);
+
+
+
+    m_pWorldConstBinder  = new xConstantValueDataBinder(transContext()->m_matWorld.data , sizeof(xmat4) );
+    m_pViewMatBinder     = new xConstantValueDataBinder(transContext()->m_matView.data , sizeof(xmat4) );
+    m_pProjMatBinder     = new xConstantValueDataBinder(transContext()->m_matProject.data , sizeof(xmat4) );
+    m_pTextureMatBinder  = new xConstantValueDataBinder(transContext()->m_matTexture.data , sizeof(xmat4) );
+    
+    //注册变量绑定器
+    //WorldMatrix
+    pRenderApi->registeShaderConstBinder(L"matWorld"       , m_pWorldConstBinder);
+    pRenderApi->registeShaderConstBinder(L"WorldMatrix"    , m_pWorldConstBinder);
+    pRenderApi->registeShaderConstBinder(eSPS_WorldMatrix  , m_pWorldConstBinder);
+
+
+    //ViewMatrix
+    pRenderApi->registeShaderConstBinder(L"matView"       , m_pViewMatBinder);
+    pRenderApi->registeShaderConstBinder(L"ViewMatrix"    , m_pViewMatBinder);
+    pRenderApi->registeShaderConstBinder(eSPS_ViewMatrix  , m_pViewMatBinder);
+
+    //ProjectMatrix
+    pRenderApi->registeShaderConstBinder(L"matProj"        , m_pProjMatBinder);
+    pRenderApi->registeShaderConstBinder(L"matProject"     , m_pProjMatBinder);
+    pRenderApi->registeShaderConstBinder(L"ProjMatrix"     , m_pProjMatBinder);
+    pRenderApi->registeShaderConstBinder(L"ProjectMatrix"  , m_pProjMatBinder);
+    pRenderApi->registeShaderConstBinder(eSPS_ProjMatrix   , m_pProjMatBinder);
+
+    //Texture Matrix
+    pRenderApi->registeShaderConstBinder(L"matTexture"      , m_pTextureMatBinder);
+    pRenderApi->registeShaderConstBinder(L"TextureMatrix"   , m_pTextureMatBinder);
+    pRenderApi->registeShaderConstBinder(eSPS_TextureMatrix , m_pTextureMatBinder);
+
 	return true;
 }
 
@@ -110,19 +140,19 @@ void xRenderApiMatContext::onMatrixChange(eMatrixMode matMode)
 	switch(matMode)
 	{
 	case MATRIXMODE_World:
-		m_WorldConstBinder.setDirty();		
+		m_pWorldConstBinder->setDirty();		
 		break;
 
 	case MATRIXMODE_View:
-		m_viewMatBinder.setDirty();		
+		m_pViewMatBinder->setDirty();		
 		break;
 
 	case MATRIXMODE_Project:
-		m_projMatBinder.setDirty();		
+		m_pProjMatBinder->setDirty();		
 		break;
 
 	case MATRIXMODE_Texture:
-		m_textureMatBinder.setDirty();	
+		m_pTextureMatBinder->setDirty();	
 		break;
 	}
 	m_pReflection->setDirty(true);
@@ -168,10 +198,10 @@ bool xRenderApiMatContext::onCameraChange(IRenderCamera* pCamera)
 
 
 	//更新状态
-	m_CameraUpBinder.setDirty();	 
-	m_CameraPosBinder.setDirty();	
-	m_CameraDirBinder.setDirty();
-	m_CameraArgBinder.setDirty();
+	m_pCameraUpBinder->setDirty();	 
+	m_pCameraPosBinder->setDirty();	
+	m_pCameraDirBinder->setDirty();
+	m_pCameraArgBinder->setDirty();
 	return true;
 
 }
@@ -191,61 +221,4 @@ IRenderCamera* xRenderApiMatContext::getCamera()
 	return m_pCamera;
 }
 
-//自动设置世界矩阵
-bool xWorldMatConstBinder::updateConstant(IShaderConstantReflection* pConst)
-{
-	pConst->setData(matContext->transContext()->m_matWorld.data , sizeof(xmat4) );
-    return true;
-}
-
-//自动设置观察矩阵
-bool xViewMatConstBinder::updateConstant(IShaderConstantReflection* pConst)
-{
-	pConst->setData(matContext->transContext()->m_matView.data , sizeof(xmat4) );
-	return true;
-}
-
-//自动设置投影矩阵
-bool xProjectMatConstBinder::updateConstant(IShaderConstantReflection* pConst)
-{
-	pConst->setData(matContext->transContext()->m_matProject.data , sizeof(xmat4) );
-	return true;
-}
-
-//自动设置纹理矩阵
-bool xTextureMatConstBinder::updateConstant(IShaderConstantReflection* pConst)
-{
-	pConst->setData(matContext->transContext()->m_matTexture.data , sizeof(xmat4) );
-	return true;
-}
-
-//自动设置Camera的属性
-bool xCameraUpConstBinder::updateConstant(IShaderConstantReflection* pConst)
-{
-	xvec4 up = matContext->m_pCamera->m_Eye.m_Up;
-	up.normalize();
-	pConst->setData( &up , sizeof(xvec4) );
-	return true;
-}
-
-bool xCameraPosConstBinder::updateConstant(IShaderConstantReflection* pConst)
-{
-	pConst->setData( &matContext->m_pCamera->m_Eye.m_EyePos , sizeof(xvec4) );
-	return true;
-}
-
-bool xCameraDirConstBinder::updateConstant(IShaderConstantReflection* pConst)
-{
-	xvec4 dir = matContext->m_pCamera->m_Eye.m_EyeTarget - matContext->m_pCamera->m_Eye.m_EyePos;
-	dir.normalize();
-	pConst->setData( &dir , sizeof(xvec4) );
-	return true;
-}
-
-bool xCameraArgConstBinder::updateConstant(IShaderConstantReflection* pConst)
-{
-	xvec4 arg(matContext->m_pCamera->getNearPlan() , matContext->m_pCamera->getFarPlan() , matContext->m_pCamera->getFOV() , matContext->m_pCamera->getAspect() ); 
-	pConst->setData( &arg , sizeof(xvec4) );
-	return true;
-}
 END_NAMESPACE_XEVOL3D

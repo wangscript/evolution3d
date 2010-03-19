@@ -451,10 +451,6 @@ void     CEvolEnviroment::initRenderer(HWND hRenderWindow)
 
 	onResize();
 
-	m_ProcedureTexture = m_pRenderApi->createLockableTexture(256,256,PIXELFORMAT_R32G32B32A32F,false );
-	xTextureLockArea _lock;
-	m_ProcedureTexture->lock(eLock_WriteDiscard , _lock);
-	m_ProcedureTexture->unlock(_lock);
 	m_pStencilState = m_pRenderApi->createDepthStencilState(L"Overlay");
 
 	m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel<0:simple.texture,simple.fakehdr>" , NULL);;
@@ -553,7 +549,10 @@ void     CEvolEnviroment::updateFrame(long passedTime , ISceneVisitor* pVisitor)
 	xSleep(5);
 	m_pRenderApi->identityMatrix(MATRIXMODE_World);
 	m_pRenderApi->applyCamera(m_pCamera);
-	m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.3f,0.0f));
+	if(m_pRenderApi->renderMode() == eRenderMode::eRenderMode_Select )
+		m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.0f,0.0f));
+	else 
+		m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.3f,0.0f));
 	m_pRenderApi->beginScene();
 	xMathLib::xmat4 mat;
 	//xMathLib::XM_RotateY(mat,angle);
@@ -625,8 +624,8 @@ CEvolEnviroment::CEvolEnviroment()
 	m_pCamera   = NULL;
 	m_pStencilState   = NULL;
 	m_DefRasterizer   = NULL;
-	m_ProcedureTexture   = NULL;
-	m_cameraStep =40.0f;
+
+    m_cameraStep =40.0f;
 
 	m_pSelView   = NULL;
 	m_pRenderer    = NULL;

@@ -52,6 +52,8 @@ public:
 	bool                   load(const wchar_t* fileName , unsigned long  arg);
 	unsigned long          memUsage();
 
+    virtual void           setName(const wchar_t* name) { m_Name = name ; }
+    const wchar_t*         name() { return m_Name.c_str() ; }
 protected:
 	virtual bool           createShader(ID3D10Blob* pShaderCode , ID3D11ClassLinkage * pClassLinkage) = 0;
 };

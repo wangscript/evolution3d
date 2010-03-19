@@ -106,6 +106,8 @@ public:
 	IGpuProgramParamTable*  createParamTable(bool bLoadDef);
 	IGpuProgramParamTable*  getDefaultParamTable();
 	void                    commit();
+    IBaseShader*            getShader(eShaderType _type);
+    void                    getName(xGpuProgNameParser& _name);
 };
 
 

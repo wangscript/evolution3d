@@ -79,7 +79,7 @@ float4 Phong_Lighting(float3 vNormal , float3 wPosition , float3 eyePosition)
 //============================================
 
 
-//Insert Node Declaration Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simpleMesh.pixel.hlsl
+//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simpleMesh.pixel.hlsl
 
 cbuffer TransformBuffer
 {
@@ -111,14 +111,14 @@ struct PS_INPUT
 
 //============================================
 
-//Insert Node Code Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.texture.hlsl
+//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.texture.hlsl
 
 float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , Texture2D _texture )
 {
       return _texture.Sample(_sampler, texCoord.xy) * _Color ;
 }
 
-//Insert Node Code Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.Lighting.hlsl
+//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.Lighting.hlsl
 
 float4 Simple_Lighting(float4 _Color , float4 wNormal , float4    wPosition , float4 eyePositon)
 {

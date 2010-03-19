@@ -47,10 +47,18 @@ public:
 	bool updateConstant(IShaderConstantReflection* pConst);
 };
 
+class xPixelSelectIDConstBinderF16 : public xPixelSelectIDConstBinder
+{
+public:
+    bool updateConstant(IShaderConstantReflection* pConst);
+};
+
 class xD3DBaseColorSelector : public IColorSelector
 {
-	xPixelSelectIDConstBinderS m_ColorSelBinderS;
-	xPixelSelectIDConstBinderU m_ColorSelBinderU;
+	xPixelSelectIDConstBinderS   m_ColorSelBinderS;
+	xPixelSelectIDConstBinderU   m_ColorSelBinderU;
+    xPixelSelectIDConstBinderF16 m_ColorSelBinderF16; 
+
 	IBlenderState*             m_ColorSelBlender;
 	IRenderView*               m_SelectRenderView;
 	HBaseShader                m_hColorSelShader;

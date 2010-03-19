@@ -41,8 +41,8 @@ bool xuiDemoInfoPannel::onNotify(eXUIWinNotifyEvent _event, xuiWindow* pCtrl , i
 	{
 		float w = (float)param1 ;
 		float h = (float)param2;
-		float x = w - m_state.m_Region.Rect2D().w - 10.0f;
-		float y = h - m_state.m_Region.Rect2D().h - 10.0f;
+		float x = w - m_CurState.m_Region.Rect2D().w - 10.0f;
+		float y = h - m_CurState.m_Region.Rect2D().h - 10.0f;
 		setPosition(xuiPoint(x,y));
 	}
 	return false;
@@ -50,10 +50,10 @@ bool xuiDemoInfoPannel::onNotify(eXUIWinNotifyEvent _event, xuiWindow* pCtrl , i
 
 bool xuiDemoInfoPannel::onLoad(xXmlNode* pCfgNode)
 {
-	int w = (int)m_state.m_Region.Rect2D().w;
-	int h = (int)m_state.m_Region.Rect2D().h;
+	int w = (int)m_CurState.m_Region.Rect2D().w;
+	int h = (int)m_CurState.m_Region.Rect2D().h;
 
-	xuiRect rect = m_state.m_Region.Rect();
+	xuiRect rect = m_CurState.m_Region.Rect();
 	rect.x = rect.y = 0;
     IRenderApi* pRenderApi = m_pWindowMgr->renderApi();
 	m_pTextCacheTexture = pRenderApi->createRenderableTexture(w , h , 1 ,PIXELFORMAT_R8G8B8A8 , false);// createRenderToTexture(w,h,PIXELFORMAT_R8G8B8A8) ;
@@ -61,8 +61,8 @@ bool xuiDemoInfoPannel::onLoad(xXmlNode* pCfgNode)
     int wnd_w = 0;
     int wnd_h = 0;
     pRenderApi->getWindowSize(wnd_w , wnd_h );
-	float x = (float)wnd_w - m_state.m_Region.Rect2D().w - 10.0f;
-	float y = (float)wnd_h - m_state.m_Region.Rect2D().h - 10.0f;
+	float x = (float)wnd_w - m_CurState.m_Region.Rect2D().w - 10.0f;
+	float y = (float)wnd_h - m_CurState.m_Region.Rect2D().h - 10.0f;
 	setPosition(xuiPoint(x,y));
 
 	xuiWindow::load(pCfgNode);
@@ -90,8 +90,11 @@ void xuiDemoInfoPannel::setText(const wchar_t* _text)
 
 bool xuiDemoInfoPannel::onDraw()
 {
-	xuiRect2D rect = m_state.m_Region.Rect2D();
-    m_hFont->drawText(m_text.c_str(),m_state.m_Region.Rect2D().x + 5,m_state.m_Region.Rect2D().y + 5 , (int)rect.w - 10, m_state.m_textcolor);
+	xuiRect2D rect = m_CurState.m_Region.Rect2D();
+    if(m_hFont.getResource() )
+    {
+        m_hFont->drawText(m_text.c_str(),m_CurState.m_Region.Rect2D().x + 5,m_CurState.m_Region.Rect2D().y + 5 , (int)rect.w - 10, m_CurState.m_textcolor);
+    }
 	//IRenderSystem::singleton()->enableBlend(true);
 	//IRenderSystem::singleton()->drawRect(m_pTextCacheTexture, rect, m_state.m_textcolor);
 	return true;

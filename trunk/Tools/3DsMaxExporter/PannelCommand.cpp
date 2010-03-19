@@ -208,6 +208,7 @@ bool On_ConfirmScene(HWND hDlg,WPARAM wParam,LPARAM lParam)
 bool On_ViewNode(HWND hDlg,WPARAM wParam,LPARAM lParam)
 {
     CNodeViewDlg dlg;
+    dlg.m_bSelected = TRUE;
     dlg.BuildSelNodeTree();
     dlg.DoModal();
     dlg.ReleaseTree();
@@ -217,6 +218,7 @@ bool On_ViewNode(HWND hDlg,WPARAM wParam,LPARAM lParam)
 bool On_ViewSceneNode(HWND hDlg,WPARAM wParam,LPARAM lParam)
 {
     CNodeViewDlg dlg;
+    dlg.m_bSelected = TRUE;
     dlg.BuildRootNodeTree();
     dlg.DoModal();
     dlg.ReleaseTree();
@@ -344,6 +346,7 @@ bool On_ExportStaticModel(HWND hDlg,WPARAM wParam,LPARAM lParam)
     XEVOL_LOG(eXL_DEBUG_HIGH , L"------------------------------------\r\n");
     XEVOL_LOG(eXL_DEBUG_HIGH , L"开始导出静态模型\r\n");
     CNodeViewDlg dlg;
+    dlg.m_bSelected = TRUE;
     dlg.BuildSelNodeTree();
     if(IDOK == dlg.DoModal() )
     {
@@ -366,6 +369,7 @@ bool On_ExportFrameAniModel(HWND hDlg,WPARAM wParam,LPARAM lParam)
     XEVOL_LOG(eXL_DEBUG_HIGH , L"------------------------------------\r\n");
     XEVOL_LOG(eXL_DEBUG_HIGH , L"开始导出帧动画模型\r\n");
     CNodeViewDlg dlg;
+    dlg.m_bSelected = TRUE;
     dlg.BuildSelNodeTree();
     if(IDOK == dlg.DoModal() )
     {
@@ -389,6 +393,7 @@ bool On_ExportSkeletonModel(HWND hDlg,WPARAM wParam,LPARAM lParam)
     XEVOL_LOG(eXL_DEBUG_HIGH , L"------------------------------------\r\n");
     XEVOL_LOG(eXL_DEBUG_HIGH , L"开始导出骨骼动画模型\r\n");
     CNodeViewDlg dlg;
+    dlg.m_bSelected = TRUE;
     dlg.BuildSelNodeTree();
     if(IDOK == dlg.DoModal() )
     {

@@ -58,7 +58,7 @@ bool string2Region(const wchar_t* _str , xuiRegion& region)
 
     if(typeStr == L"rect" || typeStr == L"RECT" || typeStr == L"Rect")
     {
-        swscanf(str.c_str(),L"[%f,%f,%f,%f]",&region.Rect2D().x,&region.Rect2D().y,&region.Rect2D().w,&region.Rect2D().h);
+        stringToRect(str.c_str() , region.Rect2D() );
         region._type = xuiRegion::eRT_Rect;
     }
     else if(typeStr == L"DELTA" || typeStr == L"delta" || typeStr == L"Delta")
@@ -70,6 +70,12 @@ bool string2Region(const wchar_t* _str , xuiRegion& region)
         region.Rect2D().w += (w - x) ;
         region.Rect2D().h += (h - y) ;
     }
+    return true;
+}
+
+bool stringToRect(const wchar_t* _str , xuiRect2D& rect)
+{
+    swscanf(_str,L"[%f,%f,%f,%f]",&rect.x,&rect.y,&rect.w,&rect.h);
     return true;
 }
 

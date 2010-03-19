@@ -27,9 +27,9 @@ BEGIN_NAMESPACE_XEVOL3D
 
 struct sCDDataCompressPack
 {
-	int m_DataSize;
-	int m_CompreessedSize;
-	int m_CompreessedRate;
+	int32 m_DataSize;
+	int32 m_CompreessedSize;
+	int32 m_CompreessedRate;
 };
 
 
@@ -45,8 +45,8 @@ struct CCDCompressedDataPackBuffer
 private:
 	sCDDataCompressPack m_Info;
 	_xcd_int8*          buffer;
-	int                 m_OffsetInFile;
-	int                 m_dataBegPos;
+	int32                m_OffsetInFile;
+	int32               m_dataBegPos;
 public:
 	friend class CZLibReadBuffer;
 	CCDCompressedDataPackBuffer()	
@@ -83,15 +83,15 @@ class CZLibReadBuffer
 {
 
 	IStreamIO* m_DiskFile;
-	int          m_FileBegPos;
-	int          m_ComprressedLen;
+	int32      m_FileBegPos;
+	int32      m_ComprressedLen;
 
 	sCDCompressedFile m_FileHeader;
 
-	int    m_curBlockIndex;   // = 0;
-	int    m_curBlockReadPos; // = 0;
-	int    m_DataNowPos;
-	int    m_DataLen;
+	int32     m_curBlockIndex;   // = 0;
+	int32     m_curBlockReadPos; // = 0;
+	int32     m_DataNowPos;
+	int32     m_DataLen;
 
 protected:
 	void   init_file_header();

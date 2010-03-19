@@ -161,9 +161,9 @@ public:
 			struct 
 			{
 #ifdef _BIG_ENDIAN_
-				int8 sa,sb,sg,sr;
+                int8 sa,sb,sg,sr;
 #else
-				int8 sr,sg,sb,sa;
+                int8 sr,sg,sb,sa;
 #endif
 			};
 		};
@@ -196,12 +196,23 @@ public:
 public:
 	xColor_4ub(){}
 	xColor_4ub(unsigned int8 _r,unsigned int8 _g , unsigned int8 _b,unsigned int8 _a = 255):r(_r),g(_g),b(_b),a(_a) {};
+    template<typename T> void swap(T&v1 , T& v2)
+    {
+        T temp = v1;
+        v1 = v2;
+        v2 = temp;
+    };
+
 	void        swapEndian()
 	{
-		unsigned int8 t = r;
-		r = b;
-		b = t;
+		swap(r , a);
+        swap(b , g);
 	}
+
+    void        swapRB()
+    {
+        swap(r , b);
+    }
 
 	xColor_4ub(float _r,float _g , float _b , float _a  )
 	{
@@ -214,7 +225,7 @@ public:
 	xColor_4ub  operator +(const xColor_4ub& rhv)
 	{
 		xColor_4ub outcl;
-#if defined(_MSC_VER) && !defined(_WIN32_WCE)
+#if defined(_MSC_VER) && !defined(_WIN32_WCE) && !defined(_WIN64)
 		__asm
 		{
 			MOVD mm0 , this;
@@ -233,7 +244,7 @@ public:
 	xColor_4ub  operator -(const xColor_4ub& rhv)
 	{
 		xColor_4ub outcl;
-#if defined(_MSC_VER) && !defined(_WIN32_WCE)
+#if defined(_MSC_VER) && !defined(_WIN32_WCE) && !defined(_WIN64)
 		__asm
 		{
 			MOVD mm0 , this;
@@ -251,7 +262,7 @@ public:
 
 	xColor_4ub& operator +=(const xColor_4ub& rhv)
 	{
-#if defined(_MSC_VER) && !defined(_WIN32_WCE)
+#if defined(_MSC_VER) && !defined(_WIN32_WCE) && !defined(_WIN64)
 		__asm
 		{
 			MOVD mm0 , this;
@@ -269,7 +280,7 @@ public:
 
 	xColor_4ub& operator -=(const xColor_4ub& rhv)
 	{
-#if defined(_MSC_VER) && !defined(_WIN32_WCE)
+#if defined(_MSC_VER) && !defined(_WIN32_WCE) && !defined(_WIN64)
 		__asm
 		{
 			MOVD mm0 , this;

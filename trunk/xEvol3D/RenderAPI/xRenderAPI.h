@@ -65,6 +65,18 @@ public:
 	virtual        bool          onChange(){ return true ; }
 };
 
+class IRenderApiDeviceLostListener 
+{
+public:
+    enum eResetAction
+    {
+        eReset_Begin,
+        eReset_Finish,
+    };
+public:
+    virtual void onDeviceReset(bool bNewDevice , eResetAction _Action) = 0;
+};
+
 class _XEVOL_BASE_API_  IRenderApi : public IRefCountObject
 {
 public:
@@ -80,6 +92,9 @@ public:
 	IRenderApi();
 	virtual ~IRenderApi();
     virtual eFeatureLevel            featureLevel() = 0;
+    virtual int                      intCapsValue(const wchar_t* cfgName , int defValue) = 0; 
+    virtual void                     AddDeviceLostListener(IRenderApiDeviceLostListener* pResource) = 0;
+    virtual void                     RemoveDeviceLostListener(IRenderApiDeviceLostListener* pResource) = 0;
 	//选择模式
     virtual eRenderMode              renderMode() = 0;
     virtual void                     addRenderObject(IRenderApiObject* pObject) = 0;
@@ -148,6 +163,7 @@ public:
 	virtual IShaderConstBinder*      getShaderConstBinder(const wchar_t* pShaderConstName) = 0;
 	virtual void                     registeShaderConstBinder(const wchar_t* constName , IShaderConstBinder* pBinder) = 0;
 	virtual void                     registeShaderConstBinder(eShaderParamSemantic _semantic , IShaderConstBinder* pBinder) = 0;
+    virtual void                     registeShaderConstBinder(const wchar_t* _name , const wchar_t* _alisName) = 0;
 								  
 	virtual IBaseShader*             createShader(eShaderType type) = 0;
     virtual HBaseShader              createShader(const wchar_t* shaderName , eShaderType type)= 0;
@@ -171,11 +187,12 @@ public:
 	//Texture Funciton				
 	//文件类型的纹理				
 	//通过资源来加载。				
-	virtual IBaseTexture*            createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen , unsigned int arg = 0) = 0 ;
+	virtual IBaseTexture*            createFileTexture(const wchar_t* texFile , const unsigned int8* buf , unsigned int bufLen , unsigned int arg = 0, const xTextureInitDesc* texInitDesc = NULL) = 0 ;
 	//通过扩展名,创建对象后，        需要自己调用load
-	virtual IBaseTexture*            createFileTexture(const wchar_t* extFile) = 0 ;
-	virtual IBaseTexture*            createLockableTexture(int w , int h , ePIXEL_FORMAT fmt , bool bReadable , int nMipMap = 1, int nArraySize = 1 ) = 0;
-	virtual IBaseTexture*            createLockableTexture(int w , int h , int depth , ePIXEL_FORMAT fmt , bool bReadable ,  int nMipMap = 1, int nArraySize = 1 ) = 0 ;
+	virtual IBaseTexture*            createFileTexture(const wchar_t* extFile, const xTextureInitDesc* texInitDesc = NULL) = 0 ;
+    virtual IBaseTexture*            createTexture(int w , int h , ePIXEL_FORMAT fmt , bool bLockable = false ,int nMipMap = 1, int nArraySize = 1 ,  eResourceUsage usage = RESOURCE_USAGE_DYNAMIC , eResourceAccessFlage access = RESOURCE_ACCESS_WRITE , eResourceBindType bindType = BIND_AS_SHADER_RESOURCE) = 0;
+	virtual IBaseTexture*            createTexture(int w , int h , int depth , ePIXEL_FORMAT fmt ,  bool bLockable = false , int nMipMap = 1, int nArraySize = 1 , eResourceUsage usage = RESOURCE_USAGE_DYNAMIC , eResourceAccessFlage access = RESOURCE_ACCESS_WRITE , eResourceBindType bindType = BIND_AS_SHADER_RESOURCE) = 0 ;
+    virtual IBaseTexture*            createTexture(const xTextureInitDesc& initDesc , xTextureInitData* pInitData = NULL, int nInitData = 0) = 0;
 	virtual IBaseTexture*            createRenderableTexture(int w , int h , int depth , ePIXEL_FORMAT fmt , bool bReadable ,  int nMipMap = 1, int nArraySize = 1 , const xRTSampleDesc& sampleQulity = xRTSampleDesc::None) = 0 ;
 	virtual bool                     isTextureSupport(ePIXEL_FORMAT fmt , bool lockable = true) = 0;
     virtual xBaseTextureMgr*         createTextureManager(const wchar_t* _name, bool nonRefKeep = false) = 0;

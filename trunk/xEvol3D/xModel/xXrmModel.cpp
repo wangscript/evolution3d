@@ -191,7 +191,7 @@ bool xXrmModel::loadSkeleton(xcomdoc& doc , const wchar_t* _dir)
 		size_t _ActNodes = actNodes.size() ;
 		for(size_t  i = 0 ;i < _ActNodes ; i ++)
 		{
-			xCoreAction* pAction = new xCoreAction;
+			xCoreAction* pAction = new xEmbAction();
 			pAction->setBoneNumber(m_pSkeleton->nBone() );
 			xXmlNode* pNode = actNodes[i];
 			if(false == pAction->load(pNode , doc , actDir.c_str()) )
@@ -219,7 +219,7 @@ bool xXrmModel::loadEmbMeshs(xcomdoc& doc , const wchar_t* _dir , xXmlNode* pRoo
 	{
 		xXmlNode* pMeshNode = meshNodes[i];
 		const wchar_t* name = pMeshNode->value(L"name");
-		xCoreMesh* pMesh = new xCoreMesh(m_pTexMgr);
+		xCoreMesh* pMesh = new xCoreMesh(m_pTexMgr , m_pSkeleton);
 		ds_wstring meshName = ds_wstring(_dir) + L"/" + name + L"/";
 		if( pMesh->load(doc , meshName.c_str(), 0) == false)
 		{
@@ -242,7 +242,7 @@ bool xXrmModel::loadEmbSkinGroup(xcomdoc& doc , const wchar_t* _dir , xXmlNode* 
 	{
 		xXmlNode* pSkinGrouNode = skinGroupNodes[i];
 		const wchar_t* skinGroupName = pSkinGrouNode->value(L"name");
-		xCoreMesh* pMesh = new xCoreMesh(m_pTexMgr);
+		xCoreMesh* pMesh = new xCoreMesh(m_pTexMgr , m_pSkeleton);
 		ds_wstring skinGroupDesName = ds_wstring(_dir) + L"/" + skinGroupName + L"/skins.xml";
 		xcomdocstream* pdescstream = doc.open_stream(skinGroupDesName.c_str() );
 		xcdstream  _in(pdescstream);
@@ -258,7 +258,7 @@ bool xXrmModel::loadEmbSkinGroup(xcomdoc& doc , const wchar_t* _dir , xXmlNode* 
 		{
 			xXmlNode* pMeshNode = meshNodes[i];
 			const wchar_t* name = pMeshNode->value(L"name");
-			xCoreMesh* pMesh = new xCoreMesh(m_pTexMgr);
+			xCoreMesh* pMesh = new xCoreMesh(m_pTexMgr , m_pSkeleton);
 			ds_wstring meshName = ds_wstring(_dir) + L"/" + skinGroupName + L"/" + name + L"/" ;
 			if( pMesh->load(doc , meshName.c_str(), 0) == false)
 			{

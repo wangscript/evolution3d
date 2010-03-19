@@ -25,8 +25,8 @@
 #include "RenderAPI/xTextureManager.h"
 
 #ifdef _WIN32
-HANDLE Global_hEvol3DHandle = NULL;
 #ifndef _XEVOL_BUILD_STATIC_
+HANDLE Global_hModuleHandle = NULL;
 BOOL WINAPI DllMain(HANDLE  hDllHandle,   DWORD   dwReason,    LPVOID  lpreserved     )
 {
         if (dwReason == DLL_PROCESS_ATTACH)
@@ -37,7 +37,7 @@ BOOL WINAPI DllMain(HANDLE  hDllHandle,   DWORD   dwReason,    LPVOID  lpreserve
          * using exception handling can be called in the current image until
          * after __security_init_cookie has been called.
          */
-            Global_hEvol3DHandle = hDllHandle;
+            Global_hModuleHandle = hDllHandle;
         }
         return TRUE;
 }
@@ -301,7 +301,19 @@ bool   xEvol3DEngine::initPlatform(IApplication* pApp , const wchar_t* cfgFile, 
 	return m_platform != NULL;
 }
 
-bool   xEvol3DEngine::initRenderer( const wchar_t* projectName, void* hWnd , xXmlNode* pCreateParams) 
+void xEvol3DEngine::onDeviceReset(bool bNewDevice , eResetAction _Action)
+{
+    if(_Action == IRenderApiDeviceLostListener::eReset_Begin)
+    {
+        if(m_pModelMgr )
+        {
+            m_pModelMgr->unload();
+        }
+
+    }
+}
+
+bool xEvol3DEngine::initRenderer( const wchar_t* projectName, void* hWnd , xXmlNode* pCreateParams) 
 {
 	xXmlNode* pRootNode    = m_cfgDocument->root();
 
@@ -309,6 +321,11 @@ bool   xEvol3DEngine::initRenderer( const wchar_t* projectName, void* hWnd , xXm
 	if(pPrjNode == NULL) pPrjNode = pRootNode->findNode(L"engine");
 
 	const wchar_t* renderApiName = pPrjNode->value(L"renderapi");
+	
+	if( renderApiName == NULL)
+	{
+		renderApiName = L"Auto";
+	}
 
 	if(hWnd == NULL)
 	{
@@ -338,6 +355,7 @@ bool   xEvol3DEngine::initRenderer( const wchar_t* projectName, void* hWnd , xXm
 	if(m_pRenderApi == NULL) 
 		m_pRenderApi = NULL;
 
+    m_pRenderApi->AddDeviceLostListener(this);
 	m_pRenderApi->init( pRootNode ) ;
 
 	//现在来初始化所有的ResourceManager;

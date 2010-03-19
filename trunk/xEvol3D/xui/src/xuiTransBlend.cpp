@@ -21,27 +21,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../../xStdPch.h"
 #include "../xuiWindow.h"
 BEGIN_NAMESPACE_XUI
-void xuiWindowTransform_t::setName(const wchar_t* _name)
+void xuiWindowTransform::setName(const wchar_t* _name)
 {
 
 }
 
-xuiWindowTransform_t::xuiWindowTransform_t()
+xuiWindowTransform::xuiWindowTransform()
 {
 
 }
 
-void xuiWindowTransform_t::begin()
+void xuiWindowTransform::begin()
 {
 
 }
 
-void xuiWindowTransform_t::end()
+void xuiWindowTransform::end()
 {
 
 }
 
-xuiWindowTransform_t  xuiWindowTransform_t::XUITRANFORM_IDENTITY;//单位变换
+xuiWindowTransform  xuiWindowTransform::XUITRANFORM_IDENTITY;//单位变换
 
 
 xuiWindowTransBlender::xuiWindowTransBlender(xuiWindow* pWindow)
@@ -69,17 +69,17 @@ bool xuiWindowTransBlender::stop()
     return true;
 }
 
-bool xuiWindowTransBlender::setTrans(xuiWindowTransform_t* pStartState , xuiWindowTransform_t* pEndState , long _time)
+bool xuiWindowTransBlender::setTrans(xuiWindowTransform* pStartState , xuiWindowTransform* pEndState , long _time)
 {
     return true;
 }
 
-bool xuiWindowTransBlender::setTrans(xuiWindowTransform_t* pEndState , long _time)
+bool xuiWindowTransBlender::setTrans(xuiWindowTransform* pEndState , long _time)
 {
     return true;
 }
 
-bool xuiWindowTransBlender::getTrans(xuiWindowTransform_t& tans)
+bool xuiWindowTransBlender::getTrans(xuiWindowTransform& tans)
 {
     return false;
 }

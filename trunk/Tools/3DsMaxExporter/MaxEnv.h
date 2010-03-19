@@ -82,28 +82,10 @@ public:
    static CSetSkinGroupDlg m_SkinGroupDlg;
 
 
-   bool get_saved_filename(wchar_t* file_name, const wchar_t* extern_string , const wchar_t* ext_name,const wchar_t* strTile)
-   {
-	   OPENFILENAMEW ofn; 
-	   ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	   ofn.lStructSize = sizeof(OPENFILENAME);
-	   ofn.hwndOwner = GetActiveWindow();
-	   ofn.lpstrTitle = strTile;
-	   ofn.lpstrFile = file_name;
-	   ofn.nMaxFile = MAX_PATH;
-	   ofn.lpstrFilter = extern_string;
-	   ofn.nFilterIndex = 1;
-	   ofn.lpstrFileTitle = NULL;
-	   ofn.lpstrDefExt = ext_name;
-	   ofn.nMaxFileTitle = 0;
-	   ofn.lpstrInitialDir = NULL;
-	   ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-	   if(GetSaveFileNameW(&ofn) == FALSE)
-	   {
-		   return false;
-	   }
-	   return true;
-   }
+   bool             get_saved_filename(wchar_t* file_name, const wchar_t* extern_string , const wchar_t* ext_name,const wchar_t* strTile);
+   float            TicksToSeconds(TimeValue ticks);
+   TimeValue        SecondsToTicks(float sec);
+   void             SetBipedUniform(INode *pNode, BOOL bUniform);
    void             UseBeforeSkeletonPose(bool bUsed = true);
    void             start(Interface* pInterface , HWND hPannel);
    void             shutdown();
@@ -136,6 +118,8 @@ wstring     ToWCHAR(const char* pStr);
 wstring     ToWCHAR(const string& pStr);
 string      ToAnsi(const std::wstring& pStr);
 void        WGetWndText(CWnd* pWnd , wchar_t* out , int nTex);
+
+
 typedef std::vector<INode*>           sMaxNodes_t;
 wstring tex_usage_string(int usage);
 #define _XASSERT(exp) do{  if( ! (exp) ){ MessageBoxA(GetActiveWindow(),#exp,"´íÎó",MB_OK); assert(exp);} } while(0)

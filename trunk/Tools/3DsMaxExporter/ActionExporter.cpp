@@ -28,24 +28,28 @@ void     makBoneTrans2(INode* pNode , sBoneTrans_t& boneTrans , Matrix3& mat)
 	Point3   Trans = mat.GetTrans();
 	Matrix3  RotMat = mat;
 	Matrix3  ScaleMat = mat;
-	RotMat.NoTrans();
-	RotMat.NoScale();
+
+    RotMat.NoScale();
+    ScaleMat = mat * Inverse(RotMat);
+    //算出Scale Matrix;
+
+	RotMat.NoTrans();	
 	Quat RotQuat(RotMat);
-	   
-	ScaleMat.NoRot();
-	ScaleMat.NoTrans();
+
+	//ScaleMat.NoRot();
+	//ScaleMat.NoTrans();
 
 	boneTrans.m_Rotate    = conv_type<sQuat_t , Quat>(RotQuat);
 	boneTrans.m_Trans     = conv_type<sVector_t   ,Point3 >(Trans);
 	boneTrans.m_Scale.x   = ScaleMat.GetRow(0).x;
 	boneTrans.m_Scale.y   = ScaleMat.GetRow(1).y;
 	boneTrans.m_Scale.z   = ScaleMat.GetRow(2).z;
-	if( abs(boneTrans.m_Scale.x - 1.0f) > 0.000001 ||
-		abs(boneTrans.m_Scale.y - 1.0f) > 0.000001 ||
-		abs(boneTrans.m_Scale.z - 1.0f) > 0.000001 )
+	if( abs(boneTrans.m_Scale.x - boneTrans.m_Scale.y) > 0.000001 ||
+		abs(boneTrans.m_Scale.y - boneTrans.m_Scale.z) > 0.000001 ||
+		abs(boneTrans.m_Scale.z - boneTrans.m_Scale.x) > 0.000001 )
 	{
-		
-            XEVOL_LOG(eXL_DEBUG_HIGH , L"   {警告} :  骨头[ %s ] 的上有Scale\r\n",INodeName(pNode) );
+            std::wstring _NodeName = INodeName(pNode);
+            XEVOL_LOG(eXL_DEBUG_HIGH , L"   {警告} :  骨头[ %s ] 的上有NonUniformScale\r\n", _NodeName.c_str() );
 	}
 }
 
@@ -207,7 +211,7 @@ void CActionExporter::export(CSkeletonExporter* pSkeleton, sActionInfos_t& actio
 	//
 	int nBone  = (int)pSkeleton->m_MaxBones.size();
 
-
+    pSkeleton->setUniform(TRUE);
 	//分动作，把所有的Bone的Data写入到文件中
     for(size_t iAction = 0 ; iAction < actions.size() ; ++iAction)
     {
@@ -289,6 +293,7 @@ void CActionExporter::export(CSkeletonExporter* pSkeleton, sActionInfos_t& actio
 		}
 		comdoc.close_stream(pactiondatastream);
 	}
+    pSkeleton->setUniform(FALSE);
 
 }
 

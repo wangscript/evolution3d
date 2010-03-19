@@ -91,9 +91,11 @@ bool xD10RenderView::setRenderTarget(IRenderTarget* pRenderTarget , size_t rtIdx
 	m_RenderTargetsView[rtIdx] = pRTV;
 	return true;
 }
+
 bool xD10RenderView::setupDepthView(int w , int h , bool bSet)
 {
-    if( false == m_DepthTexture->create(w , h , PIXELFORMAT_DEPTH32) )
+    xTextureInitDesc initDesc(w , h , PIXELFORMAT_DEPTH32);
+    if( false == m_DepthTexture->create( initDesc , NULL , 0 ) )
     {
         return false;
     }
@@ -352,6 +354,7 @@ xD10RenderWindow::xD10RenderWindow(HWND hWnd , xD3D10RenderApi* pRenderApi) : xD
 	m_hWnd = hWnd;
 	m_pSwapChain = NULL;
 	m_pD10Api = pRenderApi;
+    ZeroMemory(&m_SwapChainDesc , sizeof(m_SwapChainDesc) );
 }
 
 xD10RenderWindow::~xD10RenderWindow()
@@ -372,10 +375,9 @@ bool xD10RenderWindow::resize(int w , int h)
 	DXGI_SWAP_CHAIN_FLAG swcFlag = (DXGI_SWAP_CHAIN_FLAG)0;
 	m_widht  = w;
 	m_height = h;
-	DXGI_SWAP_CHAIN_DESC _desc;
-	m_pSwapChain->GetDesc(&_desc);
+	m_pSwapChain->GetDesc(&m_SwapChainDesc);
 	m_pD10Api->getRTSampleDesc(m_RTSampleDesc);
-	HRESULT hr = m_pSwapChain->ResizeBuffers(_desc.BufferCount , m_widht , m_height , _desc.BufferDesc.Format , swcFlag);
+	HRESULT hr = m_pSwapChain->ResizeBuffers(m_SwapChainDesc.BufferCount , m_widht , m_height , m_SwapChainDesc.BufferDesc.Format , swcFlag);
     return _createRenderTargets();
 }
 
@@ -397,8 +399,8 @@ bool xD10RenderWindow::_createRenderTargets()
 	m_WindowRT.m_TexDesc.m_width  = m_widht;
 	m_WindowRT.m_TexDesc.m_height = m_height;
 	DXGI_SAMPLE_DESC DXGISampleDesc ;
-    m_pD10Api->GetDXGISampleDesc(DXGISampleDesc);
-    m_pD10Api->getRTSampleDesc(m_RTSampleDesc);
+    DXGISampleDesc = m_SwapChainDesc.SampleDesc;
+    getRTSampleDesc(m_RTSampleDesc);
 	//重新创建Depth Stencil view
     if( createDepthView(m_widht , m_height ) )
 	{
@@ -412,14 +414,28 @@ bool xD10RenderWindow::desc(xTextureDesc& _desc)
 	_desc = m_WindowRT.m_TexDesc;
 	return true;
 }
+bool xD10RenderWindow::GetDXGISampleDesc(DXGI_SAMPLE_DESC& SampleDesc)
+{
+    SampleDesc = m_SwapChainDesc.SampleDesc;
+    return true;
+}
+
+void xD10RenderWindow::getRTSampleDesc(xRTSampleDesc& _desc)
+{
+    DXGI_SWAP_CHAIN_DESC swap_desc;
+    m_pSwapChain->GetDesc(&swap_desc);
+    _desc.m_SampleCount = swap_desc.SampleDesc.Count;
+    _desc.m_SampleQulity= swap_desc.SampleDesc.Quality;
+}
 
 bool xD10RenderWindow::create(IDXGISwapChain* pSwapChain , int width , int height)
 {
 	m_pSwapChain = pSwapChain;
-	DXGI_SWAP_CHAIN_DESC _desc;
-	m_pSwapChain->GetDesc(&_desc);
-	m_pD10Api->getRTSampleDesc(m_RTSampleDesc);
-	xD10GIFormatInfo* pFmtInfo = xD10ConstLexer::singleton()->GetPixelFormat(_desc.BufferDesc.Format);
+	m_pSwapChain->GetDesc(&m_SwapChainDesc);
+	getRTSampleDesc(m_RTSampleDesc);
+    GetDXGISampleDesc(m_DXGISampleDesc);
+
+	xD10GIFormatInfo* pFmtInfo = xD10ConstLexer::singleton()->GetPixelFormat(m_SwapChainDesc.BufferDesc.Format);
 	if(pFmtInfo == NULL)
 	{
 		m_WindowRT.m_TexDesc.m_fmt = PIXELFORMAT_R8G8B8A8;
@@ -446,5 +462,17 @@ bool  xD10RenderWindow::destory()
 	XSAFE_RELEASE(m_RenderTargetsView[0]);
 	return xD10RenderView::destory();
 }
-
+bool xD10RenderWindow::NeedResize(int width , int height )
+{
+    if(m_SwapChainDesc.BufferDesc.Width == width && m_SwapChainDesc.BufferDesc.Height == height)
+    {
+        return false;
+    }
+    return true;
+}
+bool xD10RenderWindow::Present(UINT syncInterval , UINT Flags)
+{
+    m_pSwapChain->Present( 0, 0 );
+    return true;
+}
 END_NAMESPACE_XEVOL3D

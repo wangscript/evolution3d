@@ -1,9 +1,9 @@
 #include "xStdPch.h"
 #include "Application/xWindow.h"
 #include <Windows.h>
+#include "xWin32Platform.h"
 BEGIN_NAMESPACE_XEVOL3D
 
-#define MAPVKEY(x) (x)
 
 void translateKbMsg(xWindowMsg& msg)
 {

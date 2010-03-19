@@ -10,7 +10,7 @@ IMPL_BASE_OBJECT_CLASSID(xOBJModel , xBaseModel);
 IMPL_BASE_OBJECT_CLASSID(xOBJMesh  , xCoreMesh );
 IMPL_OBJECT_FACTORY(xOBJModel , xBaseModel , xOBJModelCreator , xBaseModelCreator , xBaseModelCreatorMgr , L"obj"    , L"OBJ model" , xBaseTextureMgr* , bool)
 
-xOBJMesh::xOBJMesh(xBaseTextureMgr* pTexMgr , bool bSysMemCopy) : xCoreMesh(pTexMgr , bSysMemCopy)
+xOBJMesh::xOBJMesh(xBaseTextureMgr* pTexMgr , bool bSysMemCopy) : xCoreMesh(pTexMgr , NULL)
 {
 
 }

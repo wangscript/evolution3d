@@ -3,7 +3,7 @@
 #include "../BaseLib/xEvol3DAPI.h"
 #include "../BaseLib/stl_dllalloc.h"
 #include "../Application/xVirtualKey.h"
-#ifdef WIN32
+#if (defined(_WIN32) || defined(_WIN64) )
 #include <windows.h>
 #endif
 #define XEVOL_MAX_PATH 512
@@ -70,17 +70,6 @@ public:
 	virtual bool    load(const wchar_t* dllName) = 0;
 	virtual bool    unload() = 0;
 	virtual void*   getProcAddress(const wchar_t* funcName) = 0;
-};
-
-//Keyboard
-class _XEVOL_BASE_API_  IKeyboard
-{
-public :
-	virtual bool          isKeyPressed(VIRTUAL_KEY vKey)     = 0;
-	virtual bool          isCharKey(VIRTUAL_KEY vKey)        = 0;
-	virtual bool          isKeyToggle(VIRTUAL_KEY vKey)      = 0;
-	virtual unsigned char convert2Char(VIRTUAL_KEY vKey)     = 0;
-	virtual unsigned char getSysVirtualKey(VIRTUAL_KEY vKey) = 0;
 };
 
 class _XEVOL_BASE_API_  IIMEInput

@@ -6,28 +6,7 @@
 #include  "xRenderView.h"
 BEGIN_NAMESPACE_XEVOL3D
 
-class _XEVOL_BASE_API_ xAlpahRefConstaBinder : public IShaderConstBinder
-{
-	xRenderApiMatContext* matContext;
-	bool                 m_bDirty;
-	IMPL_NONE_REFCOUNT_OBJECT_INTERFACE(xAlpahRefConstaBinder);
-	float&                m_AlphaRefValue;
-public:
-	void     setDirty(){m_bDirty = true ;}
-	xAlpahRefConstaBinder(float& _value) : m_AlphaRefValue(_value) {};
-	//返回true，表示变量被更新了
-	bool     updateConstant(IShaderConstantReflection* pConst)
-	{
-		return pConst->setData( &m_AlphaRefValue , sizeof(m_AlphaRefValue) );
-	}
-
-	IShaderConstBinder*   createInstance()
-	{
-		return this;
-	}
-};
-
-
+typedef TConstantValueBinder<float> xAlpahRefConstaBinder;
 //===========================================================
 class xFontRenderDevice : public IFontRenderDevice
 {
@@ -36,8 +15,8 @@ class xFontRenderDevice : public IFontRenderDevice
 	IBlenderState*         m_BlendState;
 	ISamplerState*         m_pPointSampler;
 	ISamplerState*         m_pLinearSampler;
-	IGpuProgram*           m_pDefFontShader;
-	IGpuProgram*           m_pUsrFontShader;
+	HGpuProgram            m_pDefFontShader;
+	HGpuProgram            m_pUsrFontShader;
 	IDepthStencilState*    m_pStencilState;
 	I2DRectObject*         m_2DObject;
 public:
@@ -47,14 +26,14 @@ public:
 public:
 	virtual I2DRectObject*  get2DObject();
 	virtual bool            setUVLayer(int nUVLayer);
-	virtual bool            setShaderProgram(IGpuProgram* pProgram);
+	virtual bool            setShaderProgram(HGpuProgram pProgram);
 	virtual bool            init();
 	virtual bool            setFontFilter(eFontFilter filter);
 	virtual bool            beginFontRender();
 	virtual bool            endFontRender();
 	virtual bool            drawRectf(IBaseTexture* pTexture, float vDestRect[4] , const xColor_4f& color);
 	virtual bool            drawRectf(IBaseTexture* pTexture, float vDestRect[4] ,float vSrcRect[4]  , const xColor_4f& color);
-	virtual IBaseTexture*   createLockableTexture(int w , int h , ePIXEL_FORMAT fmt , bool bReadable , int nMipMap = 1, int nArraySize = 1 );
+	virtual IBaseTexture*   createTexture(int w , int h , ePIXEL_FORMAT fmt , bool bReadable , eResourceUsage usage , int nMipMap = 1, int nArraySize = 1 );
 	virtual bool            isTextureSupport(ePIXEL_FORMAT fmt , bool lockable = true);
 };
 
@@ -69,7 +48,7 @@ bool xFontRenderDevice::setUVLayer(int nUVLayer)
 	return true;
 }
 
-bool xFontRenderDevice::setShaderProgram(IGpuProgram* pProgram)
+bool xFontRenderDevice::setShaderProgram(HGpuProgram pProgram)
 {
 	m_pUsrFontShader = pProgram;
 	return true;
@@ -87,7 +66,7 @@ bool xFontRenderDevice::init()
 	if(m_pDefFontShader == NULL)
 	{
 		HGpuProgram hGpuProgram = m_pRenderApi->gpuProgramManager()->load(L"font.vertex", L"font.pixel" ,NULL);
-		m_pDefFontShader = hGpuProgram.getResource();
+		m_pDefFontShader = hGpuProgram;
 	}
 
 	if(m_pStencilState == NULL)	 { m_pStencilState = m_pRenderApi->createDepthStencilState(L"Overlay");}
@@ -115,12 +94,12 @@ xFontRenderDevice::xFontRenderDevice(IRenderApi* pRenderApi)
 {
 	m_filter         = eFontFilter_Point;
 	m_pStencilState  = NULL;
-	m_pDefFontShader = NULL;
+	m_pDefFontShader.setNULL();
 	m_pRenderApi     = pRenderApi;
 	m_pPointSampler  = NULL;
 	m_pLinearSampler = NULL;
 	m_BlendState     = NULL;
-	m_pUsrFontShader = NULL;
+	m_pUsrFontShader.setNULL();
 }
 
 xFontRenderDevice::~xFontRenderDevice()
@@ -178,11 +157,20 @@ bool xFontRenderDevice::drawRectf(IBaseTexture* pTexture, float vDestRect[4] ,fl
 	return false;
 }
 
-IBaseTexture* xFontRenderDevice::createLockableTexture(int w , int h , ePIXEL_FORMAT fmt , bool bReadable, int nMipMap, int nArraySize)
+IBaseTexture* xFontRenderDevice::createTexture(int w , int h , ePIXEL_FORMAT fmt , bool bReadable, eResourceUsage usage , int nMipMap, int nArraySize)
 {
 	if(m_pRenderApi)
 	{
-		return m_pRenderApi->createLockableTexture(w , h , fmt , bReadable,  nMipMap , nArraySize);
+        xTextureInitDesc texInitDesc(w , h , fmt);
+        texInitDesc.m_bReadable = bReadable;//;
+        texInitDesc.m_nMipmap = nMipMap;
+        texInitDesc.m_TextureDesc.m_nArraySize = nArraySize;
+        texInitDesc.m_usage  = usage;
+        if(texInitDesc.m_usage == RESOURCE_USAGE_DEFAULT)
+        {
+            texInitDesc.m_access = 0;
+        }
+  		return m_pRenderApi->createTexture(texInitDesc , NULL , 0);
 	}
 	return false; 
 }
@@ -288,6 +276,33 @@ HFontRender xRenderApiImp::findFont(const wchar_t* family , const wchar_t* fontN
 HFontRender xRenderApiImp::findFont(const wchar_t* fontName)
 {
 	return m_FontManager.findFont(fontName , false);
+}
+
+IBaseTexture* xRenderApiImp::createTexture(int w , int h , ePIXEL_FORMAT fmt ,  bool bLockable  , int nMipMap , int nArraySize  ,  eResourceUsage usage  , eResourceAccessFlage access, eResourceBindType bindType)
+{
+    xTextureInitDesc desc(w , h , fmt , 1);
+    desc.m_access = access;
+    desc.m_bindType = bindType;
+    desc.m_usage = usage;
+    desc.m_bReadable = bLockable;
+    desc.m_TextureDesc.m_nArraySize = nArraySize;
+    desc.m_nMipmap = nMipMap;
+    IRenderApi* pRenderApi = this;
+    return pRenderApi->createTexture(desc ,  NULL , 0);
+
+}
+
+IBaseTexture* xRenderApiImp::createTexture(int w , int h , int depth , ePIXEL_FORMAT fmt ,  bool bLockable  , int nMipMap , int nArraySize ,  eResourceUsage usage , eResourceAccessFlage access, eResourceBindType bindType)
+{
+    xTextureInitDesc desc(w , h , fmt , depth);
+    desc.m_access = access;
+    desc.m_bindType = bindType;
+    desc.m_bReadable = bLockable;
+    desc.m_usage = usage;
+    desc.m_TextureDesc.m_nArraySize = nArraySize;
+    desc.m_nMipmap = nMipMap;
+    IRenderApi* pRenderApi = this;
+    return pRenderApi->createTexture(desc ,  NULL , 0);
 }
 
 //=======================================
@@ -423,7 +438,6 @@ xRenderApiBase::xRenderApiBase()
 	m_pCallback = NULL;
 
 	m_AlphaRef = 0.0f;
-	m_pAlphaRefValueConstBinder = NULL;
 }
 
 IColorSelector* xRenderApiBase::colorSelector()
@@ -484,7 +498,12 @@ xRenderApiBase::~xRenderApiBase()
 
 bool xRenderApiBase::uninit( )
 {
-	XSAFE_DELETE(m_pAlphaRefValueConstBinder);
+    size_t nShaderConstBinder = m_vShaderConstBinders.size() ;
+    for(size_t i = 0 ; i < nShaderConstBinder  ; i ++)
+    {
+        XSAFE_DELETE(m_vShaderConstBinders[i]);
+    }
+    m_vShaderConstBinders.clear();
 	XSAFE_RELEASEOBJECT(m_LightingState);
 	XSAFE_DELETE(m_pBaseSelector);
 	freeAllTextureManager();
@@ -533,7 +552,7 @@ bool xRenderApiBase::init(xXmlNode* pSysNode)
 	//------------------------------------------
 	//IRenderApi::init(pSysNode);
 	TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
-	xXmlNode* pRendererNode = pSysNode->findNode( name() , 0 );
+	xXmlNode* pRendererNode  = pSysNode->findNode( name() , 0 );
 	xXmlNode* pShaderMgrNode = pRendererNode->findNode(L"ShaderManager",0);
 
 	//Load Shader Manager configuration
@@ -602,14 +621,44 @@ bool xRenderApiBase::init(xXmlNode* pSysNode)
 
 	m_FontRenderDevice->init();
 
-	XSAFE_DELETE(m_pAlphaRefValueConstBinder);
-	m_pAlphaRefValueConstBinder = new xAlpahRefConstaBinder(m_AlphaRef);
-	registeShaderConstBinder(L"AlphaRefValue"      , m_pAlphaRefValueConstBinder );
-	registeShaderConstBinder(L"AlphaRef"           , m_pAlphaRefValueConstBinder );
-	return true;
+	xAlpahRefConstaBinder* pAlphaRefValueConstBinder = new xAlpahRefConstaBinder(m_AlphaRef);
+	registeShaderConstBinder(L"AlphaRefValue"      , pAlphaRefValueConstBinder );
+	registeShaderConstBinder(L"AlphaRef"           , L"AlphaRefValue"  );
+    m_vShaderConstBinders.push_back( pAlphaRefValueConstBinder );
+
+
+    //m_RenderProperty.load( pSysNode->findNode(L"RenderProperty") );
+
+    //PropertyItem::PropertyItems vOuts;
+    //m_RenderProperty.get_property(vOuts);
+
+    //int nProperty = (int)vOuts.size();
+    //for(int i = 0 ; i < nProperty ; i ++)
+    //{
+    //     xPropertyItem* pItem = vOuts[i];
+    //     IPropertyValue* pValue = pItem->getValueObject();
+    //     xConstantValueDataBinder* pBinder = new xConstantValueDataBinder(pValue->getValuePtr() , pValue->getValueDataLen() );
+    //     registeShaderConstBinder(pItem->name()  , pBinder );
+    //     m_vShaderConstBinders.push_back( pBinder );
+    //}
+
+    return true;
 }
 
+void xRenderApiBase::registeShaderConstBinder(const wchar_t* _name , const wchar_t* _alisName)
+{
+    IShaderConstBinder* pConstBinder = getShaderConstBinder(_alisName);
+    if(pConstBinder == NULL)
+        return ;
+    registeShaderConstBinder(_name , pConstBinder);
+}
 
+void xRenderApiBase::registeShaderConstBinder(const wchar_t* _name , void* pData , int dataLen)
+{
+    xConstantValueDataBinder* pBinder = new xConstantValueDataBinder( pData , dataLen );
+    registeShaderConstBinder( _name  , pBinder );
+    m_vShaderConstBinders.push_back( pBinder );
+}
 
 bool xRenderApiBase::enableThreadLocker(bool bEnable)
 {
@@ -872,6 +921,7 @@ bool xRenderApiBase::draw2DRect(I2DRectObject* p2DRect)
 HBaseShader xRenderApiBase::createShader(const wchar_t* shaderName , eShaderType type)
 {
 	HBaseShader hShader = m_ShaderManager.add(shaderName,(unsigned int)type , true );
+    if(hShader.getResource() ) hShader->setName( shaderName );
 	return hShader;
 }
 

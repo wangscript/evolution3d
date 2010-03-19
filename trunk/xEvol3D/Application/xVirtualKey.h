@@ -165,6 +165,16 @@
 #define MKEY_CONTROL          0x0008   //MK_RBUTTON
 #define MKEY_MBUTTON          0x0010   //MK_SHIFT
 
+//Keyboard
+class IKeyboard
+{
+public :
+	virtual bool           isKeyPressed(VIRTUAL_KEY vKey)     = 0;
+	virtual bool           isCharKey(VIRTUAL_KEY vKey)        = 0;
+	virtual bool           isKeyToggle(VIRTUAL_KEY vKey)      = 0;
+	virtual unsigned short convert2Char(VIRTUAL_KEY vKey)     = 0;
+	virtual unsigned char  getSysVirtualKey(VIRTUAL_KEY vKey) = 0;
+};
 
 #endif
 

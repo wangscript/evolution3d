@@ -1,4 +1,5 @@
 #include "geotiffio.h"
+#include "xTerrainTool.h"
 #include "geo_normalize.h"
 #include "libxtiff/xtiffio.h"
 #include "xTerrainData.h"
@@ -6,6 +7,9 @@
 
 BEGIN_NAMESPACE_XEVOL3D
 
+
+#define _TEMP_SX 5000.0
+#define _TEMP_SY 4000.0
 
 //------------------------------------------------------------------------
 
@@ -165,12 +169,13 @@ bool xTerrainData::load(xBaseTextureMgr* pTexMgr, xXmlNode* pNode)
 		GTIFFree(gtif);
 
 		// 原始（如：1000 X 800）算到1025 X 1025
+
+        GeoTif_Scale(OriginDepth  , imageWidth , imageLength , m_pDepth , m_ResX , m_ResY);
+
 		float xfactor = ((float) (imageWidth - 1)) / 1024.0f;
 		float yfactor = ((float) (imageLength - 1)) / 1024.0f;
 		// 生成高度信息
 		uint32 px , py;
-		float ZAvr = 0.0f;
-		int ZAvrCount = 0;
 		for ( uint32 y = 0 ; y < m_ResY ; ++y )
 		{
 			for ( uint32 x = 0 ; x < m_ResX ; ++x )
@@ -180,24 +185,6 @@ bool xTerrainData::load(xBaseTextureMgr* pTexMgr, xXmlNode* pNode)
 				py = y * yfactor;
 				// 取此像素的高度
 				m_pDepth[m_ResX*y + x] = OriginDepth[py*imageWidth + px];
-				if ( m_pDepth[m_ResX*y + x] > -20000.0f )
-				{
-					ZAvr += m_pDepth[m_ResX*y + x];
-					++ZAvrCount;
-					m_vRelativeCenter.z	= max(m_vRelativeCenter.z, m_pDepth[m_ResX*y + x]);
-				}
-			}
-		}
-		ZAvr /= ZAvrCount;
-		for ( uint32 y = 0 ; y < m_ResY ; ++y )
-		{
-			for ( uint32 x = 0 ; x < m_ResX ; ++x )
-			{
-				// 取此像素的高度
-				if ( m_pDepth[m_ResX*y + x] < -20000.0f )
-				{
-					m_pDepth[m_ResX*y + x] = ZAvr;
-				}
 			}
 		}
 	}
@@ -207,6 +194,22 @@ bool xTerrainData::load(xBaseTextureMgr* pTexMgr, xXmlNode* pNode)
 	m_hTexture  = pTexMgr->loadTexture(_RES_ABSPATH_( m_ccTextureName.c_str() ) , true , 0);
 	m_surfResX	= pNode->findValue(L"TempSurfSizeX")->int_value();
 	m_surfResY	= pNode->findValue(L"TempSurfSizeY")->int_value();
+
+	_TileX = m_realStartX / _TEMP_SX;
+	_TileY = m_realStartY / _TEMP_SY;
+
+	double tilesx = _TEMP_SX;
+	double tilesy = _TEMP_SY;
+	double tsx = getRealEndX() - getRealStartX();
+	double tsy = getRealEndY() - getRealStartY();
+	double decx = tsx - tilesx;
+	double decy = tsy - tilesy;
+	// TODO 更好的设计
+	if ( abs(decx) > 100 || abs(decy) > 100 )
+	{
+		// TODO log error
+		return false;
+	}
 
 	return true;
 }
@@ -221,6 +224,52 @@ bool xTerrainData::save(xXmlNode* pNode)
 	return true;
 }
 
+float	xTerrainData::getAcceptableData(double x, double y)
+{
+	double sizex = (m_realEndX - m_realStartX)/1024.0;
+	double sizey = (m_realEndY - m_realStartY)/1024.0;
+	// 将xy映射到ID空间：
+	int xid = (x - m_realStartX)/sizex;
+	int yid = (y - m_realStartY)/sizey;
+	// 此ID的数据是否合法？
+	if ( xid >= 0 && xid < m_ResX && yid >= 0 && yid < m_ResY && m_pDepth[yid*m_ResX+xid] > -20000.0f )
+	{
+		return m_pDepth[yid*m_ResX+xid];
+	}
+	// TODO如果不合法，寻找周边合法数据
+	return -30000.0f;
+}
+
+void xTerrainData::_clearupEdges(xTerrainData* px, xTerrainData* pX, xTerrainData* py, xTerrainData* pY)
+{
+	double xsize_per_samp = (m_realEndX - m_realStartX)/1024.0;
+	double ysize_per_samp = (m_realEndY - m_realStartY)/1024.0;
+	// 
+	for (uint32 y = 0; y < m_ResY; ++y )
+	{
+		for (uint32 x = 0; x < m_ResX; ++x)
+		{
+			if(m_pDepth[y*m_ResX+x] < -20000.0f)
+			{
+				double realx = x * xsize_per_samp + m_realStartX;
+				double realy = y * ysize_per_samp + m_realStartY;
+				// 从4个方向得到数值。
+				float vx = -30000.0f;
+				if(px) vx = px->getAcceptableData(realx, realy);
+				float vX = -30000.0f;
+				if(pX) vX = pX->getAcceptableData(realx, realy);
+				float vy = -30000.0f;
+				if(py) vy = py->getAcceptableData(realx, realy);
+				float vY = -30000.0f;
+				if(pY) vY = pY->getAcceptableData(realx, realy);
+				if ( vx > -20000.0f )m_pDepth[y*m_ResX+x] = vx;
+				if ( vX > -20000.0f )m_pDepth[y*m_ResX+x] = vX;
+				if ( vy > -20000.0f )m_pDepth[y*m_ResX+x] = vy;
+				if ( vY > -20000.0f )m_pDepth[y*m_ResX+x] = vY;
+			}
+		}
+	}
+}
 
 //------------------------------------------------------------------------
 
@@ -322,6 +371,7 @@ void xTerrainDataSet::generatePatchView( unsigned int tileCountX, unsigned int t
 
 bool xTerrainDataSet::load(xXmlNode* pNode)
 {
+
 	int node_count = pNode->countNode();
 	std::vector< xTerrainData*,dllsafe_alloc<xTerrainData*> > TerrainDatas;
 	for ( int i = 0 ; i < node_count ; ++i )
@@ -340,59 +390,59 @@ bool xTerrainDataSet::load(xXmlNode* pNode)
 	double sx = -100000000000000000000000000000.0;
 	double sy = -100000000000000000000000000000.0;
 	// 用以区分不同的Data之间是否有特别大（小）的块
-	// TODO 更好的设计
-	double tilesx = 0;
-	double tilesy = 0;
+	int origin_idx = INT_MAX;
+	int origin_idy = INT_MAX;
 
+	if ( TerrainDatas.empty() )
+	{
+		return false;
+	}
+
+	vector<size_t> killData;
+	// TODO 更好的设计
+	// 根据配置，预算格子大小（因为DEM是等大小的）
+	// 读取某个节点，并适配某个格子，第一个格子决定所有适配的空间位置，Tile从0,0开始起算。
+	// 第二个格子开始，适配空间，对于地形数据，我们检查X方向和Y方向均除以5000（TODO 当前版本）。
+	// 适配需要修改数据区域，直到相邻数据区域完全缝合。
 	for (size_t i = 0 ; i < TerrainDatas.size(); ++i)
 	{
+		double tilesx = _TEMP_SX;
+		double tilesy = _TEMP_SY;
 		double tsx = TerrainDatas[i]->getRealEndX() - TerrainDatas[i]->getRealStartX();
 		double tsy = TerrainDatas[i]->getRealEndY() - TerrainDatas[i]->getRealStartY();
 
 		m_TerrainOriginX = min(m_TerrainOriginX,TerrainDatas[i]->getRealStartX());
 		m_TerrainOriginY = min(m_TerrainOriginY,TerrainDatas[i]->getRealStartY());
+		origin_idx = min(origin_idx,TerrainDatas[i]->GetTileX());
+		origin_idy = min(origin_idy,TerrainDatas[i]->GetTileY());
 		m_TerrainSizeX	= max(m_TerrainSizeX,TerrainDatas[i]->getRealEndX());
 		m_TerrainSizeY	= max(m_TerrainSizeY,TerrainDatas[i]->getRealEndY());
-
-		if ( tilesx < 1 && tilesy < 1 )
-		{
-			tilesx = TerrainDatas[i]->getRealEndX() - TerrainDatas[i]->getRealStartX();
-			tilesy = TerrainDatas[i]->getRealEndY() - TerrainDatas[i]->getRealStartY();
-			continue;
-		}
 
 		double decx = tsx - tilesx;
 		double decy = tsy - tilesy;
 		// TODO 更好的设计
-		if ( decx > 50 || decy > 50 )
+		if ( abs(decx) > 100 || abs(decy) > 100 )
 		{
 			// TODO log error
 			return false;
 		}
-		tilesx = TerrainDatas[i]->getRealEndX() - TerrainDatas[i]->getRealStartX();
-		tilesy = TerrainDatas[i]->getRealEndY() - TerrainDatas[i]->getRealStartY();
 	}
 	m_TerrainSizeX	-= m_TerrainOriginX;
 	m_TerrainSizeY	-= m_TerrainOriginY;
 
 	// 计算大致覆盖的地形数量
-	m_TerrainDataCountX = m_TerrainSizeX / tilesx + 1;
-	m_TerrainDataCountY = m_TerrainSizeY / tilesy + 1;
+	m_TerrainDataCountX = m_TerrainSizeX / _TEMP_SX + 1;
+	m_TerrainDataCountY = m_TerrainSizeY / _TEMP_SY + 1;
 
 	bool* BoolArray = new bool[m_TerrainDataCountX*m_TerrainDataCountY];
 	memset(BoolArray, 0, sizeof(BoolArray));
 
 	// 算出每个地形的覆盖范围
 	// 计算这个data是落在了哪个范围内
-	vector<size_t> killData;
 	for (size_t i = 0 ; i < TerrainDatas.size(); ++i)
 	{
-		double tsx = TerrainDatas[i]->getRealEndX() - TerrainDatas[i]->getRealStartX();
-		double tsy = TerrainDatas[i]->getRealEndY() - TerrainDatas[i]->getRealStartY();
-		double tcx = tsx*0.5 + TerrainDatas[i]->getRealStartX();
-		double tcy = tsy*0.5 + TerrainDatas[i]->getRealStartY();
-		unsigned int xid = (tcx-m_TerrainOriginX) / tilesx;
-		unsigned int yid = (tcy-m_TerrainOriginY) / tilesy;
+		unsigned int xid = TerrainDatas[i]->GetTileX() - origin_idx;
+		unsigned int yid = TerrainDatas[i]->GetTileY() - origin_idy;
 		if ( BoolArray[xid+yid*m_TerrainDataCountX] )
 		{
 			killData.push_back(i);
@@ -400,6 +450,7 @@ bool xTerrainDataSet::load(xXmlNode* pNode)
 		BoolArray[xid+yid*m_TerrainDataCountX] = true;
 		TerrainDatas[i]->_format( xid, yid, m_TerrainOriginX, m_TerrainOriginY );
 	}
+
 	// 已经存在的应该被抹去
 	for (size_t i = 0 ; i < killData.size(); ++i)
 	{
@@ -419,7 +470,42 @@ bool xTerrainDataSet::load(xXmlNode* pNode)
 	}
 	delete[] BoolArray;
 
+	// 平整地形高度，处理边缘地带。
+	for (size_t i = 0 ; i < m_TerrainHeightDatas.size(); ++i)
+	{
+		xTerrainData* px = NULL;	xTerrainData* pX = NULL;	xTerrainData* py = NULL;	xTerrainData* pY = NULL;
+		GetSideTerrain(m_TerrainHeightDatas[i], &px, &pX, &py, &pY);
+		m_TerrainHeightDatas[i]->_clearupEdges(px, pX, py, pY);
+	}
+
 	return true;
+}
+
+void xTerrainDataSet::GetSideTerrain(xTerrainData* pSource, xTerrainData** ppx, xTerrainData** ppX, xTerrainData** ppy, xTerrainData** ppY)
+{
+	for (size_t i = 0 ; i < m_TerrainHeightDatas.size(); ++i)
+	{
+		if (m_TerrainHeightDatas[i]->GetTileX() == pSource->GetTileX() - 1
+			&& m_TerrainHeightDatas[i]->GetTileY() == pSource->GetTileY())
+		{
+			*ppx = m_TerrainHeightDatas[i];
+		}
+		if (m_TerrainHeightDatas[i]->GetTileX() == pSource->GetTileX() + 1
+			&& m_TerrainHeightDatas[i]->GetTileY() == pSource->GetTileY())
+		{
+			*ppX = m_TerrainHeightDatas[i];
+		}
+		if (m_TerrainHeightDatas[i]->GetTileY() == pSource->GetTileY() - 1
+			&& m_TerrainHeightDatas[i]->GetTileX() == pSource->GetTileX())
+		{
+			*ppy = m_TerrainHeightDatas[i];
+		}
+		if (m_TerrainHeightDatas[i]->GetTileY() == pSource->GetTileY() + 1
+			&& m_TerrainHeightDatas[i]->GetTileX() == pSource->GetTileX())
+		{
+			*ppY = m_TerrainHeightDatas[i];
+		}
+	}
 }
 
 bool xTerrainDataSet::save(xXmlNode* pNode)

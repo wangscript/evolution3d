@@ -12,15 +12,9 @@ BEGIN_NAMESPACE_XEVOL3D
 class  _XEVOL_BASE_API_  xBaseTextureLoader;
 struct _XEVOL_BASE_API_  xTextureName
 {
-	std::ds_wstring m_Name;
-	int             m_Width;
-	int             m_Height;
-	int             m_Depth;
-	ePIXEL_FORMAT   m_fmt;
-	int             m_ArraySize;
-	bool            m_bR2Texture;
-	eResourceType   m_Type;
-	bool            m_bLockable;
+	std::ds_wstring  m_Name;
+	xTextureInitDesc m_InitDesc;
+	eResourceType    m_Type;	
 public:
 	xTextureName();
 	xTextureName(const wchar_t* fileName);
@@ -55,7 +49,7 @@ public:
 	void                 setRenderApi(IRenderApi* pRenderApi);
 	HBaseTexture         load(const xTextureName& texName , bool bLoadImm  , bool arg);
 	HBaseTexture         loadTexture(const wchar_t* texName, bool bLoadImm  , bool arg);
-	HBaseTexture         loadTexture(const wchar_t* texName , ePIXEL_FORMAT fmt , int w , int h , int depth = 1 , eResourceType type = RESOURCE_TEXTURE2D , int arraySize = 1,  bool rtt  = false , bool bLockable = false) ;
+	HBaseTexture         loadTexture(const wchar_t* texName , xTextureInitDesc& initDesc , eResourceType type = RESOURCE_TEXTURE2D ) ;
 protected:
 	virtual unsigned int _getResSize(IBaseTexture* pRes);
 	virtual bool         _isResLoaded(IBaseTexture* pRes);

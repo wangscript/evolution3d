@@ -426,8 +426,9 @@ bool xXmlFileSource::loadStream(istream& stream)
 	return true;
 }
 
-int xXmlBaseElementBuilder::readText(const wchar_t* pText,wstring& text)
+int xXmlBaseElementBuilder::readText(const wchar_t* pBase,wstring& text)
 {
+    const wchar_t* pText = pBase;
 	int nWhite = g_xCfgLexer.skipWhiteSpace(pText);
 	pText += nWhite;
 	const wchar_t* endTag= L"";
@@ -440,7 +441,8 @@ int xXmlBaseElementBuilder::readText(const wchar_t* pText,wstring& text)
 		endTag = L"\"";
 	}
 	pText += wcslen(endTag);
-	return nWhite +  (int)wcslen(endTag) + g_xCfgLexer.getString(pText,text,endTag , XEvol_IsCfgTokenChar);
+	pText += g_xCfgLexer.getString(pText,text,endTag , XEvol_IsCfgTokenChar);
+    return pText - pBase;
 }
 
 int xXmlHeaderBuilder::parse(const wchar_t* pText)

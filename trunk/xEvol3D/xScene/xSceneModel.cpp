@@ -2,7 +2,7 @@
 #include "xSceneModel.h"
 #include "xSceneGraph.h"
 #include "../Renderer/xRenderer.h"
-
+#include "../RenderAPI/xShaderName.h"
 // TEST
 #include <OperationSys/xOperationSys.h>
 #include <RenderAPI/xBaseTexture.h>
@@ -37,6 +37,30 @@ bool xSceneModel::load(xXmlNode* pXml)
 	xMaterial* pMaterial = pRenderer->createMaterial(_matName);
 	_effect->setMaterial(pMaterial);
 	if(_matName) m_matName = _matName;
+
+    IGpuProgram* pShader = pMaterial->gpuProgram();
+    xBaseModel* pModel = hModel.getResource();
+    IRenderApi* pRenderApi = pRenderer->renderApi();
+    if(pShader && pModel)
+    {
+        xGpuProgNameParser _nameParser;
+        pShader->getName( _nameParser );
+        xShaderName* pVsName = _nameParser.getShaderName(eShader_VertexShader);
+        bool bSkinModifier = pModel->skeleton() != NULL;
+        if(pModel->skeleton())
+        {
+            bSkinModifier = pRenderApi->intCapsValue(L"MaxGpuBone" , 256) >= pModel->skeleton()->nBone();
+        }
+
+        //自动移掉SkinAni的修改器。
+        if(pVsName && bSkinModifier == false && pVsName->removeNode(L"SkinAni"))
+        {
+            xGpuProgramName _name;
+            _nameParser.toName(_name);
+            pMaterial->setGpuProgram(_name);
+        }    
+
+    }
 
 	//做一些_effect参数的加载工作
 	xXmlNode* pEffectXml = pXml->findNode(L"EffectParam");

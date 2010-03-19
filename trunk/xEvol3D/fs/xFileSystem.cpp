@@ -122,7 +122,7 @@ std::ds_wstring xFileSystem::getFileName(const wchar_t* fullName)
 {
 	if(fullName == NULL)
 		return L"";
-	int idx = (int)wcslen(fullName - 1);
+	int idx = (int)wcslen(fullName);
 	for(; idx >= 0 ; idx --)
 	{
 		if(fullName[idx] == '\\' || fullName[idx]=='/')

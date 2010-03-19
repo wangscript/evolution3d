@@ -18,14 +18,15 @@ BEGIN_NAMESPACE_XEVOL3D
 class  _XEVOL_BASE_API_ xCoreMeshName
 {
 public:
-	ds_wstring   m_MeshName   ;    //每个mesh有自己的名字. 这个名字可能会挂一个组别
-	ds_wstring   m_ModelName  ;    //每个Mesh可能会属于某一个Model.如果不属于某个Model,它也
-	int          m_strHash    ;
-	xcomdoc      m_comdoc     ;    //如果该复合文档不空,则从该文档里去load mesh
+	ds_wstring      m_MeshName   ;    //每个mesh有自己的名字. 这个名字可能会挂一个组别
+	ds_wstring      m_ModelName  ;    //每个Mesh可能会属于某一个Model.如果不属于某个Model,它也
+	int             m_strHash    ;
+    xCoreSkeleton*  m_pSkeleton;
+	xcomdoc         m_comdoc     ;    //如果该复合文档不空,则从该文档里去load mesh
 public:
 	bool operator == (const xCoreMeshName& rhv) const;
 	bool operator <  (const xCoreMeshName& rhv) const;
-	xCoreMeshName(const wchar_t* meshName = NULL, const wchar_t* modelName = NULL);
+	xCoreMeshName(const wchar_t* meshName = NULL, const wchar_t* modelName = NULL, xCoreSkeleton* pSkeleton = NULL);
 	~xCoreMeshName();
 #ifdef _MSC_VER
 	size_t hash_value() const;

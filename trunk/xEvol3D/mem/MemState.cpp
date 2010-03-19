@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../xStdPch.h"
 
 #include "MemState.h"
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64) )
 #include <windows.h>
 #endif
 

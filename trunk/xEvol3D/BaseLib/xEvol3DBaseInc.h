@@ -20,6 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef __XEVOL3D_ENGINE_BASE_INC_H__
 #define __XEVOL3D_ENGINE_BASE_INC_H__
+#if (defined(_WIN32)  || defined(_WIN64) )
+#include <windows.h>
+#endif
+
 #include <string.h>
 #include "xEvol3DAPI.h"
 #include "xBaseObject.h"

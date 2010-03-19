@@ -25,7 +25,7 @@ BEGIN_NAMESPACE_XEVOL3D
 
 inline void xSwapUShort(unsigned short *s)  
 {
-#ifdef _MSC_VER
+#if (defined(_MSC_VER) && !defined(_WIN64) )
 	__asm 
 	{
 		mov ebx, s
@@ -52,7 +52,7 @@ inline void xSwapShort(short *s)
 
 inline void xSwapUInt(unsigned int *i) 
 {
-#ifdef _MSC_VER
+#if (defined(_MSC_VER) && !defined(_WIN64) )
 	__asm {
 		mov ebx, i
 			mov eax, [ebx]

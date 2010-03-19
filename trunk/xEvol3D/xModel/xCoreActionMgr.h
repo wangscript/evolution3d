@@ -15,14 +15,16 @@ BEGIN_NAMESPACE_XEVOL3D
 class  _XEVOL_BASE_API_ xCoreActionName
 {
 public:
-	ds_wstring   m_Name    ;    //每个动作有自己的名字. 这个名字可能会挂一个组别
+	ds_wstring   m_ActionName    ;    //每个动作有自己的名字. 这个名字可能会挂一个组别
 	HBaseModel   m_hModel  ;    //动作隶属的模型
-	int          m_strHash    ;
+	int          m_strHash ;
+	ds_wstring   m_Type;
+	ds_wstring   m_ResFile;
 public:
 	bool operator == (const xCoreActionName& rhv) const;
 	bool operator <  (const xCoreActionName& rhv) const;
 	xCoreActionName();
-	xCoreActionName(HBaseModel hBaseModel , const wchar_t* actionName = NULL, const wchar_t* skelName = NULL);
+	xCoreActionName(HBaseModel hBaseModel , const wchar_t* actionName , const wchar_t* skelName  , const wchar_t* resFile = NULL);
 	~xCoreActionName();
 #ifdef _MSC_VER
 	size_t hash_value() const;
@@ -55,18 +57,21 @@ public:
 	static xCoreActionMgr* createInstance(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr , const wchar_t* _name);
     void   setActionLoop(bool bLoop) { m_bActionLoop = bLoop ; }
     bool   isActionLoop(){return m_bActionLoop ; }
+
+public:
+	xBaseAction*  createAction(const xCoreActionName& strResName);
 protected:
-	unsigned int  _getResSize(xCoreAction* pRes);
-	virtual  bool _isResLoaded(xCoreAction* pRes);
-	virtual  bool _postLoadResource  (const xCoreActionName& strResName , xCoreAction* & pRes , int& ResSize, unsigned int arg){ return true ; }
-	virtual  bool _preLoadResource  (const xCoreActionName& strResName , xCoreAction* & pRes , int& ResSize, unsigned int arg) { return true ; }
-	virtual  bool _loadResource  (const xCoreActionName& strResName , xCoreAction* & pRes , int& ResSize, unsigned int arg);
-	virtual  bool _unloadResource(const xCoreActionName& strResName , xCoreAction* & pRes , unsigned int& TotalResSize);
-	virtual  void _deleteResource(const xCoreActionName& strResName , xCoreAction* pRes);
+	unsigned int  _getResSize(xBaseAction* pRes);
+	virtual  bool _isResLoaded(xBaseAction* pRes);
+	virtual  bool _postLoadResource  (const xCoreActionName& strResName , xBaseAction* & pRes , int& ResSize, unsigned int arg){ return true ; }
+	virtual  bool _preLoadResource  (const xCoreActionName& strResName , xBaseAction* & pRes , int& ResSize, unsigned int arg) { return true ; }
+	virtual  bool _loadResource  (const xCoreActionName& strResName , xBaseAction* & pRes , int& ResSize, unsigned int arg);
+	virtual  bool _unloadResource(const xCoreActionName& strResName , xBaseAction* & pRes , unsigned int& TotalResSize);
+	virtual  void _deleteResource(const xCoreActionName& strResName , xBaseAction* pRes);
 protected:
-	bool __loadFromDirectory(const xCoreActionName& strResName,xCoreAction* & pCoreMesh , xResPkgPathItem& resPkgItem, int i);
-	bool __loadFromPackage(const xCoreActionName& strResName,xCoreAction* & pCoreMesh , xResPkgPathItem& item , int i);
-	bool newInstance(const xCoreActionName& name , xCoreAction* & pCoreAction);
+	bool __loadFromDirectory(const xCoreActionName& strResName,xBaseAction* & pCoreMesh , xResPkgPathItem& resPkgItem, int i );
+	bool __loadFromPackage(const xCoreActionName& strResName,xBaseAction* & pCoreMesh , xResPkgPathItem& item , int i );
+	bool newInstance(const xCoreActionName& name , xBaseAction* & pCoreAction);
 protected:
 	xCoreActionLoader();
 	virtual ~xCoreActionLoader();
