@@ -95,7 +95,7 @@ void xplane::normalize()
     float len = pNormal->len();
 	if( xMathLib::numeric_equal(len , 0) )
 		return ;
-	if(D > 0) len = - len;
+	//if(D > 0) len = - len;
 	A /= len;
 	B /= len;
 	C /= len;
