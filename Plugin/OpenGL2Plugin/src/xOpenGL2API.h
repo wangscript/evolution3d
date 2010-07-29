@@ -189,7 +189,7 @@ public:
 	IBaseShader*         createShader(wchar_t* shaderFile , eShaderType type);
 	bool                 beginDrawPrimitive();
 	bool                 endDrawPrimitive();
-	bool                 drawPrimitive(size_t nVertex , size_t iStartVertex, ePrimtiveType pt);
+	bool                 drawPrimitiveIndex(size_t nVertex , size_t iStartVertex, ePrimtiveType pt);
 
 public:
 	ISamplerState*       createSamplerState(const wchar_t* name);

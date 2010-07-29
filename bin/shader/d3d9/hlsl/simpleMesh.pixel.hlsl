@@ -4,9 +4,10 @@
 ///{{Declaration
 struct cTransformBuffer
 {
-      matrix matWorld;
-      matrix matView;
-      matrix matProject;
+      float4x4 matWorld;
+      float4x4 matView;
+      float4x4 matProject;
+      float4x4 matTexture;
 	  float4 cameraUp;
 	  float4 cameraPos;
 	  float4 cameraDir;
@@ -23,7 +24,7 @@ struct PS_INPUT
      
       float4 Color     : COLOR;
 
-      float2 Tex       : TEXCOORD0;  
+      float4 Tex       : TEXCOORD0;  
       float4 Pos       : TEXCOORD1;
       float4 Nor       : TEXCOORD2;     
       float4 Tan       : TEXCOORD3;      
@@ -82,9 +83,9 @@ float4 main( PS_INPUT input) : COLOR0
 */
 
 ///{{SourceCode
-    vDiffuse.w = 1.0f;
+    //vDiffuse.w = 1.0f;
     if(vDiffuse.w <= AlphaRef)
        discard;
-    return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , 1.0f);// clamp(vDiffuse.w , 0.0  , 1.0) );
+    return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , vDiffuse.w);// clamp(vDiffuse.w , 0.0  , 1.0) );
 }
 ///}}

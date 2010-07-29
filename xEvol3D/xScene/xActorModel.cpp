@@ -86,7 +86,7 @@ bool xSceneActor::save(xXmlNode* pXml)
 	return true;
 }
 
-bool xSceneActor::updateFrame(unsigned long passedTime)
+bool xSceneActor::updateFrame(unsigned long passedTime, IRenderCamera* pCamera)
 {
     m_pModelElement->update(passedTime);
 	return true ;

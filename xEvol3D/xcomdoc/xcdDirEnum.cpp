@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../xStdPch.h"
 #include "xcdDirEnum.h"
 
-#ifdef _LINUX
+#ifdef _UNIX
 #include <dirent.h>
 #endif
 
@@ -92,7 +92,7 @@ namespace xComdoc
 		return len;
 	}
 
-#ifdef _LINUX
+#ifdef _UNIX
 static bool ___isDir(const char* dir_name)
 {
 	DIR* dirp = opendir(dir_name);

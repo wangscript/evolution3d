@@ -1,0 +1,454 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="d3d10">
+      <UniqueIdentifier>{ef227050-654c-4cfe-ab15-0f353cad58e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d10\blend">
+      <UniqueIdentifier>{09124d1c-ebee-4087-99a8-9158bc172ea1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d1x">
+      <UniqueIdentifier>{315a8a02-7ca2-4d89-9ee2-6b50e0dcc604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d1x\hlsl">
+      <UniqueIdentifier>{675a47f4-d735-4d35-8063-89fdcb9f156a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d1x\lib">
+      <UniqueIdentifier>{261c94bd-84e9-4578-973e-71ad75f68578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d1x\zstencil">
+      <UniqueIdentifier>{1b71cc5d-d369-4fb4-9f7d-bea3ba1aa3ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d1x\rasterizer">
+      <UniqueIdentifier>{fdc664be-dea1-4db6-88cc-39a8ac0fd3e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d1x\sampler">
+      <UniqueIdentifier>{5b244afe-a042-482d-b45d-b717e82f44b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d1x\shader">
+      <UniqueIdentifier>{8cc36886-e20a-4876-80d6-fbaf4f35b53d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d11">
+      <UniqueIdentifier>{93254a48-b0a8-4457-97e1-0c296d97e7a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d11\blend">
+      <UniqueIdentifier>{ccd3ff2e-e7e9-4282-971b-2688702bcde0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9">
+      <UniqueIdentifier>{60fb9b73-09d2-4764-923f-c742a428a928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9\hlsl">
+      <UniqueIdentifier>{1500680f-049c-421f-9853-a88d5bb3a858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9\lib">
+      <UniqueIdentifier>{bbb9bbbe-1d16-4416-93fe-0d5a1e60187b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9\rasterizer">
+      <UniqueIdentifier>{1582b726-f61a-41b5-9297-0c59d50c6c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9\sampler">
+      <UniqueIdentifier>{f100f350-2a84-49f3-8e49-abd022eebceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9\zstencil">
+      <UniqueIdentifier>{30d86176-2d3c-45d4-af41-1ec3790bfd2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9\shader">
+      <UniqueIdentifier>{349bbbfb-0288-4b81-b594-bb7abdfdb32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9\blend">
+      <UniqueIdentifier>{d36052ce-ec1b-48cc-9a06-4c674217060b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\shader\d3d10\blend\AlphaBlend.blend">
+      <Filter>d3d10\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d10\blend\ColorSel.blend">
+      <Filter>d3d10\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d10\blend\Default.blend">
+      <Filter>d3d10\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d10\blend\Font.Blend.blend">
+      <Filter>d3d10\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\ArcBall.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\ArcBall.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\Axis.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\Axis.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\ColorSel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\ColorSelRGBA8.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\ColorSelSINT16.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\font.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\font.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\FSQuad.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\GsShowNormal.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\LensTransform.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\PlaneGrid.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\PlaneGrid.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\PositionSel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simple.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simple.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simple2D.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simple2D.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simpleMesh.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simpleMesh.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simpleNoTexture.ps.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simpleNoTexture.vs.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simpleTerrainPatch.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\simpleTerrainPatch.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\SkinAni.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\Stero2D.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\vFont.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\YUV2ToRGB.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\YV12Video.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\YV12VideoNoRet.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\libDip.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\libLighting.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\libMatrix.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\RGBAGray.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\simple.fakehdr.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\simple.Lighting.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\simple.mask.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\simple.texture.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\SteroL.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\SteroR.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\VertexColor.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\lib\YV12ToRGB.hlsl">
+      <Filter>d3d1x\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\zstencil\Default.zs">
+      <Filter>d3d1x\zstencil</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\zstencil\Overlay.zs">
+      <Filter>d3d1x\zstencil</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\rasterizer\Default.ras">
+      <Filter>d3d1x\rasterizer</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\rasterizer\Wireframe.ras">
+      <Filter>d3d1x\rasterizer</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\sampler\Default.sampler">
+      <Filter>d3d1x\sampler</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\sampler\FontLinear.sampler">
+      <Filter>d3d1x\sampler</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\sampler\FontPoint.sampler">
+      <Filter>d3d1x\sampler</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\shader\simple.shader">
+      <Filter>d3d1x\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\shader\SimpleMesh.shader">
+      <Filter>d3d1x\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\shader\SimpleMeshNoLight.shader">
+      <Filter>d3d1x\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\shader\SimpleStaticMesh.shader">
+      <Filter>d3d1x\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\shader\SimpleStaticMeshNoLighting.shader">
+      <Filter>d3d1x\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\shader\SimpleTerrainPatch.shader">
+      <Filter>d3d1x\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d11\blend\AlphaBlend.blend">
+      <Filter>d3d11\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d11\blend\ColorSel.blend">
+      <Filter>d3d11\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d11\blend\Default.blend">
+      <Filter>d3d11\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d11\blend\Font.Blend.blend">
+      <Filter>d3d11\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\ArcBall.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\ArcBall.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\Axis.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\Axis.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\ColorSel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\ColorSelRGBA8.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\ColorSelSINT16.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\font.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\font.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\PlaneGrid.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\PlaneGrid.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\PositionSel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simple.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simple.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simple2D.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simple2D.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simpleMesh.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simpleMesh.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simpleNoTexture.ps.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simpleNoTexture.vs.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simpleTerrainPatch.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\simpleTerrainPatch.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\SkinAni.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\vFont.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\libDip.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\libLighting.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\libMatrix.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\RGBAGray.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\simple.fakehdr.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\simple.Lighting.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\simple.mask.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\simple.texture.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\SteroL.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\SteroR.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\lib\VertexColor.hlsl">
+      <Filter>d3d9\lib</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\rasterizer\Default.ras">
+      <Filter>d3d9\rasterizer</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\rasterizer\Wireframe.ras">
+      <Filter>d3d9\rasterizer</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\sampler\Default.sampler">
+      <Filter>d3d9\sampler</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\sampler\FontLinear.sampler">
+      <Filter>d3d9\sampler</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\sampler\FontPoint.sampler">
+      <Filter>d3d9\sampler</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\zstencil\Default.zs">
+      <Filter>d3d9\zstencil</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\zstencil\Overlay.zs">
+      <Filter>d3d9\zstencil</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\shader\simple.shader">
+      <Filter>d3d9\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\shader\SimpleMesh.shader">
+      <Filter>d3d9\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\shader\SimpleMeshNoLight.shader">
+      <Filter>d3d9\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\shader\SimpleStaticMesh.shader">
+      <Filter>d3d9\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\shader\SimpleStaticMeshNoLighting.shader">
+      <Filter>d3d9\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\shader\SimpleTerrainPatch.shader">
+      <Filter>d3d9\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\blend\AlphaBlend.blend">
+      <Filter>d3d9\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\blend\ColorSel.blend">
+      <Filter>d3d9\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\blend\Default.blend">
+      <Filter>d3d9\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\blend\Font.Blend.blend">
+      <Filter>d3d9\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\shader\GisTMesh.shader">
+      <Filter>d3d1x\shader</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\GisTMesh.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\GisTMesh.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\sampler\DefaultClamp.sampler">
+      <Filter>d3d1x\sampler</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\Pipe.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\Pipe.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\Pipe.geometry.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\quadParticle.pixel.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d1x\hlsl\quadParticle.vertex.hlsl">
+      <Filter>d3d1x\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d10\blend\QuadParticle.blend">
+      <Filter>d3d10\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d11\blend\QuadParticle.blend">
+      <Filter>d3d11\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\blend\QuadParticle.blend">
+      <Filter>d3d9\blend</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\quadParticle.pixel.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+    <None Include="bin\shader\d3d9\hlsl\quadParticle.vertex.hlsl">
+      <Filter>d3d9\hlsl</Filter>
+    </None>
+  </ItemGroup>
+</Project>

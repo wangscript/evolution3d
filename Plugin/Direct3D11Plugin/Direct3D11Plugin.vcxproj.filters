@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{dc87e3b1-a2c0-401d-b632-ff1b9e702915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{2e847bc3-2168-4412-a8d0-13aa3e53b503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3DCommon">
+      <UniqueIdentifier>{cfd33664-2794-4793-827f-c150773c9719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="texture">
+      <UniqueIdentifier>{62990856-b8be-4508-9a2d-efe8701f840b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State">
+      <UniqueIdentifier>{a579f10d-97a4-46a7-b7b6-2e960f764c0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{53ab7e0e-24c1-4e96-a527-bb23a84e5966}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\xD11ConstLexer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11InputAssembler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11InputBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11RenderView.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xDirect3D11API.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xDirect3D11APICreator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3D2DRect.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DBaseColorSelector.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DInputBuffer.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DTLEnviroment.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11BaseRenderTarget.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11BaseTexture.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11FileTexture.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11LockableTexture.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11RenderTarget.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11BlendState.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11DepthStencilState.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11RazState.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11Sampler.cpp">
+      <Filter>State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11GPUProgram.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11ParamBuffer.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD11Shader.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="xDirect3D11Plugin.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\xD11ConstLexer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11InputAssembler.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11InputBuffer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11RenderView.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xDirect3D11API.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xDirect3D11APICreator.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xDirect3D11DllApi.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3D2DRect.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DBaseColorSelector.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DInputBuffer.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DTLEnviroment.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11BaseRenderTarget.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11BaseTexture.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11FileTexture.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11LockableTexture.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11RenderTarget.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11BlendState.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11DepthStencilState.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11RazState.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11Sampler.h">
+      <Filter>State</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11GPUProgram.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11ParamBuffer.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD11Shader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stdafx.h" />
+  </ItemGroup>
+</Project>

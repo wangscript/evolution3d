@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 BEGIN_NAMESPACE_XUI
 bool strUtf8ToUnicode(const char* _utfString , wchar_t* out_buf , int len)
 {
-    return XEvol_Utf8ToUnicode(_utfString , out_buf , len);
+    return XEvol_Utf8ToUnicode(_utfString , out_buf , len) == conversionOK;
 
 }
 

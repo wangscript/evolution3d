@@ -9,7 +9,7 @@ struct PS_INPUT
    float4 Color    : COLOR;
 };
 
-float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , Texture2D _texture )
+float4 COMMON_Texture(float4 _Color , float4 texCoord , SamplerState _sampler , Texture2D _texture )
 {     
     return _texture.Sample(_sampler, texCoord.xy) * _Color ;
 }
@@ -38,6 +38,6 @@ float4 main( PS_INPUT input) : SV_Target
    vDiffuse.y += rColor.y;
    vDiffuse.z += rColor.z;  
 
-   return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , clamp(vDiffuse.w , 0.0  , 1.0) );
+   return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , 1.0f);//clamp(vDiffuse.w , 0.0  , 1.0) );
    
 }

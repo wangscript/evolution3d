@@ -1,19 +1,23 @@
-// This MFC Samples source code demonstrates using MFC Microsoft Office Fluent User Interface 
-// (the "Fluent UI") and is provided only as referential material to supplement the 
-// Microsoft Foundation Classes Reference and related electronic documentation 
-// included with the MFC C++ library software.  
-// License terms to copy, use or distribute the Fluent UI are available separately.  
-// To learn more about our Fluent UI licensing program, please visit 
-// http://msdn.microsoft.com/officeui.
+// 这段 MFC 示例源代码演示如何使用 MFC Microsoft Office Fluent 用户界面 
+// (“Fluent UI”)。该示例仅供参考，
+// 用以补充《Microsoft 基础类参考》和 
+// MFC C++ 库软件随附的相关电子文档。
+// 复制、使用或分发 Fluent UI 的许可条款是单独提供的。
+// 若要了解有关 Fluent UI 许可计划的详细信息，请访问  
+// http://msdn.microsoft.com/officeui。
 //
-// Copyright (C) Microsoft Corporation
-// All rights reserved.
+// 版权所有(C) Microsoft Corporation
+// 保留所有权利。
 
-// MedusaView.cpp : implementation of the CMedusaView class
+// MedusaView.cpp : CMedusaView 类的实现
 //
 
 #include "stdafx.h"
+// SHARED_HANDLERS 可以在实现预览、缩略图和搜索筛选器句柄的
+// ATL 项目中进行定义，并允许与该项目共享文档代码。
+#ifndef SHARED_HANDLERS
 #include "Medusa.h"
+#endif
 
 #include "MedusaDoc.h"
 #include "MedusaView.h"
@@ -28,20 +32,20 @@
 IMPLEMENT_DYNCREATE(CMedusaView, CView)
 
 BEGIN_MESSAGE_MAP(CMedusaView, CView)
-	// Standard printing commands
+	ON_WM_CREATE()
+	// 标准打印命令
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMedusaView::OnFilePrintPreview)
-	ON_WM_CLOSE()
-	ON_WM_TIMER()
-	ON_WM_CREATE()
+	ON_WM_CONTEXTMENU()
+	ON_WM_RBUTTONUP()
 END_MESSAGE_MAP()
 
-// CMedusaView construction/destruction
+// CMedusaView 构造/析构
 
 CMedusaView::CMedusaView()
 {
-	// TODO: add construction code here
+	// TODO: 在此处添加构造代码
 
 }
 
@@ -51,62 +55,69 @@ CMedusaView::~CMedusaView()
 
 BOOL CMedusaView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
+	// TODO: 在此处通过修改
+	//  CREATESTRUCT cs 来修改窗口类或样式
 
 	return CView::PreCreateWindow(cs);
 }
+int CMedusaView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (__super::OnCreate(lpCreateStruct) == -1)
+		return -1;
 
-// CMedusaView drawing
+	theApp.OnRenderWindowCreate(this);
+
+}
+// CMedusaView 绘制
 
 void CMedusaView::OnDraw(CDC* /*pDC*/)
 {
-	CMedusaDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
-
-	// TODO: add draw code for native data here
+	
+	// TODO: 在此处为本机数据添加制代码
 }
 
 
-// CMedusaView printing
+// CMedusaView 打印
 
 
 void CMedusaView::OnFilePrintPreview()
 {
+#ifndef SHARED_HANDLERS
 	AFXPrintPreview(this);
+#endif
 }
 
 BOOL CMedusaView::OnPreparePrinting(CPrintInfo* pInfo)
 {
-	// default preparation
+	// 默认准备
 	return DoPreparePrinting(pInfo);
 }
 
 void CMedusaView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
-	// TODO: add extra initialization before printing
+	// TODO: 添加额外的打印前进行的初始化过程
 }
 
 void CMedusaView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
-	// TODO: add cleanup after printing
+	// TODO: 添加打印后进行的清理过程
 }
 
-void CMedusaView::OnRButtonUp(UINT nFlags, CPoint point)
+void CMedusaView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
 	ClientToScreen(&point);
 	OnContextMenu(this, point);
 }
 
-void CMedusaView::OnContextMenu(CWnd* pWnd, CPoint point)
+void CMedusaView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 {
+#ifndef SHARED_HANDLERS
 	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
+#endif
 }
 
 
-// CMedusaView diagnostics
+// CMedusaView 诊断
 
 #ifdef _DEBUG
 void CMedusaView::AssertValid() const
@@ -119,7 +130,7 @@ void CMedusaView::Dump(CDumpContext& dc) const
 	CView::Dump(dc);
 }
 
-CMedusaDoc* CMedusaView::GetDocument() const // non-debug version is inline
+CMedusaDoc* CMedusaView::GetDocument() const // 非调试版本是内联的
 {
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CMedusaDoc)));
 	return (CMedusaDoc*)m_pDocument;
@@ -127,37 +138,23 @@ CMedusaDoc* CMedusaView::GetDocument() const // non-debug version is inline
 #endif //_DEBUG
 
 
-// CMedusaView message handlers
-
-BOOL CMedusaView::DestroyWindow()
-{
-	// TODO: Add your specialized code here and/or call the base class
-
-	return CView::DestroyWindow();
-}
-
-void CMedusaView::OnClose()
-{
-	// TODO: Add your message handler code here and/or call default
-
-	CView::OnClose();
-}
-
-BEGIN_NAMESPACE_XEVOL3D
+// CMedusaView 消息处理程序
+BEGIN_NAMESPACE_XEVOL3D;
 bool ConvertToXEvolMsg(xWindowMsg& WinMsg , HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam);
-END_NAMESPACE_XEVOL3D
+END_NAMESPACE_XEVOL3D;
+
 BOOL CMedusaView::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
 	// TODO: Add your specialized code here and/or call the base class
 	NS_XEVOL3D::xWindowMsg msg;
 	ConvertToXEvolMsg(msg , GetSafeHwnd() , message , wParam , lParam);
-	if( (msg.MsgID >= WIN_KEYBOARD_MESSAGE_BEGIN && msg.MsgID < WIN_KEYBOARD_MESSAGE_END) ||
-		(msg.MsgID >= WIN_MOUSE_MESSAGE_BEGIN && msg.MsgID < WIN_MOUSE_MESSAGE_END)             )
+	if( (msg.MsgID >= WIN_KEYBOARD_MESSAGE_BEGIN && msg.MsgID < WIN_KEYBOARD_MESSAGE_END) || (msg.MsgID >= WIN_MOUSE_MESSAGE_BEGIN && msg.MsgID < WIN_MOUSE_MESSAGE_END)             )
 	{
-		if(GetEditorEnv()->onMessage(msg) == false )
+
+		CMedusaMainUI* pUI = dynamic_cast<CMedusaMainUI*>( GetMedusaEditor()->GetUI() );
+		if( pUI->FireWindowMsg(msg) == false)
 		{
-			CMedusaMainUI* pUI = dynamic_cast<CMedusaMainUI*>( GetMedusaEditor()->GetUI() );
-			pUI->FireWindowMsg(msg);
+			GetEditorEnv()->onMessage(msg);
 		}
 	}
 	else 
@@ -165,22 +162,4 @@ BOOL CMedusaView::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* 
 		GetEditorEnv()->onMessage(msg);		
 	}
 	return CView::OnWndMsg(message, wParam, lParam, pResult);
-}
-
-void CMedusaView::OnTimer(UINT_PTR nIDEvent)
-{
-	// TODO: Add your message handler code here and/or call default
-   // GetEditorEnv()->OnIdle();
-	CView::OnTimer(nIDEvent);
-}
-
-int CMedusaView::OnCreate(LPCREATESTRUCT lpCreateStruct)
-{
-	if (CView::OnCreate(lpCreateStruct) == -1)
-		return -1;
-
-	//SetTimer(1000,20,NULL);
-	// TODO:  Add your specialized creation code here
-
-	return 0;
 }

@@ -4,7 +4,7 @@ typedef unsigned long DWORD_PTR, *PDWORD_PTR;
 #include <Atlbase.h>
 #include <windows.h>
 
-#include <streams.h>
+#include "streams.h"
 #include "../include/xVideoSource.h"
 #include "xVideoRenderer.h"
 #include <dshow.h>

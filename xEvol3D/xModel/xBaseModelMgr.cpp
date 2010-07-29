@@ -40,7 +40,7 @@ xBaseTextureMgr*   xBaseModelLoader::getTextureMgr()
 
 void   xBaseModelLoader::KillObject()
 {
-	xBaseModelMgr* pMgr = dynamic_cast<xBaseModelMgr*>(this);
+	xBaseModelMgr* pMgr = m_pThis;
 	delete pMgr;
 
 }
@@ -48,6 +48,7 @@ void   xBaseModelLoader::KillObject()
 xBaseModelMgr* xBaseModelLoader::createInstance(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr , const wchar_t* name)
 {
 	xBaseModelMgr* pMgr = new xBaseModelMgr(name , 0 );
+    pMgr->setThis(pMgr);
 	pMgr->m_pRenderApi = pRenderApi;
 	pMgr->m_pTexMgr    = pTexMgr;
 	return pMgr;
@@ -118,13 +119,13 @@ bool xBaseModelLoader::_loadFromPackage(xResPkgPathItem& item , const std::ds_ws
 	 //从包里的xrm里加载
 	 //c:\MyPkg.xcd[_name.xrm]
 	 std::ds_wstring modelName = strResName;
-	 xcomdocstream* pstream = doc.create_stream(fullName.c_str());
+	 xcomdocstream* pstream = doc.open_stream(fullName.c_str());
 	 if(pstream == NULL)
 	 {
 		 //加一个扩展名
 		 std::ds_wstring nameWithExt = fullName + m_ext;
 		 modelName = strResName + m_ext;
-		 pstream = doc.create_stream(nameWithExt.c_str());
+		 pstream = doc.open_stream(nameWithExt.c_str());
 	 }
 
 	 //加了扩展名，依然找不到那个stream,表示失败了。

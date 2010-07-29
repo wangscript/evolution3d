@@ -255,7 +255,7 @@ size_t XComDocStreamImp::data_len()
 {
 	if(m_bUseSrcFile)
 	{
-#ifdef _LINUX
+#ifdef _UNIX
 		char fileNameAnsi[256]={0};
 		XEvol_UnicodeToFsEnc(m_SrcFileName.c_str() , fileNameAnsi , 256);
 		ifstream ifile(fileNameAnsi,ios::binary);
@@ -264,7 +264,7 @@ size_t XComDocStreamImp::data_len()
 #endif
 		ios::pos_type beg_pos = ifile.tellg();
 		ifile.seekg(0,ios::end);
-		int len   = ifile.tellg() - beg_pos ;
+		int len   = (int)ifile.tellg() - beg_pos ;
 		ifile.close();
 		return len;
 	}

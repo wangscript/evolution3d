@@ -1,0 +1,1 @@
+#include "xGisImgBaseInclude.h"

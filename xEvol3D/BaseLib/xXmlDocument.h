@@ -109,6 +109,7 @@ public:
 	void           setName(const wchar_t* newName);
 	const wchar_t* name();
 	xXmlNode*      parent();
+	void           removeNode(xXmlNode* pNode);
 	xXmlNode*      insertNode(const wchar_t* nodeName);
 	xXmlNode*      insertNodeAfter(const wchar_t* nodeName,size_t index);
 	xXmlNode*      insertNodeBefore(const wchar_t* nodeName,size_t index);
@@ -162,7 +163,7 @@ public:
 	void           cloneTo(xXmlNode* pDestNode , bool cloneChild = false);
 };
 
-class xXmlDocument : public xXmlNode
+class _XEVOL_BASE_API_ xXmlDocument : public xXmlNode
 {
 	xXmlDocument(const xXmlDocument& ){};
 	xXmlDocument* operator =(const xXmlDocument& ){return NULL;};
@@ -176,6 +177,7 @@ public:
 	};
 public:
 	xXmlDocument();
+    ~xXmlDocument();
 	//bool       load(const char* fileName , bool loadHeader = true);
 	bool       load(const wchar_t* fileName , bool loadHeader = true);
 	bool       load(const wchar_t* buf , int len , bool loadHeader = true);
@@ -183,10 +185,12 @@ public:
     bool       load(const wchar_t* buf , size_t len , bool loadHeader = true);
     bool       load(const int8*    buf , size_t len , bool loadHeader = true);
 	bool       load(std::istream& stream , bool loadHeader = true);
+    bool       load(IStreamIO* stream , bool loadHeader = true);
 	//bool       save(const char* fileName , bool saveHeader = true);
 	bool       save(const wchar_t* fileName , bool saveHeader = true, eTextEncode _encode = eText_Unicode);
 	bool       save(std::ostream& stream , bool saveHeader = true , eTextEncode _encode = eText_Unicode);
 	bool       save(std::wostringstream& stream , bool saveHeader = true);
+    bool       save(IStreamIO* _stream, bool saveHeader , eTextEncode _encode = eText_Unicode);
 	xXmlNode*  root();
 	xXmlNode*  root(const wchar_t* name );
 	void       setXMLStyle(bool bXMLStyle);

@@ -93,7 +93,6 @@ protected:
 	IDepthStencilState*         m_pStencilState;
 	IRasterizerState*           m_DefRasterizer;
 
-	IBaseTexture*               m_ProcedureTexture;
 	HFontRender                 m_hFont;
 	float                       m_cameraStep;
 	//IRenderView*                m_pSelView;

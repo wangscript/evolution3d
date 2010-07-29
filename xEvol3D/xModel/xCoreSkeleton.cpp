@@ -245,7 +245,7 @@ bool xCoreSkeleton::loadBoneList(std::istream& _in)
         {
             unsigned short _name[32];
             Ts_Read(_in , _name, (std::streamsize)32);
-            XEvol_UCS2ToUCS4(_name, (unsigned int*)bone.m_BoneName , 32 , 32);
+            XEvol_Utf16ToUtf32( (UTF16*)_name, (UTF32*)bone.m_BoneName , 32);
 
             size_t Len = sizeof(xSkinBone) - sizeof(wchar_t) * 32;
             Ts_Read(_in , (char* )&bone.m_UC4AddStart , (std::streamsize)Len );
@@ -258,7 +258,7 @@ bool xCoreSkeleton::loadBoneList(std::istream& _in)
     Ts_Read(_in , fScale);
     return true;
 }
-
+/*
 bool xCoreSkeleton::blendLerp(xBaseAction* pAction, xCoreActionAttr* pAttr ,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2)
 {
     for(int boneIndex = 0 ; boneIndex < m_nBone ; boneIndex++)
@@ -324,13 +324,13 @@ bool xCoreSkeleton::blendHiberarchy(xBaseAction* pAction, xCoreActionAttr* pAttr
         }
         else
         {
-            /*
-            xmat4 mat1 ,mat2;            
-            XM_Mul(pBone->m_InitMTInv , localeMT, mat1);
-            XM_Mul(mat1 , m_Bones[parent].m_InitMT , mat2);
-            XM_Mul(mat2 , parentMT , transMat);
+           
+            //xmat4 mat1 ,mat2;            
+            //XM_Mul(pBone->m_InitMTInv , localeMT, mat1);
+            //XM_Mul(mat1 , m_Bones[parent].m_InitMT , mat2);
+            //XM_Mul(mat2 , parentMT , transMat);
             //mat = pBone->m_InitMTInv * localeMT * m_Bones[parent]->m_InitMT * parentMT;
-            */
+            
 
             //优化
             XM_Mul(localeMT , skeletonFrame.m_WSMats[parent] , wsMat);
@@ -345,6 +345,7 @@ bool xCoreSkeleton::blendHiberarchy(xBaseAction* pAction, xCoreActionAttr* pAttr
     }
     return true;
 }
+*/
 
 void xBoneTrans::toMatrix(xMathLib::xmat4& mat)
 {
@@ -364,26 +365,7 @@ void xBoneTrans::toMatrix(xMathLib::xmat4& mat)
 }
 
 
-bool makeLocaleTM(xBoneTrans& boneTrans , xmat4& mat , xBoneData& boneData1 , xBoneData& boneData2 , float t)
-{
-    //插值旋转
-    xquat q1 = boneData1.m_BoneTrans.m_Rotate;
-    xquat q2 = boneData2.m_BoneTrans.m_Rotate;
-    boneTrans.m_Rotate = q1.slerp(t,q2);
 
-    //插值平移
-    xvec3& t1 = boneData1.m_BoneTrans.m_Trans;
-    xvec3& t2 = boneData2.m_BoneTrans.m_Trans;
-    boneTrans.m_Trans = t1*(1.0f - t) + t2*t;
-
-    //插值平移
-    xvec3& s1 = boneData1.m_BoneTrans.m_Scale;
-    xvec3& s2 = boneData2.m_BoneTrans.m_Scale;
-    boneTrans.m_Scale = s1*(1.0f - t) + s2*t;
-
-    boneTrans.toMatrix(mat);
-    return true;
-}
 
 bool makeTransData(xBoneData& boneData)
 {
@@ -400,7 +382,7 @@ bool makeTransData(xBoneData& boneData)
      return true;
 }
 
-bool xCoreSkeleton::blendSlerp(xBaseAction* pAction,xCoreActionAttr* pAttr ,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent)
+bool xCoreSkeleton::blendSlerp(xBaseAction* pAction, xBaseActionState* pActionState , xCoreActionAttr* pAttr ,  xCoreActionFrame& skeletonFrame,int parent)
 {
     xmat4 parentMT;
     xmat4 parentMTInv;
@@ -423,26 +405,22 @@ bool xCoreSkeleton::blendSlerp(xBaseAction* pAction,xCoreActionAttr* pAttr ,xCor
         int     boneIndex = boneH.m_Childrens[i];
         xSkinBone*  pBone = &m_Bones[boneIndex];
 
-        xBoneData* boneData1 = pAction->getBoneData(boneIndex,frame1);
-        xBoneData* boneData2 = pAction->getBoneData(boneIndex,frame2);
+		xmat4& transMat       = skeletonFrame.m_FrameMat[boneIndex];
+		xmat4& wsMat          = skeletonFrame.m_WSMats[boneIndex];
+		xBoneTrans& boneTrans = skeletonFrame.boneTrans(boneIndex);
 
+		bool bHasBone = pAction->getBoneTrans(boneIndex , pActionState , boneTrans);
+		boneTrans.toMatrix(localeMT);
 
 		//骨骼不属于这个动作
-        if(boneData1 == NULL || boneData2 == NULL || pAttr->boneUsed(boneIndex) == false )
+        if(bHasBone == false || pAttr->boneUsed(boneIndex) == false )
 		{
-			blendSlerp(pAction, pAttr , skeletonFrame , t,frame1,frame2,boneIndex);
+			blendSlerp(pAction,  pActionState , pAttr , skeletonFrame ,boneIndex);
 			continue;
 		}
-
-        xmat4& transMat       = skeletonFrame.m_FrameMat[boneIndex];
-        xmat4& wsMat          = skeletonFrame.m_WSMats[boneIndex];
-        xBoneTrans& boneTrans = skeletonFrame.boneTrans(boneIndex);
-
-        makeLocaleTM(boneTrans , localeMT, *boneData1 , *boneData2 , t);
-
+ 
         //mat = boneData1.m_Matrix;
         //XM_Lerp(boneData1.m_Matrix , boneData2.m_Matrix , t , mat);
-
         if(parent == -1)
         {
             //使用记录的变量插值
@@ -452,7 +430,6 @@ bool xCoreSkeleton::blendSlerp(xBaseAction* pAction,xCoreActionAttr* pAttr ,xCor
             //直接使用夫节点
             //XM_Lerp(boneData1.m_Matrix , boneData2.m_Matrix , t , transMat);
             //XM_Mul(pBone->m_InitMT , transMat , wsMat);
-           
         }
         else
         {
@@ -465,19 +442,28 @@ bool xCoreSkeleton::blendSlerp(xBaseAction* pAction,xCoreActionAttr* pAttr ,xCor
             //另外，夫节点上带了 pBone->m_InitMTInv。 所以在parentMT前要乘上m_Bones[parent]->m_InitMT
             //mat = pBone->m_InitMTInv * localeMT * m_Bones[parent]->m_InitMT * parentMT;
             */
-
             //优化
             XM_Mul(localeMT , skeletonFrame.m_WSMats[parent] , wsMat);
             XM_Mul(pBone->m_InitMTInv , wsMat , transMat);
             //mat = pBone->m_InitMTInv * wsMat --> wsMat = localeMT * parentWsMT;
 
         }
-        blendSlerp(pAction, pAttr , skeletonFrame , t,frame1,frame2,boneIndex);
+        blendSlerp(pAction,  pActionState , pAttr , skeletonFrame ,boneIndex);
     }
     return true;
 }
+xCoreActionFrame*  xCoreSkeleton::createActionFrame()
+{
+	xCoreActionFrame* pActFrame = new xCoreActionFrame;
+	pActFrame->load( nBone() );
+	return pActFrame;
+}
 
-bool xCoreSkeleton::blendSlerp(xBaseAction* pAction, xBaseActionState* _pInputActionState ,xCoreActionFrame& skeletonFrame , int parent)
+void  xCoreSkeleton::destoryActionFrame(xCoreActionFrame* pAcFrame)
+{
+	delete pAcFrame;
+}
+bool xCoreSkeleton::blendSlerp(xBaseAction* pAction, xBaseActionState* pActionState ,xCoreActionFrame& skeletonFrame , int parent)
 {
     xmat4 parentMT;
     xmat4 parentMTInv;
@@ -502,19 +488,11 @@ bool xCoreSkeleton::blendSlerp(xBaseAction* pAction, xBaseActionState* _pInputAc
         xSkinBone*  pBone = &m_Bones[boneIndex];
 
 
-        xBaseActionState* pActionState = pAction->getActionState(boneIndex , _pInputActionState);
-
-        int frame1 = pActionState->m_Frame1;
-        int frame2 = pActionState->m_Frame2;
-        xBoneData* boneData1 = pAction->getBoneData(boneIndex, frame1);
-        xBoneData* boneData2 = pAction->getBoneData(boneIndex, frame2);
-
         xmat4& transMat       = skeletonFrame.m_FrameMat[boneIndex];
         xmat4& wsMat          = skeletonFrame.m_WSMats[boneIndex];
         xBoneTrans& boneTrans = skeletonFrame.boneTrans(boneIndex);
-
-        makeLocaleTM(boneTrans , localeMT, *boneData1 , *boneData2 , pActionState->m_fTime);
-
+        assert(true == pAction->getBoneTrans(boneIndex , pActionState , boneTrans ) );
+		boneTrans.toMatrix(localeMT);
         //      mat = boneData1.m_Matrix;
         //XM_Lerp(boneData1.m_Matrix , boneData2.m_Matrix , t , mat);
 
@@ -530,7 +508,7 @@ bool xCoreSkeleton::blendSlerp(xBaseAction* pAction, xBaseActionState* _pInputAc
             XM_Mul(localeMT , skeletonFrame.m_WSMats[parent] , wsMat);
             XM_Mul(pBone->m_InitMTInv , wsMat , transMat);
         }
-        blendSlerp(pAction, _pInputActionState , skeletonFrame ,boneIndex);
+        blendSlerp(pAction, pActionState , skeletonFrame ,boneIndex);
     }
     return true;
 }

@@ -63,6 +63,10 @@ bool ISceneNode::initPropertySet()
 	};
 	static xPlacementChangeHandler g_PlacementChangeHandler;
 
+	DECL_ADD_SCENE_PROPERTY_REF_STRING(L"名字" , std::ds_wstring , m_Name);
+	ADD_DESCRIPTOR(L"data_type"    , L"string");
+	ADD_DESCRIPTOR(L"control_type" , L"edit");
+	END_ADD_SCENE_PROPERTY(L"名字");
 
 	DECL_ADD_SCENE_PROPERTY_REF(L"可见性" , bool , m_bVisible);
 	ADD_DESCRIPTOR(L"data_type"    , L"bool");
@@ -230,11 +234,11 @@ bool  ISceneNode::updateChildrenTrans()
 	return true;
 }
 
-bool ISceneNode::updateFrame(unsigned long passedTime , bool bRecursive)
+bool ISceneNode::updateFrame(unsigned long passedTime , IRenderCamera* pCamera , bool bRecursive)
 {
 	for(size_t i = 0 ; i < nObjects() ; i ++ )
 	{
-		getObject(i)->updateFrame(passedTime);
+		getObject(i)->updateFrame(passedTime , pCamera);
 	}
 
 	if(bRecursive)
@@ -243,7 +247,7 @@ bool ISceneNode::updateFrame(unsigned long passedTime , bool bRecursive)
 		ISceneNode* pChildNode = NULL;
 		while(pChildNode = nextChild() )
 		{
-			pChildNode->updateFrame(passedTime , bRecursive);
+			pChildNode->updateFrame(passedTime , pCamera ,  bRecursive);
 		}
 		endEnumChildren();
 	}
@@ -569,9 +573,11 @@ bool xSceneBasicNode::load(xXmlNode* pNode)
 			ISceneObject* pObject = xSceneObjectFactoryMgr::singleton()->createInstance(type , m_pScene , 0 );
 			if(pObject)
 			{
-				pObject->load(pEntityXML);
-			    attachObject(pObject);
-			    pObject->ReleaseObject();
+                if(true == pObject->load(pEntityXML) )
+                {
+                    attachObject(pObject);
+                }
+                pObject->ReleaseObject();
 			}
 			else
 			{
@@ -584,12 +590,12 @@ bool xSceneBasicNode::load(xXmlNode* pNode)
 	return ISceneNode::load(pNode);
 }
 
-bool xSceneBasicNode::updateFrame(unsigned long passedTime , bool bRecursive)
+bool xSceneBasicNode::updateFrame(unsigned long passedTime ,IRenderCamera* pCamera , bool bRecursive)
 {
 	size_t _nObj = nObjects() ;
 	for(size_t i = 0 ; i < _nObj ; i ++ )
 	{
-		m_vObjects[i]->updateFrame(passedTime);
+		m_vObjects[i]->updateFrame(passedTime , pCamera);
 	}
 
 	if(bRecursive)
@@ -597,7 +603,7 @@ bool xSceneBasicNode::updateFrame(unsigned long passedTime , bool bRecursive)
         size_t _nChildrens = m_Childrens.size() ;
 		for(size_t i = 0 ; i < _nChildrens ; i ++)
 		{
-			m_Childrens[i]->updateFrame(passedTime);
+			m_Childrens[i]->updateFrame(passedTime , pCamera , bRecursive);
 		}
 	}
 	return true ;
@@ -653,19 +659,21 @@ bool xSceneBasicNode::updateChildrenTrans()
 	for(size_t i = 0 ;  i < nObject ; i ++)
 	{
 		ISceneObject* pObject = getObject(i);
-		ISceneDrawable* pDrawable = dynamic_cast<ISceneDrawable*>(pObject);
+		ISceneDrawable* pDrawable = type_cast<ISceneDrawable*>(pObject);
 		if(pDrawable)
 		{
-			size_t nElement  = pDrawable->nDrawElement();
-			for(size_t iEl = 0 ; iEl < nElement ; iEl ++)
-			{
-				IDrawElement*   pDrawElement = pDrawable->drawElement(iEl);
-				if(pDrawElement) 
-				{
-					pDrawElement->setMatrix(m_trans);
-				}
-			}
-		}
+            pDrawable->setMatrix(m_trans);
+        }
+		//	size_t nElement  = pDrawable->nDrawElement();
+		//	for(size_t iEl = 0 ; iEl < nElement ; iEl ++)
+		//	{
+		//		IDrawElement*   pDrawElement = pDrawable->drawElement(iEl);
+		//		if(pDrawElement) 
+		//		{
+		//			pDrawElement->setMatrix(m_trans);
+		//		}
+		//	}
+		//}
 	}
 	return true ;
 }

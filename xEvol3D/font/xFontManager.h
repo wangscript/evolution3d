@@ -58,7 +58,7 @@ public:
 	xFontLoader();
 	IFontRenderDevice* fontRenderDevice();
     void               setFontRenderDevice(IFontRenderDevice* pDevice);
-
+    void               setThis(xFontManager* pThis){m_pThis = pThis ; }
 	HFontRender        findFont(const wchar_t* familly, const wchar_t* name, bool loadImm);
     HFontRender        findFont(const wchar_t* name, bool loadImm);
 
@@ -89,6 +89,7 @@ protected:
 	xXmlDocument            m_FontFamillyXML;
 	typedef ds_map(int , xXmlNode*) FontNodeMap;
 	FontNodeMap             m_FontNodeMap;
+    xFontManager*           m_pThis;
 };
 
 END_NAMESPACE_XEVOL3D

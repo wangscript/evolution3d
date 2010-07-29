@@ -12,10 +12,6 @@ xCubeDrawable::xCubeDrawable(IBaseRenderer* pRenderer, int arg)
 	m_pIdxBuffer = NULL;
 	m_pAss = NULL;
 	m_pRenderApi = NULL;
-	m_pTexture = NULL;
-	m_pGpuProgram = NULL;
-
-	m_pMaskTexture = NULL;
 	m_pBlendState = NULL;
     m_RefCount = 1;
 }
@@ -96,59 +92,38 @@ bool xCubeDrawable::init(xBaseTextureMgr* pTexMgr)
 	idxBufDesc.m_accessFlage = RESOURCE_ACCESS_NONE;
 	idxBufDesc.m_bindtype = BIND_AS_INDEX_BUFFER;
 	m_pIdxBuffer = m_pRenderApi->createInputBuffer(36  , 4 , &idxBufDesc,indices);
-
-	m_pTexture = m_pRenderApi->createFileTexture(_XEVOL_ABSPATH_(L"texture/Cover.jpg") , NULL, 0);
-	//m_pRenderApi->setShaderResource(eShader_PixelShader,0,m_pTexture);
-	m_pRenderApi->setTexture(Texture_Diffuse , m_pTexture);
-
-	m_pMaskTexture = m_pRenderApi->createFileTexture(_XEVOL_ABSPATH_(L"texture/Mask.dds") , NULL, 0);
-	m_pRenderApi->setTexture(Texture_Mask , m_pMaskTexture);
-
+  
+	m_hTexture = pTexMgr->add(L"red.jpg" , true , 0);
 	m_pBlendState = m_pRenderApi->createBlendState(L"Default");
 	m_pRenderApi->setBlendState(m_pBlendState);
 
 
-	//HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.shader");
-	//HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.vertex" , L"simple.pixel(0:simple.mask,RGBAGray;)" , NULL);
-	//HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.vertex" , L"simple.pixel(0:simple.mask,RGBAGray;)" , NULL);;
-	xGpuProgNameParser _shaderNameParser;
-	xGpuProgramName    _shaderName;
-	_shaderNameParser.setShaderName(eShader_VertexShader , L"simple.vertex" );
-	_shaderNameParser.setShaderName(eShader_PixelShader  , L"simple.pixel"  );
-	_shaderNameParser.addShaderNode(eShader_PixelShader  , L"simple.texture");
-	//_shaderNameParser.addShaderNode(eShader_PixelShader  , L"simple.mask"   );
-	//_shaderNameParser.addShaderNode(eShader_PixelShader  , L"simple.fakehdr" );
-	//_shaderNameParser.addShaderNode(eShader_PixelShader  , L"RGBAGray"   );
-	_shaderNameParser.toName(_shaderName);
-	HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load( _shaderName);
-	m_pGpuProgram = hProgram.getResource() ;
-	m_pRenderApi->setGpuProgram( m_pGpuProgram );
-
-	m_pGpuProgram->setTexture(L"DiffuseTexture" , m_pTexture);
-	m_pGpuProgram->setTexture(L"Texture1"       , m_pMaskTexture);
-
+	m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple.vertex" , L"simple.pixel(0:simple.texture;)" , NULL);
+	assert(m_hProgram.getResource() );
 	return true;
 }
 
 bool xCubeDrawable::begin()
 {
-	m_pRenderApi->setTexture(Texture_Mask , m_pMaskTexture);
+	m_pRenderApi->setTexture(Texture_Diffuse , m_hTexture.getResource() );
 	m_pRenderApi->setBlendState(m_pBlendState);
-
 	m_pRenderApi->setDepthStencilState(NULL);
-	m_pRenderApi->setGpuProgram( m_pGpuProgram );
+	m_pRenderApi->pushGpuProgram( m_hProgram.getResource() );
 	return true;
 }
 
 bool xCubeDrawable::render(unsigned long passedTime)
 {
+	begin();
 	m_pRenderApi->setVertexStream( m_pVertexStream );
 	m_pRenderApi->draw(m_pIdxBuffer , 36 );
+	end();
 	return true;
 }
 
 bool xCubeDrawable::end()
 {
+	m_pRenderApi->popGpuProgram();
 	return true;
 }
 
@@ -157,6 +132,8 @@ void xCubeDrawable::center(XMathLib::xvec3&   _center)
 }
 void xCubeDrawable::aabb(xGeomLib::xaabb&     _aabb)
 {
+	_aabb.m_Max = xvec3(1.0f  , 1.0f  , 1.0f);
+	_aabb.m_Min = xvec3(-1.0f , -1.0f , -1.0f);
 }
 
 void xCubeDrawable::shpere(xGeomLib::xshpere& _shpere)

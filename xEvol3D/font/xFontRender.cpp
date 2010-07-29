@@ -22,7 +22,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../RenderAPI/xRenderAPI.h"
 #include "../RenderAPI/xBaseTexture.h"
 
+
 BEGIN_NAMESPACE_XEVOL3D
+static xWCharTrait wcharTrait;
+
 IMPL_BASE_OBJECT_CLASSID(xFontRender  , IBaseObject);
 IMPL_OBJECT_FACTORY_MGR(xFontRender ,xFontRenderCreator , xFontRenderCreatorMgr );
  xFontRender::xFontRender(xFontLoader* pFontLoader , int arg)
@@ -41,10 +44,13 @@ bool  xFontRender::drawText(const wchar_t* strText, float x , float y , int maxW
 	int nChar = 0;
 	setFontRenderState();
 	//m_pRendeDevice->beginFontRender();
-	for(size_t i = 0 ; i < wcslen(strText) ; i ++)
+    size_t _len = wcharTrait.strlen(strText);
+
+	for(size_t i = 0 ; i < _len ; i ++)
 	{
 		//再画一个几出界了
-		if(strText[i] == '\n')
+        xWCharTrait::CharType ch = wcharTrait.GetCodePoint(strText , i );
+		if(ch == '\n')
 		{
 			start_y   += (maxY + getLinePitch() );
 			maxY = 0;
@@ -52,17 +58,17 @@ bool  xFontRender::drawText(const wchar_t* strText, float x , float y , int maxW
 		}
 		else 
 		{
-			getCharDim(strText[i],dx , dy);
+			getCharDim(ch,dx , dy);
 			if( end_x > 0 && ( (start_x + dx) > end_x)  )
 			{
 				start_y   +=  (maxY + getLinePitch() );
 				maxY = 0;
 				start_x = left ;
-				drawChar(strText[i],start_x,start_y,dx,dy,cl);
+				drawChar(ch,start_x,start_y,dx,dy,cl);
 			}
 			else
 			{
-				drawChar(strText[i],start_x,start_y,dx,dy,cl);
+				drawChar(ch,start_x,start_y,dx,dy,cl);
 			}
 			if(dy > maxY) maxY = (float)dy;
 			start_x += dx;
@@ -76,10 +82,14 @@ bool  xFontRender::drawText(const wchar_t* strText, float x , float y , int maxW
 	return true;
 }
 
+
+
+
+
 // 不换行式的输出一个区间内的文本
 bool xFontRender::drawText(const wchar_t* strText, float x , float y , int iBgnIdx, int nCount, const xColor_4f& cl, int nMaxW /*= 0*/)
 {
-	int nLen = (int)wcslen(strText);
+	int nLen = (int)wcharTrait.strlen(strText);
 	if ( nCount < 0 )
 		nCount = nLen;
 	if ( nLen > 0 && iBgnIdx < nLen && nCount > 0 )
@@ -91,9 +101,11 @@ bool xFontRender::drawText(const wchar_t* strText, float x , float y , int iBgnI
 		setFontRenderState();
 		//m_pRendeDevice->beginFontRender();
 		int dx = 0, dy = 0;
-		for (int i = iBgnIdx; i < iBgnIdx + nCount; i++)
+		for (size_t i = iBgnIdx; i < size_t(iBgnIdx + nCount); i++)
 		{
-			drawChar(strText[i], x, y, dx, dy, cl);
+            xWCharTrait::CharType ch = wcharTrait.GetCodePoint(strText , i );
+
+			drawChar(ch, x, y, dx, dy, cl);
 			x += dx;
 			if ( nMaxW > 0 )
 			{
@@ -123,16 +135,18 @@ bool xFontRender::drawText(const wchar_t* strText, float x , float y , const xCo
 	int dx , dy;
 	setFontRenderState();
 	//m_pRendeDevice->beginFontRender();
-	for(size_t i = 0 ; i < wcslen(strText) ; i ++)
+    size_t _len = wcharTrait.strlen(strText);
+	for(size_t i = 0 ; i < _len ; i ++)
 	{
-		if(strText[i] == '\n')
+        xWCharTrait::CharType ch = wcharTrait.GetCodePoint(strText , i );
+		if(ch == '\n')
 		{
 			sy += maxY + getLinePitch();
 			start_x = (float)sx ;
 			continue;
 		}
-		getCharDim(strText[i],dx , dy);
-		drawChar(strText[i],(float)start_x, sy, dx,dy,cl);
+		getCharDim(ch,dx , dy);
+		drawChar(ch,(float)start_x, sy, dx,dy,cl);
 		start_x +=  dx ;
 	}
 	//m_pRendeDevice->endFontRender();
@@ -140,20 +154,22 @@ bool xFontRender::drawText(const wchar_t* strText, float x , float y , const xCo
 	return true;
 }
 
-bool  xFontRender::getTextDim(const wchar_t* text , int& w , int& h)
+bool  xFontRender::getTextDim(const wchar_t* strText , int& w , int& h)
 {
 	int start_x = 0 ;
 	int maxY = 0;
-	for(size_t i = 0 ; i < wcslen(text) ; i ++)
+    size_t _len = wcharTrait.strlen(strText);
+	for(size_t i = 0 ; i < _len ; i ++)
 	{
-		if(text[i] == '\n')
+        xWCharTrait::CharType ch = wcharTrait.GetCodePoint(strText , i );
+		if(ch == '\n')
 		{
 			h   += ( maxY + getLinePitch() );
 			maxY = 0;
 			start_x = 0 ;
 			continue;
 		}
-		getCharDim(text[i],w , h);
+		getCharDim(  ch , w , h);
 		if(h > maxY) maxY = h;
 		start_x += w;
 	}
@@ -166,16 +182,18 @@ bool  xFontRender::getTextDim(const wchar_t*  strText , int& dx , int& dy , int 
 	int start_x = 0 ;
 	dx = 0 ; dy = 0;
 	int maxY = 0;
-	for(size_t i = 0 ; i < wcslen(strText) ; i ++)
+    size_t _len = wcharTrait.strlen(strText);
+    for(size_t i = 0 ; i < _len ; i ++)
 	{
-		if(strText[i] == '\n')
+        xWCharTrait::CharType ch = wcharTrait.GetCodePoint(strText , i );
+		if(ch == '\n')
 		{
 			dy   += ( maxY + getLinePitch() );
 			maxY = 0;
 			start_x = 0 ;
 			continue;
 		}
-		getCharDim(strText[i],dx , dy);
+		getCharDim(ch,dx , dy);
 		if( maxWidth >0 && ( (start_x + dx) > maxWidth)  )
 		{
 			dy   += ( maxY + getLinePitch() );
@@ -196,17 +214,18 @@ int	xFontRender::getFontHeight()
 
 int	xFontRender::getTextWidth(const wchar_t* strText, int iBegin, int& nLen)
 {
-	int nRealLen = (int)wcslen(strText);
+	size_t nRealLen =  wcharTrait.strlen(strText);
 	int w = 0, dx = 0, dy = 0;
-	if ( iBegin < nRealLen )
+	if ( iBegin < (int)nRealLen )
 	{
-		if ( nLen > nRealLen - iBegin)
-			nLen = nRealLen - iBegin;
+		if ( nLen > (int)nRealLen - iBegin)
+			nLen = (int)nRealLen - iBegin;
 		if ( iBegin < 0 )
 			iBegin = 0;
-		for (int i = iBegin; i < iBegin + nLen; i++)
+		for (size_t i = iBegin; i < (size_t)(iBegin + nLen); i++)
 		{
-			getCharDim(strText[i], dx, dy);
+            xWCharTrait::CharType ch = wcharTrait.GetCodePoint(strText , i );
+			getCharDim(ch, dx, dy);
 			w += dx;
 		}
 	}
@@ -215,28 +234,31 @@ int	xFontRender::getTextWidth(const wchar_t* strText, int iBegin, int& nLen)
 
 int	xFontRender::getCharCount(const wchar_t* strText, int iBegin, int& nMaxWidth, bool bRoundVal /*= false*/)
 {
-	int nRealCnt = (int)wcslen(strText);
-	if ( iBegin >= nRealCnt || nMaxWidth <= 0 )
+	size_t nRealCnt = (size_t)wcharTrait.strlen(strText);
+	if ( iBegin >= (int)nRealCnt || nMaxWidth <= 0 )
 		return 0;
-	int i = iBegin, dx = 0, dy = 0, w = 0;
+	size_t i = iBegin;
+    int dx = 0, dy = 0, w = 0;
 	while (i < nRealCnt)
 	{
-		getCharDim(strText[i], dx, dy);
+        xWCharTrait::CharType ch = wcharTrait.GetCodePoint(strText , i );
+		getCharDim(ch, dx, dy);
 		w += dx;
 		if ( w >= nMaxWidth )
 		{
 			int step = w - nMaxWidth;
 			if ( step > dx/2 || !bRoundVal )
 				nMaxWidth = w - dx;
-			else {
+			else 
+            {
 				++i; nMaxWidth = w;
 			}
-			return i - iBegin;
+			return int(i - iBegin);
 		}
 		++i;
 	}
 	nMaxWidth = w;
-	return i - iBegin;
+	return int(i - iBegin);
 }
 
 bool  xFontRender::drawTextOneLine(const wchar_t* strText, xMathLib::xvec4& rect, const xColor_4f& cl, eAlignMode hAlignMode , eAlignMode vAlignMode)
@@ -288,14 +310,16 @@ bool  xFontRender::drawTextOneLine(const wchar_t* strText, xMathLib::xvec4& rect
 	int dx , dy;
 	setFontRenderState();
 	//m_pRendeDevice->beginFontRender();
-	for(size_t i = 0 ; i < wcslen(strText) ; i ++)
+    size_t _len = wcharTrait.strlen(strText);
+	for(size_t i = 0 ; i < _len ; i ++)
 	{
-		getCharDim(strText[i], dx, dy);
+        xWCharTrait::CharType ch = wcharTrait.GetCodePoint(strText , i );
+		getCharDim(ch, dx, dy);
 		if( (start_x +  dx) > (rect_x + rect_w) )
 		{
 			break;
 		}
-		drawChar(strText[i], start_x, sy, dx,dy,cl);
+		drawChar(ch, start_x, sy, dx,dy,cl);
 		start_x +=  dx ;
 	}
 	//m_pRendeDevice->endFontRender();

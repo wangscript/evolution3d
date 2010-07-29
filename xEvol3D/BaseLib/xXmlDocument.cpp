@@ -259,6 +259,19 @@ void xXmlNode::clear()
 
 }
 
+void  xXmlNode::removeNode(xXmlNode* pNode)
+{
+	XmlNodes::iterator pos = m_ChildrenNodes.begin();
+	for(;pos != m_ChildrenNodes.end() ; pos ++)
+	{
+		if(*pos == pNode)
+		{
+			delete pNode;
+			m_ChildrenNodes.erase(pos);
+			return ;
+		}
+	}
+}
 xXmlNode*  xXmlNode::insertNode(const wchar_t* nodeName)
 {
 	xXmlNode* pNode = new xXmlNode;
@@ -783,6 +796,20 @@ bool xXmlDocument::load(const wchar_t* buf , size_t len , bool loadHeader)
     return xXmlBuilder::loadMem((xXmlDocument*) this, buf , loadHeader );
 }
 
+bool xXmlDocument::load(IStreamIO* stream , bool loadHeader )
+{
+    int pos = (int)stream->tell();
+    stream->seek(0 , ios::end);
+    int len = (int)stream->tell() - pos;
+    stream->seek(pos , ios::beg);
+
+    int8 * buf = new int8[len];
+    stream->read(buf , len);
+
+    bool bRet = load( buf , len , loadHeader );
+    delete [] buf ;
+    return bRet;
+}
 
 bool xXmlDocument::load(std::istream& stream , bool loadHeader )
 {
@@ -802,7 +829,7 @@ bool xXmlDocument::save(const wchar_t* fileName , bool saveHeader , eTextEncode 
 	return ret;	
 }
 #else
-bool xXmlDocument::save(const wchar_t* fileName , bool saveHeader )
+bool xXmlDocument::save(const wchar_t* fileName , bool saveHeader , eTextEncode _encode )
 {
 	ofstream file;
 	char fileNameANSII[1024]={0};
@@ -810,7 +837,7 @@ bool xXmlDocument::save(const wchar_t* fileName , bool saveHeader )
 	file.open(fileNameANSII,ios::binary);
 	if(file.fail())
 		return false;
-	bool ret = save(file , saveHeader);
+	bool ret = save(file , saveHeader , _encode);
 	file.close();
 	return ret;	
 }
@@ -835,6 +862,11 @@ xXmlDocument::xXmlDocument()
 	m_pParant = NULL;
 	m_saveAsXML = true;
 	m_Name = L"DocumentRoot";
+}
+
+xXmlDocument::~xXmlDocument()
+{
+    unload();
 }
 
 void xXmlDocument::unload()
@@ -945,11 +977,12 @@ template <typename _TOutStream > void saveToStream(bool bSaveAsXML , _TOutStream
 
 	else//save as xml
 	{
-		stream<<L"<"<<pNode->name()<<L" ";
+		stream<<L"<"<<pNode->name()<<L"";
 
 		pNode->findValue(values);
 		std::sort(values.begin(), values.end());
 		int nValues = (int)values.size();
+
 		for(int i = 0 ; i <  nValues;  i ++)
 		{
 			stream<< L" ";
@@ -1030,7 +1063,7 @@ bool xXmlDocument::save(std::ostream& _stream, bool saveHeader , eTextEncode _en
 {	
 	if(_encode == eText_Unicode) 
 	{
-		xXmlUnicodeStream<std::ostream> stream(_stream,true);
+		xXmlUnicodeStream<std::ostream> stream(&_stream,true);
 
 		if(saveHeader)
 		{
@@ -1047,7 +1080,7 @@ bool xXmlDocument::save(std::ostream& _stream, bool saveHeader , eTextEncode _en
 	
 	if(_encode == eText_Utf8) 
 	{
-		xXmlUtf8Stream<std::ostream> stream(_stream,true);
+		xXmlUtf8Stream<std::ostream> stream(&_stream,true);
 
 		if(saveHeader)
 		{
@@ -1064,7 +1097,7 @@ bool xXmlDocument::save(std::ostream& _stream, bool saveHeader , eTextEncode _en
 
 	if(_encode == eText_Ansi) 
 	{
-		xXmlAnsiStream<std::ostream> stream(_stream,true);
+		xXmlAnsiStream<std::ostream> stream(&_stream,true);
 
 		if(saveHeader)
 		{
@@ -1081,9 +1114,64 @@ bool xXmlDocument::save(std::ostream& _stream, bool saveHeader , eTextEncode _en
 	return false;
 }
 
+bool xXmlDocument::save(IStreamIO* _stream, bool saveHeader , eTextEncode _encode)
+{	
+    if(_encode == eText_Unicode) 
+    {
+        xXmlUnicodeStream<IStreamIO> stream(_stream,true);
+
+        if(saveHeader)
+        {
+            stream<< L"<?xml version=\"1.0\" encoding=\"unicode\"?>";
+            stream.endl();
+        }
+        int nChildNodes = (int)m_ChildrenNodes.size();
+        for(int i = 0 ; i <  nChildNodes; i ++)
+        {
+            saveToStream(m_saveAsXML , stream , m_ChildrenNodes[i] , 0);
+        }
+        return true;
+    }
+
+    if(_encode == eText_Utf8) 
+    {
+        xXmlUtf8Stream<IStreamIO> stream(_stream,true);
+
+        if(saveHeader)
+        {
+            stream<< L"<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+            stream.endl();
+        }
+        int nChildNodes = (int)m_ChildrenNodes.size();
+        for(int i = 0 ; i <  nChildNodes; i ++)
+        {
+            saveToStream(m_saveAsXML , stream , m_ChildrenNodes[i] , 0);
+        }
+        return true;
+    }
+
+    if(_encode == eText_Ansi) 
+    {
+        xXmlAnsiStream<IStreamIO> stream(_stream,true);
+
+        if(saveHeader)
+        {
+            stream<< L"<?xml version=\"1.0\" encoding=\"ansi\"?>";
+            stream.endl();
+        }
+        int nChildNodes = (int)m_ChildrenNodes.size();
+        for(int i = 0 ; i <  nChildNodes; i ++)
+        {
+            saveToStream(m_saveAsXML , stream , m_ChildrenNodes[i] , 0);
+        }
+        return true;
+    }
+    return false;
+}
+
 bool xXmlDocument::save(std::wostringstream& _stream , bool saveHeader)
 {
-	xXmlUnicodeStream<std::wostringstream> stream(_stream,true);
+	xXmlUnicodeStream<std::wostringstream> stream(&_stream,true);
 
 	if(saveHeader)
 	{

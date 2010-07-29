@@ -145,9 +145,7 @@ bool On_ExportSkin(HWND hDlg,WPARAM wParam,LPARAM lParam)
 	XEVOL_LOG(eXL_DEBUG_HIGH , L"------------------------------------\n");
 	XEVOL_LOG(eXL_DEBUG_HIGH , L"开始导出皮肤文件 \n");
 	if(CMaxEnv::GetInstance().get_saved_filename(skin_file,
-		L"XEvol模型文件(*.xrm)\0*.xrm\0 XEvol皮肤组文件(*.skins)\0*.skins\0XEvol皮肤文件(*.mesh)\0*.mesh\0所有文件(*.*)\0*.*\0",
-		L"xrm",
-		L"请选择一个皮肤文件") == false)
+		L"XEvol模型文件(*.xrm)\0*.xrm\0 XEvol皮肤组文件(*.skins)\0*.skins\0XEvol皮肤文件(*.mesh)\0*.mesh\0所有文件(*.*)\0*.*\0",L"xrm", L"请选择一个皮肤文件", true) == false)
 	{
 		return false;
 	}

@@ -30,14 +30,14 @@ bool   xPropertyValue::reAlloc(size_t iData)
 	if(iData == 0) //删除所有内存
 	{
 		m_DataLen = 0;
-		if(m_pData) { delete [] m_pData ;}
+		if(m_pData) { delete [] (int8*)m_pData ;}
 		m_pData = NULL;
 	}
 	else
 	{
 		if(m_DataLen < iData)//只有内存小的时候才需要重新分配
 		{
-			if(m_pData) { delete [] m_pData ;}
+			if(m_pData) { delete [] (int8*)m_pData ;}
 			m_pData = new int8[iData];
 			m_DataLen = iData;
 		}

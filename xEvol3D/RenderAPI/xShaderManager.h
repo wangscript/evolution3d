@@ -30,6 +30,7 @@ public:
 	void            clear();
     void            unload();
 	xShaderCodeNodeMgr* codeManager(){return &m_CodeMgr;}
+    void            setThis(xGpuProgramMgrImp* pThis){ m_pThis = pThis ; }
 public:
 	//Path Manager;
 	void            clearAllSearchPath();
@@ -54,6 +55,7 @@ protected:
     IRenderApi*         m_pRenderApi;
 	xShaderCodeNodeMgr  m_CodeMgr;
 	ds_wstring          m_defExt;
+    xGpuProgramMgrImp*  m_pThis;
 };
 
 class  _XEVOL_BASE_API_  xBaseShaderLoader

@@ -1,35 +1,16 @@
 #ifndef _XEVOL_OPENGL20_BASE_TEXTURE_H_
 #define _XEVOL_OPENGL20_BASE_TEXTURE_H_
 #include <RenderApi/xRenderApi.h>
-#include <d3d10.h>
-#include <D3DX10.h>
-#include <D3DX10tex.h>
 #include <string>
 #include <vector>
 #include <RenderAPI/xBaseTexture.h>
-#include "xGL2ConstLexer.h"
-
+#include <OperationSys/xOperationSys.h>
+#include <GL/glew.h>
+#include <GL/wglew.h>
+#include <GL/glu.h>
 
 BEGIN_NAMESPACE_XEVOL3D
 class xGL2RenderApi;
-struct xGL2TexInfo
-{
-	DXGI_FORMAT   m_ShaderViewFmt;
-    DXGI_FORMAT   m_ResFmt;
-    DXGI_FORMAT   m_RTViewFmt;
-	size_t        m_TexWidth;
-	size_t        m_TexHeight;
-	size_t        m_TexDepth;
-	size_t        m_MipmapLevel;
-	size_t        m_ArraySize;
-	eResourceType m_Type;
-	ePIXEL_FORMAT m_xfmt;
-	int           m_MemSize;
-	int           m_Pitch;
-	int           m_SlicePitch;
-	int           m_nBytePerPixel;
-};
-
 class xGL2TextureBuffer
 {
 public:
@@ -47,31 +28,51 @@ public:
 	bool  flush(int h ,  int dest_pitch , int src_pitch = 0);
 };
 
+struct xGLTextureInfo
+{
+	ePIXEL_FORMAT m_fmt;
+	GLuint        m_TextureID;
+	int           m_TexWidth;
+	int           m_TexHeight;
+	int           m_TexDepth;
+	int           m_MipmapLevel;
+	int           m_ArraySize;
+	eResourceType m_Type;
+	int           m_MemSize;
+	int           m_Pitch;
+	int           m_SlicePitch;
+	int           m_nBytePerPixel;
+	D3D10_USAGE   m_Usage;
+
+};
 class xGL2BaseTexture : public IBaseTexture
 {
 protected:
-	xGL2RenderApi*          m_pD10Api;
-	ID3D10ShaderResourceView* m_pTextureView;
-	xGL2TexInfo               m_TexInfo;
+	xGL2RenderApi*            m_pGL2Api;
+	xGLTextureInfo            m_TexInfo;
 	IMPL_REFCOUNT_OBJECT_INTERFACE(xGL2BaseTexture);
 public:
-	xGL2BaseTexture(xGL2RenderApi* pD10Api);
+	xGL2BaseTexture(xGL2RenderApi* pGL2Api);
 	virtual ~xGL2BaseTexture();
 	virtual unsigned long  memUsage();
 	virtual eResourceType  res_type();
 	virtual IRenderTarget* toRenderTarget(size_t iSlice = 0 , size_t iMipMapLevel = 0){return NULL ; }
-	virtual ePIXEL_FORMAT  format(){ return m_TexInfo.m_xfmt ; }
+	virtual ePIXEL_FORMAT  format(){ return m_TexInfo.m_fmt ; }
 	virtual bool           validate(){return true; }
 	virtual bool           desc(xTextureDesc& _desc);
 	virtual bool           grabRenderTagetData(int x , int y , int w , int h , void* pData) { return false ; }
     virtual bool           unload();
+    bool                   thread_lock();
+    bool                   thread_unlock();
+    xThreadLocker*         thread_locker();
+	GLuint                 getTexID() { return m_TexInfo.m_TextureID; }
+public:
+    xThreadLocker*         m_pLocker;
+    
 };
 
 class xGL2UnkwonTexture : public xGL2BaseTexture
 {
-protected:
-	ID3D10Resource*           m_pTexture;
-	ID3D10ShaderResourceView* m_pTextureView;
 public:
 	void*                 handle();
 	virtual bool          isLoaded();
@@ -84,11 +85,17 @@ protected:
 	virtual bool          lock(eLockPolicy lockPolicy, xTextureLockArea& lockInfo, int mipmapLevel = 0 , int arraySlice = 0){ return false ;}
 	virtual bool          unlock(xTextureLockArea& lockInfo){return false;}
 protected:
-	virtual bool          _load(ID3D10Resource* pTexture , bool bCreateTextureView = true);
 	xGL2UnkwonTexture(xGL2RenderApi* pD10Api);
 	virtual ~xGL2UnkwonTexture();
 };
-bool fillLoadInfo(D3DX10_IMAGE_LOAD_INFO& loadInfo , bool lockAble);
+
+enum GL_FEATURE 
+{
+    FEATURE_NPOT,
+    FEATURE_PBO,
+    FEATURE_TEXTRUE_COMPRESSION,
+};
+bool GL_Feature_Support(GL_FEATURE _feature);
 END_NAMESPACE_XEVOL3D
 
 #endif

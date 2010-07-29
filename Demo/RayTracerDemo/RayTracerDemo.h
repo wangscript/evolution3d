@@ -30,7 +30,8 @@
 #include "objPlacement.h"
 #include "xuiDemoInfoPannel.h"
 #include "xEvol3D.h"
-
+#include "xEffectSystem/xParticleSystem.h"
+#include "xEffectSystem/xParticleEmitter.h"
 using namespace XEvol3D;
 
 struct xRayTraceNodeData
@@ -139,9 +140,8 @@ protected:
 	IBaseTexture*               m_ProcedureTexture;
 	HFontRender                 m_hFont;
 	float                       m_cameraStep;
-	IRenderView*                m_pSelView;
 
-	IBaseRenderer*              m_pRenderer ;
+    IBaseRenderer*              m_pRenderer ;
 	std::ds_wstring             m_cfgFile;
 	xui::xuiWindowManager*      m_xuiWinMgr;
 	xui::xuiDemoInfoPannel*     m_InfoPanel;
@@ -153,4 +153,8 @@ protected:
 	xSceneRenderVisitor*        m_renderVisitor;
 	xSceneSelection             m_Selection;
 	CRaytracerPrimaryRenderCallback m_PrimRayCb;
+
+    xParticleSystem*            m_ParticleSystem;//xParticleSystem::createInstance(m_pRenderer);
+    //IParticleEmitter*           m_pEmitter;//= ps->createEmitter(L"xSphereEmitter");
+	//IParticleEmitter*           m_pBoxEmitter;
 };

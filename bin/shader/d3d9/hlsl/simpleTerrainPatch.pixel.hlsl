@@ -8,7 +8,7 @@ struct PS_INPUT
       float4 Pos      : SV_POSITION;
       float4 Nor       : TEXCOORD0;
       float4 Color     : TEXCOORD1;
-      float2 Tex       : TEXCOORD2; 
+      float4 Tex       : TEXCOORD2; 
 
       float4 wPosition : TEXCOORD3;
       float4 wNormal   : TEXCOORD4; 

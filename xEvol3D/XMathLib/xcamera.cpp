@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../xStdPch.h"
 #include "xcamera.h"
 #include "xfrustum.h"
+#include "xline.h"
 using namespace XEvol3D::XMathLib;
 
 BEGIN_NAMESPACE_XGEOMLIB
@@ -34,6 +35,20 @@ void xCamera::XEye::toMatirx(xmat4& matView)
 xCamera::XEye::XEye():
 m_EyePos(0,0,0),m_EyeTarget(0,0,-1),m_Up(0,1,0)
 {
+}
+xMathLib::xvec4 xCamera::XEye::getDir(bool bNormalized ) 
+{ 
+    xMathLib::xvec4 ret = m_EyeTarget - m_EyePos;
+    if(bNormalized)
+        ret.normalize();
+    return ret;
+}
+xMathLib::xvec4 xCamera::XEye::getRight()
+{
+    xMathLib::xvec4 dir = getDir();
+    xMathLib::xvec4 ret = dir.cp(m_Up);
+    ret.normalize();
+    return ret;
 }
 
 void xCamera::toMatrix(xmat4& matView,xmat4& matProject)
@@ -235,6 +250,27 @@ void xCamera::setPerspective2D(int w , int h , float fov, bool bResetEye)
 	setAspect( float(w)/float(h) );
 }
 
+void xCamera::cloneTo(xCamera* pCamera , bool fireEvent)
+{
+    pCamera->m_fFov           = m_fFov;
+    pCamera->m_fNear          = m_fNear;
+    pCamera->m_fFar           = m_fFar;
+    pCamera->m_fAspect        = m_fAspect;
+    pCamera->m_ViewRect       = m_ViewRect;
+    pCamera->m_ProjectType    = m_ProjectType;
+    pCamera->m_ViewMat        = m_ViewMat;
+    pCamera->m_ProjMat        = m_ProjMat;
+    pCamera->m_frustum        = m_frustum;
+    pCamera->m_pEventHanlder  = m_pEventHanlder;
+    pCamera->m_bUpdate = true;
+
+    pCamera->m_Eye            = m_Eye;
+    if( fireEvent ) 
+    {
+        pCamera->__setdirty();
+    }
+}
+
 void xCamera::__setdirty()
 {
 	m_bUpdate = true;
@@ -408,5 +444,73 @@ void xCamera::focus(float dist,float factor)
 	m_Eye.m_EyePos =  m_Eye.m_EyeTarget + V;
 	__setdirty();
 }
+
+void xCamera::getPickRay( xvec3& pvPickRay,int x,int y,int sw,int sh )
+{
+    __calcMatrix();
+    xvec4 v;
+    if( sw==-1 )
+        sw = (int)m_ViewRect.width();
+    if( sh==-1 )
+        sh = (int)m_ViewRect.height();
+    v.x =  ( 2.f * x / (float)sw - 1 ) / m_ProjMat.m[0][0];
+    v.y = -( 2.f * y / (float)sh - 1 ) / m_ProjMat.m[1][1];
+    v.z =  -1.0f;
+    v.w =  1.0f;
+    xmat4 matViewI = m_ViewMat;
+    matViewI.inverse();
+
+    XM_Mul(v, matViewI, pvPickRay);
+}
+
+void xCamera::getPickRay(xline& pvPickLine, int x, int y, int sw/*=-1*/, int sh/*=-1*/)
+{
+    xvec3 vDir;
+    getPickRay(vDir, x, y, sw, sh);
+    vDir = vDir - m_Eye.m_EyePos;
+    vDir.normalize();
+    pvPickLine.m_Dir = vDir;
+    pvPickLine.m_Point = m_Eye.m_EyePos;
+}
+
+xvec3 xCamera::trans2Screen( xvec3& vScr , const xvec3& pvPos )
+{
+    xvec3 vDir = pvPos - m_Eye.m_EyePos;
+    xvec3 vEyeDir = m_Eye.getDir();
+    if( vDir.dp(vEyeDir) > 0.f )
+    {
+        xmat4 matProjView;
+        xmat4 matView;
+        xmat4 matProj;
+        toMatrix(matView , matProj );
+        XM_Mul(matView , matProj , matProjView);
+        vScr = matProjView * pvPos;
+        vScr.x = pvPos.x * matProjView.m[0][0] + pvPos.y * matProjView.m[1][0] + pvPos.z * matProjView.m[2][0] + matProjView.m[3][0];
+        vScr.y = pvPos.x * matProjView.m[0][1] + pvPos.y * matProjView.m[1][1] + pvPos.z * matProjView.m[2][1] + matProjView.m[3][1];
+        vScr.z = pvPos.x * matProjView.m[0][2] + pvPos.y * matProjView.m[1][2] + pvPos.z * matProjView.m[2][2] + matProjView.m[3][2];
+        float w = matProjView.m[0][3] * pvPos.x + matProjView.m[1][3] * pvPos.y + matProjView.m[2][3] * pvPos.z + matProjView.m[3][3];
+        vScr.x /= w;
+        vScr.y /= w;
+        vScr.z /= w;
+        vScr.x *= m_ViewRect.width();
+        vScr.y *= m_ViewRect.height();
+    }
+    else
+    {
+        vScr.x = -FLT_MAX;
+        vScr.y = -FLT_MAX;
+        vScr.z = -FLT_MAX;
+    }
+    return vScr;
+}
+
+void  xCamera::calcBillboardMatrix(const xMathLib::xmat4& worldMatrix , xMathLib::xmat4& _bbMatrix)
+{
+    __calcMatrix();
+    XM_Mul(worldMatrix , m_ViewMat , _bbMatrix);
+    _bbMatrix.noTrans();
+    _bbMatrix.inverse();
+}
+
 END_NAMESPACE_XGEOMLIB
 

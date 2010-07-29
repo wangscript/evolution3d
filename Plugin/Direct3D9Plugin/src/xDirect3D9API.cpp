@@ -210,7 +210,7 @@ bool xD3D9RenderApi::onResize(int width , int height)
 
 	TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
 	TAutoLocker<xRenderApiLocker> aRenderLocker(&m_RenderLocker);
-	xD3D9RenderView* pRenderView = m_RenderView.type_case<xD3D9RenderView*>(); //dynamic_cast<xD3D9RenderView*>(m_RenderView.operator TObject*());
+	xD3D9RenderView* pRenderView = m_RenderView.dynamic_convert<xD3D9RenderView*>(); //dynamic_cast<xD3D9RenderView*>(m_RenderView.operator TObject*());
 	if(false == __needResize(width , height) )
 	{
 		pRenderView->install();
@@ -363,7 +363,6 @@ bool xD3D9RenderApi::swapBuffer()
 {
 	TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
 	m_RenderWindow->Present(NULL , NULL , NULL , NULL , 0 );
-	unlock();
 	return true;
 }
 
@@ -581,23 +580,42 @@ bool xD3D9RenderApi::endScene()
     unlock();
     return true;
 }
-bool xD3D9RenderApi::drawPrimitive(size_t nVertex , size_t iStartVertex , ePrimtiveType pt)
+bool xD3D9RenderApi::drawPrimitiveIndex(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt)
 {
     int nPrimitive = 0;
-    D3DPRIMITIVETYPE d3dPt = GetD3DPrimitiveType(pt , (int)nVertex , nPrimitive);
+    D3DPRIMITIVETYPE d3dPt = GetD3DPrimitiveType(pt , (int)nVertexIndex , nPrimitive);
 	if(m_pCallback)
 	{
 		m_pCallback->preDrawPrimitive(this , m_RenderMode);
 		setPrimitiveType(pt);
-		getDevice()->DrawIndexedPrimitive(d3dPt,0 , 0 , m_NumVerticesInVB , (UINT)iStartVertex , (UINT)nPrimitive);
+		getDevice()->DrawIndexedPrimitive(d3dPt,0 , 0 , m_NumVerticesInVB , (UINT)iStartVertexIndex , (UINT)nPrimitive);
 		m_pCallback->preDrawPrimitive(this , m_RenderMode);
 	}
 	else
 	{
 		setPrimitiveType(pt);
-		getDevice()->DrawIndexedPrimitive(d3dPt,0 , 0 , m_NumVerticesInVB , (UINT)iStartVertex , nPrimitive);
+		getDevice()->DrawIndexedPrimitive(d3dPt,0 , 0 , m_NumVerticesInVB , (UINT)iStartVertexIndex , nPrimitive);
 	}
 	return true;
+}
+
+bool xD3D9RenderApi::drawPrimitive(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt)
+{
+    int nPrimitive = 0;
+    D3DPRIMITIVETYPE d3dPt = GetD3DPrimitiveType(pt , (int)nVertexIndex , nPrimitive);
+    if(m_pCallback)
+    {
+        m_pCallback->preDrawPrimitive(this , m_RenderMode);
+        setPrimitiveType(pt);
+        getDevice()->DrawPrimitive(d3dPt, (UINT)iStartVertexIndex , (UINT)nPrimitive);
+        m_pCallback->preDrawPrimitive(this , m_RenderMode);
+    }
+    else
+    {
+        setPrimitiveType(pt);
+        getDevice()->DrawPrimitive(d3dPt,(UINT)iStartVertexIndex , nPrimitive);
+    }
+    return true;
 }
 
 bool  xD3D9RenderApi::drawRectf(IBaseTexture* pTexture, float vDestRect[4] , const xColor_4f& color)
@@ -766,7 +784,7 @@ bool xD3D9RenderApi::setSamplerState(eShaderType _st , int iSlot , ISamplerState
 
 bool  xD3D9RenderApi::setShaderResource(eShaderType _st , int iSlot , IBaseTexture* pTexture)
 {
-	 IDirect3DBaseTexture9* pDxTexture = (IDirect3DBaseTexture9*)pTexture->handle();
+	IDirect3DBaseTexture9* pDxTexture = pTexture!=NULL?(IDirect3DBaseTexture9*)pTexture->handle():NULL;
      getDevice()->SetTexture(iSlot , pDxTexture);
      return true;
 }

@@ -1,31 +1,30 @@
-// This MFC Samples source code demonstrates using MFC Microsoft Office Fluent User Interface 
-// (the "Fluent UI") and is provided only as referential material to supplement the 
-// Microsoft Foundation Classes Reference and related electronic documentation 
-// included with the MFC C++ library software.  
-// License terms to copy, use or distribute the Fluent UI are available separately.  
-// To learn more about our Fluent UI licensing program, please visit 
-// http://msdn.microsoft.com/officeui.
+// 这段 MFC 示例源代码演示如何使用 MFC Microsoft Office Fluent 用户界面 
+// (“Fluent UI”)。该示例仅供参考，
+// 用以补充《Microsoft 基础类参考》和 
+// MFC C++ 库软件随附的相关电子文档。
+// 复制、使用或分发 Fluent UI 的许可条款是单独提供的。
+// 若要了解有关 Fluent UI 许可计划的详细信息，请访问  
+// http://msdn.microsoft.com/officeui。
 //
-// Copyright (C) Microsoft Corporation
-// All rights reserved.
+// 版权所有(C) Microsoft Corporation
+// 保留所有权利。
 
-// MainFrm.h : interface of the CMainFrame class
+// MainFrm.h : CMainFrame 类的接口
 //
 
 #pragma once
-
-#include "..\Resource.h"
 #include "DockPaneContainer.h"
 #include <vector>
 #include "BaseLib/xIDManager.h"
-#include "..\xMedusaEditor.h"
-//#include "RibbonToolBar.h"
+#include "../xMedusaEditor.h"
+#include "RibbonBar.h"
 
-
+class CMainFrame;
+///Medusa主项目的状态栏
 class CStatusBarItem
 {
 public:
-    enum StatusBarItemType
+	enum StatusBarItemType
 	{
 		SBIT_Label,
 		SBIT_Button,
@@ -36,39 +35,52 @@ private:
 	nsMedusaEditor::IMEdUICommandReciver* m_pCallBack;
 	CMFCRibbonBaseElement*                m_pElement;
 };
+typedef ds_map(int , IMEdUIElement*) vID2UIElement;
 
-
-class CMainFrame;
 class CStatusBarInterface : public IMEdUIStatusBar
 {
 public:
-	 IMEdUIStatusBarItem* FindItem(const wchar_t* pName);
-	 bool                 DeleteItem(IMEdUIStatusBarItem* pItem);
-	 IMEdUIStatusBarItem* InsertItem(const wchar_t* pName , IMEdUIStatusBarItem::StatusBarItemType _type);
-	 bool                 InsertSeperator();
+	IMEdUIStatusBarItem* FindItem(const wchar_t* pName);
+	bool                 DeleteItem(IMEdUIStatusBarItem* pItem);
+	IMEdUIStatusBarItem* InsertItem(const wchar_t* pName , IMEdUIStatusBarItem::StatusBarItemType _type);
+	bool                 InsertSeperator();
 public:
 	CMainFrame*           m_pMainFrame;
 
 };
 
-class CMainFrame : public CMDIFrameWndEx
+//////////////////////////////////////////////////////////////////////////
+class CMainFrame : public CFrameWndEx
 {
-	DECLARE_DYNAMIC(CMainFrame)
-public:
+	
+protected: // 仅从序列化创建
 	CMainFrame();
+	DECLARE_DYNCREATE(CMainFrame)
 
-// Attributes
+// 特性
 public:
-
-// Operations
+	IMEdUIStatusBarItem* FindItem(const wchar_t* pName);
+	bool                 DeleteItem(IMEdUIStatusBarItem* pItem);
+	IMEdUIStatusBarItem* InsertItem(const wchar_t* pName , IMEdUIStatusBarItem::StatusBarItemType _type);
+	bool                 InsertSeperator();
+	IMEdUIStatusBar*     GetStatusBarImpl(){return &m_StatusBarImpl;}
+    void                 ResetApplicationLook();
+    void                 SetRibbonBar(CMFCRibbonBar* pRibbonBar);
+	//CMFCRibbonBar*       GetRibbonBar();
+// 操作
 public:
+	bool         AttachToolBar(HWND hToolBar);
+	bool         DetachToolBar(HWND hToolBar);
+	bool         AttachDockPane(nsMedusaEditor::IMEdDockPane* pPane);
+	bool         DetachDockPane(nsMedusaEditor::IMEdDockPane* pPane);
 
-// Overrides
+    bool         AddUIElementToShowHideMenu(IMEdUIElement* pUIElement , int id = - 1);
+// 重写
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
-
-// Implementation
+	virtual BOOL DestroyWindow();
+	virtual BOOL OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
+// 实现
 public:
 	virtual ~CMainFrame();
 #ifdef _DEBUG
@@ -76,50 +88,41 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-protected:  
-	CMFCToolBarImages m_UserImages;
-
-	//CMFCCaptionBar              m_wndCaptionBar;
-	CMFCRibbonStatusBar         m_wndStatusBar;
-public:
-	bool         AttachToolBar(HWND hToolBar);
-	bool         DetachToolBar(HWND hToolBar);
-	bool         AttachDockPane(nsMedusaEditor::IMEdDockPane* pPane);
-	bool         DetachDockPane(nsMedusaEditor::IMEdDockPane* pPane);
-	//BOOL         CreateCaptionBar();
-public:
+protected:  // 控件条嵌入成员
+	CMFCRibbonStatusBar              m_wndStatusBar;
+	////
 	std::vector<CDockPaneContainer*> m_DockPanes;
 	NS_XEVOL3D::xIDManager           m_DockPaneIDMgr;
-// Generated message map functions
+	CStatusBarInterface              m_StatusBarImpl;
+    CMFCCaptionBar                   m_wndCaptionBar;
+    vID2UIElement                    m_mapUIElment;
+    CMFCRibbonPanel*                 m_pShowHidePanelView;
+// 生成的消息映射函数
 protected:
+    afx_msg void OnViewCustomize();
 	afx_msg int  OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnWindowManager();
-	afx_msg void OnViewCustomize();
 	afx_msg void OnApplicationLook(UINT id);
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
-	//afx_msg void OnViewCaptionBar();
-	//afx_msg void OnUpdateViewCaptionBar(CCmdUI* pCmdUI);
+    afx_msg void OnViewCaptionBar();
+    afx_msg void OnUpdateViewCaptionBar(CCmdUI* pCmdUI);
+	afx_msg void OnFilePrint();
+	afx_msg void OnFilePrintPreview();
+	afx_msg void OnUpdateFilePrintPreview(CCmdUI* pCmdUI);
+
+    afx_msg void OnEditUndo();
+    afx_msg void OnUpdateEditUndo(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateEditRedo(CCmdUI *pCmdUI);
+    afx_msg void OnEditRedo();
+
 	afx_msg void OnDockPaneRange(UINT id);
 	afx_msg void OnUpdateDockPaneRange(CCmdUI* pCmdUI);
 
 	afx_msg void OnPluginCmdRange(UINT id);
 	afx_msg void OnUpdatePluginCmdRange(CCmdUI* pCmdUI);
-
+	afx_msg void OnDestroy();
 	DECLARE_MESSAGE_MAP()
 
-
-	virtual BOOL OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
-public:
-	virtual BOOL DestroyWindow();
-
-	 IMEdUIStatusBarItem* FindItem(const wchar_t* pName);
-	 bool                 DeleteItem(IMEdUIStatusBarItem* pItem);
-	 IMEdUIStatusBarItem* InsertItem(const wchar_t* pName , IMEdUIStatusBarItem::StatusBarItemType _type);
-	 bool                 InsertSeperator();
-
-	 IMEdUIStatusBar*     GetStatusBarImpl(){return &m_StatusBarImpl;}
-protected:
-	CStatusBarInterface m_StatusBarImpl;
+	
 };
 
 

@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __APPLICATION_LAYER_H__
 #define __APPLICATION_LAYER_H__
 #include "../BaseLib/xEvol3DBaseInc.h"
+#include "../Application/xWindow.h"
 BEGIN_NAMESPACE_XEVOL3D
 class _XEVOL_BASE_API_  IAppLayer
 {
@@ -33,9 +34,11 @@ public:
 	virtual bool preUnhandle() ;
 	virtual bool postHandle();	
 	virtual bool postUnhandle() ;
-	
+    virtual bool onLogicTick(long passedTime);
+    virtual bool onRenderTick(long passedTime);
 	virtual bool prevUpdateFrame(long timePassed = 0) ;
 	virtual bool postUpdateFrame(long timePassed = 0)  ;
+    virtual bool onMessage(xWindowMsg& msg);
 
 	virtual const wchar_t* name() = 0;
 };

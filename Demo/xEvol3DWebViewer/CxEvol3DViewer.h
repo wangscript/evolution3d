@@ -8,7 +8,7 @@
 #error "Single-threaded COM objects are not properly supported on Windows CE platform, such as the Windows Mobile platforms that do not include full DCOM support. Define _CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA to force ATL to support creating single-thread COM object's and allow use of it's single-threaded COM object implementations. The threading model in your rgs file was set to 'Free' as that is the only threading model supported in non DCOM Windows CE platforms."
 #endif
 
-
+class xURLDownloader;
 // CCxEvol3DViewer
 class ATL_NO_VTABLE CCxEvol3DViewer :
 	public CComObjectRootEx<CComSingleThreadModel>,
@@ -93,7 +93,8 @@ BEGIN_MSG_MAP(CCxEvol3DViewer)
 	MESSAGE_HANDLER(WM_CREATE, OnCreate)
 	MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
 	MESSAGE_HANDLER(WM_TIMER, OnTimer)
-	CHAIN_MSG_MAP(CComControl<CCxEvol3DViewer>)
+    MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+    CHAIN_MSG_MAP(CComControl<CCxEvol3DViewer>)
 	DEFAULT_REFLECTION_HANDLER()
 END_MSG_MAP()
 // Handler prototypes:
@@ -123,26 +124,47 @@ END_MSG_MAP()
 // ICxEvol3DViewer
 public:
 	HRESULT OnDraw(ATL_DRAWINFO& di);
-
+    CEvolEnviroment* Evol3DEnv(){ return &m_Evol3D ; };
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct()
-	{
-		return S_OK;
-	}
-
-	void FinalRelease()
-	{
-	}
+	HRESULT FinalConstruct();
+	void    FinalRelease();
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnShowWindow(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-
+    void    OnDownloadFinish(const wchar_t* localFile);
 protected:
 	bool InitEvol3D(HWND hWnd , bool bCreateOwnWindow);
 	CEvolEnviroment m_Evol3D;
 	bool            m_bEvol3DInited;
 public:
-	LRESULT OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT   OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+    static void WINAPI ObjectMain(bool bStarting);
+    LRESULT   OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+    STDMETHOD(OpenURL)(BSTR _url);
 };
 
+
+class xURLDownloader : public IBindStatusCallback 
+{
+public:
+    std::ds_wstring     m_LocalFile;
+    std::ds_wstring     m_URL;
+    CCxEvol3DViewer*    m_pViewer;
+public:
+    xURLDownloader(CCxEvol3DViewer* pViewer);
+    bool Download(const wchar_t* _url);
+    STDMETHOD(OnProgress)( ULONG ulProgress, ULONG ulProgressMax, ULONG ulStatusCode, LPCWSTR wszStatusText);
+
+    STDMETHOD(OnStartBinding)( DWORD dwReserved,  IBinding __RPC_FAR *pib)  { return E_NOTIMPL; }
+    STDMETHOD(GetPriority)   (  LONG __RPC_FAR *pnPriority)  { return E_NOTIMPL; }
+    STDMETHOD(OnLowResource) ( DWORD reserved)   { return E_NOTIMPL; }
+    STDMETHOD(OnStopBinding)( HRESULT hresult,  LPCWSTR szError)   { return E_NOTIMPL; }
+    STDMETHOD(GetBindInfo)(DWORD __RPC_FAR *grfBINDF,  BINDINFO __RPC_FAR *pbindinfo)   { return E_NOTIMPL; }
+    STDMETHOD(OnDataAvailable)(DWORD grfBSCF,DWORD dwSize,FORMATETC __RPC_FAR *pformatetc,STGMEDIUM __RPC_FAR *pstgmed)   { return E_NOTIMPL; }
+    STDMETHOD(OnObjectAvailable)(REFIID riid,IUnknown __RPC_FAR *punk)   { return E_NOTIMPL; }
+    STDMETHOD_(ULONG,AddRef)()  { return 0; }
+    STDMETHOD_(ULONG,Release)()  { return 0; }
+    STDMETHOD(QueryInterface)( REFIID riid, void __RPC_FAR *__RPC_FAR *ppvObject)   { return E_NOTIMPL; }
+
+};
 OBJECT_ENTRY_AUTO(__uuidof(CxEvol3DViewer), CCxEvol3DViewer)

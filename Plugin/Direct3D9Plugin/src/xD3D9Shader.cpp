@@ -95,7 +95,7 @@ bool xD3D9Shader::load(const wchar_t* fileName , const unsigned int8* srcCode , 
     LPD3DXBUFFER pErrorMsgs= NULL; // Buffer with error messages
 
 	const char* strProfileName = m_pD3D9RenderApi->getShaderProfile( type() );
-    HRESULT hr = D3DXCompileShader((LPCSTR)srcCode,strLen,NULL,NULL, func_name ,strProfileName, dwShaderFlags ,&pCode,&pErrorMsgs,&m_pShaderReflect);
+    HRESULT hr = D3DXCompileShader((LPCSTR)srcCode, (UINT)strLen,NULL,NULL, func_name ,strProfileName, dwShaderFlags ,&pCode,&pErrorMsgs,&m_pShaderReflect);
     if(pCode != 0)
     {
         long* pCodeBuffer = NULL;

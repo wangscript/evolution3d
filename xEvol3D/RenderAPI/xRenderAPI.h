@@ -52,11 +52,14 @@ class _XEVOL_BASE_API_  IRenderCamera : public IRefCountObject , public xGeomLib
 {
 private:
 	ICameraPropertySet*         m_pPropertySet;
+    float                       m_fStepLen;
 public:
     IRenderCamera();
 	virtual ~IRenderCamera();
 	virtual ICameraPropertySet*  getPropertySet();
 	virtual void                 initPropertySet();
+    float                        step();
+    void                         setStep(float step);
 	void                         toTopView();
 	void                         toLeftView();
 	void                         toRightView();
@@ -147,9 +150,8 @@ public:
 	virtual bool                     setIndexBuffer(IInputBuffer* pVertexBuffer , size_t iOffset = 0) = 0;
 	virtual bool                     setVertexBuffer(IInputBuffer* pVertexBuffer , size_t bufIdx = 0 , size_t stride = 0 , size_t iOffset = 0) = 0;
 	virtual bool                     setVertexStream(IVertexStream* vertexStream) = 0;
-	virtual bool                     draw(IInputBuffer* pIdxBuffer , size_t nVertex , size_t iStartVertex = 0 , ePrimtiveType pt = ePrimtiveType_Triangles ) = 0;
-	virtual bool                     draw(size_t nVertex , size_t iStartVertex = 0 , ePrimtiveType pt = ePrimtiveType_Triangles) = 0;
-    virtual  bool                    drawPrimitive(size_t nVertex , size_t iStartVertex, ePrimtiveType pt) = 0;
+	virtual bool                     draw(IInputBuffer* pIdxBuffer , size_t nVertexIndex , size_t iStartVertexIndex = 0 , ePrimtiveType pt = ePrimtiveType_Triangles ) = 0;
+	virtual bool                     draw(size_t nVertexIndex , size_t iStartVertexIndex = 0 , ePrimtiveType pt = ePrimtiveType_Triangles) = 0;
 	virtual bool                     set2DZValue(float zValue) = 0;
 	virtual float                    get2DZValue() = 0;
 	virtual bool                     drawRectf(IBaseTexture* pTexture, float vDestRect[4] , const xColor_4f& color) = 0;
@@ -157,6 +159,7 @@ public:
 	virtual void                     set2DTexture(int iStage , IBaseTexture* pTexture) = 0;
 	virtual void                     set2DTexture(int iStage , IBaseTexture* pTexture , float srcRect[4]) = 0;
 	virtual I2DRectObject*           create2DRectObject() = 0;
+    virtual I2DRectObject*           def2DObject() = 0;
 	virtual bool                     draw2DRect(I2DRectObject* p2DRect) = 0;
 	//Vertex /Pixel / Geometry Shader
 	virtual IShaderConstBinder*      getShaderConstBinder(eShaderParamSemantic _semantic) = 0;
@@ -256,8 +259,15 @@ public:
 	//Help funtion;					
 	virtual xGpuProgramManager*      gpuProgramManager() = 0;
 	virtual xBaseShaderMgr*          shaderManager() = 0;
-};
+	virtual float                    globalAlpha() = 0;
+	virtual void                     globalAlpha(float _value) = 0;
+    virtual void                     setGlobalWireFrame(bool bFlag) = 0;
+    virtual bool                     isGlobalWireFrame() = 0;
 
+protected:
+	virtual  bool                    drawPrimitiveIndex(size_t nVertexIndex , size_t iStartVertexIndex, ePrimtiveType pt) = 0;
+    virtual  bool                    drawPrimitive(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt) = 0;
+};
 
 END_NAMESPACE_XEVOL3D
 #endif

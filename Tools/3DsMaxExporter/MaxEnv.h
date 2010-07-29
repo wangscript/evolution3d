@@ -82,7 +82,7 @@ public:
    static CSetSkinGroupDlg m_SkinGroupDlg;
 
 
-   bool             get_saved_filename(wchar_t* file_name, const wchar_t* extern_string , const wchar_t* ext_name,const wchar_t* strTile);
+   bool             get_saved_filename(wchar_t* file_name, const wchar_t* extern_string , const wchar_t* ext_name,const wchar_t* strTile, bool saved);
    float            TicksToSeconds(TimeValue ticks);
    TimeValue        SecondsToTicks(float sec);
    void             SetBipedUniform(INode *pNode, BOOL bUniform);

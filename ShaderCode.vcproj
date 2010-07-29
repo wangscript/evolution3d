@@ -402,6 +402,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\bin\shader\d3d1x\hlsl\Axis.pixel.hlsl"
+					>
+				</File>
+				<File
+					RelativePath=".\bin\shader\d3d1x\hlsl\Axis.vertex.hlsl"
+					>
+				</File>
+				<File
 					RelativePath=".\bin\shader\d3d1x\hlsl\ColorSel.hlsl"
 					>
 				</File>
@@ -423,6 +431,14 @@
 				</File>
 				<File
 					RelativePath=".\bin\shader\d3d1x\hlsl\FSQuad.hlsl"
+					>
+				</File>
+				<File
+					RelativePath=".\bin\shader\d3d1x\hlsl\GisTMesh.pixel.hlsl"
+					>
+				</File>
+				<File
+					RelativePath=".\bin\shader\d3d1x\hlsl\GisTMesh.vertex.hlsl"
 					>
 				</File>
 				<File
@@ -606,6 +622,10 @@
 				Name="shader"
 				>
 				<File
+					RelativePath=".\bin\shader\d3d1x\shader\GisTMesh.shader"
+					>
+				</File>
+				<File
 					RelativePath=".\bin\shader\d3d1x\shader\simple.shader"
 					>
 				</File>
@@ -667,6 +687,14 @@
 				</File>
 				<File
 					RelativePath=".\bin\shader\d3d9\hlsl\ArcBall.vertex.hlsl"
+					>
+				</File>
+				<File
+					RelativePath=".\bin\shader\d3d9\hlsl\Axis.pixel.hlsl"
+					>
+				</File>
+				<File
+					RelativePath=".\bin\shader\d3d9\hlsl\Axis.vertex.hlsl"
 					>
 				</File>
 				<File

@@ -34,10 +34,19 @@ class CActionExporter
 {
 	void    writeActionList(sActionInfos_t& actions, xcomdoc&  comdoc, std::wstring action_list_name);
 public:
-    void    export(CSkeletonExporter* pSkeleton, sActionInfos_t& actions, xcomdoc&  comdoc, std::wstring action_dir);
+    void    export(CSkeletonExporter* pSkeleton, sActionInfos_t& actions, xcomdoc&  comdoc, std::wstring action_dir );
+    CActionExporter();
     Matrix3 get_bone_tm(CSkeletonExporter* pSkeleton,int boneIndex,unsigned int iMaxTime);
     Matrix3 get_locale_tm(INode* pNode , bool hasParent,unsigned int iMaxTime);
 	//void    export_xml(CSkeletonExporter* pSkeleton, sActionInfos_t& actions, xcomdoc&  comdoc, std::wstring action_dir);
 	bool    load_action_list(sActionInfos_t& actions,xcomdoc&  comdoc, std::wstring action_list_name);
+protected:
+    void    MakeBoneData(sBoneData_t& BoneData , int iBone , int iFrame, CSkeletonExporter* pSkeleton) ;
+    void    WriteActionDesc( CSkeletonExporter* pSkeleton, xcomdocstream* pactiondatastream, sActionInfo_t  &action ) ;
+    void    WriteActionData( sActionInfo_t& action , xcomdoc &comdoc, std::wstring action_dir, CSkeletonExporter* pSkeleton ) ;
+    void    WriteActionDataInKeyFrame( sActionInfo_t& action , xcomdoc &comdoc, std::wstring action_dir, CSkeletonExporter* pSkeleton ) ;
+protected:
+    Matrix3 m_FlipYZMat;
+    bool*   m_bAlertStringSet;
 };
 #include "ActionExporter_Helper.h"

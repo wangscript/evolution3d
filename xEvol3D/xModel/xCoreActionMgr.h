@@ -5,7 +5,7 @@
 #include "../xcomdoc/xcomdoc.h"
 #include "../BaseLib/xResPackageMgr.h"
 #include "../BaseLib/xResourceMgr.h"
-#include "xCoreAction.h"
+#include "xBaseAction.h"
 #include "xModelFWDecl.h"
 
 
@@ -18,13 +18,14 @@ public:
 	ds_wstring   m_ActionName    ;    //每个动作有自己的名字. 这个名字可能会挂一个组别
 	HBaseModel   m_hModel  ;    //动作隶属的模型
 	int          m_strHash ;
-	ds_wstring   m_Type;
+	ds_wstring   m_Ext;
+    eActionType  m_ActionType;
 	ds_wstring   m_ResFile;
 public:
 	bool operator == (const xCoreActionName& rhv) const;
 	bool operator <  (const xCoreActionName& rhv) const;
-	xCoreActionName();
-	xCoreActionName(HBaseModel hBaseModel , const wchar_t* actionName , const wchar_t* skelName  , const wchar_t* resFile = NULL);
+	xCoreActionName(eActionType _Type = eActType_None);
+	xCoreActionName(eActionType _Type , HBaseModel hBaseModel , const wchar_t* actionName , const wchar_t* skelName  , const wchar_t* resFile = NULL);
 	~xCoreActionName();
 #ifdef _MSC_VER
 	size_t hash_value() const;
@@ -55,9 +56,10 @@ class  _XEVOL_BASE_API_  xCoreActionLoader  : public xResPathManager
 public:
 	void   KillObject();
 	static xCoreActionMgr* createInstance(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr , const wchar_t* _name);
-    void   setActionLoop(bool bLoop) { m_bActionLoop = bLoop ; }
-    bool   isActionLoop(){return m_bActionLoop ; }
-
+    void         setActionLoop(bool bLoop) { m_bActionLoop = bLoop ; }
+    bool         isActionLoop(){return m_bActionLoop ; }
+    HCoreAction  loadAction(const xCoreActionName& name, int arg , bool bLoadedImm ) ;
+    void         setThis(xCoreActionMgr* pThis){ m_pThis = pThis ; }
 public:
 	xBaseAction*  createAction(const xCoreActionName& strResName);
 protected:
@@ -76,7 +78,8 @@ protected:
 	xCoreActionLoader();
 	virtual ~xCoreActionLoader();
 protected:
-    bool     m_bActionLoop;
+    bool            m_bActionLoop;
+    xCoreActionMgr* m_pThis;
 };
 
 

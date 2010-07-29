@@ -38,8 +38,10 @@ public:
 	virtual bool visit(ISceneNode* pNode , ISceneGraph* pScne);
 public:
 	virtual bool setFrameTime(unsigned long passedTime) ;
+    virtual bool setCamera(IRenderCamera* pCamera){ m_pCamera = pCamera ; return true; }
 protected:
-	unsigned long m_PassedTime;
+	unsigned long  m_PassedTime;
+    IRenderCamera* m_pCamera;
 
 };
 
@@ -53,10 +55,13 @@ public:
 	virtual bool visit(ISceneNode* pNode , ISceneGraph* pScene);
 	virtual bool bQueue(){ return m_bQueue  ; }
 	virtual void bQueue(bool bQue) { m_bQueue = bQue ; }
+    virtual bool includeOther(){ return m_bIncludeOther;}
+    virtual void incoudeOther(bool bInclude){m_bIncludeOther = bInclude ; }
 protected:
 	IBaseRenderer*          m_pRenderer;
 	IRenderCamera*          m_pCamera;
 	bool                    m_bQueue;
+    bool                    m_bIncludeOther;
 };
 
 END_NAMESPACE_XEVOL3D

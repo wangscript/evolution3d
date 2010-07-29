@@ -11,6 +11,7 @@ xRenderApiMatContext::xRenderApiMatContext(IRenderApi* pRenderApi)
 	m_name         = L"TransformBuffer";
 	m_pReflection  = NULL;
 	m_pConstBuffer = NULL;
+    m_pCamera      = NULL;
 
 	//×¢²á±äÁ¿°ó¶¨Æ÷
     m_pWorldConstBinder  = NULL;

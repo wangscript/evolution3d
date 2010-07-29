@@ -24,7 +24,7 @@ public:
 
 class _XEVOL_BASE_API_  xDirEnum
 {
-#ifdef _LINUX
+#ifdef _UNIX
 	void _enumDir(const wchar_t* wcsDirName, bool recursive);
 #endif
 
@@ -87,6 +87,17 @@ public:
             out.push_back( name[i] );
         }
     }
+
+    template <typename T>void
+    fileNameWithoutExt(const char* name , T& out)
+    {
+        for(size_t i = 0 ; i < strlen(name) ; i ++)
+        {
+            if(name[i] == '.') break;
+            out.push_back( name[i] );
+        }
+    }
+
 };
 
 END_NAMESPACE_XEVOL3D

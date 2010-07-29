@@ -37,14 +37,17 @@ EXPIMP_TEMPLATE template <typename _Type> class _XEVOL_BASE_API_ TVec2;
 EXPIMP_TEMPLATE template <typename _Type> class _XEVOL_BASE_API_ TVec3;
 EXPIMP_TEMPLATE template <typename _Type> class _XEVOL_BASE_API_ TVec4;
 
+typedef _XEVOL_BASE_API_ TVec2<double>        xvec2r;
 typedef _XEVOL_BASE_API_ TVec2<float>         xvec2;
 typedef _XEVOL_BASE_API_ TVec2<unsigned int>  xvec2ui;
 typedef _XEVOL_BASE_API_ TVec2<int>           xvec2i;
 
+typedef _XEVOL_BASE_API_ TVec3<double>        xvec3r;
 typedef _XEVOL_BASE_API_ TVec3<float>         xvec3;
 typedef _XEVOL_BASE_API_ TVec3<unsigned int>  xvec3ui;
 typedef _XEVOL_BASE_API_ TVec3<int>           xvec3i;
 								 
+typedef _XEVOL_BASE_API_ TVec4<double>        xvec4r;
 typedef _XEVOL_BASE_API_ TVec4<float>         xvec4;
 typedef _XEVOL_BASE_API_ TVec4<unsigned int>  xvec4ui;
 typedef _XEVOL_BASE_API_ TVec4<int>           xvec4i;
@@ -52,6 +55,14 @@ typedef _XEVOL_BASE_API_ TVec4<int>           xvec4i;
 typedef xvec4  float4;
 typedef xvec4i int4;
 typedef xmat4  float4x4;
+
+typedef xvec3  float3;
+typedef xvec3i int3;
+typedef xmat3  float3x3;
+
+typedef xvec2  float2;
+typedef xvec2i int2;
+
 
 class xquat;
 

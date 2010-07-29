@@ -23,7 +23,7 @@ bool   ISceneDrawable::isVisible(xGeomLib::xCamera* pCamera)
 	for(size_t i = 0 ; i < nElement ; i ++)
 	{
 		IDrawElement*   pDrawElement = drawElement(i);
-		if(pDrawElement && pDrawElement->isVisible(pCamera) )
+		if(pDrawElement && pDrawElement->isVisible(pCamera , m_trans) )
 		{
 			return true;
 		}
@@ -66,7 +66,7 @@ IRenderEffect* xSceneEffectObject::effect(size_t idx)
 	return m_pEffect;
 }
 
-bool           xSceneEffectObject::setEffect(IRenderEffect* _effect)
+bool           xSceneEffectObject::setEffect(IRenderEffect* _effect , size_t idx )
 {
 	if(_effect == NULL)
 		return false;
@@ -84,31 +84,31 @@ bool     xSceneEffectObject::draw(IBaseRenderer* pRenderer , xGeomLib::xCamera* 
 	{
 		IDrawElement*   pDrawElement = drawElement(i);
 		IRenderEffect*  pEffect      = effect(i);
-		if(pCamera && pDrawElement && pDrawElement->isVisible(pCamera) == false)
+		if(pCamera && pDrawElement && pDrawElement->isVisible(pCamera , m_trans) == false)
 			continue;
 
 		if(pEffect )
 		{
-			pEffect->draw(pDrawElement);
+			pEffect->draw(pDrawElement , this);
 		}
 	}
 	return true;
 }
 
 
-bool     xSceneEffectObject::draw(IBaseRenderer* pRenderer , unsigned int passedTime  , xGeomLib::xCamera* pCamera)
+bool     xSceneEffectObject::drawImm(IBaseRenderer* pRenderer , unsigned int passedTime  , xGeomLib::xCamera* pCamera)
 {
 	size_t nElement = nDrawElement();
 	for(size_t i = 0 ; i < nElement ; i ++)
 	{
 		IDrawElement*   pDrawElement = drawElement(i);
 		IRenderEffect*  pEffect      = effect(i);
-		if(pCamera && pDrawElement && pDrawElement->isVisible(pCamera) == false)
+		if(pCamera && pDrawElement && pDrawElement->isVisible(pCamera , m_trans) == false)
 			continue;
 
 		if(pEffect )
 		{
-			pEffect->draw(pDrawElement , passedTime);
+			pEffect->drawImm(pDrawElement  , this , passedTime);
 		}
 	}
 	return true;

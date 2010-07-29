@@ -9,7 +9,7 @@
 
 #ifdef _XEVOL_BUILD_STATIC_PLUGIN_
 extern bool InitEvolHelperObjPlugin();
-extern bool InitDirect3D10Plugin();
+extern bool InitDirect3D9Plugin();
 extern bool InitKidRenderCreatorPlugin();
 extern bool InitWin32PlatformPlugin();
 //extern bool InitDirect3D11Plugin();
@@ -63,11 +63,12 @@ void     CEvolEnviroment::frontCamera(xGeomLib::xaabb& aabox)
 
 void     CEvolEnviroment::exit()
 {
+    TAutoLocker<CEvolEnviroment> aLocker(this);
 	if(m_pScene)
 	{
 		m_pScene->unload();
 		m_pScene->ReleaseObject();
-	}
+	}    
 	m_hProgram.setNULL();
 	m_hFont.setNULL();
 	m_pEngine->exit();
@@ -257,6 +258,7 @@ bool     CEvolEnviroment::createScene(const wchar_t* _SceneType)
 bool     CEvolEnviroment::loadScene(const wchar_t* _Scene)
 {
 
+    TAutoLocker<CEvolEnviroment> aLocker(this);
 	if(_Scene != NULL)
 	{
 		xSceneInitArg arg;
@@ -298,12 +300,13 @@ bool    CEvolEnviroment::init()
     xOperationSys::singleton()->setResourcePath( _XEVOL_ABSPATH_(L"./") );
 	xStringTable::singleton()->addPath(_RES_ABSPATH_(L"Language/"));
 	xStringTable::singleton()->setLanguage(NULL);
+    m_pLocker = xOperationSys::singleton()->createThreadLocker();
 
 	m_pEngine = new xEvol3DEngine;
 	m_cfgFile = _RES_ABSPATH_(L"Web3D/system.xml");
 
 #ifdef _XEVOL_BUILD_STATIC_PLUGIN_
-    InitDirect3D10Plugin();
+    InitDirect3D9Plugin();
     InitKidRenderCreatorPlugin();
     InitWin32PlatformPlugin();
     //InitDirect3D11Plugin();
@@ -350,13 +353,10 @@ void     CEvolEnviroment::initRenderer(HWND hRenderWindow , HWND hParentWnd)
 	m_p2DCamera = m_pRenderApi->createCamera(L"2DCamera");
 	onResize();
 
-	m_ProcedureTexture = m_pRenderApi->createLockableTexture(256,256,PIXELFORMAT_R32G32B32A32F,false );
-	xTextureLockArea _lock;
-	m_ProcedureTexture->lock(eLock_WriteDiscard , _lock);
-	m_ProcedureTexture->unlock(_lock);
+
 	m_pStencilState = m_pRenderApi->createDepthStencilState(L"Overlay");
 
-	m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel<0:simple.texture,simple.fakehdr>" , NULL);;
+	m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel(0:simple.texture,simple.fakehdr)" , NULL);;
 
 	m_hFont    = m_pRenderApi->findFont(L"small" );
 
@@ -437,7 +437,10 @@ void     CEvolEnviroment::updateFrame(long passedTime , ISceneVisitor* pVisitor)
 	xSleep(5);
 	m_pRenderApi->identityMatrix(MATRIXMODE_World);
 	m_pRenderApi->applyCamera(m_pCamera);
-	m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.3f,1.0f));
+	if(m_pRenderApi->renderMode() == eRenderMode::eRenderMode_Select )
+		m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.0f,0.0f));
+	else 
+		m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.3f,1.0f));
 	m_pRenderApi->beginScene();
 	xMathLib::xmat4 mat;
 	//xMathLib::XM_RotateY(mat,angle);
@@ -481,12 +484,14 @@ void     CEvolEnviroment::updateFrame(long passedTime , ISceneVisitor* pVisitor)
 	m_pRenderApi->setDepthStencilState(m_pStencilState);
 
 	wchar_t texInfo[1024] = {0};
-	swprintf(texInfo , L"Web3D²âÊÔ³ÌÐò\nFPS=%f \nRenderApi=%s" , nFrame*1000.0f/tPassed ,m_pRenderApi->name() );
-
+	swprintf(texInfo , L"Web3DÑÝÊ¾³ÌÐò\nFPS=%f \nRenderApi=%s" , nFrame*1000.0f/tPassed ,m_pRenderApi->name() );
+    
 	m_InfoPanel->show();
-	ds_wstring infoText = ds_wstring(texInfo) ;
+	ds_wstring infoText = ds_wstring(texInfo) ;   
 	
 	infoText = ds_wstring(texInfo) ;
+    infoText += m_textInfo.c_str();
+
 	infoText += L"\nPowered By xEvol3D "; 
 	m_InfoPanel->setText(infoText.c_str() );
 	m_xuiWinMgr->draw();
@@ -510,7 +515,14 @@ CEvolEnviroment::CEvolEnviroment()
 
 	m_pRenderer    = NULL;
     m_fCameraDist = 3.0f;
+    m_pLocker = NULL;
 	return ;
+}
+
+CEvolEnviroment::~CEvolEnviroment()
+{
+    XSAFE_RELEASEOBJECT(m_pLocker);
+    return ;
 }
 END_NAMESPACE_XEVOL3D
 

@@ -47,6 +47,24 @@ bool  xKidBasicMaterial::setGpuProgram(xGpuProgramName& _name)
     return true;
 }
 
+bool xKidBasicMaterial::setDepthState(const wchar_t* _name) 
+{
+	XSAFE_RELEASEOBJECT(m_pDepthStencil);
+    m_pDepthStencil = m_pRenderApi->createDepthStencilState(_name);
+	return true;
+}
+
+bool  xKidBasicMaterial::setRazState(const wchar_t* _name) 
+{
+	return true;
+}
+
+
+bool xKidBasicMaterial::setBlendState(const wchar_t* _name)
+{
+	return true;
+}
+
 bool xKidBasicMaterial::load(xXmlNode* pNode)
 {
 	if(pNode == NULL )
@@ -59,7 +77,8 @@ bool xKidBasicMaterial::load(xXmlNode* pNode)
 	xXmlNode* pXMLShader = pNode->findNode(L"shader");
 	if(pXMLShader)
 	{
-		m_hGpuPrograme = m_pRenderer->renderApi()->gpuProgramManager()->load(pXMLShader->value(L"name"));
+        const wchar_t* shaderName = pXMLShader->value(L"name");
+		m_hGpuPrograme = m_pRenderer->renderApi()->gpuProgramManager()->load( shaderName );
         //if(m_hGpuPrograme.getResource() )
         //{
         //    xGpuProgNameParser _parser;
@@ -118,13 +137,14 @@ bool xKidBasicMaterial::end(IGpuProgramParamTable* pConstTable )
 
 //=================
 IMPL_BASE_OBJECT_DLLSAFE(xKidBasicRenderEffect , IRenderEffect);
-xKidBasicRenderEffect::xKidBasicRenderEffect(xKidRenderer* pRenderer)
+xKidBasicRenderEffect::xKidBasicRenderEffect(xKidRenderer* pRenderer, const wchar_t* _name)
 : IRenderEffect(pRenderer)
 {
 	 setQueueName(L"default");
 	 m_pRenderApi = pRenderer->renderApi();
 	 m_pKidRenderer = pRenderer;
 	 m_pRenderPass = m_pKidRenderer->createPass(L"model");
+	 m_Name = _name;
 }
 
 xKidBasicRenderEffect::~xKidBasicRenderEffect()
@@ -137,14 +157,16 @@ bool xKidBasicRenderEffect::setQueueName(const wchar_t* queueName)
 	m_QueueName = queueName;
 	return true;
 }
-bool xKidBasicRenderEffect::draw(IDrawElement* pObject , unsigned int passedTime)
+bool xKidBasicRenderEffect::drawImm(IDrawElement* pObject , IRenderPassArg* pArg , unsigned int passedTime)
 {
 	m_pRenderPass->setDrawable(pObject);
+	m_pRenderPass->setRenderPassArg(pArg);
 	return m_pRenderer->drawPass(m_pRenderPass , passedTime , true);
 }
 
-bool xKidBasicRenderEffect::draw(IDrawElement* pObject)
+bool xKidBasicRenderEffect::draw(IDrawElement* pObject  , IRenderPassArg* pArg )
 {
+	m_pRenderPass->setRenderPassArg(pArg);
 	m_pRenderPass->setDrawable(pObject);
 	
 	int queueID = xStringHash(m_QueueName.c_str() );
@@ -157,6 +179,25 @@ bool xKidBasicRenderEffect::draw(IDrawElement* pObject)
 	return true;
 }
 
+bool  xKidBasicRenderEffect::setArg(const wchar_t* _argName , const wchar_t* _argVal)
+{
+    if(_argName == std::wstring(L"queue"))
+    {
+        m_QueueName = _argVal;
+        return true;
+    }
+    return false;
+}
+
+const wchar_t* xKidBasicRenderEffect::getArg(const wchar_t* _argName) 
+{
+      if(_argName == std::wstring(L"queue"))
+      {
+          return m_QueueName.c_str();
+      }
+      return NULL;
+}
+
 bool xKidBasicRenderEffect::setMaterial(xMaterial* pMaterial)
 {
 	m_pRenderPass->setMaterial(pMaterial);
@@ -167,6 +208,11 @@ bool xKidBasicRenderEffect::save(xXmlNode* pXml)
 {
 	//加载一些Effect的参数
 	XEVOL_WARNNING_NOT_IMPLEMENT_INFO( "Need to save effect's param\n" );
+    if(m_shaderName.length() > 0)
+    {
+        pXml->setValue(L"shader" , m_shaderName.c_str() );
+    }
+	pXml->setValue(L"queue" , m_QueueName.c_str() );
     return true;
 }
 
@@ -174,7 +220,23 @@ bool xKidBasicRenderEffect::load(xXmlNode* pXml)
 {
 	//加载一些Effect的参数
 	XEVOL_WARNNING_NOT_IMPLEMENT_INFO( "Need to load effect's param\n" );
+    m_shaderName = L"";
+    if(pXml && pXml->value(L"shader") && m_pRenderPass->getMaterial() )
+    {
+         m_shaderName = pXml->value(L"shader");
+         xGpuProgramName _name(m_shaderName.c_str() , true);
+         m_pRenderPass->getMaterial()->setGpuProgram( _name );
+    }
+	if(pXml && pXml->value(L"queue"))
+	{
+		m_QueueName = pXml->value(L"queue");
+	}
+
 	return true;
+}
+const wchar_t* xKidBasicRenderEffect::name()
+{
+	return m_Name.c_str();
 }
 
 END_NAMESPACE_XEVOL3D

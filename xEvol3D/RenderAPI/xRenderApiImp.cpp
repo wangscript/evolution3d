@@ -7,6 +7,7 @@
 BEGIN_NAMESPACE_XEVOL3D
 
 typedef TConstantValueBinder<float> xAlpahRefConstaBinder;
+typedef TConstantValueBinder<float> xAlpahCtrlConstaBinder;
 //===========================================================
 class xFontRenderDevice : public IFontRenderDevice
 {
@@ -63,7 +64,7 @@ bool xFontRenderDevice::init()
 	}
 	m_filter = eFontFilter_Point;
 
-	if(m_pDefFontShader == NULL)
+	if(m_pDefFontShader.isHandle() == false)
 	{
 		HGpuProgram hGpuProgram = m_pRenderApi->gpuProgramManager()->load(L"font.vertex", L"font.pixel" ,NULL);
 		m_pDefFontShader = hGpuProgram;
@@ -109,7 +110,7 @@ xFontRenderDevice::~xFontRenderDevice()
 
 bool xFontRenderDevice::beginFontRender()
 {
-	if(m_pDefFontShader == NULL)
+	if(m_pDefFontShader.isHandle()  == false )
 		return false;
 	m_pRenderApi->setDepthStencilState(m_pStencilState);
 	m_pRenderApi->setBlendState(m_BlendState);
@@ -247,6 +248,7 @@ xRenderApiImp::xRenderApiImp()
 	m_FontRenderDevice = new xFontRenderDevice(this);
 	m_FontManager.setFontRenderDevice( m_FontRenderDevice );
 	m_pRenderObjectSets = new xRenderObjectSet;
+    m_FontManager.setThis(&m_FontManager);
 	//m_RenderObjectSet.reserve(10000);
 
 }
@@ -438,6 +440,15 @@ xRenderApiBase::xRenderApiBase()
 	m_pCallback = NULL;
 
 	m_AlphaRef = 0.0f;
+	m_GlobalAlphaValue = 1.0f;
+    IRenderApi* pRenderApi = this;
+    m_pDef2DCamera = NULL;//pRenderApi->createCamera(L"$Def2DCamera__");
+    m_pApplyed3DCamera = NULL;
+
+    m_GpuProgramMgr.setThis(&m_GpuProgramMgr);
+
+    m_bGlobalWireFrame = false;
+    m_pWireFrameRasterizerState = NULL;
 }
 
 IColorSelector* xRenderApiBase::colorSelector()
@@ -546,7 +557,8 @@ bool xRenderApiBase::init(xXmlNode* pSysNode)
 	m_LightingState = createLightingState(L"xLightState");
 	//初始化矩阵
 	m_MatrixCtx->init(this);
-
+    IRenderApi* pRenderApi = this;
+    m_pDef2DCamera = pRenderApi->createCamera(L"$Def2DCamera__");
 	//------------------------------------------
 	//初始化配置文件里的东西
 	//------------------------------------------
@@ -627,6 +639,11 @@ bool xRenderApiBase::init(xXmlNode* pSysNode)
     m_vShaderConstBinders.push_back( pAlphaRefValueConstBinder );
 
 
+	xAlpahCtrlConstaBinder* pAlphaCtrlValueConstBinder = new xAlpahCtrlConstaBinder(m_GlobalAlphaValue);
+	registeShaderConstBinder(L"GlobalAlphaValue"      , pAlphaCtrlValueConstBinder );
+	registeShaderConstBinder(L"GlobalAlpha"           , L"GlobalAlphaValue"  );
+	m_vShaderConstBinders.push_back( pAlphaCtrlValueConstBinder );
+
     //m_RenderProperty.load( pSysNode->findNode(L"RenderProperty") );
 
     //PropertyItem::PropertyItems vOuts;
@@ -642,7 +659,19 @@ bool xRenderApiBase::init(xXmlNode* pSysNode)
     //     m_vShaderConstBinders.push_back( pBinder );
     //}
 
+
+    m_bGlobalWireFrame = false;
+    m_pWireFrameRasterizerState = createRasterizerState(L"WireFrame");
     return true;
+}
+void xRenderApiBase::setGlobalWireFrame(bool bFlag)
+{
+    m_bGlobalWireFrame = bFlag;
+}
+
+bool xRenderApiBase::isGlobalWireFrame()
+{
+   return m_bGlobalWireFrame;
 }
 
 void xRenderApiBase::registeShaderConstBinder(const wchar_t* _name , const wchar_t* _alisName)
@@ -689,7 +718,6 @@ bool xRenderApiBase::unlock()
 
 bool xRenderApiBase::begin(xColor_4f& bkColor , float z , unsigned int stencil)
 {
-	lock();
 	TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
 	return m_RenderView->clear(bkColor , z , stencil );
 }
@@ -864,6 +892,11 @@ bool xRenderApiBase::beginDrawPrimitive()
 	{
 		m_pColorSelector->beginPrimitive();
 	}
+    else if(m_bGlobalWireFrame)
+    {
+        pushRasterizerState(m_pWireFrameRasterizerState);
+    }
+
 	return true;
 }
 bool xRenderApiBase::endDrawPrimitive()
@@ -872,10 +905,15 @@ bool xRenderApiBase::endDrawPrimitive()
 	{
 		m_pColorSelector->endPrimitive();
 	}
+    else if(m_bGlobalWireFrame)
+    {
+        popRasterizerState();
+    }
+
 	return true;
 }
 
-bool xRenderApiBase::draw(IInputBuffer* pIdxBuffer , size_t nVertex , size_t iStartVertex, ePrimtiveType pt)
+bool xRenderApiBase::draw(IInputBuffer* pIdxBuffer , size_t nVertexIndex , size_t iStartVertexIndex, ePrimtiveType pt)
 {
 	TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
 	setIndexBuffer(pIdxBuffer);
@@ -883,7 +921,7 @@ bool xRenderApiBase::draw(IInputBuffer* pIdxBuffer , size_t nVertex , size_t iSt
 	if(false == beginDrawPrimitive() ) 
 		return false;
 
-	bool bDrawRet = this->drawPrimitive(nVertex , iStartVertex , pt);
+	bool bDrawRet = this->drawPrimitiveIndex(nVertexIndex , iStartVertexIndex , pt);
 
 	bool bRet = endDrawPrimitive();
 
@@ -1065,6 +1103,7 @@ xBaseTextureMgr* xRenderApiBase::createTextureManager(const wchar_t* _name , boo
 {
 	xBaseTextureMgr* pMgr = new xBaseTextureMgr(_name , nonRefKeep ? 1 : 0 );
 	pMgr->setRenderApi(this);
+	pMgr->setThis(pMgr);
 	m_TextureMagrs.push_back(pMgr);
 	return pMgr;
 }
@@ -1107,6 +1146,11 @@ void xRenderApiBase::unloadAllTextureManager()
 
 bool xRenderApiBase::enter2DMode(int x , int y , int w , int h , bool bTextMode)
 {
+    m_pDef2DCamera->setPerspective2D(w , h , 60);
+    m_pApplyed3DCamera = getCamera();
+    applyCamera(m_pDef2DCamera);
+    return true;
+
 	m_MatrixCtx->pushMatrix(MATRIXMODE_Project);
 	m_MatrixCtx->pushMatrix(MATRIXMODE_View);
 	if( w ==  0 || h == 0)
@@ -1127,6 +1171,12 @@ bool xRenderApiBase::enter2DMode(int x , int y , int w , int h , bool bTextMode)
 
 bool xRenderApiBase::leave2DMode()
 {
+    if(m_pApplyed3DCamera == NULL)
+        return false;
+    applyCamera(m_pApplyed3DCamera);
+    m_pApplyed3DCamera = NULL;
+    return true;
+
 	m_MatrixCtx->popMatrix(MATRIXMODE_Project);
 	m_MatrixCtx->popMatrix(MATRIXMODE_View);
 	return true;

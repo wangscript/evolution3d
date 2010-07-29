@@ -1,7 +1,10 @@
 #include "../xStdPch.h"
 #include "xCoreAction.h"
+#include "xBaseAction.h"
 #include "xTransitionAction.h"
 #include "xMixAction.h"
+#include "xKeyframeAction.h"
+
 #include "xCoreSkeleton.h"
 #include "xCoreActionMgr.h"
 #include "../BaseLib/xStringHash.h"
@@ -32,18 +35,40 @@ bool xCoreActionName::operator == (const xCoreActionName& rhv) const
        
 }
 
-xCoreActionName::xCoreActionName()
+xCoreActionName::xCoreActionName(eActionType _Type)
 {
 	m_hModel.setNULL();
 	m_ActionName = L"";
 	m_ResFile    = L"";
 	m_strHash = 0;
-	m_Type = L"xCoreAction";
+	m_Ext = L"xra";
+    m_ActionType = _Type;
 }
 
-xCoreActionName::xCoreActionName(HBaseModel hBaseModel , const wchar_t* actionName , const wchar_t* skelName , const wchar_t* resFile )
+HCoreAction xCoreActionLoader::loadAction(const xCoreActionName& name, int arg , bool bLoadedImm )
 {
-	m_Type = L"xCoreAction";
+    xBaseModel* pModel = name.m_hModel.getResource();
+    if(pModel == NULL)
+        return HCoreAction();
+
+    std::ds_wstring _name1;
+    std::ds_wstring _name2;
+    xCoreActionMgr* pMgr = m_pThis;
+    if( xTransitionAction::IsTransitionName(name.m_ActionName , _name1 , _name2) )
+    {
+        const wchar_t* strSkelName = pModel->name();
+        xCoreActionName _ActName1(eActType_None , name.m_hModel , _name1.c_str() , strSkelName );
+        xCoreActionName _ActName2(eActType_None , name.m_hModel , _name2.c_str() , strSkelName );
+        HCoreAction hAction1 = pMgr->add(_ActName1 , 0 , true);
+        HCoreAction hAction2 = pMgr->add(_ActName2 , 0 , true);
+    }
+    return pMgr->add(name , arg , bLoadedImm);
+}
+
+xCoreActionName::xCoreActionName(eActionType _Type , HBaseModel hBaseModel , const wchar_t* actionName , const wchar_t* skelName , const wchar_t* resFile )
+{
+	m_Ext = L"xra";
+    m_ActionType = _Type;
 	m_hModel = hBaseModel;
 	if(actionName == NULL ) actionName = L"";
 	m_ActionName = actionName;
@@ -74,58 +99,103 @@ xCoreActionLoader::~xCoreActionLoader()
 
 bool xCoreActionLoader::newInstance(const xCoreActionName& name , xBaseAction* & pCoreAction)
 {
-	std::ds_wstring _name1;
-	std::ds_wstring _name2;
-	xCoreActionMgr* pMgr = dynamic_cast<xCoreActionMgr*>(this);
-	if( xTransitionAction::IsTransitionName(name.m_ActionName , _name1 , _name2) )
+
+	xCoreActionMgr* pMgr = m_pThis;
+    std::ds_wstring _name1;
+    std::ds_wstring _name2;
+    bool bTransition = xTransitionAction::IsTransitionName(name.m_ActionName , _name1 , _name2) ;
+
+	if(name.m_ActionType == eActType_Transition ||  name.m_ActionType == eActType_None && bTransition )
 	{
+    
 		xBaseModel* pModel = name.m_hModel.getResource();
 		if(pModel == NULL)
 			return false;
 
 		const wchar_t* strSkelName = pModel->name();
 
-		xTransitionAction* _action = dynamic_cast<xTransitionAction*>(pCoreAction);
+		xTransitionAction* _action = type_cast<xTransitionAction*>(pCoreAction);
 		if(_action == NULL)
 		{
-			_action = new xTransitionAction();
+			_action = new xTransitionAction(pModel->skeleton() , 0 );
 		}
 	    
-		xCoreActionName _ActName1(name.m_hModel , _name1.c_str() , strSkelName );
-		xCoreActionName _ActName2(name.m_hModel , _name2.c_str() , strSkelName );
+		xCoreActionName _ActName1(eActType_None , name.m_hModel , _name1.c_str() , strSkelName );
+		xCoreActionName _ActName2(eActType_None , name.m_hModel , _name2.c_str() , strSkelName );
 		HCoreAction hAction1 = pMgr->add(_ActName1 , 0 , true);
 		HCoreAction hAction2 = pMgr->add(_ActName2 , 0 , true);
 		if(hAction1.getResource() == NULL || hAction2.getResource() == NULL)
 		{
-			XEVOL_LOG(eXL_DEBUG_HIGH , L"Create transition action failed : %s action not exist\n" , _name1.c_str() );
-			_action->ReleaseObject();
+            if( hAction1.getResource() == NULL) 
+			    XEVOL_LOG(eXL_DEBUG_HIGH , L"Create transition action failed : %s action not exist\n" , _name1.c_str() );
+
+            if( hAction2.getResource() == NULL) 
+                XEVOL_LOG(eXL_DEBUG_HIGH , L"Create transition action failed : %s action not exist\n" , _name2.c_str() );
+            
+            _action->ReleaseObject();
 			return false;
 		}
 
-        xCoreAction* pCoreAction1 = dynamic_cast<xCoreAction*>( hAction1.getResource() );
-        xCoreAction* pCoreAction2 = dynamic_cast<xCoreAction*>( hAction2.getResource() );
+        hAction1.lock();
+        hAction2.lock();
+        xCoreAction* pCoreAction1 = type_cast<xCoreAction*>( hAction1.getResource() );
+        xCoreAction* pCoreAction2 = type_cast<xCoreAction*>( hAction2.getResource() );
 		_action->setAction( pCoreAction1  , pCoreAction2 , 1.0f );
 		pCoreAction = _action;
         pCoreAction->setLoop(m_bActionLoop);
+        hAction1.unlock();
+        hAction2.unlock();
 		return true;
 	}
 
-	if(name.m_Type == L"xCoreAction")
-	{
-		pCoreAction = new xCoreAction();
-		pCoreAction->setLoop(m_bActionLoop);
-		return false;
-	}
 
-	if(name.m_Type == L"Mix" || name.m_Type == L"xMixedAction")
+	if(name.m_ActionType == eActType_Mix)
 	{
-		xBaseModel* pModel = name.m_hModel.getResource();
-		pCoreAction = new xMixedAction( pModel? pModel->skeleton() : NULL);
-		pCoreAction->setLoop(m_bActionLoop);
-		return false;
-	}
+        xBaseModel* pModel = name.m_hModel.getResource();
+        pCoreAction = new xMixedAction( pModel? pModel->skeleton() : NULL , 0 );
+        pCoreAction->setLoop(m_bActionLoop);
+        return false;
+    }
 
-	return false;
+    if(name.m_ActionType == eActType_None )
+    {
+        pCoreAction = NULL;
+        return false;
+    }
+
+    if(name.m_ActionType == eActType_Freeze )
+    {
+        xBaseModel* pModel = name.m_hModel.getResource();
+        if(pModel == NULL)
+            return false;
+
+        const wchar_t* strSkelName = pModel->name();
+
+        xPauseAction* _action = type_cast<xPauseAction*>(pCoreAction);
+        if(_action == NULL)
+        {
+            _action = new xPauseAction(pModel? pModel->skeleton() : NULL , 0);
+        }
+
+        float _actionTime = 0.4f;
+        std::ds_wstring _actionName = xPauseAction::GetActionName(name.m_ActionName.c_str() , _actionTime );
+       xCoreActionName _ActName1(eActType_None , name.m_hModel , _actionName.c_str() , strSkelName );
+
+        HCoreAction hAction1 = pMgr->add(_ActName1 , 0 , true);
+        if(hAction1.getResource() == NULL)
+        {
+            XEVOL_LOG(eXL_DEBUG_HIGH , L"Create Pause action failed : %s action not exist\n" , _actionName.c_str() );
+            return false;
+        }
+
+        xCoreAction* pCoreAction1 = type_cast<xCoreAction*>( hAction1.getResource() );
+        _action->setAction( pCoreAction1 , _actionTime);
+        pCoreAction = _action;
+        pCoreAction->setLoop(false);
+        return true;
+    }
+
+    return false;
 }
 
 
@@ -146,6 +216,38 @@ xBaseAction*   xCoreActionLoader::createAction(const xCoreActionName& strResName
 	_loadResource(strResName , pAction , resSize , 0);
 	return pAction;
 }
+
+xBaseAction* CreateActionByStream(xcomdocstream* pActionStream, bool bLoop)
+{
+    int32       nBone = 0;
+    xSkeletonID SkeID;
+    xActionInfo Info;
+
+    pActionStream->read(SkeID );
+    pActionStream->read(nBone );
+    pActionStream->read(Info  );
+    pActionStream->stream_seekr(xcdsd_beg , 0 );
+    xBaseAction* pCoreAction =  xBaseAction::createInstance( Info.m_eActType , NULL , 0);   
+
+    if(pCoreAction) pCoreAction->setLoop(bLoop);
+    return pCoreAction;
+}
+
+xBaseAction* CreateActionByStream(std::ifstream& stream , bool bLoop)
+{
+    int32       nBone = 0;
+    xSkeletonID SkeID;
+    xActionInfo Info;
+
+    stream.read((char*)&SkeID , sizeof(SkeID) );
+    stream.read((char*)&nBone , sizeof(nBone) );
+    stream.read((char*)&Info  , sizeof(Info) );
+    stream.seekg(0 , ios::beg);
+    xBaseAction* pCoreAction =  xBaseAction::createInstance( Info.m_eActType , NULL , 0);   
+    if(pCoreAction) pCoreAction->setLoop(bLoop);
+    return pCoreAction;
+}
+
 #define STR_SKELETON   PATH_SPLITTER_STRING + L"skeleton" + PATH_SPLITTER_STRING
 bool xCoreActionLoader::__loadFromPackage(const xCoreActionName& strResName,xBaseAction* & pCoreAction , xResPkgPathItem& item , int i )
 {
@@ -153,11 +255,12 @@ bool xCoreActionLoader::__loadFromPackage(const xCoreActionName& strResName,xBas
 	if(pModel == NULL)
 		return false;
 	const wchar_t* strSkelName = pModel->name();
+    std::ds_wstring _FileExt = strResName.m_Ext;
 
 	//++++++++++++++++++++Load function 01 ++++++++++++++++++++++++++++++++++++++++++++++++++
 	//【PAKAGE.xrm】【PATH】/SkeletonName/skeleton/[ACTIONNAME]
 	{
-		ds_wstring full_action_name = item.m_ResDir + strSkelName + STR_SKELETON + strResName.m_ResFile.c_str() + L"."  + pCoreAction->typeID();
+		ds_wstring full_action_name = item.m_ResDir + strSkelName + STR_SKELETON + strResName.m_ResFile.c_str() + L"."  + _FileExt;
 		xcomdoc model_doc ;
 		xcomdocstream* pActionStream = item.m_Package.open_stream(full_action_name.c_str());
 
@@ -168,17 +271,26 @@ bool xCoreActionLoader::__loadFromPackage(const xCoreActionName& strResName,xBas
             pActionStream = item.m_Package.open_stream(full_action_name.c_str());
 		} 
 
-		if(pCoreAction->load(strResName.m_ActionName.c_str() , pActionStream) == true)
-		{
-			item.m_Package.close_stream(pActionStream);
-			return true;
-		}
-		item.m_Package.close_stream(pActionStream);
+        if(pActionStream)
+        {
+            //创建Action
+            if(pCoreAction == NULL)
+            {
+                pCoreAction = CreateActionByStream(pActionStream , m_bActionLoop);
+            }
+
+            if(pCoreAction->load(strResName.m_ActionName.c_str() , pActionStream) == true)
+            {
+                item.m_Package.close_stream(pActionStream);
+                return true;
+            }
+            item.m_Package.close_stream(pActionStream);
+        }
 	}
 
 	//【PAKAGE.xrm】【PATH】/SkeletonName/[ACTIONNAME]
 	{
-		ds_wstring full_action_name = item.m_ResDir + strSkelName + PATH_SPLITTER_STRING + strResName.m_ResFile.c_str() + L"."  + pCoreAction->typeID();
+		ds_wstring full_action_name = item.m_ResDir + strSkelName + PATH_SPLITTER_STRING + strResName.m_ResFile.c_str() + L"."  + _FileExt;
 		xcomdoc model_doc ;
 		xcomdocstream* pActionStream = item.m_Package.open_stream(full_action_name.c_str());
 		
@@ -188,12 +300,23 @@ bool xCoreActionLoader::__loadFromPackage(const xCoreActionName& strResName,xBas
 			full_action_name = item.m_ResDir + strSkelName + PATH_SPLITTER_STRING + strResName.m_ResFile.c_str();
             pActionStream = item.m_Package.open_stream(full_action_name.c_str());
 		}
-		if(pCoreAction->load(strResName.m_ActionName.c_str() ,pActionStream) == true)
-		{
-			item.m_Package.close_stream(pActionStream);
-			return true;
-		}
-		item.m_Package.close_stream(pActionStream);
+
+        if(pActionStream)
+        {
+            //创建Action
+            if(pCoreAction == NULL)
+            {
+                pCoreAction = CreateActionByStream(pActionStream , m_bActionLoop);
+            }
+
+            if(pCoreAction->load(strResName.m_ActionName.c_str() ,pActionStream) == true)
+            {
+                item.m_Package.close_stream(pActionStream);
+                return true;
+            }
+            item.m_Package.close_stream(pActionStream);
+        }
+
 	}
 	return false;
 }
@@ -204,10 +327,11 @@ bool xCoreActionLoader::__loadFromDirectory(const xCoreActionName& strResName,xB
 	if(pModel == NULL)
 		return false;
 	const wchar_t* strSkelName = pModel->name();
+    std::ds_wstring _FileExt = strResName.m_Ext;
 
 	//【PATH】/SkeletonName/skeleton/[ACTIONNAME]
 	{
-		ds_wstring full_action_name = item.m_ResDir + strSkelName + PATH_SPLITTER_STRING + STR_SKELETON + PATH_SPLITTER_STRING + strResName.m_ResFile.c_str() + L"." + pCoreAction->typeID();
+		ds_wstring full_action_name = item.m_ResDir + strSkelName + PATH_SPLITTER_STRING + STR_SKELETON + PATH_SPLITTER_STRING + strResName.m_ResFile.c_str() + L"." + _FileExt;
 		xcomdoc model_doc ;
 		std::ifstream _stream;
 		bool bRet = xFileSystem::singleton()->loadFile(full_action_name.c_str() , _stream );
@@ -217,17 +341,27 @@ bool xCoreActionLoader::__loadFromDirectory(const xCoreActionName& strResName,xB
 			full_action_name = item.m_ResDir + strSkelName + STR_SKELETON + strResName.m_ResFile.c_str();
 			bRet = xFileSystem::singleton()->loadFile(full_action_name.c_str() , _stream );
 		}
-		if(bRet && pCoreAction->load(strResName.m_ActionName.c_str() , _stream))
-		{
-			_stream.close();
-			return true;
-		}
-		_stream.close();
+
+        if(bRet)
+        {
+            //创建Action
+            if(pCoreAction == NULL)
+            {
+                pCoreAction = CreateActionByStream(_stream , m_bActionLoop);
+            }
+            if(pCoreAction->load(strResName.m_ActionName.c_str() , _stream))
+            {
+                _stream.close();
+                return true;
+            }
+            _stream.close();
+        }
+		
 	}
 
 	//【PATH】/SkeletonName/[ACTIONNAME]
 	{
-		ds_wstring full_action_name = item.m_ResDir + strSkelName + PATH_SPLITTER_STRING + strResName.m_ResFile.c_str() + L"."  + pCoreAction->typeID();
+		ds_wstring full_action_name = item.m_ResDir + strSkelName + PATH_SPLITTER_STRING + strResName.m_ResFile.c_str() + L"."  + _FileExt;
 		std::ifstream _stream;
 		bool bRet = xFileSystem::singleton()->loadFile(full_action_name.c_str() , _stream );
 		//加载没有扩展名的
@@ -237,19 +371,27 @@ bool xCoreActionLoader::__loadFromDirectory(const xCoreActionName& strResName,xB
 			bRet = xFileSystem::singleton()->loadFile(full_action_name.c_str() , _stream );
 		}
 
-		if(bRet && pCoreAction->load(strResName.m_ActionName.c_str() , _stream))
-		{
-			_stream.close();
-			return true;
-		}
-		_stream.close();
+        if(bRet)
+        {
+            //创建Action
+            if(pCoreAction == NULL)
+            {
+                pCoreAction = CreateActionByStream(_stream , m_bActionLoop);
+            }
+            if(pCoreAction->load(strResName.m_ActionName.c_str() , _stream))
+            {
+                _stream.close();
+                return true;
+            }
+            _stream.close();
+        }
 	}
 	return false;
 }
 
 bool xCoreActionLoader::_loadResource(const xCoreActionName& strResName , xBaseAction* & pCoreAction , int& ResSize, unsigned int arg)
 {
-	ds_wstring full_name;
+ 	ds_wstring full_name;
 	ResSize = 0;
 	bool needDeletepCoreMesh = false;
 	if(pCoreAction == NULL)
@@ -257,9 +399,6 @@ bool xCoreActionLoader::_loadResource(const xCoreActionName& strResName , xBaseA
 		needDeletepCoreMesh = true;
 		if(true == newInstance(strResName , pCoreAction) )
 			return true;
-
-		if(pCoreAction == NULL)
-			return false;
 	}
 
 	int nResItem = (int)nPackageItem();
@@ -276,10 +415,16 @@ bool xCoreActionLoader::_loadResource(const xCoreActionName& strResName , xBaseA
 		{   
 			_ret = __loadFromPackage(strResName , pCoreAction,item , i );
 		}
-		ResSize = pCoreAction->memUsage();
-        pCoreAction->setLoop(m_bActionLoop);
-		if(_ret) return true;
-
+        if(pCoreAction && _ret )
+        {
+            ResSize = pCoreAction->memUsage();
+            pCoreAction->setLoop(m_bActionLoop);
+            return true;
+        }
+        else
+        {
+            delete pCoreAction;
+        }
 	}
 
 	//如果是创建出来的就删除掉
@@ -295,7 +440,9 @@ bool xCoreActionLoader::_loadResource(const xCoreActionName& strResName , xBaseA
 bool xCoreActionLoader::_unloadResource(const xCoreActionName& strResName,xBaseAction* & pCoreAction , unsigned int& TotalResSize)
 {
 	TotalResSize -= pCoreAction->memUsage();
-	pCoreAction->unload();
+    pCoreAction->unload();
+    pCoreAction->KillObject();
+    pCoreAction = NULL;
 	return true;
 }
 

@@ -19,7 +19,7 @@ bool xSceneRenderVisitor::visit(ISceneNode* pNode , ISceneGraph* pScne)
 	for(size_t i = 0 ;  i < nObject ; i ++)
 	{
 		ISceneObject* pObject = pNode->getObject(i);
-		ISceneDrawable* pDrawable = dynamic_cast<ISceneDrawable*>(pObject);
+		ISceneDrawable* pDrawable = type_cast<ISceneDrawable*>(pObject);
 		if(pDrawable)
 		{
 			pDrawable->draw(m_pRenderer , m_pCamera );
@@ -42,13 +42,13 @@ bool xSceneColorSelectVisitor::visit(ISceneNode* pNode , ISceneGraph* pScne)
 	for(size_t i = 0 ;  i < nObject ; i ++)
 	{
 		ISceneObject*   pObject = pNode->getObject(i);
-		ISceneDrawable* pDrawable = dynamic_cast<ISceneDrawable*>(pObject);
+		ISceneDrawable* pDrawable = type_cast<ISceneDrawable*>(pObject);
 		if(pDrawable)
 		{
 			m_pRenderer->renderApi()->colorSelector()->setRenderObjectID( (int)pNode , (int)pObject );
 			if(pDrawable)
 			{
-				pDrawable->draw(m_pRenderer , 0 , m_pCamera);
+				pDrawable->drawImm(m_pRenderer , 0 , m_pCamera);
 			}
 		}
 	}
@@ -61,6 +61,7 @@ xTerrainHeightSelVisitor::xTerrainHeightSelVisitor(IBaseRenderer* pRenderer, IRe
 	m_pRenderer = pRenderer;
 	m_pCamera   = pCamera;
 	m_bQueue    = false;
+    m_bIncludeOther = false;
 }
 
 bool xTerrainHeightSelVisitor::visit(ISceneNode* pNode , ISceneGraph* pScne) 
@@ -68,10 +69,10 @@ bool xTerrainHeightSelVisitor::visit(ISceneNode* pNode , ISceneGraph* pScne)
 	size_t nObject = pNode->nObjects();
 	for(size_t i = 0 ;  i < nObject ; i ++)
 	{
-		if(pNode->classID().isType( xTerrainBase::ms_CLASSID ) )
+		if(pNode->classID().isType( xTerrainBase::ms_CLASSID ) || m_bIncludeOther == true )
 		{
 			ISceneObject*   pObject = pNode->getObject(i);
-			ISceneDrawable* pDrawable = dynamic_cast<ISceneDrawable*>(pObject);
+			ISceneDrawable* pDrawable = type_cast<ISceneDrawable*>(pObject);
 			if(pDrawable)
 			{
 				m_pRenderer->renderApi()->colorSelector()->setRenderObjectID( (int)pNode , (int)pObject );
@@ -80,7 +81,7 @@ bool xTerrainHeightSelVisitor::visit(ISceneNode* pNode , ISceneGraph* pScne)
 					if(m_bQueue)
 						pDrawable->draw(m_pRenderer , m_pCamera);  //放到队列去。
 					else
-					    pDrawable->draw(m_pRenderer , 0 , m_pCamera); //直接渲染
+					    pDrawable->drawImm(m_pRenderer , 0 , m_pCamera); //直接渲染
 				}
 			}
 		}
@@ -94,6 +95,7 @@ IMPL_BASE_OBJECT_DLLSAFE(xSceneUpdateVisitor , ISceneVisitor);
 xSceneUpdateVisitor::xSceneUpdateVisitor()
 {
     m_PassedTime = 0;
+    m_pCamera    = NULL;
 }
 
 bool  xSceneUpdateVisitor::setFrameTime(unsigned long passedTime)
@@ -102,9 +104,9 @@ bool  xSceneUpdateVisitor::setFrameTime(unsigned long passedTime)
 	return true ;
 }
 
-bool xSceneUpdateVisitor::visit(ISceneNode* pNode , ISceneGraph* pScne) 
+bool xSceneUpdateVisitor::visit(ISceneNode* pNode , ISceneGraph* pScne ) 
 {
-	pNode->updateFrame(m_PassedTime);
+	pNode->updateFrame(m_PassedTime , m_pCamera );
 	return true;
 }
 END_NAMESPACE_XEVOL3D

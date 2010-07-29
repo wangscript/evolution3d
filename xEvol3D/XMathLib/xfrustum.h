@@ -21,9 +21,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _X_MATH_FRUSTUM_H_
 #define _X_MATH_FRUSTUM_H_
 
-#include "xGeomLib.h"
-#include "xvolume.h"
+#include "xMathLib.h"
+#include "xplane.h"
 BEGIN_NAMESPACE_XGEOMLIB
+
+class _XEVOL_BASE_API_  xplane;
+class _XEVOL_BASE_API_  xrect;
+class _XEVOL_BASE_API_  xshpere;
+class _XEVOL_BASE_API_  xobb;
+class _XEVOL_BASE_API_  xcylinder;
+class _XEVOL_BASE_API_  xaabb;
 class _XEVOL_BASE_API_  xCamera;
 class _XEVOL_BASE_API_  xFrustum
 {

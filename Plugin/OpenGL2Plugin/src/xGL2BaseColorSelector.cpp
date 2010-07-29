@@ -48,22 +48,22 @@ bool xGL2BaseColorSelector::setRenderObjSlaveID(int _id)
 
 xGL2BaseColorSelector::xGL2BaseColorSelector(xGL2RenderApi* pD10Api) : IColorSelector(pD10Api)
 {
-	m_pD10Api = pD10Api;
+	m_pGL2Api = pD10Api;
 	m_SelectID[0]._id = 0; 
 	m_SelectID[1]._id = 0;
 	m_ColorSelBinderS.setID(m_SelectID);
 	m_ColorSelBinderU.setID(m_SelectID);
-	m_pD10Api->registeShaderConstBinder(L"colorID"   , &m_ColorSelBinderS);
-	m_pD10Api->registeShaderConstBinder(L"ColorID"   , &m_ColorSelBinderS);
-	m_pD10Api->registeShaderConstBinder(L"SelectID"  , &m_ColorSelBinderS);
-	m_pD10Api->registeShaderConstBinder(L"selectID"  , &m_ColorSelBinderS);
-	m_pD10Api->registeShaderConstBinder(L"color_id"  , &m_ColorSelBinderS);
+	m_pGL2Api->registeShaderConstBinder(L"colorID"   , &m_ColorSelBinderS);
+	m_pGL2Api->registeShaderConstBinder(L"ColorID"   , &m_ColorSelBinderS);
+	m_pGL2Api->registeShaderConstBinder(L"SelectID"  , &m_ColorSelBinderS);
+	m_pGL2Api->registeShaderConstBinder(L"selectID"  , &m_ColorSelBinderS);
+	m_pGL2Api->registeShaderConstBinder(L"color_id"  , &m_ColorSelBinderS);
 
-	m_pD10Api->registeShaderConstBinder(L"ucolorID"  , &m_ColorSelBinderU);
-	m_pD10Api->registeShaderConstBinder(L"uColorID"  , &m_ColorSelBinderU);
-	m_pD10Api->registeShaderConstBinder(L"uSelectID" , &m_ColorSelBinderU);
-	m_pD10Api->registeShaderConstBinder(L"uselectID" , &m_ColorSelBinderU);
-	m_pD10Api->registeShaderConstBinder(L"ucolor_id" , &m_ColorSelBinderU);
+	m_pGL2Api->registeShaderConstBinder(L"ucolorID"  , &m_ColorSelBinderU);
+	m_pGL2Api->registeShaderConstBinder(L"uColorID"  , &m_ColorSelBinderU);
+	m_pGL2Api->registeShaderConstBinder(L"uSelectID" , &m_ColorSelBinderU);
+	m_pGL2Api->registeShaderConstBinder(L"uselectID" , &m_ColorSelBinderU);
+	m_pGL2Api->registeShaderConstBinder(L"ucolor_id" , &m_ColorSelBinderU);
 
 	m_SelectRenderView = NULL;
 	m_SelectRenderView = NULL;
@@ -75,17 +75,17 @@ xGL2BaseColorSelector::xGL2BaseColorSelector(xGL2RenderApi* pD10Api) : IColorSel
 xGL2BaseColorSelector::~xGL2BaseColorSelector()
 {
 	XSAFE_DELETE(m_SelectRenderView);
-	//m_pD10Api->unRegisteShaderConstBinder(L"colorID");
-	//m_pD10Api->unRegisteShaderConstBinder(L"ColorID");
-	//m_pD10Api->unRegisteShaderConstBinder(L"SelectID");
-	//m_pD10Api->unRegisteShaderConstBinder(L"selectID");
-	//m_pD10Api->unRegisteShaderConstBinder(L"color_id");
+	//m_pGL2Api->unRegisteShaderConstBinder(L"colorID");
+	//m_pGL2Api->unRegisteShaderConstBinder(L"ColorID");
+	//m_pGL2Api->unRegisteShaderConstBinder(L"SelectID");
+	//m_pGL2Api->unRegisteShaderConstBinder(L"selectID");
+	//m_pGL2Api->unRegisteShaderConstBinder(L"color_id");
 
-	//m_pD10Api->unRegisteShaderConstBinder(L"ucolorID" );
-	//m_pD10Api->unRegisteShaderConstBinder(L"uColorID" );
-	//m_pD10Api->unRegisteShaderConstBinder(L"uSelectID");
-	//m_pD10Api->unRegisteShaderConstBinder(L"uselectID");
-	//m_pD10Api->unRegisteShaderConstBinder(L"ucolor_id");
+	//m_pGL2Api->unRegisteShaderConstBinder(L"ucolorID" );
+	//m_pGL2Api->unRegisteShaderConstBinder(L"uColorID" );
+	//m_pGL2Api->unRegisteShaderConstBinder(L"uSelectID");
+	//m_pGL2Api->unRegisteShaderConstBinder(L"uselectID");
+	//m_pGL2Api->unRegisteShaderConstBinder(L"ucolor_id");
 }
 
 bool xGL2BaseColorSelector::create(xXmlNode* pSelNode)
@@ -93,11 +93,11 @@ bool xGL2BaseColorSelector::create(xXmlNode* pSelNode)
 	ePIXEL_FORMAT fmt = xPixelFormatAssit::singleton()->GetPixelFormat( pSelNode->value(L"format") );
 	const wchar_t* pColorShader = pSelNode->value(L"shader");
 	if(pColorShader == NULL) pColorShader = L"ColorSel";
-	m_SelectRenderView = (xGL2RenderView*) m_pD10Api->createRenderView( 0 ,0 , true);
+	m_SelectRenderView = (xGL2RenderView*) m_pGL2Api->createRenderView( 0 ,0 , true);
 	m_SelectRenderView->createRenderTarget(1, fmt , true ,false);
 	m_Format = fmt;
-	m_pColorSelShader = (xGL2Shader*)m_pD10Api->createShader(pColorShader,eShader_PixelShader);
-	m_ColorSelBlender = m_pD10Api->createBlendState(L"ColorSel");
+	m_pColorSelShader = (xGL2Shader*)m_pGL2Api->createShader(pColorShader,eShader_PixelShader);
+	m_ColorSelBlender = m_pGL2Api->createBlendState(L"ColorSel");
 	return true;
 }
 
@@ -105,8 +105,8 @@ bool xGL2BaseColorSelector::begin()
 {
 	if(m_SelectRenderView == NULL)
 		return false;
-	m_pD10Api->pushRenderView(m_SelectRenderView);
-	m_pD10Api->setBlendState(m_ColorSelBlender);
+	m_pGL2Api->pushRenderView(m_SelectRenderView);
+	m_pGL2Api->setBlendState(m_ColorSelBlender);
 	return true;
 }
 bool xGL2BaseColorSelector::resize(int w , int h )
@@ -123,10 +123,10 @@ bool xGL2BaseColorSelector::end()
 {
 	if(m_SelectRenderView == NULL)
 		return false;
-	m_pD10Api->popRenderView();
-	IGpuProgram* pCurProgram = m_pD10Api->getGpuProgram();
-	m_pD10Api->setGpuProgram( NULL );
-	m_pD10Api->setGpuProgram( pCurProgram );
+	m_pGL2Api->popRenderView();
+	IGpuProgram* pCurProgram = m_pGL2Api->getGpuProgram();
+	m_pGL2Api->setGpuProgram( NULL );
+	m_pGL2Api->setGpuProgram( pCurProgram );
 	return true;
 }
 
@@ -141,7 +141,7 @@ bool xGL2BaseColorSelector::getSelectID(int x , int y , int w , int h, void* _da
 
 bool xGL2BaseColorSelector::beginPrimitive()
 {
-	m_pD10Api->setPixelShader(m_pColorSelShader);
+	m_pGL2Api->setPixelShader(m_pColorSelShader);
 	xGL2PixelShader* pColorSelShader = (xGL2PixelShader*)m_pColorSelShader;
 	pColorSelShader->commitParamTable();
 	return true;

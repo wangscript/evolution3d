@@ -1,5 +1,5 @@
 #include "../../xStdPch.h"
-#ifdef _LINUX
+#ifdef _UNIX
 #include "xWin32DllLoader.h"
 
 BEGIN_NAMESPACE_XEVOL3D

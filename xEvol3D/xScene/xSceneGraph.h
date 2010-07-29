@@ -41,16 +41,22 @@ public:
 	virtual size_t             nObjects() { return 0 ; }
 	virtual ISceneObject*      getObject(size_t idx ) { return NULL ; }
 	virtual bool               save(const wchar_t * fileName );
-	virtual bool               save(xXmlNode* pNode) = 0;
-	virtual bool               load(xXmlNode* pNode) = 0;
-	virtual bool               unload();
+    virtual bool               save(xXmlNode* pNode);
+
+
+
+    virtual bool               load(xXmlNode* pNode);
+    virtual bool               unload();
+    virtual const wchar_t*     getPath(const wchar_t* _path);
+    virtual std::ds_wstring    getFileInPath(const wchar_t* _path , const wchar_t* _file);
+    virtual bool               addPath(const wchar_t* _path , const wchar_t* _name);
 	virtual IResManager*       findResManager(const wchar_t* _name);
 	virtual bool               registeResManager(IResManager* _pResManager);
 	virtual eSceneNodeType     type(){ return eSNT_SceneGraph ; }
 public:
 	//»æÖÆ²Ù×÷
 	virtual bool       visit(ISceneVisitor* pVisitor , eVisitOrder  _order = eVO_PreOrder, IRenderCamera* pCamera = NULL) = 0;
-	virtual bool       updateFrame(unsigned long passedTime, bool bRecursive) = 0;
+	virtual bool       updateFrame(unsigned long passedTime, IRenderCamera* pCamera , bool bRecursive) = 0;
 
 	virtual bool       draw(ISceneVisitor* pVisitor , IRenderCamera* pCamera = NULL)   { return visit(pVisitor , eVO_PreOrder , pCamera) ; }
 	virtual bool       update(ISceneVisitor* pVisitor , IRenderCamera* pCamera = NULL) { return visit(pVisitor , eVO_PreOrder , pCamera) ; }
@@ -62,13 +68,24 @@ public:
 public:
 	virtual bool       initPropertySet(){ return xSceneBasicNode::initPropertySet() ; }
 protected:
-	typedef ds_map(int , IResManager* )   mapResManager;
+    void               saveAllPath( xXmlNode* pNode );
+
+protected:
+	typedef ds_map(int , IResManager* )               mapResManager;
+    struct _Path
+    {
+        std::ds_wstring m_FullPath;
+        std::ds_wstring m_Path;
+        std::ds_wstring m_Type;
+    };
+    typedef ds_map(std::ds_wstring , _Path) mapPaths;
 
 	IBaseRenderer*       m_pRenderer;
 	xBaseTextureMgr*     m_pTextureMgr;
 	xBaseModelMgr*       m_pModelMgr;
 	mapResManager        m_vResManagers;
 	xResPathManager*     m_pResPathMgr;
+    mapPaths             m_vPaths;
 
 };
 
@@ -85,7 +102,7 @@ public:
 	virtual bool       load(xXmlNode* pNode);
 	virtual bool       save(xXmlNode* pNode);
 	virtual bool       visit(ISceneVisitor* pVisitor , eVisitOrder  _order = eVO_PreOrder, IRenderCamera* pCamera = NULL);
-	virtual bool       updateFrame(unsigned long passedTime, bool bRecursive);
+	virtual bool       updateFrame(unsigned long passedTime, IRenderCamera* pCamera , bool bRecursive);
 protected:
 	bool               _visit_preorder(ISceneNode* pSceneNode , ISceneVisitor* pVisitor ,  IRenderCamera* pCamera = NULL);
 	bool               _visit_postorder(ISceneNode* pSceneNode , ISceneVisitor* pVisitor ,  IRenderCamera* pCamera = NULL);

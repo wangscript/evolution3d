@@ -169,9 +169,9 @@ void xPluginMgr::registeObject(const wchar_t* _name , xPlugin* plugin)
 	xPluginMap::iterator pos = m_objCreateMap.find(hsID);
 	if(pos != m_objCreateMap.end() )
 	{
-		XEVOL_LOG(eXL_DEBUG_HIGH,L"插件支持的对象名字和插件%s的对象冲突\n",pos->second->fileName() );
-		XEVOL_LOG(eXL_DEBUG_HIGH,L"    对象名字: %s\n",_name);
-		XEVOL_LOG(eXL_DEBUG_HIGH,L"    插件名字: %s\n",plugin->fileName() );
+		XEVOL_LOG(eXL_DEBUG_HIGH,L"Object name in plugin %s conflict\n",pos->second->fileName() );
+		XEVOL_LOG(eXL_DEBUG_HIGH,L"    Object name: %s\n",_name);
+		XEVOL_LOG(eXL_DEBUG_HIGH,L"    Plugin Name: %s\n",plugin->fileName() );
 		return ;
 	}
 	m_objCreateMap.insert(map<int, xPlugin*>::value_type(hsID,plugin) );

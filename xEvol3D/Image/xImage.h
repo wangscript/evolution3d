@@ -43,10 +43,10 @@ namespace xImageLib
     _XEVOL_BASE_API_  bool         getSize(const wchar_t* wcsFileName , xImageSize& _size);
     _XEVOL_BASE_API_  xImage*      createSpecialImage(const wchar_t* fileName);
     _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,xImageSize size);
-    _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,int w , int h , ePIXEL_FORMAT fmt);
-    _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,const wchar_t* fileName, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER);
-    _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER);
-    _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,const wchar_t* filename, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin = IO_LEFT_LOWER);
+    _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,int w , int h , ePIXEL_FORMAT fmt , unsigned int _arg = 0 );
+    _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,const wchar_t* fileName, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER , unsigned int _arg = 0 );
+    _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER , unsigned int _arg = 0 );
+    _XEVOL_BASE_API_  xImage*      load(IMAGE_TYPE type ,const wchar_t* filename, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin = IO_LEFT_LOWER , unsigned int _arg = 0 );
     _XEVOL_BASE_API_  void         kill(xImage* pImage);
     _XEVOL_BASE_API_  IStreamIO*   createImageStream(const wchar_t* fileName , const int8* mem_buf , int buf_len );
     _XEVOL_BASE_API_  bool         registeImageLoader(const wchar_t* _ext        , xImageLoader* imageCreateFunc);

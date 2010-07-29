@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="xcomdoc">
+      <UniqueIdentifier>{5f3f40fe-05d1-44cc-a7c3-733bc17d22d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xcomdoc\header files">
+      <UniqueIdentifier>{82a1c0b4-bb55-49f1-ae51-9ded2cca3478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="packager">
+      <UniqueIdentifier>{a4c71422-1048-41d7-b801-adbb1dc269bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zlib">
+      <UniqueIdentifier>{bb005641-d87c-4931-930a-6e483f947f74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zlib\header">
+      <UniqueIdentifier>{72b696b7-82f0-465c-ab99-834fb69ed4a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lzma">
+      <UniqueIdentifier>{986675cb-bdc4-4ef7-9cbf-b37fb6aabb03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lzma\h">
+      <UniqueIdentifier>{37e0b9c2-5084-4193-8937-76fdb6eeda3c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="xcomdoc\xcdDirEnum.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdFile.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdFileImp.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdReadWriterBuffer.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdStream.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdStringHash.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdUtil.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdoc.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdocbase.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\zlibStream.cpp">
+      <Filter>xcomdoc</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\Packager.cpp">
+      <Filter>packager</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\stdafx.cpp">
+      <Filter>packager</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\adler32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\compress.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\crc32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\deflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\gzio.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\infback.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inffast.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inftrees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\trees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\uncompr.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\zutil.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Alloc.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Bra.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzFind.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzFindMt.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Lzma2Dec.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Lzma2Enc.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaDec.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaEnc.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaLib.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\MtCoder.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Threads.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdir.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="xcomdoc\xcdDirEnum.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdReadBuffer.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdStringHash.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdUtil.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdWriteBuffer.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdoc.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdoc_common.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdocImp.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xdocfstream.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\zlibStream.h">
+      <Filter>xcomdoc\header files</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\stdafx.h">
+      <Filter>packager</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\crc32.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\deflate.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffast.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffixed.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inflate.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inftrees.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\trees.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.in.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zlib.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zutil.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Alloc.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Bra.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzFind.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzFindMt.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzHash.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Lzma2Dec.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Lzma2Enc.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaDec.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaEnc.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaLib.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\MtCoder.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Threads.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Types.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdir.h" />
+    <ClInclude Include="xcomdoc\xcomdocbase.h" />
+  </ItemGroup>
+</Project>

@@ -78,7 +78,7 @@ public:
 	xBasicRenderCamera(xRenderApiMatContext* pContext) { m_pMatContext = pContext ; }
 	 bool          onChange()
 	 {
-		 return m_pMatContext->onCameraChange(dynamic_cast<IRenderCamera*>(this));
+		 return m_pMatContext->onCameraChange(type_cast<IRenderCamera*>(this));
 	 }
 };
 

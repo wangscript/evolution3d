@@ -156,6 +156,17 @@ public:
 		return  float(v.x*x + v.y *y) ;
 	}
 
+    float            cp(const TVec2<_Type>& v)  const     
+    {
+        return x * v.y - v.x * y;
+    }
+
+	void            cp(const TVec2<_Type>& v , TVec3<_Type>& _out)  const     
+	{
+		_out.x = 0;
+		_out.y = 0;
+		_out.z = x * v.y - v.x * y;
+	}
 
 
 	//-----------------------------------------------------
@@ -202,6 +213,21 @@ public:
 		_Type v[2];
 	};
 };
+template <typename T> TVec2<T> operator * (const T& v1 , const TVec2<T>& v2)
+{
+    TVec2<T> _ret;
+    _ret.x = v1 * v2.x;
+    _ret.y = v1 * v2.y;
+    return _ret;
+}
+
+template <typename T> TVec2<T> operator * (const TVec2<T>& v1 , const TVec2<T>& v2)
+{
+    TVec2<T> _ret;
+    _ret.x = v1.x * v2.x;
+    _ret.y = v1.y * v2.y;
+    return _ret;
+}
 
 //typedef TVec2<float>         xvec2;
 //typedef TVec2<unsigned int>  xvec2ui;

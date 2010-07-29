@@ -23,7 +23,7 @@ public:
 	static void     appendNewLine(_StrT& _str){};  
 };
 
-template <typename _StrT> class xBaseStrFunc<wchar_t , typename _StrT>
+template <typename _StrT> class xBaseStrFunc<wchar_t , _StrT>
 {
 public:
 	static size_t     len(const wchar_t* _str)                            { return wcslen(_str) ;               }
@@ -34,7 +34,7 @@ public:
 	static void       appendNewLine(_StrT& _str){_str.append(L"\n"); };  
 };
 
-template <typename _StrT> class xBaseStrFunc<char, typename _StrT>
+template <typename _StrT> class xBaseStrFunc<char, _StrT>
 {
 public:
 	static size_t  len(const char* _str)                         { return strlen(_str) ;             }
@@ -124,7 +124,7 @@ public:
 		p += skipWhiteSpace(p);
 		if( stringEqual( p , tag , ignoreCase) )
 		{
-			p += xBaseStrFunc<_CharT, typename _StrT>::len(tag);
+			p += xBaseStrFunc<_CharT, _StrT>::len(tag);
 			return int(p - pBase);
 		}
 		return 0;		
@@ -235,6 +235,23 @@ public:
 		}
 	}
 
+	void toLower(_StrT& text)
+	{
+		size_t len = text.length();
+		for (size_t i = 0 ; i < len ; i ++) 
+		{
+			text[i] = tolower(text[i]);
+		}
+	}
+	void toUpper(_StrT& text)
+	{
+		size_t len = text.length();
+		for (size_t i = 0 ; i < len ; i ++) 
+		{
+			text[i] = tolower(text[i]);
+		}
+	}
+	
 	int getString(const _CharT* p, _StrT& text, const _CharT* endTag , FUNC_IS_ACCEPT func)
 	{
 		const _CharT* pBase = p;

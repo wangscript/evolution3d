@@ -7,9 +7,10 @@
 
 struct cTransformBuffer
 {
-      matrix matWorld;
-      matrix matView;
-      matrix matProject;
+      float4x4 matWorld;
+      float4x4 matView;
+      float4x4 matProject;
+      float4x4 matTexture;
 	  float4 cameraUp;
 	  float4 cameraPos;
 	  float4 cameraDir;
@@ -28,7 +29,7 @@ struct VS_INPUT
 struct PS_INPUT
 {
       float4 Pos      : POSITION0;
-      float2 Tex      : TEXCOORD0;
+      float4 Tex      : TEXCOORD0;
       float4 Color    : COLOR;
 };
 
@@ -45,8 +46,9 @@ PS_INPUT main( VS_INPUT input )
       output.Pos   = mul( output.Pos , TransformBuffer.matWorld   );
       output.Pos   = mul( output.Pos , TransformBuffer.matView    );
       output.Pos   = mul( output.Pos , TransformBuffer.matProject );
-      output.Tex   = input.Tex;
+      output.Tex   = float4(input.Tex , 1.0f , 1.0f);
       output.Color = input.Color;
 
       return output;
+
 }

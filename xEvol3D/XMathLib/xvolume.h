@@ -44,10 +44,13 @@ class _XEVOL_BASE_API_  xaabb
 {
 public:
 	xaabb(){};
-	xaabb(xMathLib::xvec3& Min,xMathLib::xvec3& Max){ Build(Min,Max); }
-	void Build(xMathLib::xvec3& Min,xMathLib::xvec3& Max){  AddPoint(Min) ;  AddPoint(Max) ;};
-	void Build(xMathLib::xvec3* points,int n) { for(int  i = 0 ; i < n ; i ++) { AddPoint(points[i]) ; } };
-	void AddPoint(xMathLib::xvec3& v)
+	xaabb(const xMathLib::xvec3& Min,const xMathLib::xvec3& Max){ Build(Min,Max); }
+    xaabb(const xMathLib::xvec4& Min,const xMathLib::xvec4& Max){ Build(Min,Max); }
+	void Build(const xMathLib::xvec3& Min,const xMathLib::xvec3& Max){  AddPoint(Min) ;  AddPoint(Max) ;};
+    void Build(const xMathLib::xvec4& Min,const xMathLib::xvec4& Max){  AddPoint(Min) ;  AddPoint(Max) ;};
+	void Build(const xMathLib::xvec3* points,int n) { for(int  i = 0 ; i < n ; i ++) { AddPoint(points[i]) ; } };
+    void Build(const xMathLib::xvec4* points,int n) { for(int  i = 0 ; i < n ; i ++) { AddPoint(points[i]) ; } };
+	void AddPoint(const xMathLib::xvec3& v)
 	{
 		if(v.x > m_Max.x) m_Max.x = v.x;
 		if(v.y > m_Max.y) m_Max.y = v.y;
@@ -57,6 +60,17 @@ public:
 		if(v.y < m_Min.y) m_Min.y = v.y;
 		if(v.z < m_Min.z) m_Min.z = v.z;
 	}
+    void AddPoint(const xMathLib::xvec4& v)
+    {
+        if(v.x > m_Max.x) m_Max.x = v.x;
+        if(v.y > m_Max.y) m_Max.y = v.y;
+        if(v.z > m_Max.z) m_Max.z = v.z;
+
+        if(v.x < m_Min.x) m_Min.x = v.x;
+        if(v.y < m_Min.y) m_Min.y = v.y;
+        if(v.z < m_Min.z) m_Min.z = v.z;
+    }
+
 	void Init(float len = 1000000.0f)
 	{
 		m_Min.x = len;	m_Max.x = -len;

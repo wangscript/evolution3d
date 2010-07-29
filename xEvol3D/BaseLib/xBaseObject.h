@@ -38,7 +38,8 @@ public:
 	int& operator ++()    {++_count  ; return _count   ; }// ++a
 	int  operator --(int) {--_count  ; return _count+1 ; }// a--
 	int& operator --()    {--_count  ; return _count   ; }// --a
-};
+	int  _GetCount(){ return _count; }
+ };
 
 class _XEVOL_BASE_API_  IRefCountObject
 {
@@ -228,9 +229,9 @@ public:                                   \
 #define IMPL_REFCOUNT_OBJECT_INTERFACE(ClassName)   \
 public:                                   \
 	virtual int      RefCount()	{ return m_RefCount; }\
-	virtual int      AddRef()   { m_RefCount ++;     return m_RefCount; }\
+	virtual int      AddRef()   { m_RefCount ++;     return  m_RefCount; }\
 	virtual int      ReleaseObject()	{ m_RefCount --;  int RefCount = m_RefCount;   if(m_RefCount == 0) delete this; return RefCount; }\
-	virtual int      KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, "RefCount Object not released class m_RefCount=%d \n" , m_RefCount ) ; m_RefCount = 0 ; delete this; return 0;  }; \
+	virtual int      KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, "RefCount Object not released class m_RefCount=%d \n" , m_RefCount._GetCount() ) ; m_RefCount = 0 ; delete this; return 0;  }; \
 
 
 
@@ -245,10 +246,10 @@ public:                                         \
 
 
 #define IMPL_REFCOUNT_OBJECT_FUNCTION(ClassName)   \
-    int      ClassName##::RefCount()	{ return m_RefCount; }\
-    int      ClassName##::AddRef()   { m_RefCount ++;     return m_RefCount; }\
-    int      ClassName##::ReleaseObject()	{ m_RefCount --;  int RefCount = m_RefCount;   if(m_RefCount == 0) delete this; return RefCount; }\
-    int      ClassName##::KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, "RefCount Object not released class m_RefCount=%d \n" , m_RefCount ) ; m_RefCount = 0 ; delete this; return 0;  }; \
+    int      ClassName::RefCount()	{ return m_RefCount; }\
+    int      ClassName::AddRef()   { m_RefCount ++;     return m_RefCount; }\
+    int      ClassName::ReleaseObject()	{ m_RefCount --;  int RefCount = m_RefCount;   if(m_RefCount == 0) delete this; return RefCount; }\
+    int      ClassName::KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, "RefCount Object not released class m_RefCount=%d \n" , m_RefCount._GetCount() ) ; m_RefCount = 0 ; delete this; return 0;  }; \
 
 
 //Base Object Class
@@ -260,7 +261,7 @@ public:                                   \
 	virtual int      RefCount()	{ return m_RefCount; }\
 	virtual int      AddRef()   { m_RefCount ++;     return m_RefCount; }\
 	virtual int      ReleaseObject()	{ m_RefCount --;  int RefCount = m_RefCount;   if(m_RefCount == 0) delete this; return RefCount; }\
-	virtual int      KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, L"RefCount Object not released class m_RefCount=%d type=%s\n" , m_RefCount ,ms_CLASSID.name() ) ; m_RefCount = 0 ; delete this; return 0;  }; \
+	virtual int      KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, L"RefCount Object not released class m_RefCount=%d type=%s\n" , m_RefCount._GetCount() ,ms_CLASSID.name() ) ; m_RefCount = 0 ; delete this; return 0;  }; \
 public :                                                              \
 	virtual const    xObjectClassID&  classID(){ return this->ms_CLASSID; } \
 	virtual void*    queryObject(const xObjectClassID& _id){if( this->ms_CLASSID.isType(_id)){this->AddRef(); return this;} return 0;}\
@@ -319,23 +320,37 @@ DECL_BASE_OBJECT_INTERFACE(ClassName)         \
 
 #define IMPL_BASE_OBJECT_DLLSAFE(ClassName, BaseClass) \
       xObjectClassID ClassName::ms_CLASSID = xObjectClassID( _WIDETEXT_(#ClassName) , &BaseClass::ms_CLASSID);    \
-      int      ClassName##::RefCount()	{ return m_RefCount; }\
-      int      ClassName##::AddRef()   { m_RefCount ++;     return m_RefCount; }\
-      int      ClassName##::ReleaseObject()	{ m_RefCount --;  int RefCount = m_RefCount;   if(m_RefCount == 0) delete this; return RefCount; }\
-      int      ClassName##::KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, "RefCount Object not released class m_RefCount=%d \n" , m_RefCount ) ; m_RefCount = 0 ; delete this; return 0;  }; \
-      const    xObjectClassID&  ClassName##::classID(){ return this->ms_CLASSID; } \
-      void*    ClassName##::queryObject(const xObjectClassID& _id){if( this->ms_CLASSID.isType(_id)){this->AddRef(); return this;} return 0;}\
-      bool     ClassName##::isType(const    xObjectClassID& _id){return classID().isType(_id) ;}\
+      int      ClassName::RefCount()	{ return m_RefCount; }\
+      int      ClassName::AddRef()   { m_RefCount ++;     return m_RefCount; }\
+      int      ClassName::ReleaseObject()	{ m_RefCount --;  int RefCount = m_RefCount;   if(m_RefCount == 0) delete this; return RefCount; }\
+      int      ClassName::KillObject()     { if(m_RefCount != 1) XEVOL_LOG(eXL_DEBUG_HIGH, "RefCount Object not released class m_RefCount=%d \n" , m_RefCount._GetCount() ) ; m_RefCount = 0 ; delete this; return 0;  }; \
+      const    xObjectClassID&  ClassName::classID(){ return this->ms_CLASSID; } \
+      void*    ClassName::queryObject(const xObjectClassID& _id){if( this->ms_CLASSID.isType(_id)){this->AddRef(); return this;} return 0;}\
+      bool     ClassName::isType(const    xObjectClassID& _id){return classID().isType(_id) ;}\
 
+
+
+#ifdef DISABLE_RTTI
+template<typename _TTo , typename _TFrom> _TTo type_cast(_TFrom _ptr)
+{
+    return _ptr;
+}
+#else
+template<typename _TTo , typename _TFrom> _TTo type_cast(_TFrom _ptr)
+{
+    return dynamic_cast<_TTo>(_ptr);
+}
+#endif
 
 
 template<typename _ChildT , typename _ParentT> bool XEvol_Convert(_ChildT* & _ch , _ParentT* parent)
 {
-	_ChildT* pChild = dynamic_cast<_ChildT*>(parent);
+	_ChildT* pChild = type_cast<_ChildT*>(parent);
 	if(pChild == NULL) return false;
 	_ch = pChild ;
 	return true;
 }
+
 
 
 #define XEVOL_DEFINE_PROPERTY_P(type , name) \

@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "../Application/xPlatform.h"
 #include "../Application/xPluginMgr.h"
 #include "../RenderAPI/xRenderAPI.h"
+#include "../RenderAPI/x2DRenderer.h"
 #ifndef BEGIN_NAMESPACE_XUI
 #define BEGIN_NAMESPACE_XUI namespace XEvol3D{ namespace xui{
 #define END_NAMESPACE_XUI  } }

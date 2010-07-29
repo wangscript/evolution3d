@@ -1,7 +1,7 @@
 #include "../xStdPch.h"
 #include "xSceneGraph.h"
 #include "xSceneVisitor.h"
-
+#include "../OperationSys/xOperationSys.h"
 #include "xSceneModel.h"
 
 #include "Renderer/xRenderer.h"
@@ -105,16 +105,91 @@ bool ISceneGraph::save(const wchar_t * fileName )
 	doc.unload();
 	return false;
 }
+
+void ISceneGraph::saveAllPath( xXmlNode* pNode ) 
+{
+    mapPaths::iterator pos = m_vPaths.begin();
+    if(m_vPaths.size() > 0 )
+    {
+        xXmlNode* pPathsXmls = pNode->insertNode(L"paths") ;
+        for( ; pos != m_vPaths.end()  ; pos ++)
+        {
+            xXmlNode* pXml = pPathsXmls->insertNode(L"path");
+            pXml->setValue(L"name" , pos->first.c_str()  );
+            pXml->setValue(L"path" , pos->second.m_Path.c_str()  );
+            pXml->setValue(L"type" , pos->second.m_Type.c_str()  );
+        }
+    }
+}
+
 bool ISceneGraph::save(xXmlNode* pNode)
 {
+    saveAllPath(pNode);
 	return xSceneBasicNode::save(pNode);
 }
 
 bool ISceneGraph::load(xXmlNode* pNode)
 {
+    xXmlNode::XmlNodes nodes;
+    xXmlNode* pPathsXmls = pNode->findNode(L"paths") ;
+    if( pPathsXmls )
+    {
+        pPathsXmls->findNode(L"path" , nodes);
+        for(size_t i = 0 ; i < nodes.size() ; i ++)
+        {
+            _Path _path;
+            _path.m_Type = nodes[i]->value(L"type") == NULL ? L"resPath" : nodes[i]->value(L"type");
+            _path.m_Path = nodes[i]->value(L"path");
+            if(_path.m_Type == L"resPath" )
+            {
+                _path.m_FullPath = _RES_ABSPATH_( _path.m_Path.c_str() );
+            }
+            else if(_path.m_Type == L"relPath" )
+            {
+                _path.m_FullPath = _XEVOL_ABSPATH_( _path.m_Path.c_str() );
+            }
+            else
+            {
+                _path.m_FullPath =  _path.m_Path.c_str() ;
+            }
+            m_vPaths[nodes[i]->value(L"name")] = _path;
+        }
+    }
 	return xSceneBasicNode::load(pNode);
 }
 
+std::ds_wstring ISceneGraph::getFileInPath(const wchar_t* _path , const wchar_t* _file)
+{
+    const wchar_t* _pathName = this->m_pScene->getPath(_path);//(NULL,szDocDirFile,CSIDL_PERSONAL,false);  
+    if(_pathName == NULL)
+    {
+        std::wstring t = std::wstring(L"./") + _path + std::wstring(L"/");
+        _pathName = _RES_ABSPATH_( t.c_str() );
+    }
+
+    std::ds_wstring strFull = std::ds_wstring(_pathName) + _file ;
+    return strFull;
+}
+
+const wchar_t* ISceneGraph::getPath(const wchar_t* _path)
+{
+    mapPaths::iterator pos = m_vPaths.find(_path);
+    if(pos != m_vPaths.end() )
+        return pos->second.m_FullPath.c_str();
+    return NULL;
+}
+
+bool ISceneGraph::addPath(const wchar_t* _strPath , const wchar_t* _name)
+{
+    if(getPath(_name))
+        return false;
+    _Path _path;
+    _path.m_Type      = L"absPath";
+    _path.m_Path      =_strPath;
+    _path.m_FullPath  =_strPath;
+    m_vPaths[_name] = _path;
+    return true;
+}
 //-----------------------------------------------------------
 //
 //===========================================================
@@ -139,6 +214,8 @@ bool xBasicScene::save(xXmlNode* pXml)
 {
 	if(pXml == NULL)
 		return false;
+
+    saveAllPath(pXml);
     pXml->setValue(L"type" , L"BasicScene");
 	beginEnumChildren();
 	ISceneNode* pChildNode = NULL;
@@ -174,7 +251,7 @@ bool xBasicScene::_visit_preorder(ISceneNode* pSceneNode , ISceneVisitor* pVisit
 			if(pChild->isVisible() == false)
 				continue;
 			// 如果是SG，则直接执行SG的
-			ISceneGraph* pSG = dynamic_cast<ISceneGraph*>(pChild);
+			ISceneGraph* pSG = type_cast<ISceneGraph*>(pChild);
 			if ( pSG  )
 			{
 				pSG->visit(pVisitor, eVO_PreOrder , pCamera);
@@ -206,7 +283,7 @@ bool xBasicScene::_visit_postorder(ISceneNode* pSceneNode , ISceneVisitor* pVisi
 		if(pChild->isVisible() == false)
 			continue;
 		// 如果是SG，则直接执行SG的
-		ISceneGraph* pSG = dynamic_cast<ISceneGraph*>(pChild);
+		ISceneGraph* pSG = type_cast<ISceneGraph*>(pChild);
 		if ( pSG )
 		{
 			pSG->visit(pVisitor, eVO_PostOrder , pCamera);
@@ -222,9 +299,9 @@ bool xBasicScene::_visit_postorder(ISceneNode* pSceneNode , ISceneVisitor* pVisi
 	return true ;
 }
 
-bool xBasicScene::updateFrame(unsigned long passedTime, bool bRecursive)
+bool xBasicScene::updateFrame(unsigned long passedTime,IRenderCamera* pCamera , bool bRecursive)
 {
-	return ISceneNode::updateFrame(passedTime , bRecursive);
+	return ISceneNode::updateFrame(passedTime , pCamera , bRecursive);
 }
 
 

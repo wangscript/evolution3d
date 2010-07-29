@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{5a8c3ff5-edfd-460b-a982-4feae43c49d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{4367cb2d-b2b9-4d23-ae52-2076e40754c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{7c149f5d-36fc-48cf-bfa6-321f1f2b758b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="xKidMaterail.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="xKidRenderer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="xKidRTech.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="KidsRendererPlugin.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="xKidMaterail.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xKidRenderCreator.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xKidRenderer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xKidRTech.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xKidRdrApi.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\bin\KidRenderer\materials.xml">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\SimpleModel.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\SimpleModelBlend.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\SimpleSkin.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\SimpleSkinBlend.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\SimpleTerrainPatch.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\StaticModelNotLight.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\Simple.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\SimpleBlend.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="..\..\bin\KidRenderer\material\Tree.material">
+      <Filter>Materials</Filter>
+    </None>
+  </ItemGroup>
+</Project>

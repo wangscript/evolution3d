@@ -3,6 +3,7 @@
 #include "../resource.h"
 #include "../xEvolEnviroment.h"
 #include "BaseLib/xBaseMath.h"
+#include "xSceneSelector.h"
 USING_NS_MDED;
 xInsertNodeCommand::xInsertNodeCommand(ISceneNode* pParent , ISceneNode* pThis , bool bInsert)
 {
@@ -50,132 +51,6 @@ xInsertNodeCommand* xInsertNodeCommand::newInstacne(ISceneNode* pParent , IScene
 	return new xInsertNodeCommand(pParent , pThis , bInsert);
 }
 
-xSceneSelection::xSceneSelection()
-{
-	m_pCurGizmo     = NULL;
-	m_pSelSceneNode = NULL;
-	m_pRotGizimo    = NULL;
-	m_ArcBall       = NULL;
-
-}
-
-bool xSceneSelection::init(CEvolEnviroment*     pEvolEnv)
-{
-	m_pEvolEnv  = pEvolEnv;
-	m_ArcBall = (IDrawableHelper *)xDrawElementFactoryMgr::singleton()->createInstance(L"ArcBall" , m_pEvolEnv->renderer() , 0) ;
-	m_ArcBall->init(pEvolEnv->texMgr() );
-	return true;
-}
-
-xSceneSelection::~xSceneSelection()
-{
-
-}
-
-void xSceneSelection::showGizimo()
-{
-	if(m_pCurGizmo == NULL)
-		return ;
-	m_pCurGizmo->attachToScene( m_pEvolEnv->scene() );
-
-	//根据父节点,设置Gizmo的大小和位置
-	ISceneNode* pParent = m_pCurGizmo->getParent();
-	if(pParent)
-	{
-		xGeomLib::xaabb aabb;
-	    aabb.Init(); 
-		size_t nObj = pParent->nObjects();
-		for(size_t i = 0 ; i < nObj ; i ++ )
-		{
-			ISceneDrawable* pDrawable = dynamic_cast<ISceneDrawable*>(pParent->getObject(i));
-			size_t nEl = pDrawable->nDrawElement();
-			for(size_t iEl = 0 ; iEl < nEl  ; iEl ++)
-			{
-				xGeomLib::xaabb _aabb;
-				if(pDrawable && pDrawable->drawElement(iEl) )
-				{
-					pDrawable->drawElement(iEl)->aabb(_aabb);	
-					aabb.AddPoint(_aabb.m_Min);
-					aabb.AddPoint(_aabb.m_Max);
-				}
-			}
-
-		}
-		xvec3 cen = (aabb.m_Max + aabb.m_Min) * 0.5f;
-		xvec3 len = aabb.m_Max - aabb.m_Min;
-		float _len = len.len() * 0.5f;
-		m_pCurGizmo->placement()->setPosition(cen);
-		m_pCurGizmo->placement()->setScale(xvec3(_len , _len , _len ));
-		m_pCurGizmo->invalidatePlacement();
-	}
-}
-
-void xSceneSelection::setMoveGizmo()
-{
-	setRotGizmo();
-}
-void xSceneSelection::setNullGizmo()
-{
-	setGizmoNode(NULL);
-}
-
-void xSceneSelection::setCurSelNode(ISceneNode* pNode)
-{
-	//当前的Gizmo Node是不能参与选择的。
-	if(IsGizmoNode(pNode))
-		return ;
-	GetMedusaEditor()->GetUI()->fireMEdUIEvent(eMEUI_SceneSelChanged , (int)pNode , 0);
-	setGizmoNode(NULL);
-	m_pSelSceneNode = pNode;
-}
-
-ISceneNode* xSceneSelection::GetCurSelNode()
-{
-	return m_pSelSceneNode;
-}
-bool xSceneSelection::IsGizmoNode(ISceneNode* pNode)
-{
-	if(dynamic_cast<ISceneNode*>(m_pRotGizimo) == pNode)
-		return true;
-	if(dynamic_cast<ISceneNode*>(m_pCurGizmo)  == pNode)
-		return true;
-	return false;
-}
-
-void xSceneSelection::setRotGizmo()
-{
-	if(m_pRotGizimo == NULL)
-	{
-		m_pRotGizimo = dynamic_cast<xSceneHelperDrawableNode*>(XEvol_CreateSceneNode(L"xSceneHelperDrawableNode" , m_pEvolEnv->scene() , NULL) );
-		if ( NULL == m_pRotGizimo )
-			return;
-		m_pRotGizimo->attachDrawElement(m_ArcBall);
-		xvec3 _scale(30.0f, 30.0f , 30.f);
-		m_pRotGizimo->placement()->setScale( _scale );
-		m_pRotGizimo->setInScene(false);
-	}
-	setGizmoNode(m_pRotGizimo);
-}
-
-void xSceneSelection::setGizmoNode(ISceneNode* pNode)
-{
-	if(pNode == NULL)
-	{
-		if(m_pSelSceneNode) 
-		{
-			m_pSelSceneNode->removeChild(m_pRotGizimo);
-		}
-		return ;
-	}
-	if(m_pSelSceneNode )
-	{
-		m_pSelSceneNode->insertChild(pNode);
-		pNode->updateChildrenTrans();
-	}
-	m_pCurGizmo = dynamic_cast<xSceneHelperDrawableNode*>(pNode);
-	showGizimo();
-
-}
 
 bool xPlacementCommand::Redo()
 {
@@ -194,17 +69,18 @@ bool xPlacementCommand::Undo()
 //===========
 xObjPlacement::xObjPlacement()
 {
-	m_placementType = eOPT_None;
+    m_placementType = eOPT_None;
     m_pCommandInDoing = NULL;
 
-	m_SceneToolbar.m_hDll = AfxGetResourceHandle();
-	wcscpy(m_SceneToolbar.m_name , L"SceneOperator");
-	wcscpy(m_SceneToolbar.m_title , L"场景操作");
-	m_SceneToolbar.m_ResID = IDR_SCENEPLACEMENT;
+    m_SceneToolbar.m_hDll = AfxGetResourceHandle();
+    wcscpy(m_SceneToolbar.m_name , L"SceneOperator");
+    wcscpy(m_SceneToolbar.m_title , L"场景操作");
+    m_SceneToolbar.m_ResID = IDR_SCENEPLACEMENT;
+    m_SceneToolbar.SetType(CMEdUiToolBarInfo::eToolBar);
 
-	m_SceneToolbar.m_funcCallback = this;
-	m_SceneToolbar.ProcessToolbarID(-1);
-	GetMedusaEditor()->GetUI()->RegisteToolbar(&m_SceneToolbar);
+    m_SceneToolbar.m_funcCallback = this;
+    m_SceneToolbar.ProcessToolbarID(-1);
+    GetMedusaEditor()->GetUI()->RegisteToolbar(&m_SceneToolbar);
 
 }
 
@@ -219,20 +95,37 @@ void xObjPlacement::init(CEvolEnviroment* pEnv)
 	m_SceneSelection = pEnv->GetSelection();
 
 }
-bool xObjPlacement::onActive(bool bActive)
+
+bool xObjPlacement::DeActive()
 {
-	if(bActive)
+    IMEdUIMessageListenner* pOldListener = GetMedusaEditor()->GetUI()->GetMessageListenner();
+    IMEdUIMessageListenner* pThisLister = dynamic_cast<IMEdUIMessageListenner*>(this);
+	if(pOldListener == pThisLister)
 	{
-		m_SceneSelection->showGizimo();         
+		GetMedusaEditor()->GetUI()->PopMessageListenner();
 	}
-	else
+    return true;
+}
+
+bool xObjPlacement::onActive(IMEdUIMessageListenner::eActiveReason _Reason)
+{
+    if(_Reason == IMEdUIMessageListenner::eAR_Active || _Reason == IMEdUIMessageListenner::eAR_Attach )
+    {
+        m_SceneSelection->showGizimo();     
+		return true;
+    }
+    else if(_Reason == IMEdUIMessageListenner::eAR_DeActive)
 	{
-		//取消了。不绘制
-		//ISceneObject* pObject = m_pRotGizimo->getObject(0);
-		//ISceneDrawable* pSceneDrawable = dynamic_cast<ISceneDrawable*>(pObject);
-		//pSceneDrawable->setDrawElement(NULL);
+		DeActive();
 	}
-	return true;
+	else 
+	{
+        //取消了。不绘制
+		m_placementType = eOPT_None;
+		m_SceneSelection->setGizmoNode(NULL);
+		setCurSelNode(NULL);
+	}
+    return true;
 }
 
 xvec4  xObjPlacement::getMouseMoveDir(int x , int y , float& movPercent)
@@ -296,11 +189,11 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 		{
 			IMEdUIMessageListenner* pOldListener = GetMedusaEditor()->GetUI()->GetMessageListenner();
 			IMEdUIMessageListenner* pThisLister = dynamic_cast<IMEdUIMessageListenner*>(this);
-			if(pOldListener == pThisLister)
-			{
-				GetMedusaEditor()->GetUI()->PopMessageListenner();
-				m_placementType = eOPT_None;
-			}
+            if(pOldListener == pThisLister)
+            {
+                GetMedusaEditor()->GetUI()->PopMessageListenner();
+            }
+            return true;
 		}
 	}
 	if(msg.MsgID == NS_XEVOL3D::WIN_LMOUSE_DOWN)
@@ -308,42 +201,20 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 		xTextureDesc _desc;
 		int x = msg.Mouse.x;
 		int y = msg.Mouse.y;
-
-		xvec2i* pRTData = m_pEvolEnv->GetSelectData(_desc , x , y );
-		xvec2i& val = pRTData[ y * _desc.m_width + x];
-
-		ISceneNode* pSelNode = NULL;
-		if(val.x > 10000)
-		{
-            //val.x = xRoundToByte(val.x, 4);
-			pSelNode = dynamic_cast<ISceneNode*> ( (IBaseObject*)val.x);
-		}
-
-		//检查时不是点中了那个旋转的Gizmo
+        unsigned int v = 0;
+		xSceneSelector _selector(m_pEvolEnv);
+		_selector.begin(x - 4 ,  y - 4 , 8 ,  8);
+		ISceneNode* pSelNode = _selector.getSelect(x , y , v);
 		m_RotateAxis = -1;
-		for(int _i = -3 ; _i < 3 ; _i ++)
+		bool hasHitGizmo = _selector.checkPoint(m_SceneSelection->GetRotGizmo() , x , y , 4 , v);
+        
+		if(hasHitGizmo)
 		{
-			for(int _j = -3 ; _j < 3 ; _j ++)
-			{
-				int _x = x + _i;
-				int _y = y + _j;
-				if(_x >=0 && _x < _desc.m_width && _y >= 0 && _y < _desc.m_height)
-				{
-					xvec2i& val = pRTData[ _y * _desc.m_width + _x];
-					if(val.x == (int)m_SceneSelection->GetRotGizmo())
-					{ 
-						//开始转动了，记录一个Command
-						m_pCommandInDoing= new xPlacementCommand;
-						m_pCommandInDoing->m_pSceneNode = GetCurSelNode();
-						m_pCommandInDoing->m_OldPlacement = *( GetCurSelNode()->placement() );
-						m_RotateAxis = val.y;
-						m_lastDragPos = xvec2i(x , y);
-						return true;
-					}
-				}		
-			}
+			m_lastDragPos = xvec2i(x , y);
+			m_RotateAxis = v ;
+			_selector.end();
+			return true;
 		}
-
 
 		//如果是Node不属于场景。就啥也不做。
 		if(pSelNode && pSelNode->bInScene() == false )
@@ -353,8 +224,8 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 
 		
 		m_SceneSelection->setGizmoNode(NULL);
-		setCurSelNode(NULL);
-		if(pSelNode)
+        setCurSelNode(NULL);
+        if(pSelNode)
 		{
 			setCurSelNode(pSelNode);
 		}
@@ -376,9 +247,6 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 			m_pCommandInDoing->m_pSceneNode = GetCurSelNode();
 			m_pCommandInDoing->m_OldPlacement = *( GetCurSelNode()->placement() );
 		}
-
-
-		m_pEvolEnv->ReleaseSelectData(pRTData);
 		return true;
 	}
 
@@ -483,25 +351,34 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 		}
 		return true;
 	}
-	return true;
+	return false;
 }
 
-NS_MDED::CMEdUiToolBarInfo::CommandUIStatus  xObjPlacement::OnUpdateCommandUI(int ctrlID , int ctrlIdx)
+bool  xObjPlacement::OnUpdateCommandUI(int ctrlID , int ctrlIdx , NS_MDED::CMEdUiToolBarInfo::CMEdUiCmdUi* pUi)
 {
 	if(ctrlID == ID_BTN_SCENE_OP_MOVE)
 	{
 		if(m_placementType == eOPT_Move)
-			return NS_MDED::CMEdUiToolBarInfo::CUS_CHECKED;
-		return NS_MDED::CMEdUiToolBarInfo::CUS_ENABLE;
+             pUi->SetCheck(TRUE);
+		else 
+            pUi->SetCheck(FALSE);
 	}
 
 	if(ctrlID == ID_BTN_SCENE_OP_ROTATE)
 	{
 		if(m_placementType == eOPT_Rotate)
-			return NS_MDED::CMEdUiToolBarInfo::CUS_CHECKED;
-		return NS_MDED::CMEdUiToolBarInfo::CUS_ENABLE;
+            pUi->SetCheck(TRUE);
+        else 
+            pUi->SetCheck(FALSE);
 	}
-	return NS_MDED::CMEdUiToolBarInfo::CUS_ENABLE;
+	return true;
+}
+
+bool  xObjPlacement::SendCommand(xObjPlacement::eCommand _cmd)
+{
+    if(_cmd == eCmd_Move  ) return OnCommand( ID_BTN_SCENE_OP_MOVE   , 0);
+    if(_cmd == eCmd_Rotate) return OnCommand( ID_BTN_SCENE_OP_ROTATE , 0);
+    return true;
 }
 
 bool  xObjPlacement::OnCommand(int ctrlID , int ctrlIdx)

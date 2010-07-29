@@ -41,7 +41,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
    #define EXPIMP_TEMPLATE
 #endif
 
-#ifdef _LINUX
+#ifdef _UNIX
 #undef    _XEVOL_BASE_API_  
 #define   _XEVOL_BASE_API_ 
 #define EXPIMP_TEMPLATE
@@ -63,14 +63,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define NS_XEVOL3D XEvol3D
 
 #ifndef MSCVER
-#define int8 char  
-#define int32 int
-#define int16 short
+#define int8   char 
+#define int16  short
+#define int32  int
 #else   
 #define int8  __int8
 #define int32 __int32
 #define int16 __int16
 #endif
+
+typedef unsigned int8  uint8;
+typedef unsigned int16 uint16;
+typedef unsigned int32 uint32;
+
 
 #pragma warning(disable : 4251)
 #pragma warning(disable : 4799)

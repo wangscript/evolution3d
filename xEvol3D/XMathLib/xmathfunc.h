@@ -231,7 +231,17 @@ __FORCE_INLINE__ float  XM_ASinR(float s)
 
 template <typename T>T  xsqrt(const T v)
 {
-	return sqrt(v);
+	return sqrt( (float)v);
+}
+
+__FORCE_INLINE__ double  xsqrt(const double v)
+{
+    return sqrt(v);
+}
+
+__FORCE_INLINE__ float  xsqrt(const float v)
+{
+    return sqrt(v);
 }
 
 __FORCE_INLINE__ int    xsqrt(const int v)

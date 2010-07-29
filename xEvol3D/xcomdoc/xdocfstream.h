@@ -21,14 +21,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __XCOMDOC_STREAM_BUFFER_H__
 #define __XCOMDOC_STREAM_BUFFER_H__
 /*
-提供 C++ 标准库的扩展。
-支持从一个xcomdocstream上建立一个c++ stream类。
+//提供 C++ 标准库的扩展。
+//支持从一个xcomdocstream上建立一个c++ stream类。
 
-作者： 潘李亮 2004 - 10 - 25 
-xheartblue 2004-10-25
+//作者： 潘李亮 2004 - 10 - 25 
+//xheartblue 2004-10-25
 
-本代码为免费代码，可以只有使用和修改。
-但是你得保留本声明和作者名字。
+//本代码为免费代码，可以只有使用和修改。
+//但是你得保留本声明和作者名字。
 
 */
 #pragma warning(push)

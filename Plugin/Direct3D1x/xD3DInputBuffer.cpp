@@ -107,6 +107,11 @@ bool xD3DVertexStream::setInputBuffer(size_t nSlot , IInputBuffer* pIB)
 	if(nSlot >= m_VertexBuffers.size() )
 		return false;
 	
+    if(pIB == NULL)
+    {
+        XSAFE_RELEASEOBJECT(m_VertexBuffers[nSlot].m_pBuffer);
+        return true;
+    }
 	m_VertexBuffers[nSlot].m_pBuffer = pIB;
 	pIB->AddRef();
 	return m_VertexBuffers[nSlot].m_pBuffer != NULL;

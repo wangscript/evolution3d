@@ -16,8 +16,6 @@ public:
 	bool             onAttach();
 	nsMedusaEditor::IMEdDockPane* GetMEdDockPane(){return m_pMEdDockPane ; }
 	void                          SetMEdDockPane(nsMedusaEditor::IMEdDockPane* pPane);
-	CMFCRibbonButton*             GetViewBarButton(){ return m_pViewBarButton; }
-	void                          SetViewBarButton(CMFCRibbonButton* pButton) { m_pViewBarButton = pButton ; }
 protected:
 	void AdjustLayout();
 protected:
@@ -28,7 +26,6 @@ protected:
 protected:
 	HWND                          m_ChildWindow;
 	nsMedusaEditor::IMEdDockPane* m_pMEdDockPane;
-	CMFCRibbonButton*             m_pViewBarButton;
 	// Implementation
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);

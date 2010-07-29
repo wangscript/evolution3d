@@ -105,7 +105,7 @@ public:
 		a = TMax(0.0f,a - rhv.a);
 		return *this;
 	}
-	xColor_4f& operator *=(float scale)
+	xColor_4f& operator *= (float scale)
 	{
 		r = TMax(0.0f,scale * r);
 		g = TMax(0.0f,scale * g);
@@ -113,6 +113,16 @@ public:
 		a = TMax(0.0f,scale * a);
 		return *this;
 	}
+
+    xColor_4f& operator *= (xColor_4f scale)
+    {
+        r = TMax(0.0f,scale.r * r);
+        g = TMax(0.0f,scale.g * g);
+        b = TMax(0.0f,scale.b * b);
+        a = TMax(0.0f,scale.a * a);
+        return *this;
+    }
+
 	xColor_4f operator *(float scale)
 	{
 		xColor_4f _ret;
@@ -122,12 +132,7 @@ public:
 		_ret.a = TMax(0.0f,scale * a);
 		return _ret;
 	}
-	inline friend bool operator ==(const xColor_4f& c1, const xColor_4f& c2){
-		return c1.a == c2.a && c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
-	}
-	inline friend bool operator !=(const xColor_4f& c1, const xColor_4f& c2){
-		return c1.a != c2.a || c1.r != c2.r || c1.g != c2.g || c1.b != c2.b;
-	}
+
 
 	float abs()
 	{
@@ -136,6 +141,36 @@ public:
 
 };
 
+inline bool operator ==(const xColor_4f& c1, const xColor_4f& c2)
+{
+    return c1.a == c2.a && c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
+}
+
+inline bool operator !=(const xColor_4f& c1, const xColor_4f& c2)
+{
+    return c1.a != c2.a || c1.r != c2.r || c1.g != c2.g || c1.b != c2.b;
+}
+
+inline xColor_4f operator *(float scale , const xColor_4f& c)
+{
+    xColor_4f _v;
+    _v.r = scale * c.r;
+    _v.g = scale * c.g;
+    _v.b = scale * c.b;
+    _v.a = scale * c.a;
+
+    return _v;
+}
+
+inline xColor_4f operator *(const xColor_4f& scale , const xColor_4f& c)
+{
+    xColor_4f _v;
+    _v.r = scale.r * c.r;
+    _v.g = scale.g * c.g;
+    _v.b = scale.b * c.b;
+    _v.a = scale.a * c.a;
+    return _v;
+}
 
 #if !defined(_MSC_VER) || defined(_WIN32_WCE)
 

@@ -85,6 +85,7 @@ protected:
 	virtual bool          unlock(xTextureLockArea& lockInfo){return false;}
 protected:
 	virtual bool          _load(ID3D11Resource* pTexture , bool bCreateTextureView = true);
+    bool                  _update(ID3D11Resource* pLockTexture , void* data  , int dateLen , int rowPitch , int depthPicth , int mipmapLevel , int arraySlice);
 	xD11UnkwonTexture(xD3D11RenderApi* pD11Api);
 	virtual ~xD11UnkwonTexture();
 };

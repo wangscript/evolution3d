@@ -35,6 +35,14 @@ xTextureName::xTextureName(const wchar_t* _Name , ePIXEL_FORMAT fmt , eResourceT
 
 }
 
+xBaseTextureMgr*  xBaseTextureLoader::createInstance(IRenderApi* pRenderApi , const wchar_t* _name)
+{
+    xBaseTextureMgr* pMgr = new xBaseTextureMgr(_name);
+    pMgr->setThis(pMgr);
+    pMgr->setRenderApi(pRenderApi);
+    return pMgr;
+}
+
 xBaseTextureLoader::xBaseTextureLoader()
 {
     m_pRenderApi = NULL;
@@ -52,7 +60,7 @@ bool  xBaseTextureLoader::_isResLoaded(IBaseTexture* pRes)
 
 HBaseTexture xBaseTextureLoader::load(const xTextureName& texName , bool bLoadImm  , bool arg)
 {
-     xBaseTextureMgr* pMgr = dynamic_cast<xBaseTextureMgr*>(this);
+     xBaseTextureMgr* pMgr = m_pThis;
      return pMgr->add(texName, arg ,bLoadImm);
 }
 
@@ -195,7 +203,9 @@ bool  xBaseTextureLoader::_loadResource(const xTextureName& strResName   , IBase
 
 bool  xBaseTextureLoader::_unloadResource(const xTextureName& strResName , IBaseTexture* & pRes , unsigned int& TotalResSize)
 {
-	TotalResSize -= pRes->memUsage();
+	int ResSize = TotalResSize - pRes->memUsage();
+	if(ResSize < 0) ResSize = 0;
+	TotalResSize = ResSize;
 	pRes->unload();
 	return false;
 }

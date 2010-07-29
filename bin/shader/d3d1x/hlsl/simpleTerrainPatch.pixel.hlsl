@@ -9,16 +9,20 @@ struct PS_INPUT
       float4 Pos      : SV_POSITION;
       float4 Nor      : NORMAL;
       float4 Color    : COLOR;
-      float2 Tex      : TEXCOORD;  
+      float4 Tan      : TANGENT;
+      float4 Tex      : TEXCOORD;  
 
       float4 wPosition : TEXCOORD2;
       float4 wNormal   : TEXCOORD3;  
+      float4 wTangent  : TEXCOORD4;
 };
+
 ///}}
 
 ///>>Import = libDip
 
 ///{{SourceCode
+float GlobalAlpha;
 float4 main( PS_INPUT input) : SV_Target
 {
     float4 vDiffuse =  float4(1.0,1.0,1.0,1.0);//input.Color ;
@@ -57,6 +61,6 @@ float4 main( PS_INPUT input) : SV_Target
 ///{{SourceCode
    if(vDiffuse.w <0.01)
 	   discard;
-    return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , clamp(vDiffuse.w , 0.0  , 1.0) );
+    return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , clamp(vDiffuse.w , 0.0  , 1.0) * GlobalAlpha );
 }
 ///}}

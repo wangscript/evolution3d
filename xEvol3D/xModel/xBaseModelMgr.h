@@ -16,6 +16,7 @@ public:
 	HCoreMesh           loadMesh(const wchar_t*  _meshName  , const wchar_t* _ownModelName = NULL , bool bLoadImm = true);
 	const wchar_t*      getModelExtName();
 	xBaseTextureMgr*    getTextureMgr();
+    void                setThis(xBaseModelMgr* pThis){ m_pThis = pThis ; }
 
 public:
 	void                KillObject();
@@ -41,6 +42,7 @@ protected:
 	xBaseTextureMgr*  m_pTexMgr;
 	xCoreMeshMgr      m_MeshMgr;
 	std::ds_wstring   m_ext;
+    xBaseModelMgr*    m_pThis;
 };
 END_NAMESPACE_XEVOL3D
 

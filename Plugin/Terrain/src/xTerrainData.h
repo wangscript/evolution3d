@@ -39,7 +39,7 @@ public:
 	~xTerrainData();
 	struct SurfaceData
 	{
-		HBaseTexture hTexture;
+		HBaseTexture hTexture[4];
 		float minU;
 		float minV;
 		float sizeU;
@@ -83,11 +83,11 @@ private:
 private:
 	// 表面表
 	// TODO 表面文件
-	HBaseTexture m_hTexture;
+	HBaseTexture m_hTexture[4];
 	// 表面大小（按照采样点来算，单位：点）
 	unsigned int m_surfResX;
 	unsigned int m_surfResY;
-	std::ds_wstring m_ccTextureName;
+	std::ds_wstring m_ccTextureName[4];
 	//// 表面精度（每个表面点所换算的真实长度，单位：米）
 	//float m_surfDeltaX;
 	//float m_surfDeltaY;
@@ -115,7 +115,24 @@ public:
 	inline const xvec3& getStart() const { return m_relativeStart; }
 	inline const xvec3& getCenter() const{ return m_vRelativeCenter; }
 
-	inline float		getHeight(float X,float Y)
+	inline float getHeight(unsigned int X, unsigned int Y) const
+	{
+		if (X >= m_ResX || Y >= m_ResY)
+		{
+			return 0.0f;
+		}
+		return m_pDepth[X + Y*m_ResX];
+	}
+	inline void setHeight(unsigned int X, unsigned int Y, float d) const
+	{
+		if (X >= m_ResX || Y >= m_ResY)
+		{
+			return ;
+		}
+		m_pDepth[X + Y*m_ResX] = d;
+	}
+
+	inline float		getHeightByCoord(float X,float Y)
 	{
 		unsigned int x = X - m_relativeStart.x;
 		unsigned int y = Y - m_relativeStart.y;
@@ -139,6 +156,9 @@ public:
 	bool save(xXmlNode* pNode);
 
 };
+
+
+// 数据控制器
 
 // xTerrainDataSet是TerrainData的集合，按照经纬度来进行管理
 // 同时只能有一个xTerrainDataSet
@@ -181,6 +201,7 @@ public:
 	float getHeightReal( double x, double y);
 
 	void GetSideTerrain(xTerrainData* pSource, xTerrainData** ppx, xTerrainData** ppX, xTerrainData** ppy, xTerrainData** ppY);
+
 public:
 
 	bool load(xXmlNode* pNode);
@@ -200,6 +221,7 @@ private:
 	bool analysis();
 
 };
+
 
 
 END_NAMESPACE_XEVOL3D

@@ -8,6 +8,7 @@ BEGIN_NAMESPACE_XEVOL3D
 
 */
 class _XEVOL_BASE_API_ IDrawElement;
+class _XEVOL_BASE_API_ IRenderPassArg;
 class _XEVOL_BASE_API_ IBaseRenderer;
 class _XEVOL_BASE_API_ xMaterial : public IRenderObject
 {
@@ -32,6 +33,9 @@ public:
 	virtual bool         render(IDrawElement* pObject ,unsigned long passedTime);
     virtual IGpuProgram* gpuProgram() ;
     virtual bool         setGpuProgram(xGpuProgramName& _name);
+	virtual bool         setDepthState(const wchar_t* _name) = 0;
+	virtual bool         setRazState(const wchar_t* _name) = 0;
+	virtual bool         setBlendState(const wchar_t* _name) = 0;
              
 };
 
@@ -54,11 +58,14 @@ public:
 	IRenderEffect( IBaseRenderer* pRenderer); 
 	virtual  ~IRenderEffect();
 public:
-	virtual bool draw(IDrawElement* pObject , unsigned int passedTime) = 0;
-	virtual bool draw(IDrawElement* pObject) = 0;
-	virtual bool setMaterial(xMaterial* pMaterial) = 0;
-	virtual bool load(xXmlNode* pXml) = 0;
-	virtual bool save(xXmlNode* pXml) = 0;
+	virtual bool           drawImm(IDrawElement* pObject , IRenderPassArg* pArg ,  unsigned int passedTime) = 0;
+	virtual bool           draw(IDrawElement* pObject , IRenderPassArg* pArg ) = 0;
+	virtual bool           setMaterial(xMaterial* pMaterial) = 0;
+	virtual bool           load(xXmlNode* pXml) = 0;
+	virtual bool           save(xXmlNode* pXml) = 0;
+    virtual bool           setArg(const wchar_t* _argName , const wchar_t* _argVal) = 0;
+    virtual const wchar_t* getArg(const wchar_t* _argName) = 0;
+	virtual const wchar_t* name() = 0 ;
 };
 
 END_NAMESPACE_XEVOL3D

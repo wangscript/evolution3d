@@ -131,14 +131,14 @@ typedef std::vector<xSkinBone , dllsafe_alloc<xSkinBone> > vSkinBones;
 
 enum eActionType
 {
-	 eActType_Skel_Keyframe = 0,
+     eActType_None          = 0, 
      eActType_Skeleton      = 1,
-
 	 eActType_Keyframe      = 2,
 	 eActType_Frame         = 3,
 	 eActType_Blend         = 4,//两个动作融合(两个动作的按比例融合)
 	 eActType_Transition    = 5,//两个动作过渡
 	 eActType_Mix           = 6,//多个动作的混合
+     eActType_Freeze        = 8,//将一个动作冻结多久
 };
 
 struct xActionInfo

@@ -140,7 +140,7 @@ bool xD3D10RenderApi::onResize(int width , int height)
 {
       TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
       TAutoLocker<xRenderApiLocker> aRenderLocker(&m_RenderLocker);
-	  xD10RenderView* pRenderView = m_RenderView.type_case<xD10RenderView*>(); //dynamic_cast<xD10RenderView*>(m_RenderView.operator TObject*());
+	  xD10RenderView* pRenderView = m_RenderView.dynamic_convert<xD10RenderView*>(); //dynamic_cast<xD10RenderView*>(m_RenderView.operator TObject*());
       if(false == __needResize(width , height) )
       {
             pRenderView->install();
@@ -410,7 +410,6 @@ bool xD3D10RenderApi::swapBuffer()
 {
       TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
       m_RenderWindow->Present( 0, 0 );
-      unlock();
       return true;
 }
 
@@ -583,21 +582,38 @@ bool xD3D10RenderApi::setVertexStream(IVertexStream* vertexStream)
       return false;
 }
 
-bool xD3D10RenderApi::drawPrimitive(size_t nVertex , size_t iStartVertex , ePrimtiveType pt)
+bool xD3D10RenderApi::drawPrimitiveIndex(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt)
 {
 	if(m_pCallback)
 	{
 		m_pCallback->preDrawPrimitive(this , m_RenderMode);
 		setPrimitiveType(pt);
-		m_pD3DDevice->DrawIndexed( (UINT)nVertex , (UINT)iStartVertex , 0 );
+		m_pD3DDevice->DrawIndexed( (UINT)nVertexIndex , (UINT)iStartVertexIndex , 0 );
 		m_pCallback->preDrawPrimitive(this , m_RenderMode);
 	}
 	else
 	{
 		setPrimitiveType(pt);
-		m_pD3DDevice->DrawIndexed( (UINT)nVertex , (UINT)iStartVertex , 0 );
+		m_pD3DDevice->DrawIndexed( (UINT)nVertexIndex , (UINT)iStartVertexIndex , 0 );
 	}
 	return true;
+}
+
+bool xD3D10RenderApi::drawPrimitive(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt)
+{
+    if(m_pCallback)
+    {
+        m_pCallback->preDrawPrimitive(this , m_RenderMode);
+        setPrimitiveType(pt);
+        m_pD3DDevice->Draw( (UINT)nVertexIndex , (UINT)iStartVertexIndex  );
+        m_pCallback->preDrawPrimitive(this , m_RenderMode);
+    }
+    else
+    {
+        setPrimitiveType(pt);
+        m_pD3DDevice->Draw( (UINT)nVertexIndex , (UINT)iStartVertexIndex  );
+    }
+    return true;
 }
 
 bool  xD3D10RenderApi::drawRectf(IBaseTexture* pTexture, float vDestRect[4] , const xColor_4f& color)

@@ -20,7 +20,7 @@ public:
 	virtual size_t         nDrawElement(){ return 1 ;}
 	virtual IDrawElement*  drawElement(size_t idx) ;
 	virtual bool           setDrawElement(IDrawElement* pDrawElement , size_t idx);
-	virtual bool           updateFrame(unsigned long passedTime);
+	virtual bool           updateFrame(unsigned long passedTime, IRenderCamera* pCamera);
 protected:
 	xModelElement*         m_pModelElement;
 	std::ds_wstring        m_strModelFile;
@@ -40,7 +40,7 @@ public:
 	virtual size_t         nDrawElement(){ return 1 ;}
 	virtual IDrawElement*  drawElement(size_t idx) ;
 	virtual bool           setDrawElement(IDrawElement* pDrawElement , size_t idx);
-	virtual bool           updateFrame(unsigned long passedTime);
+	virtual bool           updateFrame(unsigned long passedTime, IRenderCamera* pCamera);
 };
 
 

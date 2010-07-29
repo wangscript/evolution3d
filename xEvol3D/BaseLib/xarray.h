@@ -157,6 +157,65 @@ namespace std
 		int              m_DimSize ;
 		bool             m_bNeedDelete;
 	};
+
+
+    template <typename T , typename _Allocate> class x2DArray
+    {
+    public:
+        x2DArray()
+        {
+            m_Data = NULL;
+        }
+
+        ~x2DArray()
+        {
+            free();
+        }
+
+        x2DArray(int Row , int Col)
+        {
+            create(Row,Col);
+        }
+
+        void create(int* DimSize)
+        {
+            create(DimSize[0],DimSize[1]);
+        }
+
+        void create(int Row , int Col)
+        {
+            int size = Col * Row;
+            m_Col = Col ;
+            m_Row = Row ;
+            m_Data = m_Alloc.allocate(size);
+        }
+
+        T* operator &()
+        {
+            return m_Data; 
+        }
+
+
+        T* operator[](int row)
+        {
+            assert(row < m_Row && row >= 0);
+            return &m_Data[row * m_Col];
+        }
+        void free()
+        {
+            if( m_Data)
+            {
+                m_Alloc.deallocate(m_Data , m_Row * m_Col);
+                m_Data = NULL;
+            }
+        }
+    public:
+        T*               m_Data;
+        int              m_Col;
+        int              m_Row;
+        _Allocate        m_Alloc;
+    };
+
 }
 
 #endif

@@ -53,7 +53,7 @@ public:
 	{
 		::GetKeyboardState(m_key);	
 		int sysVKey = UNMAPVKEY(vKey);
-		return m_key[sysVKey]&0x80;
+		return (m_key[sysVKey]&0x80) != 0;
 	}
 
 	bool          isCharKey(VIRTUAL_KEY vKey)

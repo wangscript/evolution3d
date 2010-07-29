@@ -39,6 +39,7 @@ void    BuildBonesFromNodes( sMaxNodes_t& out, sMaxNodes_t& in)
 }
 void    BuildMeshNodesFromNodes( sMaxNodes_t& out, sMaxNodes_t& in)
 {
+
 	size_t nMesh = in.size(); 
 	out.clear();
 	out.reserve(nMesh);
@@ -64,6 +65,7 @@ void    BuildMeshNodesFromNodes( sMaxNodes_t& out, sMaxNodes_t& in)
 
 void    ExtracAllNodes(INode* pNode, sMaxNodes_t& out)
 {
+
 	out.push_back(pNode);
     for(int i = 0 ; i  < pNode->NumberOfChildren() ; i++)
 	{		

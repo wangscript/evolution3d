@@ -347,7 +347,7 @@ bool  xBaseModel::drawMeshs(xCoreActionFrame* pActionFrame)
 
 bool  xBaseModel::draw(xCoreActionFrame* pActionFrame)
 {
-    setupAnimation();
+    setupAnimation(pActionFrame);
 	return drawMeshs(pActionFrame);
 }
 

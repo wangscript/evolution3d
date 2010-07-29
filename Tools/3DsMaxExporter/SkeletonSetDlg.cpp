@@ -160,10 +160,7 @@ void CSkeletonSetDlg::OnBnClickedSaveSkeleton()
 	wchar_t skeleton_file[128];
 	skeleton_file[0] = 0;
 
-	if(CMaxEnv::singleton().get_saved_filename(skeleton_file,
-		L"XEvol骨骼文件(*.skeleton)\0*.skeleton\0XEvol模型文件(*.xrm)\0*.xrm\0所有文件(*.*)\0*.*\0",
-		L"skeleton",
-		L"请选择一个骨架文件") == false)
+	if(CMaxEnv::singleton().get_saved_filename(skeleton_file,L"XEvol骨骼文件(*.skeleton)\0*.skeleton\0XEvol模型文件(*.xrm)\0*.xrm\0所有文件(*.*)\0*.*\0",	L"skeleton",	L"请选择一个骨架文件" , true) == false)
 	{
 		return ;
 	}

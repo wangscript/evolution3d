@@ -56,12 +56,14 @@ public:
 	bool                       setIndexBuffer(IInputBuffer* pVertexBuffer , size_t iOffset);
 	bool                       setVertexBuffer(IInputBuffer* pVertexBuffer ,   size_t bufIdx , size_t stride , size_t iOffset );
 	bool                       setVertexStream(IVertexStream* vertexStream);
-	bool                       drawPrimitive(size_t nVertex , size_t iStartVertex , ePrimtiveType pt);
+	bool                       drawPrimitiveIndex(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt);
+    bool                       drawPrimitive(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt);
 	bool                       drawRectf(IBaseTexture* pTexture, float vDestRect[4] , const xColor_4f& color);
 	bool                       drawRectf(IBaseTexture* pTexture, float vDestRect[4] ,float vSrcRect[4]  , const xColor_4f& color);
 	void                       set2DTexture(int iStage , IBaseTexture* pTexture);
 	void                       set2DTexture(int iStage , IBaseTexture* pTexture , float _srcRect[4]);
 	I2DRectObject*             create2DRectObject();
+    I2DRectObject*             def2DObject(){ return m_pDef2DRect ; }
 	bool                       draw2DRect(I2DRectObject* p2DRect);
     bool                       beginScene();
     bool                       endScene();

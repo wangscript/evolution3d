@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="State">
+      <UniqueIdentifier>{30dd9129-f719-4045-8d95-221039431a4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\Blend">
+      <UniqueIdentifier>{45c44619-f72e-48f9-8ef6-a525b754ed6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\Rasterizer">
+      <UniqueIdentifier>{80afbf23-f73f-43ee-a86b-3b0cc9ef65d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\Sampler">
+      <UniqueIdentifier>{57a34e27-4bf2-45ce-a9f8-60ae27d608cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\StencilDepth">
+      <UniqueIdentifier>{85aa51a0-632a-4fcc-aaac-319d53c88ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xui">
+      <UniqueIdentifier>{dbbd5e57-fa0a-433f-b4d1-f49719fb7407}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="objPlacement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SteroDemo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xuiDemoInfoPannel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="objPlacement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SteroDemo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xuiDemoInfoPannel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\bin\shader\blend\AlphaBlend.blend">
+      <Filter>State\Blend</Filter>
+    </None>
+    <None Include="..\..\bin\shader\blend\ColorSel.blend">
+      <Filter>State\Blend</Filter>
+    </None>
+    <None Include="..\..\bin\shader\blend\Default.blend">
+      <Filter>State\Blend</Filter>
+    </None>
+    <None Include="..\..\bin\shader\blend\Font.Blend.blend">
+      <Filter>State\Blend</Filter>
+    </None>
+    <None Include="..\..\bin\shader\rasterizer\Default.ras">
+      <Filter>State\Rasterizer</Filter>
+    </None>
+    <None Include="..\..\bin\shader\sampler\Default.sampler">
+      <Filter>State\Sampler</Filter>
+    </None>
+    <None Include="..\..\bin\shader\sampler\FontLinear.sampler">
+      <Filter>State\Sampler</Filter>
+    </None>
+    <None Include="..\..\bin\shader\sampler\FontPoint.sampler">
+      <Filter>State\Sampler</Filter>
+    </None>
+    <None Include="..\..\bin\shader\zstencil\Default.zs">
+      <Filter>State\StencilDepth</Filter>
+    </None>
+    <None Include="..\..\bin\shader\zstencil\Overlay.zs">
+      <Filter>State\StencilDepth</Filter>
+    </None>
+    <None Include="..\..\bin\xui\comonctrl.xml">
+      <Filter>xui</Filter>
+    </None>
+    <None Include="..\..\bin\xui\infopanel.xml">
+      <Filter>xui</Filter>
+    </None>
+    <None Include="..\..\bin\demoScene.xml" />
+    <None Include="..\..\bin\system.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SteroDemo.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

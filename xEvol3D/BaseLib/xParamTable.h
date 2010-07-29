@@ -71,7 +71,7 @@ public:
 public:
 	template< typename _Type> _Type* value(HASHVALUE valueName , _Type* pNull)
 	{
-		void* pRet = value(HASHVALUE valueName);
+		void* pRet = value(valueName);
 		return (_Type*)pRet;
 	};
 

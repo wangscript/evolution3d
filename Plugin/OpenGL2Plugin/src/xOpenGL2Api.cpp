@@ -908,7 +908,7 @@ bool xGL2RenderApi::endDrawPrimitive()
       return true;
 }
 
-bool xGL2RenderApi::drawPrimitive(size_t nVertex , size_t iStartVertex , ePrimtiveType pt)
+bool xGL2RenderApi::drawPrimitiveIndex(size_t nVertex , size_t iStartVertex , ePrimtiveType pt)
 {
       setPrimitiveType(pt);
       m_pGL2Device->DrawIndexed( (UINT)nVertex , (UINT)iStartVertex , 0 );
@@ -923,7 +923,7 @@ bool xGL2RenderApi::draw(IInputBuffer* pIdxBuffer , size_t nVertex , size_t iSta
       if(false == beginDrawPrimitive() ) 
             return false;
 
-      bool bDrawRet = drawPrimitive(nVertex , iStartVertex , pt);
+      bool bDrawRet = drawPrimitiveIndex(nVertex , iStartVertex , pt);
 
       bool bRet = endDrawPrimitive();
 
@@ -935,7 +935,7 @@ bool xGL2RenderApi::draw(size_t nVertex , size_t iStartVertex, ePrimtiveType pt)
       TAutoLocker<xGL2Locker> aLocker(m_pDevLocker);
       if(false == beginDrawPrimitive() ) return false;
 
-      bool bDrawRet = drawPrimitive(nVertex , iStartVertex , pt);
+      bool bDrawRet = drawPrimitiveIndex(nVertex , iStartVertex , pt);
       bool bRet = endDrawPrimitive();
 
       return bDrawRet&bRet;

@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define PATH_DOTSLASH L".\\"
 #endif
 
-#ifdef _LINUX
+#ifdef _UNIX
 #define PATH_SPLITTER '/'
 #define PATH_SPLITTER_STRING L"/"
 #define PATH_DOTSLASH L"./"

@@ -5,7 +5,7 @@
 sampler2D    DiffuseTexture : register(s0);
 struct PS_INPUT
 {
-      float2 Tex      : TEXCOORD0;
+      float4 Tex      : TEXCOORD0;
       float4 Color    : COLOR;
 };
 ///}}

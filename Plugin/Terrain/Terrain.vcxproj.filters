@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{35953753-2c81-422b-a4a6-642f134c9067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{3787f91f-a1bb-4185-8f0f-64a14286ab18}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\xSimpleHeightMap.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xTerrainData.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xTerrainDefinations.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xTerrainIndexUtil.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xTerrainTool.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\xSimpleHeightMap.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xTerrainData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xTerrainIndexUtil.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xTerrainTool.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainPlugin.cpp" />
+  </ItemGroup>
+</Project>

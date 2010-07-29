@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="State">
+      <UniqueIdentifier>{b247bd6d-e9c5-4624-96b7-b81d4459fc35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\Blend">
+      <UniqueIdentifier>{7d31163d-524e-4e81-94cd-11bc8f1d5eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\Rasterizer">
+      <UniqueIdentifier>{4572858f-b357-4570-b08d-f995fc7a7ed7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\Sampler">
+      <UniqueIdentifier>{92b3f95b-7b8d-4ae3-b123-94fbc6d55064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State\StencilDepth">
+      <UniqueIdentifier>{4fa27d2d-41b2-4d5e-989e-c5c0424e634f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xui">
+      <UniqueIdentifier>{d256637c-9a61-49f1-8df3-d55c8797a8ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{53051796-3429-4176-ae3e-a749b379aa55}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="objPlacement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTracerDemo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xuiDemoInfoPannel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="objPlacement.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RayTracerDemo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xuiDemoInfoPannel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\bin\shader\blend\AlphaBlend.blend">
+      <Filter>State\Blend</Filter>
+    </None>
+    <None Include="..\..\bin\shader\blend\ColorSel.blend">
+      <Filter>State\Blend</Filter>
+    </None>
+    <None Include="..\..\bin\shader\blend\Default.blend">
+      <Filter>State\Blend</Filter>
+    </None>
+    <None Include="..\..\bin\shader\blend\Font.Blend.blend">
+      <Filter>State\Blend</Filter>
+    </None>
+    <None Include="..\..\bin\shader\rasterizer\Default.ras">
+      <Filter>State\Rasterizer</Filter>
+    </None>
+    <None Include="..\..\bin\shader\sampler\Default.sampler">
+      <Filter>State\Sampler</Filter>
+    </None>
+    <None Include="..\..\bin\shader\sampler\FontLinear.sampler">
+      <Filter>State\Sampler</Filter>
+    </None>
+    <None Include="..\..\bin\shader\sampler\FontPoint.sampler">
+      <Filter>State\Sampler</Filter>
+    </None>
+    <None Include="..\..\bin\shader\zstencil\Default.zs">
+      <Filter>State\StencilDepth</Filter>
+    </None>
+    <None Include="..\..\bin\shader\zstencil\Overlay.zs">
+      <Filter>State\StencilDepth</Filter>
+    </None>
+    <None Include="..\..\bin\xui\comonctrl.xml">
+      <Filter>xui</Filter>
+    </None>
+    <None Include="..\..\bin\xui\infopanel.xml">
+      <Filter>xui</Filter>
+    </None>
+    <None Include="..\..\bin\Raytracer\shader\PrimaryRay.hlsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\..\bin\Raytracer\shader\RaytracerLight.hlsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\..\bin\Raytracer\raytracer.xml" />
+    <None Include="..\..\bin\raytracerScene.xml" />
+    <None Include="..\..\bin\system.xml" />
+    <None Include="..\..\bin\test.particle">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RayTracerDemo.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

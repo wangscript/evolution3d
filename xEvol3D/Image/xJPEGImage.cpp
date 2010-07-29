@@ -109,7 +109,7 @@ bool xJpegImage::load(int w , int h , ePIXEL_FORMAT fmt)
 
 
 
-bool xJpegImage::load(const wchar_t* wcsFileName , IMAGE_ORIGIN img_origin)
+bool xJpegImage::load(const wchar_t* wcsFileName , IMAGE_ORIGIN img_origin , unsigned int _arg )
 {
 	free();
 	return load(wcsFileName , NULL , 0 , img_origin);
@@ -163,9 +163,9 @@ void JpegTermSource(j_decompress_ptr cinfo)
 }
 
 
-bool xJpegImage::load(const wchar_t* wcsFileName,const char* mem_buf , int buf_len, IMAGE_ORIGIN img_origin)
+bool xJpegImage::load(const wchar_t* wcsFileName,const char* mem_buf , int buf_len, IMAGE_ORIGIN img_origin, unsigned int _arg )
 {
-	return load(wcsFileName , mem_buf , buf_len , PIXELFORMAT_R8G8B8A8 , img_origin );
+	return load(wcsFileName , mem_buf , buf_len , PIXELFORMAT_R8G8B8A8 , img_origin , _arg);
 }
 
 int  xJpegImage::__calScaleNum(int w , int h)
@@ -193,7 +193,7 @@ static ePIXEL_FORMAT GetAvilableFmt(ePIXEL_FORMAT fmt)
 	return PIXELFORMAT_B8G8R8; 
 }
 
-bool xJpegImage::load(const wchar_t* wcsFileName, const int8* mem_buf,int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin)
+bool xJpegImage::load(const wchar_t* wcsFileName, const int8* mem_buf,int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
 	free();
 

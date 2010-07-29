@@ -172,19 +172,37 @@ bool xFontLoader::load(xXmlNode* pXMLNode)
 HFontRender xFontLoader::findFont(const wchar_t* familly, const wchar_t* name, bool loadImm)
 {
 	std::ds_wstring fontFullName = std::ds_wstring(familly) + L":" + name;
-	xFontManager* pFontMgr  = dynamic_cast<xFontManager*>(this);
+	xFontManager* pFontMgr  = m_pThis;
 	return pFontMgr->findFont( fontFullName.c_str() , loadImm);
 }
 
 HFontRender xFontLoader::findFont(const wchar_t* name , bool loadImm)
 {
-	xFontManager* pFontMgr  = dynamic_cast<xFontManager*>(this);
+	xFontManager* pFontMgr  = m_pThis;
+
+    //¼ì²éMixed Font;
+    int fontId = xStringHash( name );
+    FontNodeMap::iterator pos = m_FontNodeMap.find(fontId);
+    if(pos == m_FontNodeMap.end())
+        return false;
+    xXmlNode* pNode = pos->second;
+    if( pNode->name() == std::wstring(L"mixed") )
+    {
+        const  wchar_t*  pUSCFontName   = pNode->value(L"unicode");
+        const  wchar_t*  pAsciiFontName = pNode->value(L"ascii");
+        findFont(pUSCFontName , true);
+        if(pAsciiFontName == NULL) pAsciiFontName = pUSCFontName;
+        findFont(pAsciiFontName , true);
+    }
+
+
+
 	return pFontMgr->add( name , 0 , loadImm);
 }
 
 bool xFontLoader::clearFonts()
 {
-	  xFontManager* pFontMgr  = dynamic_cast<xFontManager*>(this);
+	  xFontManager* pFontMgr  = m_pThis;
 	  if(pFontMgr) pFontMgr->unload(  ); 
       m_FontNodeMap.clear();
 	  m_FontXML.unload();

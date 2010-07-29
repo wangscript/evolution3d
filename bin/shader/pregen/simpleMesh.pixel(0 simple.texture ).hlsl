@@ -2,7 +2,7 @@
 //Begin import lib
 //Import lib name=libDip
 
-float4 dip_filter(float3x3 _filter , SamplerState _sampler , Texture2D _texture , float2 _xy, float2 texSize)
+float4 dip_filter(float3x3 _filter ,  sampler2D _texture , float2 _xy, float2 texSize)
 {
       float2 _filter_pos_delta[3][3] = 
       {
@@ -18,7 +18,7 @@ float4 dip_filter(float3x3 _filter , SamplerState _sampler , Texture2D _texture 
             {
                   float2 _xy_new = float2(_xy.x + _filter_pos_delta[i][j].x , _xy.y + _filter_pos_delta[i][j].y);
                   float2 _uv_new = float2(_xy_new.x/texSize.x , _xy_new.y/texSize.y);
-                  final_color += _texture.Sample( _sampler , _uv_new ) * _filter[i][j];
+                  final_color += tex2D( _texture , _uv_new ) * _filter[i][j];
             } 
       }
       return final_color;
@@ -38,43 +38,48 @@ float4  xposure(float4 _color , float gray , float ex)
 //============================================
 
 
-//Insert Node Declaration Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simpleMesh.pixel.hlsl
+//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d9\hlsl\simpleMesh.pixel.hlsl
 
-cbuffer TransformBuffer
+struct cTransformBuffer
 {
-      matrix matWorld;
-      matrix matView;
-      matrix matProject;
+      float4x4 matWorld;
+      float4x4 matView;
+      float4x4 matProject;
+      float4x4 matTexture;
 	  float4 cameraUp;
 	  float4 cameraPos;
 	  float4 cameraDir;
 	  float4 cameraArg;//[Near , Far , Fov , Aspect]
-}
+};
 
-SamplerState DefaultSampler : register(s0);
-Texture2D    DiffuseTexture : register(t0);
+cTransformBuffer TransformBuffer;
+
+sampler2D    DiffuseTexture : register(s0);
 float        AlphaRef;
-struct PS_INPUT
-{
-      float4 Pos      : SV_POSITION;
-      float4 Nor      : NORMAL;
-      float4 Color    : COLOR;
-      float4 Tan      : TANGENT;
-      float2 Tex      : TEXCOORD; 
 
-      float4 wPosition : TEXCOORD2;
-      float4 wNormal   : TEXCOORD3;  
-      float4 wTangent  : TEXCOORD4;   
+struct PS_INPUT
+{      
+     
+      float4 Color     : COLOR;
+
+      float4 Tex       : TEXCOORD0;  
+      float4 Pos       : TEXCOORD1;
+      float4 Nor       : TEXCOORD2;     
+      float4 Tan       : TEXCOORD3;      
+
+      float4 wPosition : TEXCOORD4;
+      float4 wNormal   : TEXCOORD5;  
+      float4 wTangent  : TEXCOORD6;  
 };
 //==================================================
 
 //============================================
 
-//Insert Node Code Node= D:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.texture.hlsl
+//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d9\lib\simple.texture.hlsl
 
-float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , Texture2D _texture )
+float4 COMMON_Texture(float4 _Color , float4 texCoord , sampler2D _texture )
 {
-      return _texture.Sample(_sampler, texCoord.xy) * _Color ;
+      return tex2D(_texture, texCoord.xy) * _Color ;
 }
 //============================================
 
@@ -82,16 +87,17 @@ float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , 
 //============================================
 //Begin Main Node'code 
 
-float4 main( PS_INPUT input) : SV_Target
+float4 main( PS_INPUT input) : COLOR0
 {
     float4 vDiffuse =  float4(1.0,1.0,1.0,1.0);//input.Color ;
 
    //Ó¦ÓÃÐÞ¸ÄÆ÷ name=simple.texture 
-   float4 Node_0_Ret = COMMON_Texture(vDiffuse , input.Tex , DefaultSampler , DiffuseTexture);
+   float4 Ret_ColorModify_Node0 = COMMON_Texture(vDiffuse , input.Tex , DiffuseTexture);
 
-   vDiffuse = Node_0_Ret; 
+   vDiffuse = Ret_ColorModify_Node0; 
 
+    //vDiffuse.w = 1.0f;
     if(vDiffuse.w <= AlphaRef)
        discard;
-    return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , clamp(vDiffuse.w , 0.0  , 1.0) );
+    return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , vDiffuse.w);// clamp(vDiffuse.w , 0.0  , 1.0) );
 }

@@ -1416,7 +1416,7 @@ int  xDXTImage::byteAlign()
 }
 
 
-bool xDXTImage::load(const wchar_t* fileName, IMAGE_ORIGIN img_origin)
+bool xDXTImage::load(const wchar_t* fileName, IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
 	m_ImgOrigin = img_origin;
 	std::ifstream _stream;
@@ -1437,7 +1437,7 @@ bool xDXTImage::load(const wchar_t* fileName, IMAGE_ORIGIN img_origin)
 	return true;
 }
 
-bool xDXTImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin)
+bool xDXTImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
 	m_ImgOrigin = img_origin;
 	if(mem_buf)
@@ -1446,12 +1446,12 @@ bool xDXTImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len,
 		_stream.set_buf((int8*)mem_buf , buf_len);
 		return __loadDDSFile(fileName , _stream);
 	}
-	return load(fileName , img_origin);
+	return load(fileName , img_origin , _arg);
 }
 
-bool xDXTImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin)
+bool xDXTImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
-	return load(fileName , mem_buf , buf_len , img_origin);
+	return load(fileName , mem_buf , buf_len , img_origin , _arg);
 }
 
 bool xDXTImage::free()

@@ -402,13 +402,15 @@ namespace XEvol3DModel
     typedef std::vector<sUVCoord_t> sUVCoords_t;
     typedef std::vector<sColor_t>   sColors_t;
 
-    enum
+    enum 
     {
-        ACTION_NONE    = 0    ,  //空动作。通常表示这是一个静态的死模型
-        ACTION_SKELENTON      ,  //骨骼动画模型的动作
-        ACTION_FA_MODEL       ,  //帧动画模型的动作
-        ACTION_SKEL_CHARACTOR ,  //骨骼角色的动作
-        ACTION_FA_CHARACTOR       ,  //帧动画角色的动作
+        eActType_None          = 0, 
+        eActType_Skeleton      = 1,
+        eActType_Keyframe      = 2,
+        eActType_Frame         = 3,
+        eActType_Blend         = 4,//两个动作融合(两个动作的按比例融合)
+        eActType_Transition    = 5,//两个动作过渡
+        eActType_Mix           = 6,//多个动作的混合
     };
 
     struct sActionInfo_t

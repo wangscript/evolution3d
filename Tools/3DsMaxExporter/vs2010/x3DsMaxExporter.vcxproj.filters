@@ -1,0 +1,758 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="静态模型导出">
+      <UniqueIdentifier>{e795ad4a-498e-4c1f-b661-111a365be9dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MAX数据包装">
+      <UniqueIdentifier>{b98a2401-3b2d-418a-bf9b-4515af059c7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="顶点动画模型">
+      <UniqueIdentifier>{cd0f128f-bc38-4706-aa0c-4bc9c4fa2df6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="骨骼动画模型">
+      <UniqueIdentifier>{879afec7-2eef-4ebf-82cf-38fbabf0c5c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="骨骼动画公用">
+      <UniqueIdentifier>{1b0c2c7c-1f42-4272-9041-565995a296ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="界面公用">
+      <UniqueIdentifier>{e57368f5-66a8-4e4e-a8b6-0c13bcd739d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D">
+      <UniqueIdentifier>{9efb641e-2532-444a-a05f-a4a81c55983f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\BaseLib">
+      <UniqueIdentifier>{e1a8f99d-c622-455a-952a-86197c6a5e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\BaseLib\xXMLParser">
+      <UniqueIdentifier>{e083ef39-00e9-4a84-93b0-03dd0ff4e993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\BaseLib\Logger">
+      <UniqueIdentifier>{4887f629-6080-46ee-8080-f756796f92c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\BaseLib\Multi-Language">
+      <UniqueIdentifier>{bf4405f3-b4b7-41a4-90f8-67b6cee21684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\BaseLib\ResourceManager">
+      <UniqueIdentifier>{6c652c09-d530-4a82-aec9-0557f9901466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\BaseLib\Object">
+      <UniqueIdentifier>{867f64e2-e0ea-479e-8921-18e4e8a14b0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\BaseLib\String">
+      <UniqueIdentifier>{92bd084c-e90f-41e9-8761-1840089fe6c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\xcomdoc">
+      <UniqueIdentifier>{93550d56-f457-4f1b-9dec-0c738f97b2cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\xcomdoc\inc">
+      <UniqueIdentifier>{e06f0bdb-8ed7-44c7-a418-d8b23f96007b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\xcomdoc\src">
+      <UniqueIdentifier>{a2b809fa-9589-4e15-b581-de424dd217b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\Mem">
+      <UniqueIdentifier>{22f6db3f-7adb-4d07-ba25-0d24560e9d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\zlib">
+      <UniqueIdentifier>{570edebd-8ffa-4371-9641-ecc6bdec1f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\zlib\header">
+      <UniqueIdentifier>{e7f9ec89-23e3-4668-b251-e2babd95dcd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\lzma">
+      <UniqueIdentifier>{028b88e4-352a-47aa-8382-a08b303972a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\lzma\h">
+      <UniqueIdentifier>{64c5eddb-bcd0-4245-a1e4-d51ac991366e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D\FileSystem">
+      <UniqueIdentifier>{3480e322-e9c2-4af5-9f1d-a26a08219850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xFolderDialog">
+      <UniqueIdentifier>{b3f0feec-29cf-4f2d-ac83-f14c3ba7377f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Document">
+      <UniqueIdentifier>{da5efc69-4657-4aa4-a429-189bf495970c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Command_ExpSkin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\KeyFrameController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MaxEnv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MeshExporterDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PannelCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WaterMeshDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\XEvolMaxExporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\XEvolMaxUtilObj.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\StaticMeshExportDlg.cpp">
+      <Filter>静态模型导出</Filter>
+    </ClCompile>
+    <ClCompile Include="..\StaticModelExport.cpp">
+      <Filter>静态模型导出</Filter>
+    </ClCompile>
+    <ClCompile Include="..\StaticModelExport_Helper.cpp">
+      <Filter>静态模型导出</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MaxMeshNode.cpp">
+      <Filter>MAX数据包装</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MaxMeshNode_Helper.cpp">
+      <Filter>MAX数据包装</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xExportFunction.cpp">
+      <Filter>MAX数据包装</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FrameAniModelExportDlg.cpp">
+      <Filter>顶点动画模型</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FrameAniModelExporter_Helper.cpp">
+      <Filter>顶点动画模型</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FrameAniModelExpoter.cpp">
+      <Filter>顶点动画模型</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SkeletonModelExpDlg.cpp">
+      <Filter>骨骼动画模型</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SkeletonModelExporter.cpp">
+      <Filter>骨骼动画模型</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SkeletonModelExporter_helper.cpp">
+      <Filter>骨骼动画模型</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ActionExporter.cpp">
+      <Filter>骨骼动画公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BoneGroupNameDlg.cpp">
+      <Filter>骨骼动画公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SetBoneGroupDlg.cpp">
+      <Filter>骨骼动画公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SetSkinGroupDlg.cpp">
+      <Filter>骨骼动画公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SkeletonActionExpDlg.cpp">
+      <Filter>骨骼动画公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SkeletonExp.cpp">
+      <Filter>骨骼动画公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SkeletonSetDlg.cpp">
+      <Filter>骨骼动画公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SkinExporter.cpp">
+      <Filter>骨骼动画公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LogTextDlg.cpp">
+      <Filter>界面公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MaxNodeTree.cpp">
+      <Filter>界面公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\MeshPropertyDlg.cpp">
+      <Filter>界面公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NodeViewDlg.cpp">
+      <Filter>界面公用</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\stl_dllalloc.cpp">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xBaseMath.cpp">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xIDManager.cpp">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xParamTable.cpp">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xProperties.cpp">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xXmlDocBuilder.cpp">
+      <Filter>xEvol3D\BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xXmlDocument.cpp">
+      <Filter>xEvol3D\BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xXmlManager.cpp">
+      <Filter>xEvol3D\BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xLogger.cpp">
+      <Filter>xEvol3D\BaseLib\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xI18N.cpp">
+      <Filter>xEvol3D\BaseLib\Multi-Language</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xStringTable.cpp">
+      <Filter>xEvol3D\BaseLib\Multi-Language</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xBaseObject.cpp">
+      <Filter>xEvol3D\BaseLib\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xBaseLexer.cpp">
+      <Filter>xEvol3D\BaseLib\String</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\BaseLib\xstring.cpp">
+      <Filter>xEvol3D\BaseLib\String</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcdDirEnum.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcdFile.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcdFileImp.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcdReadWriterBuffer.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcdStream.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcdStringHash.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcdUtil.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcomdir.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcomdoc.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\xcomdocbase.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\xcomdoc\zlibStream.cpp">
+      <Filter>xEvol3D\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\FastMemAlloc.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\FastSmallMemAlloc.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\FixMemAlloc.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\FixSmallMemAlloc.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\mem.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\mem_dbg.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\mem_operator.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\mem_operator_dbg.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\MemPool.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\mem\MemState.cpp">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\adler32.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\compress.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\crc32.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\deflate.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\gzio.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\infback.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\inffast.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\inflate.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\inftrees.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\trees.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\uncompr.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\zlib\zutil.c">
+      <Filter>xEvol3D\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\Alloc.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\Bra.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\LzFind.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\LzFindMt.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\Lzma2Dec.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\Lzma2Enc.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\LzmaDec.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\LzmaEnc.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\LzmaLib.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\MtCoder.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\lzmza\Threads.c">
+      <Filter>xEvol3D\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\xEvol3D\fs\xFileSystem.cpp">
+      <Filter>xEvol3D\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xFolderDialog\XFileOpenListView.cpp">
+      <Filter>xFolderDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xFolderDialog\XFolderDialog.cpp">
+      <Filter>xFolderDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xFolderDialog\XHistoryCombo.cpp">
+      <Filter>xFolderDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xFolderDialog\xWinVer.cpp">
+      <Filter>xFolderDialog</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\XEvolMaxExporter.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\bitmap1.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\icon1.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\res\XEvolMaxExporter.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Skeleton-Bone-DOC.htm">
+      <Filter>骨骼动画公用</Filter>
+    </None>
+    <None Include="..\骨骼动画模型数据文件结构.txt">
+      <Filter>骨骼动画公用</Filter>
+    </None>
+    <None Include="..\StaticMesh.html">
+      <Filter>Document</Filter>
+    </None>
+    <None Include="..\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\XEvolMaxExporter.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="..\xFolderDialog\XFolderDialog.rc">
+      <Filter>xFolderDialog</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\StaticMeshExportDlg.h">
+      <Filter>静态模型导出</Filter>
+    </ClInclude>
+    <ClInclude Include="..\StaticModelExport.h">
+      <Filter>静态模型导出</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DataDefine.h">
+      <Filter>MAX数据包装</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Math.h">
+      <Filter>MAX数据包装</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MaxMeshNode.h">
+      <Filter>MAX数据包装</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xExportFunction.h">
+      <Filter>MAX数据包装</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FrameAniModelExportDlg.h">
+      <Filter>顶点动画模型</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FrameAniModelExpoter.h">
+      <Filter>顶点动画模型</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SkeletonModelExpDlg.h">
+      <Filter>骨骼动画模型</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SkeletonModelExporter.h">
+      <Filter>骨骼动画模型</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ActionExporter.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ActionExporter_Helper.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BoneGroupNameDlg.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SetBoneGroupDlg.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SetSkinGroupDlg.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Skeleton_Helper.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SkeletonActionExpDlg.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SkeletonExp.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SkeletonSetDlg.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SkinExporter.h">
+      <Filter>骨骼动画公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MaxEnv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MeshExporterDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WaterMeshDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\wm3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\XEvolMaxExporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LogTextDlg.h">
+      <Filter>界面公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MaxNodeTree.h">
+      <Filter>界面公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\MeshPropertyDlg.h">
+      <Filter>界面公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NodeViewDlg.h">
+      <Filter>界面公用</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\stl_dllalloc.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xarray.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xBaseMath.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xEvol3DAPI.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xEvol3DBaseInc.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xIDManager.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xParamTable.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xProperties.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xRect.h">
+      <Filter>xEvol3D\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xXmlDocBuilder.h">
+      <Filter>xEvol3D\BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xXmlDocument.h">
+      <Filter>xEvol3D\BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xXmlFileStream.h">
+      <Filter>xEvol3D\BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xXmlManager.h">
+      <Filter>xEvol3D\BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\logstream.h">
+      <Filter>xEvol3D\BaseLib\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xLogger.h">
+      <Filter>xEvol3D\BaseLib\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xI18N.h">
+      <Filter>xEvol3D\BaseLib\Multi-Language</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xStringTable.h">
+      <Filter>xEvol3D\BaseLib\Multi-Language</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xResourceMgr.h">
+      <Filter>xEvol3D\BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xResPackageMgr.h">
+      <Filter>xEvol3D\BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xResPackageMgrTool.h">
+      <Filter>xEvol3D\BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xBaseObject.h">
+      <Filter>xEvol3D\BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xObjectFactory.h">
+      <Filter>xEvol3D\BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xRefCountObjPtr.h">
+      <Filter>xEvol3D\BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xBaseLexer.h">
+      <Filter>xEvol3D\BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xstring.h">
+      <Filter>xEvol3D\BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\BaseLib\xStringHash.h">
+      <Filter>xEvol3D\BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcdDirEnum.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcdReadBuffer.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcdStringHash.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcdUtil.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcdWriteBuffer.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcomdir.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcomdoc.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcomdoc_common.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcomdocbase.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xcomdocImp.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\xdocfstream.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\xcomdoc\zlibStream.h">
+      <Filter>xEvol3D\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\FastMemAlloc.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\FastSmallMemAlloc.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\FixMemAlloc.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\FixSmallMemAlloc.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\mem.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\mem_operator.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\MemAlloc.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\memdef.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\MemPool.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\MemState.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\mstream.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\ObjectPool.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\mem\stl_alloc.h">
+      <Filter>xEvol3D\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\crc32.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\deflate.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\inffast.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\inffixed.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\inflate.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\inftrees.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\trees.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\zconf.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\zconf.in.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\zlib.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\zlib\zutil.h">
+      <Filter>xEvol3D\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\Alloc.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\Bra.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\LzFind.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\LzFindMt.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\LzHash.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\Lzma2Dec.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\Lzma2Enc.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\LzmaDec.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\LzmaEnc.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\LzmaLib.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\MtCoder.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\Threads.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\lzmza\Types.h">
+      <Filter>xEvol3D\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\xEvol3D\fs\xFileSystem.h">
+      <Filter>xEvol3D\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xFolderDialog\XFileOpenListView.h">
+      <Filter>xFolderDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xFolderDialog\XFolderDialog.h">
+      <Filter>xFolderDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xFolderDialog\XFolderDialogRes.h">
+      <Filter>xFolderDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xFolderDialog\XHistoryCombo.h">
+      <Filter>xFolderDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xFolderDialog\xWinVer.h">
+      <Filter>xFolderDialog</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

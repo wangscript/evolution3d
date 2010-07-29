@@ -70,7 +70,10 @@ void xTerrainData::patchView(unsigned int startX, unsigned int startY, unsigned 
 	outSurface.minV = (float)startY / (float)m_surfResY;
 	outSurface.sizeU = (float)sampleX / (float)m_surfResX;
 	outSurface.sizeV = (float)sampleY / (float)m_surfResY;
-	outSurface.hTexture = m_hTexture;
+	outSurface.hTexture[0] = m_hTexture[0];
+	outSurface.hTexture[1] = m_hTexture[1];
+	outSurface.hTexture[2] = m_hTexture[2];
+	outSurface.hTexture[3] = m_hTexture[3];
 }
 
 bool xTerrainData::load(xBaseTextureMgr* pTexMgr, xXmlNode* pNode)
@@ -81,8 +84,8 @@ bool xTerrainData::load(xBaseTextureMgr* pTexMgr, xXmlNode* pNode)
 		return false;
 	}
 	m_ccImageName = pVal->value();
-	// 读取DEM数据
-	TIFF* pTiff = XTIFFOpenW( _RES_ABSPATH_(m_ccImageName.c_str()), "r");
+    // 读取DEM数据
+    TIFF* pTiff = XTIFFOpenW( _RES_ABSPATH_(m_ccImageName.c_str()), "r");
 	if (!pTiff)
 	{
 		return false;
@@ -190,8 +193,14 @@ bool xTerrainData::load(xBaseTextureMgr* pTexMgr, xXmlNode* pNode)
 	}
 
 	// 加载Surface
-	m_ccTextureName = pNode->findValue(L"TempSurfData")->value();
-	m_hTexture  = pTexMgr->loadTexture(_RES_ABSPATH_( m_ccTextureName.c_str() ) , true , 0);
+	m_ccTextureName[0] = pNode->findValue(L"TempSurfData")->value();
+	m_ccTextureName[1] = pNode->findValue(L"TempSurfDataL1")->value();
+	m_ccTextureName[2] = pNode->findValue(L"TempSurfDataL2")->value();
+	m_ccTextureName[3] = pNode->findValue(L"TempSurfDataL3")->value();
+	m_hTexture[0]  = pTexMgr->loadTexture(_RES_ABSPATH_( m_ccTextureName[0].c_str() ) , true , 0);
+	m_hTexture[1]  = pTexMgr->loadTexture(_RES_ABSPATH_( m_ccTextureName[1].c_str() ) , true , 0);
+	m_hTexture[2]  = pTexMgr->loadTexture(_RES_ABSPATH_( m_ccTextureName[2].c_str() ) , true , 0);
+	m_hTexture[3]  = pTexMgr->loadTexture(_RES_ABSPATH_( m_ccTextureName[3].c_str() ) , true , 0);
 	m_surfResX	= pNode->findValue(L"TempSurfSizeX")->int_value();
 	m_surfResY	= pNode->findValue(L"TempSurfSizeY")->int_value();
 
@@ -217,7 +226,10 @@ bool xTerrainData::load(xBaseTextureMgr* pTexMgr, xXmlNode* pNode)
 bool xTerrainData::save(xXmlNode* pNode)
 {
 	pNode->insertValue(L"TempDEMData")->setValue(m_ccImageName.c_str());
-	pNode->insertValue(L"TempSurfData")->setValue(m_ccTextureName.c_str());
+	pNode->insertValue(L"TempSurfData")->setValue(m_ccTextureName[0].c_str());
+	pNode->insertValue(L"TempSurfDataL1")->setValue(m_ccTextureName[1].c_str());
+	pNode->insertValue(L"TempSurfDataL2")->setValue(m_ccTextureName[2].c_str());
+	pNode->insertValue(L"TempSurfDataL3")->setValue(m_ccTextureName[3].c_str());
 	pNode->insertValue(L"TempSurfSizeX")->setValue(m_surfResX);
 	pNode->insertValue(L"TempSurfSizeY")->setValue(m_surfResY);
 
@@ -329,7 +341,7 @@ float xTerrainDataSet::getHeight(float X, float Y)
 	{
 		if ( m_TerrainHeightDatas[i]->getXID() == xid && m_TerrainHeightDatas[i]->getYID() == yid )
 		{
-			return m_TerrainHeightDatas[i]->getHeight(X,Y);
+			return m_TerrainHeightDatas[i]->getHeightByCoord(X,Y);
 		}
 	}
 

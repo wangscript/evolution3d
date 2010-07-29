@@ -148,6 +148,17 @@ xXmlNode* xEvol3DEngine::sysConfig()
 {
 	return m_cfgDocument->root();
 }
+void xEvol3DEngine::saveConfigure()
+{
+    m_cfgDocument->setXMLStyle(true);
+    m_cfgDocument->save( m_cfgFile.c_str() );
+}
+
+void xEvol3DEngine::saveConfigure(const wchar_t* fileName)
+{
+    m_cfgDocument->setXMLStyle(true);
+    m_cfgDocument->save( fileName );
+}
 
 xXmlNode* xEvol3DEngine::sysCfgNode(const wchar_t* sector , bool bCreated)
 {
@@ -396,6 +407,15 @@ bool xEvol3DEngine::initRenderer( const wchar_t* projectName, void* hWnd , xXmlN
 	}
 	m_pModelMgr= xBaseModelMgr::createInstance(m_pRenderApi , m_pTexMgr , L"ModelMgr");
 	m_pModelMgr->setPathMgr( &m_ResPathMgr );
+
+    //创建给骨骼动画用的BoneFrame;//
+    IInputBuffer* pBoneFrameBuffer = m_pRenderApi->findInputBuffer(L"BoneFrame");
+    if(pBoneFrameBuffer )
+        return true;
+
+    pBoneFrameBuffer = m_pRenderApi->createConstBuffer( sizeof(xvec4) * 1024); 
+    m_pRenderApi->setInputBuffer(L"BoneFrame" , pBoneFrameBuffer);
+
 	return true;
 }
 xResPathManager*    xEvol3DEngine::getResPathMgr(const wchar_t* pName)

@@ -102,7 +102,7 @@ public:
 	bool             HideMEdUI();
 	bool             ShowMEdUI();
 	const wchar_t*   typeName();
-
+    bool             IsVisible() { return IsWindowVisible() ; } 
 	bool             FindModelFile(xDirEnumItem& item, CModelResViewTreeItem* pRootItem);
 protected:
 	afx_msg int  OnCreate(LPCREATESTRUCT lpCreateStruct);

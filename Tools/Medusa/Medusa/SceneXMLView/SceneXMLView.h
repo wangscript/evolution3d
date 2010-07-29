@@ -41,6 +41,7 @@ public:
 	bool             destroyMEdUI() ;
 	bool             HideMEdUI();
 	bool             ShowMEdUI();
+    bool             IsVisible() { return m_pView->IsWindowVisible() ; } 
 	HWND             hWnd() ;
 	const wchar_t*   title();
 	const wchar_t*   name();

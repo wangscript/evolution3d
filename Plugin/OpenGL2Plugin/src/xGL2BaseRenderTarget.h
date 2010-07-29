@@ -14,7 +14,7 @@ class xGL2RenderApi;
 class xGL2BaseRenderTarget : public IRenderTarget
 {
 protected:
-	xGL2RenderApi*          m_pD10Api;
+	xGL2RenderApi*          m_pGL2Api;
 	IBaseTexture*             m_pBaseTexture;
 	IMPL_REFCOUNT_OBJECT_INTERFACE(xGL2BaseRenderTarget);
 public:

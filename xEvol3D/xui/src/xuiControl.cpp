@@ -61,6 +61,11 @@ bool xuiControl::onMMouseDown(xMouseMsg& mEvent)
     return false;
 }
 
+bool xuiControl::onLMouseDbClick(xMouseMsg& mEvent)
+{
+    return false;
+}
+
 bool xuiControl::onMMouseRelease(xMouseMsg& mEvent)
 {
     return false;

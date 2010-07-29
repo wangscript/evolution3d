@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "objPlacement.h"
 #include "SteroDemo.h"
+#include "BaseLib/xBaseMath.h"
 xSceneSelection::xSceneSelection()
 {
 	m_pCurGizmo     = NULL;
@@ -189,6 +190,7 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 		ISceneNode* pSelNode = NULL;
 		if(val.x > 10000)
 		{
+            //val.x = xRoundToByte(val.x, 4);
 			pSelNode = dynamic_cast<ISceneNode*> ( (IBaseObject*)val.x);
 		}
 

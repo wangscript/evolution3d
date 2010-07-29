@@ -40,7 +40,7 @@ xuiDialog::xuiDialog(xuiWindow* parent , xuiWindowManager* pMgr)
 xuiDialog::~xuiDialog()
 {
     if(m_pCaption) m_pCaption->ReleaseObject();
-	size_t _nHotAreas = m_vHotAreas.size() ;
+    size_t _nHotAreas = m_vHotAreas.size() ;
     for(size_t i = 0 ; i < _nHotAreas ; i ++)
     {
         m_vHotAreas[i]->disable();
@@ -71,6 +71,12 @@ bool xuiDialog::onCommand(eXUIWinCommand  _command, xuiWindow* pCtrl, int param1
 bool xuiDialog::onNotify(eXUIWinNotifyEvent _event, xuiWindow* pWndSender , int param1 , int param2)
 {
     return false;
+}
+
+bool  xuiDialog::leftMouseDbClick(xMouseMsg& mEvent)
+{
+    setActive(true);
+    return xuiDialogBase::leftMouseDbClick(mEvent);
 }
 
 bool  xuiDialog::leftMouseDown(xMouseMsg& mEvent)
@@ -313,6 +319,8 @@ bool xuiDialog::_onMouseMsg(xMouseMsg& mEvent)
         return mouseMove(mEvent);
     case WIN_MOUSE_WHEEL:
         return mouseWhell(mEvent);
+    case WIN_LMOUSE_DB_CLICK:
+        return leftMouseDbClick(mEvent);
     }
     return false;
 }

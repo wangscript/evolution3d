@@ -62,7 +62,18 @@ bool IAppLayer::postUpdateFrame(long timePassed )
 {
 	return true;
 }
+bool IAppLayer::onLogicTick(long passedTime)
+{
+    return true;
+}
 
-
+bool IAppLayer::onRenderTick(long passedTime)
+{
+    return true;
+}
+bool IAppLayer::onMessage(xWindowMsg& msg)
+{
+    return false;
+}
 END_NAMESPACE_XEVOL3D
 

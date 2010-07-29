@@ -8,7 +8,7 @@ sampler2D VTextue;
 float     cTime;
 struct PS_INPUT 
 {
-      float2 Texcoord :        TEXCOORD0;
+      float4 Texcoord :        TEXCOORD0;
 };
 
 struct PS_OUTPUT
@@ -29,9 +29,9 @@ PS_OUTPUT main( PS_INPUT Input )
 {      
       //===≤…—˘ ‰»Î∆˜=====================================
       float4 yuvColor;
-      yuvColor.x       = tex2D( YTextue, Input.Texcoord ).x;
-      yuvColor.y       = tex2D( UTextue, Input.Texcoord ).x;
-      yuvColor.z       = tex2D( VTextue, Input.Texcoord ).x;
+      yuvColor.x       = tex2D( YTextue, Input.Texcoord.xy ).x;
+      yuvColor.y       = tex2D( UTextue, Input.Texcoord.xy ).x;
+      yuvColor.z       = tex2D( VTextue, Input.Texcoord.xy ).x;
       yuvColor.w       = 1.0f;
       PS_OUTPUT RetVal  ;
       //================================================== 

@@ -67,9 +67,9 @@ public:
 
 	bool         load(xImageSize size);
 	bool         load(int w , int h , ePIXEL_FORMAT fmt);
-	bool         load(const wchar_t* fileName, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER);
-	bool         load(const wchar_t* fileName,const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER);
-	bool         load(const wchar_t* filename,const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin = IO_LEFT_LOWER);
+	bool         load(const wchar_t* fileName, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER, unsigned int _arg = 0);
+	bool         load(const wchar_t* fileName,const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER, unsigned int _arg = 0);
+	bool         load(const wchar_t* filename,const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin = IO_LEFT_LOWER, unsigned int _arg = 0);
 	bool         save(const wchar_t* fileName);
 	bool         free();
 

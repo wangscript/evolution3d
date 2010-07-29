@@ -22,7 +22,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "xMathLib.h"
 
 BEGIN_NAMESPACE_XMATHLIB
+
+EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<double>;
 EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<float>;
 EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<int>;
+EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<short>;
+EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<char>;
+EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<wchar_t>;
 EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<unsigned int>;
+EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<unsigned short>;
+EXPIMP_TEMPLATE template  class _XEVOL_BASE_API_ TVec4<unsigned char>;
 END_NAMESPACE_XMATHLIB

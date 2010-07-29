@@ -2,16 +2,7 @@
 #include "xSceneObjectRes.h"
 #include "../fs/xFileSystem.h"
 BEGIN_NAMESPACE_XEVOL3D
-IMPL_BASE_OBJECT_DLLSAFE(ISceneObjectRes ,  ISceneObject);
-ISceneObjectRes::ISceneObjectRes(ISceneGraph*  pScene , int arg) 
-:ISceneObject(pScene , arg)
-{
-}
 
-ISceneObjectRes::~ISceneObjectRes()
-{
-
-}
 size_t xSceneObjectResName::hash_value() const
 {
 	return m_hashValue;
@@ -29,7 +20,6 @@ const wchar_t*   xSceneObjectResLoader::ext()
 }
 
 
-
 xSceneObjectResLoader::xSceneObjectResLoader()
 {
 	m_ext = L"";
@@ -41,7 +31,7 @@ xSceneObjectResLoader::~xSceneObjectResLoader()
 
 }
 
-unsigned  int  xSceneObjectResLoader::_getResSize(ISceneObjectRes* pRes)
+unsigned  int  xSceneObjectResLoader::_getResSize(ISceneObject* pRes)
 {
 	if(pRes == NULL) return 0;
 
@@ -57,12 +47,12 @@ void xSceneObjectResLoader::sceneGraph(ISceneGraph* pSceneGraph)
 	m_pSceneGraph = pSceneGraph ; 
 }
 
-bool xSceneObjectResLoader::_isResLoaded(ISceneObjectRes* pRes)
+bool xSceneObjectResLoader::_isResLoaded(ISceneObject* pRes)
 {
 	return pRes && pRes->isLoaded();
 }
 
-bool xSceneObjectResLoader:: _loadFromFile(const std::ds_wstring& strResName , ISceneObjectRes* pRes, unsigned int arg)
+bool xSceneObjectResLoader:: _loadFromFile(const std::ds_wstring& strResName , ISceneObject* pRes, unsigned int arg)
 {
 	//支持目录里散开的xrm
 	//支持目录里打包的xrm
@@ -81,19 +71,19 @@ bool xSceneObjectResLoader:: _loadFromFile(const std::ds_wstring& strResName , I
 	return false;
 }
 
-bool xSceneObjectResLoader::_loadFromPackage(xcomdoc& doc , const std::ds_wstring& _name , ISceneObjectRes* pRes, unsigned int arg)
+bool xSceneObjectResLoader::_loadFromPackage(xcomdoc& doc , const std::ds_wstring& _name , ISceneObject* pRes, unsigned int arg)
 {
 	//在包里散落的模型文件，这个是打包器推荐的方式
 	if(pRes->load(doc,_name.c_str(), arg) )
 		return true;
 
 	//从包里的xrm里加载
-	xcomdocstream* pstream = doc.create_stream(_name.c_str());
+	xcomdocstream* pstream = doc.open_stream(_name.c_str());
 	if(pstream == NULL)
 	{
 		//加一个扩展名
 		std::ds_wstring nameWithExt = _name + m_ext;
-		pstream = doc.create_stream(nameWithExt.c_str());
+		pstream = doc.open_stream(nameWithExt.c_str());
 	}
 
 	//加了扩展名，依然找不到那个stream,表示失败了。
@@ -115,14 +105,14 @@ bool xSceneObjectResLoader::_loadFromPackage(xcomdoc& doc , const std::ds_wstrin
 	return ret; 
 }
 
-bool xSceneObjectResLoader::_loadResource  (const xSceneObjectResName& resName , ISceneObjectRes* & pRes , int& ResSize, unsigned int arg)
+bool xSceneObjectResLoader::_loadResource  (const xSceneObjectResName& resName , ISceneObject* & pRes , int& ResSize, unsigned int arg)
 {
 	ResSize = 0;
 	bool needDeletePRes = false;
 	if(pRes == NULL)
 	{
 		needDeletePRes = true;
-		pRes = (ISceneObjectRes*)xSceneObjectFactoryMgr::singleton()->createInstance(resName.typeName().c_str() , m_pSceneGraph , arg);
+		pRes = (ISceneObject*)xSceneObjectFactoryMgr::singleton()->createInstance(resName.typeName().c_str() , m_pSceneGraph , arg);
 		if(pRes == NULL)
 			return false;
 	}
@@ -179,14 +169,14 @@ bool xSceneObjectResLoader::_loadResource  (const xSceneObjectResName& resName ,
 
 }
 
-bool xSceneObjectResLoader::_unloadResource(const xSceneObjectResName& resName , ISceneObjectRes* & pRes , unsigned int& TotalResSize)
+bool xSceneObjectResLoader::_unloadResource(const xSceneObjectResName& resName , ISceneObject* & pRes , unsigned int& TotalResSize)
 {
 	TotalResSize -= pRes->memUsage();
 	pRes->unload();
 	return true;
 }
 
-void xSceneObjectResLoader::_deleteResource(const xSceneObjectResName& resName , ISceneObjectRes* pRes)
+void xSceneObjectResLoader::_deleteResource(const xSceneObjectResName& resName , ISceneObject* pRes)
 {
 	pRes->ReleaseObject();
 	pRes = NULL;

@@ -8,10 +8,11 @@ CMedusaMainUI::CMedusaMainUI()
 {
 	m_pMainFrame = NULL;
 	m_IDManager.setBase(ID_PLUGIN_ID_0);
+    m_CmdQueueLast = 0;
 	for(int i = 0 ; i < MAX_UNDO ; i ++)
-	{
-		m_CommandQueue[i] = UNDO_QUEUE_MASK;
-	}
+    {
+        m_CommandQueue[i] = UNDO_QUEUE_MASK;
+    }
 }
 
 CMedusaMainUI::~CMedusaMainUI()
@@ -23,16 +24,25 @@ bool CMedusaMainUI::PushMessageListenner(IMEdUIMessageListenner* pListener)
 {
 	if(m_Listeners.size() > 0 )
 	{
-		m_Listeners[m_Listeners.size() - 1]->onActive(false);
+		if( m_Listeners[m_Listeners.size() - 1]->onActive(IMEdUIMessageListenner::eAR_DeActive) == false )
+			return false;
 	}
 	m_Listeners.push_back(pListener);
-	pListener->onActive(true);
+	pListener->onActive(IMEdUIMessageListenner::eAR_Attach);
 	return true;
 }
 
-void CMedusaMainUI::PopMessageListenner()
+bool CMedusaMainUI::PopMessageListenner()
 {
+	if(m_Listeners.size() == 0 )
+		return false;
+	if(false == m_Listeners[m_Listeners.size() - 1]->onActive(IMEdUIMessageListenner::eAR_Detach) )
+		return false;
+
     m_Listeners.pop_back();
+	if(m_Listeners.size() > 0 )
+	   m_Listeners[m_Listeners.size() - 1]->onActive(IMEdUIMessageListenner::eAR_Active);
+	return true;
 }
 
 IMEdUIMessageListenner*  CMedusaMainUI::GetMessageListenner()
@@ -76,7 +86,21 @@ bool CMedusaMainUI::DetachUIElement()
 	m_vElements.clear();
 	return true;
 }
-
+IMEdUIElement*  CMedusaMainUI::FindUIElement(const wchar_t* _name , bool recursive)
+{
+    if(_name == NULL)
+        return NULL;
+    std::wstring strName = _name;
+    for(size_t i = 0 ; i < m_vElements.size()  ; i ++ )
+    {
+        std::wstring _elName = m_vElements[i]->name();
+        if(_elName == strName )
+        {
+            return m_vElements[i];
+        }
+    }
+    return NULL;
+}
 void  CMedusaMainUI::AttachUIElement(nsMedusaEditor::IMEdUIElement* pPane)
 {
 	if(pPane == NULL)
@@ -157,6 +181,20 @@ CMEdUiToolBarInfo* CMedusaMainUI::FindToolbarByCmdID(int cmdID)
 	return NULL;
 }
 
+void CMedusaMainUI::OnExit()
+{
+    vMEUIToolbars::iterator pos = m_vToolbars.begin();
+    for(;pos != m_vToolbars.end() ; pos ++)
+    {
+        CMEdUiToolBarInfo* pToolbar = pos->second;
+        if(pToolbar->m_funcCallback)
+        {
+            pToolbar->m_funcCallback->OnExit();
+        }
+    }
+    return ;
+}
+
 void CMedusaMainUI::RegisteToolbar(CMEdUiToolBarInfo* _toolbar)
 {
 	this->m_vToolbars.insert( vMEUIToolbars::value_type( std::wstring(_toolbar->m_name) , _toolbar) );
@@ -175,12 +213,52 @@ bool CMedusaMainUI::CreateToolbar(const wchar_t* _tbName)
     CMEdUiToolBarInfo* pToolbar = FindToolbar(_tbName);
 	if(pToolbar == NULL)
 		return false;
-
-	CMEdUiToolBar* pMFCToolBar = new CMEdUiToolBar(pToolbar);
-    AttachUIElement(pMFCToolBar);
-	pToolbar->m_hToolbar = (void*)pMFCToolBar;
-	return true;
+    
+    CMEdUiToolBarInfo::ToolBarType _type = pToolbar->GetType();
+    if(_type == CMEdUiToolBarInfo::eRibbonBar)
+    {
+        CMEdUiRibbonBar* pMFCRibbonBar = new CMEdUiRibbonBar(pToolbar);
+        AttachUIElement(pMFCRibbonBar);
+        m_pMainFrame->ResetApplicationLook();
+        m_pMainFrame->SetRibbonBar(pMFCRibbonBar->getRibbonBar() );
+        pToolbar->m_hToolbar = (void*)pMFCRibbonBar;
+        return true;
+    }
+    else
+    {
+        CMEdUiToolBar* pMFCToolBar = new CMEdUiToolBar(pToolbar);
+        AttachUIElement(pMFCToolBar);
+        pToolbar->m_hToolbar = (void*)pMFCToolBar;
+        return true;
+    }
 }
+
+void DestroyToolbar(CMEdUiToolBarInfo* pToolbar , CMedusaMainUI* pUI)
+{
+    CMEdUiToolBarInfo::ToolBarType _type = pToolbar->GetType();
+    if(_type == CMEdUiToolBarInfo::eRibbonBar)
+    {
+        CMEdUiRibbonBar* pMFCRibbonBar = (CMEdUiRibbonBar*)(pToolbar->m_hToolbar );
+        if(pMFCRibbonBar)
+        {
+            pUI->DetachUIElement(pMFCRibbonBar);
+            pMFCRibbonBar->ReleaseObject();
+            pToolbar->m_hToolbar = NULL;
+        }
+
+    }
+    else
+    {
+        CMEdUiToolBar* pMFCToolBar = (CMEdUiToolBar*)(pToolbar->m_hToolbar );
+        if(pMFCToolBar)
+        {
+            pUI->DetachUIElement(pMFCToolBar);
+            pMFCToolBar->ReleaseObject();
+            pToolbar->m_hToolbar = NULL;
+        }
+    }
+}
+
 bool CMedusaMainUI::DestroyToolbar()
 {
 	vMEUIToolbars::iterator pos = m_vToolbars.begin();
@@ -189,10 +267,10 @@ bool CMedusaMainUI::DestroyToolbar()
 		CMEdUiToolBarInfo* pToolbar = pos->second;
 		if(pToolbar == NULL || pToolbar->m_hToolbar == NULL)
 			continue;
-		CMEdUiToolBar* pMFCToolBar = (CMEdUiToolBar*)(pToolbar->m_hToolbar );
-		DetachUIElement(pMFCToolBar);
-		pMFCToolBar->ReleaseObject();
-		pToolbar->m_hToolbar = NULL;
+
+        ::DestroyToolbar(pToolbar , this);
+
+
 	}
 	return NULL;
 }
@@ -203,12 +281,7 @@ bool CMedusaMainUI::DestroyToolbar(const wchar_t* _tbName)
 	if(pToolbar == NULL)
 		return false;
 
-	CMEdUiToolBar* pMFCToolBar = (CMEdUiToolBar*)(pToolbar->m_hToolbar );
-	if(pMFCToolBar == NULL)
-		return false;
-	DetachUIElement(pMFCToolBar);
-	pMFCToolBar->ReleaseObject();
-	pToolbar->m_hToolbar = NULL;
+	::DestroyToolbar(pToolbar , this);
 	return true;
 }
 bool CMedusaMainUI::fireMEdUIEvent(eMEUIEvent _event , int param, int param2)
@@ -227,11 +300,15 @@ bool CMedusaMainUI::HideToolbar(const wchar_t* _tbName)
 	if(pToolbar == NULL)
 		return false;
 
-	CMEdUiToolBar* pMFCToolBar = (CMEdUiToolBar*)pToolbar->m_hToolbar;
-    if(pMFCToolBar)
-	{
-		pMFCToolBar->HideMEdUI();
-	}
+    CMEdUiToolBarInfo::ToolBarType _type = pToolbar->GetType();
+    if(_type == CMEdUiToolBarInfo::eToolBar)
+    {
+        CMEdUiToolBar* pMFCToolBar = (CMEdUiToolBar*)pToolbar->m_hToolbar;
+        if(pMFCToolBar)
+        {
+            pMFCToolBar->HideMEdUI();
+        }
+    }
 	return true;
 }
 
@@ -241,11 +318,15 @@ bool CMedusaMainUI::ShowToolbar(const wchar_t* _tbName)
 	if(pToolbar == NULL)
 		return false;
 
-	CMEdUiToolBar* pMFCToolBar = (CMEdUiToolBar*)pToolbar->m_hToolbar;
-	if(pMFCToolBar)
-	{
-		pMFCToolBar->ShowMEdUI();
-	}
+    CMEdUiToolBarInfo::ToolBarType _type = pToolbar->GetType();
+    if(_type == CMEdUiToolBarInfo::eToolBar)
+    {
+        CMEdUiToolBar* pMFCToolBar = (CMEdUiToolBar*)pToolbar->m_hToolbar;
+        if(pMFCToolBar)
+        {
+            pMFCToolBar->ShowMEdUI();
+        }
+    }
 	return true;
 }
 

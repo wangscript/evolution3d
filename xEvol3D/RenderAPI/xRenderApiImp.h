@@ -146,9 +146,7 @@ public:
 	virtual bool                        applyCamera(IRenderCamera* pCamera);
 	virtual bool                        applyCamera();
 	virtual IRenderCamera*              getCamera();
-	virtual bool                        beginDrawPrimitive();
-	virtual bool                        endDrawPrimitive();
-	virtual bool                        draw(IInputBuffer* pIdxBuffer , size_t nVertex , size_t iStartVertex, ePrimtiveType pt);
+	virtual bool                        draw(IInputBuffer* pIdxBuffer , size_t nVertexIndex , size_t iStartVertexIndex, ePrimtiveType pt);
 	virtual bool                        draw(size_t nVertex , size_t iStartVertex, ePrimtiveType pt);
 	virtual bool                        draw2DRect(I2DRectObject* p2DRect);
 	//-----------------
@@ -206,6 +204,10 @@ public:
 
 	virtual float                       alphaTestRef() { return m_AlphaRef ; }
 	virtual void                        alphaTestRef(float _value) { m_AlphaRef = _value ; }
+	virtual float                       globalAlpha() { return m_GlobalAlphaValue ; }
+	virtual void                        globalAlpha(float _value) { m_GlobalAlphaValue = _value ; }
+
+	
 	virtual bool                        popBlendState();
 	virtual bool                        popRasterizerState();
 	virtual bool                        popDepthStencilState();
@@ -213,7 +215,12 @@ public:
 	virtual IRenderApiEventCallback*    getEventCallback(){return m_pCallback ; }
     void                                registeShaderConstBinder(const wchar_t* _name , void* pData , int dataLen);
     void                                registeShaderConstBinder(const wchar_t* _name , const wchar_t* _alisName);
-	//D3D10RenderApi特有的
+    void                                setGlobalWireFrame(bool bFlag);
+    bool                                isGlobalWireFrame() ;
+protected:
+	virtual bool                        beginDrawPrimitive();
+	virtual bool                        endDrawPrimitive();
+
 public:
 	virtual bool                        removeLightingState(const wchar_t* _name);
 protected:
@@ -233,6 +240,8 @@ protected:
 protected:
 	mapConstBinder                      m_constNameBinder;
 	mapConstBinder                      m_semanticBinder;
+    IRenderCamera*                      m_pDef2DCamera;
+    IRenderCamera*                      m_pApplyed3DCamera;
 
 	//状态
 	ePrimtiveType                       m_PrimType;
@@ -241,7 +250,7 @@ protected:
 	IInputAssembler*                    m_pInputAssembler;
 	IVertexStream*                      m_pVertStream;
 	float                               m_AlphaRef;
-	IShaderConstBinder*                 m_pAlphaRefValueConstBinder;
+	float                               m_GlobalAlphaValue;
 
 	//设备属性和参数
 #ifdef _WIN32
@@ -273,7 +282,8 @@ protected:
 	IRenderApiEventCallback*           m_pCallback;
     //xPropertySet                       m_RenderProperty;
     std::vector<IShaderConstBinder*>   m_vShaderConstBinders;
-
+    IRasterizerState*                  m_pWireFrameRasterizerState;
+    bool                               m_bGlobalWireFrame;
 };
 
 

@@ -20,6 +20,9 @@ public:
 	virtual bool load(const wchar_t* matName , const int8* buf , int len);
     IGpuProgram* gpuProgram() ;
     bool         setGpuProgram(xGpuProgramName& _name);
+	bool         setDepthState(const wchar_t* _name) ;
+	bool         setRazState(const wchar_t* _name) ;
+	bool         setBlendState(const wchar_t* _name);
 public:
 	virtual bool load(xXmlNode* pNode);
 protected:
@@ -38,20 +41,25 @@ class _XEVOL_RENDERER_API_ xKidBasicRenderEffect : public IRenderEffect
 {
 public:
 	DECL_BASE_OBJECT_DLLSAFE(xKidBasicRenderEffect);
-	xKidBasicRenderEffect(xKidRenderer* pRenderer);
+	xKidBasicRenderEffect(xKidRenderer* pRenderer , const wchar_t* _name);
 	virtual  ~xKidBasicRenderEffect();
 public:
-	virtual bool draw(IDrawElement* pObject , unsigned int passedTime);
-	virtual bool draw(IDrawElement* pObject) ;
+	virtual bool drawImm(IDrawElement* pObject , IRenderPassArg* pArg  , unsigned int passedTime);
+	virtual bool draw(IDrawElement* pObject , IRenderPassArg* pArg ) ;
 	virtual bool setMaterial(xMaterial* pMaterial) ;
 	virtual bool load(xXmlNode* pXml);
 	virtual bool save(xXmlNode* pXml);
     virtual bool setQueueName(const wchar_t* queueName);
+	virtual const wchar_t* name();
+    virtual bool           setArg(const wchar_t* _argName , const wchar_t* _argVal);
+    virtual const wchar_t* getArg(const wchar_t* _argName) ;
 protected:
 	IRenderApi*     m_pRenderApi;
 	xKidRenderer*   m_pKidRenderer;
 	xRenderPass*    m_pRenderPass;
 	std::ds_wstring m_QueueName;
+    std::ds_wstring m_shaderName;
+	std::ds_wstring m_Name;
 };
 
 

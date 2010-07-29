@@ -9,7 +9,7 @@ IMPL_BASE_OBJECT_CLASSID(xGL2RenderWindow , xGL2RenderView);
 xGL2RenderView::xGL2RenderView(xGL2RenderApi* pRenderApi) : IRenderView(pRenderApi)
 {
 	m_RefCount = 1;
-	m_pD10Api = pRenderApi;
+	m_pGL2Api = pRenderApi;
 	for(size_t i = 0 ; i < MAX_RENDER_TARGET ; i ++ )
 	{
 		m_RenderTargetsView[i] = NULL;
@@ -43,7 +43,7 @@ bool  xGL2RenderView::createRenderTarget(int nRenderTarget , ePIXEL_FORMAT fmt ,
 	int h = m_height;
 	for(size_t i = 0 ; i < (size_t)nRenderTarget ; i ++ )
 	{
-		IRenderTarget* pRenderTarget = m_pD10Api->createRenderTarget(w , h ,fmt , bLockable , bAsTexture);
+		IRenderTarget* pRenderTarget = m_pGL2Api->createRenderTarget(w , h ,fmt , bLockable , bAsTexture);
 		setRenderTarget(pRenderTarget , i);
         XSAFE_RELEASEOBJECT(pRenderTarget);
 	}
@@ -105,9 +105,9 @@ bool xGL2RenderView::setupDepthView(int w , int h , bool bSet)
 bool xGL2RenderView::createDepthView(int w , int h)
 {
     HRESULT hr = S_OK;
-    ID3D10Device* pDevice = m_pD10Api->d10Device();
+    ID3D10Device* pDevice = m_pGL2Api->d10Device();
     XSAFE_RELEASEOBJECT(m_DepthTexture);
-    m_DepthTexture = new xGL2DepthTexture(false , false , m_pD10Api);
+    m_DepthTexture = new xGL2DepthTexture(false , false , m_pGL2Api);
     if(setupDepthView( w , h , true) == false)
     {
          XSAFE_RELEASEOBJECT(m_DepthTexture);
@@ -150,7 +150,7 @@ bool xGL2RenderView::setDepthBuffer(IRenderTarget* pDepthBuffer)
 
 bool xGL2RenderView::resize(int w , int h  , bool bDestorRT)
 {
-	TAutoLocker<IRenderApi> aLocker(m_pD10Api);
+	TAutoLocker<IRenderApi> aLocker(m_pGL2Api);
 	if(bDestorRT)
 	{
 		for(size_t i = 0 ; i < MAX_RENDER_TARGET ; i ++ )
@@ -164,7 +164,7 @@ bool xGL2RenderView::resize(int w , int h  , bool bDestorRT)
 
 bool xGL2RenderView::resize(int w , int h)
 {
-	TAutoLocker<IRenderApi> aLocker(m_pD10Api);
+	TAutoLocker<IRenderApi> aLocker(m_pGL2Api);
 	if( m_DepthTexture )
 	{
 		m_DepthTexture->unload();
@@ -177,7 +177,7 @@ bool xGL2RenderView::resize(int w , int h)
 ID3D10DepthStencilView* xGL2RenderView::depthView()
 {
     ID3D10DepthStencilView* pDepthStencilView = m_pDepthStencilView;
-    if(pDepthStencilView == NULL) pDepthStencilView = m_pD10Api->DefDepthStencilView();
+    if(pDepthStencilView == NULL) pDepthStencilView = m_pGL2Api->DefDepthStencilView();
     return pDepthStencilView;
 }
 
@@ -238,7 +238,7 @@ IRenderApiObject*  xGL2RenderView::renderTarget(size_t rtIdx )
 
 bool xGL2RenderView::install()
 {
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
+	ID3D10Device* pDevice = m_pGL2Api->d10Device();
 	int nRV = nRenderTargetView();
 	if(nRV == 0)
 		return false;
@@ -278,24 +278,24 @@ bool xGL2RenderView::setup()
 }
 bool xGL2RenderView::clear(xColor_4f& bkColor)
 {
-	TAutoLocker<IRenderApi> aLocker(m_pD10Api);
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
+	TAutoLocker<IRenderApi> aLocker(m_pGL2Api);
+	ID3D10Device* pDevice = m_pGL2Api->d10Device();
 	pDevice->ClearRenderTargetView( m_RenderTargetsView[0]  , &bkColor.r );
 	return true;
 }
 
 bool xGL2RenderView::clear(xColor_4f& bkColor , float z , unsigned int stencil)
 {
-    TAutoLocker<IRenderApi> aLocker(m_pD10Api);
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
+    TAutoLocker<IRenderApi> aLocker(m_pGL2Api);
+	ID3D10Device* pDevice = m_pGL2Api->d10Device();
 	pDevice->ClearRenderTargetView( m_RenderTargetsView[0]  , &bkColor.r );
 	pDevice->ClearDepthStencilView( depthView() , GL2_CLEAR_DEPTH | GL2_CLEAR_STENCIL , z, stencil );
 	return true;
 }
 bool xGL2RenderView::clear(xColor_4f& bkColor, int nClear)
 {
-	TAutoLocker<IRenderApi> aLocker(m_pD10Api);
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
+	TAutoLocker<IRenderApi> aLocker(m_pGL2Api);
+	ID3D10Device* pDevice = m_pGL2Api->d10Device();
 	for(int i = 0 ;  i < nClear ; i ++)
 	{
 		if(m_RenderTargetsView[i]) pDevice->ClearRenderTargetView( m_RenderTargetsView[i]  , &bkColor.r );
@@ -304,8 +304,8 @@ bool xGL2RenderView::clear(xColor_4f& bkColor, int nClear)
 }
 bool xGL2RenderView::clear(xColor_4f& bkColor ,  float z , unsigned int stencil, int nClear )
 {
-	TAutoLocker<IRenderApi> aLocker(m_pD10Api);
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
+	TAutoLocker<IRenderApi> aLocker(m_pGL2Api);
+	ID3D10Device* pDevice = m_pGL2Api->d10Device();
 	for(int i = 0 ;  i < nClear ; i ++)
 	{
 		if(m_RenderTargetsView[i]) pDevice->ClearRenderTargetView( m_RenderTargetsView[i]  , &bkColor.r );
@@ -319,7 +319,7 @@ xGL2RenderWindow::xGL2RenderWindow(HWND hWnd , xGL2RenderApi* pRenderApi) : xGL2
 {
 	m_hWnd = hWnd;
 	m_pSwapChain = NULL;
-	m_pD10Api = pRenderApi;
+	m_pGL2Api = pRenderApi;
 }
 
 xGL2RenderWindow::~xGL2RenderWindow()
@@ -329,10 +329,10 @@ xGL2RenderWindow::~xGL2RenderWindow()
 
 bool xGL2RenderWindow::resize(int w , int h)
 {
-    TAutoLocker<IRenderApi> aLocker(m_pD10Api);
+    TAutoLocker<IRenderApi> aLocker(m_pGL2Api);
 	if(m_widht == w && m_height == h )
 		return true; 
-	m_pD10Api->d10Device()->OMSetRenderTargets(0 , NULL , NULL );
+	m_pGL2Api->d10Device()->OMSetRenderTargets(0 , NULL , NULL );
 
     XSAFE_RELEASEOBJECT(m_DepthBuffer);
 	XSAFE_UNLOAD(m_DepthTexture);
@@ -348,7 +348,7 @@ bool xGL2RenderWindow::resize(int w , int h)
 
 bool xGL2RenderWindow::_createRenderTargets()
 {
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
+	ID3D10Device* pDevice = m_pGL2Api->d10Device();
 	HRESULT hr = S_OK;
 	// Create a render target view
 	ID3D10Texture2D *pBackBuffer;

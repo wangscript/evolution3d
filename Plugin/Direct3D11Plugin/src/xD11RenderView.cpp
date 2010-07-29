@@ -64,14 +64,14 @@ int  xD11RenderView::nRenderTargetView()
 	return MAX_RENDER_TARGET;
 }
 
-bool xD11RenderView::setRenderTarget(IBaseTexture*  pTexture , size_t rtIdx) 
+bool xD11RenderView::setRenderTarget(IBaseTexture*  pTexture , size_t rtIdx, size_t iSlice , size_t iMipMapLevel) 
 {
 	if( (int)rtIdx < startIdx() || rtIdx >= MAX_RENDER_TARGET )
 		return false;
 
 	if(pTexture == NULL)
-		return false;
-	return setRenderTarget(pTexture , rtIdx);
+		return setRenderTarget( (IRenderTarget*)NULL , rtIdx );
+	return setRenderTarget(pTexture->toRenderTarget(iSlice , iMipMapLevel) , rtIdx);
 }
 
 bool xD11RenderView::setRenderTarget(IRenderTarget* pRenderTarget , size_t rtIdx)
@@ -80,7 +80,12 @@ bool xD11RenderView::setRenderTarget(IRenderTarget* pRenderTarget , size_t rtIdx
 		return false;
 
 	if(pRenderTarget == NULL)
-		return false;
+	{
+		if(m_RenderTargets[rtIdx]) m_RenderTargets[rtIdx]->ReleaseObject();
+		m_RenderTargets[rtIdx] = NULL;
+		m_RenderTargetsView[rtIdx] = NULL;
+		return true;
+	}
 	
 	ID3D11RenderTargetView* pRTV = (ID3D11RenderTargetView*)pRenderTarget->handle();
 	if(pRTV == NULL)
@@ -187,13 +192,13 @@ ID3D11DepthStencilView* xD11RenderView::depthView()
     return pDepthStencilView;
 }
 
-int xD11RenderView::addRenderTarget(IBaseTexture*  pTexture)
+int xD11RenderView::addRenderTarget(IBaseTexture*  pTexture, size_t iSlice , size_t iMipMapLevel)
 { 
 	for(size_t i = 0 ; i < MAX_RENDER_TARGET ; i ++ )
 	{
 		if( m_RenderTargetsView[i] == NULL)
 		{
-			if(setRenderTarget(pTexture , i) == false)
+			if(setRenderTarget(pTexture , i , iSlice , iMipMapLevel) == false)
 				return (int)i ;
 			return (int)i + 1;
 		}

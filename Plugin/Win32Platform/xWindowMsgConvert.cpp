@@ -121,9 +121,12 @@ bool ConvertToXEvolMsg(xWindowMsg& WinMsg , HWND hWnd,UINT msg,WPARAM wParam,LPA
 		return true;
 
 	case WM_MOUSEWHEEL:
-		WinMsg.MsgID = WIN_MOUSE_WHEEL;
-		WinMsg.Mouse.nValue = HIWORD(wParam);
-		processMouseMsg(WinMsg,wParam,lParam);
+        {
+		    WinMsg.MsgID = WIN_MOUSE_WHEEL;
+            unsigned short _val = HIWORD(wParam);
+		    WinMsg.Mouse.nValue = *(short*)&_val;
+		    processMouseMsg(WinMsg,wParam,lParam);
+        }
 		return true;
 
 	case WM_MOUSEMOVE :

@@ -7,6 +7,7 @@
 using namespace std;
 
 BEGIN_NAMESPACE_XEVOL3D
+typedef xBaseLexer<wchar_t , std::wstring> xWcharLexer;
 
 bool  XEvol_IsStringChar(unsigned int ch)
 {
@@ -17,7 +18,7 @@ bool  XEvol_IsStringChar(unsigned int ch)
 
 bool XEvol_IsCfgTokenChar(unsigned int ch)
 {
-	if( XEvol_IsAlphaNumChar(ch)  || ch == '_' 	|| ch == '-' 	|| ch == '.' 	|| ch == ':' )  
+	if( XEvol_IsAlphaNumChar(ch)  || ch == '_' 	|| ch == '-' 	|| ch == '.' 	|| ch == ':' || ch == ';' 	||  ch == '&' || ch == '(' 	|| ch == ')')  
 		return true;
 	return false;
 }
@@ -26,12 +27,12 @@ int xXmlLexer::__skipComment(const wchar_t* p)
 {
 	const wchar_t* pBase = p;
 	//<!-- -->类型的文本。标准的xml注释
-	if(xBaseLexer::stringEqual(p, L"<!--" , false))
+	if(xWcharLexer::stringEqual(p, L"<!--" , false))
 	{
 		p += wcslen(L"<!--");
 		while(*p)
 		{
-			if( xBaseLexer::stringEqual(p, L"-->" , false) )
+			if( xWcharLexer::stringEqual(p, L"-->" , false) )
 			{
 				p += wcslen( L"-->");
 				return int(p - pBase);
@@ -51,7 +52,7 @@ int xXmlLexer::__skipComment(const wchar_t* p)
 		stringEqual(p,L";",false))
 	{
 		p ++;
-		p += xBaseLexer::skipLine(p);
+		p += xWcharLexer::skipLine(p);
 		return int(p - pBase);
 	}
 
@@ -59,7 +60,7 @@ int xXmlLexer::__skipComment(const wchar_t* p)
 	if( stringEqual(p,L"//",false) )
 	{
 		p +=2 ;
-		p += xBaseLexer::skipLine(p);
+		p += xWcharLexer::skipLine(p);
 		return int(p - pBase);
 	}
 
@@ -67,7 +68,7 @@ int xXmlLexer::__skipComment(const wchar_t* p)
 	if( stringEqual(p,L"/*",false) )
 	{
 		p +=2 ;
-		while(*p && ! xBaseLexer::stringEqual(p,L"*/",false)) 
+		while(*p && ! xWcharLexer::stringEqual(p,L"*/",false)) 
 		{
 			p++;
 		}
@@ -303,7 +304,7 @@ wchar_t* xXmlFileSource::loadUCS2FileBuffer(const char* ucs16Buff , int len , bo
 			wchar_t* ucs32Buf = new wchar_t[len/2 + 1];
 			int outBufLen = sizeof(wchar_t) * (len/2 + 1);
 			memset(ucs32Buf , 0 ,  outBufLen);
-			XEvol_UCS2ToUCS4( (unsigned short*)(ucs16Buff + 2) , (unsigned int*)ucs32Buf , len , outBufLen );
+			XEvol_Utf16ToUtf32( (UTF16*)(ucs16Buff + 2) , (UTF32*)ucs32Buf , outBufLen );
 			return ucs32Buf;
 		}
 	}
@@ -442,7 +443,7 @@ int xXmlBaseElementBuilder::readText(const wchar_t* pBase,wstring& text)
 	}
 	pText += wcslen(endTag);
 	pText += g_xCfgLexer.getString(pText,text,endTag , XEvol_IsCfgTokenChar);
-    return pText - pBase;
+    return (int)(pText - pBase);
 }
 
 int xXmlHeaderBuilder::parse(const wchar_t* pText)
@@ -494,6 +495,8 @@ int xXmlHeaderBuilder::parse(const wchar_t* pText)
 
 		if(_name == L"encoding")
 		{
+			xWcharLexer _tWlexer;
+			_tWlexer.toLower(_name);
 			if(_value == L"utf-16" || _value == L"UTF-16" || _value == L"unicode" || _value == L"UNICODE") 
             {
             }

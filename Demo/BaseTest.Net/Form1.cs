@@ -95,10 +95,10 @@ namespace BaseTest.Net
 
 
             m_DefBlender = m_RenderApi.createBlendState("Font.Blend");
-            m_pRectShader = m_RenderApi.loadGpuProgram("simple2D.vertex", "simple2D.pixel<0:simple.texture,simple.mask>", "");
+            m_pRectShader = m_RenderApi.loadGpuProgram("simple2D.vertex", "simple2D.pixel(0:simple.texture,simple.mask)", "");
             m_pRectBlankShader = m_RenderApi.loadGpuProgram("simple2D.vertex", "simple2D.pixel", "");
-            m_pModelShader = m_RenderApi.loadGpuProgram("simpleMesh.vertex", "simpleMesh.pixel<0:simple.texture;>", "");
-            m_SkelShader = m_RenderApi.loadGpuProgram("simpleMesh.vertex<0:SkinAni;>", "simpleMesh.pixel<0:simple.texture;>", "");
+            m_pModelShader = m_RenderApi.loadGpuProgram("simpleMesh.vertex", "simpleMesh.pixel(0:simple.texture;)", "");
+            m_SkelShader = m_RenderApi.loadGpuProgram("simpleMesh.vertex(0:SkinAni;)", "simpleMesh.pixel(0:simple.texture;)", "");
             m_DiffuseTexture = m_TexMgr.load("Cover.jpg");
             m_MaskTexture    = m_TexMgr.load("Mask.png");
             m_ObjectProperty.SelectedObject = m_3DCamera;

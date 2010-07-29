@@ -38,6 +38,20 @@ public:
 public:
 	IBaseTexture*  m_pTextCacheTexture;
 };
+
+class  xuiCameraInfoPannel : public xuiDialog
+{
+    wstring m_text;
+public:
+    xuiCameraInfoPannel(xuiWindow* parent , xuiWindowManager* pMgr);
+    ~xuiCameraInfoPannel();
+    virtual bool   onNotify(eXUIWinNotifyEvent _event, xuiWindow* pCtrl , int param1 , int param2);
+    virtual bool   onLoad(xXmlNode* pCfgNode);
+    virtual bool   onDraw();
+    void           setText(const wchar_t* _text);
+};
+
+
 END_NAMESPACE_XUI
 
 #endif

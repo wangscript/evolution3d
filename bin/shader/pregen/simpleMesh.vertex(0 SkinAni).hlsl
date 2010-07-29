@@ -10,17 +10,26 @@ float4x4 normalMatrix(float4x4 mat)
       matNormal[1][3] = 0.0f;  
       matNormal[2][3] = 0.0f;  
       return matNormal;
+}
+
+float4 transNormal(float4x4 mat , float4 nr)
+{
+      float4 _nr = float4(nr.xyz , 0.0f);
+      float4 _ret = mul(_nr  , mat );
+      _ret.w = nr.w;
+      return _ret;
 }//Finish import lib
 //============================================
 
 
-//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simpleMesh.vertex.hlsl
+//Insert Node Declaration Node= D:\SVN\Evol3D\xEvolEngine\Demo\RayTracerDemo\..\..\bin\shader\d3d1x\hlsl\simpleMesh.vertex.hlsl
 
 cbuffer TransformBuffer
 {
-      matrix matWorld;
-      matrix matView;
-      matrix matProject;
+      float4x4 matWorld;
+      float4x4 matView;
+      float4x4 matProject;
+      float4x4 matTexture;
 	  float4 cameraUp;
 	  float4 cameraPos;
 	  float4 cameraDir;
@@ -43,7 +52,7 @@ struct PS_INPUT
       float4 Nor      : NORMAL;
       float4 Color    : COLOR;
       float4 Tan      : TANGENT;
-      float2 Tex      : TEXCOORD;  
+      float4 Tex      : TEXCOORD;  
 
       float4 wPosition : TEXCOORD2;
       float4 wNormal   : TEXCOORD3;  
@@ -52,7 +61,7 @@ struct PS_INPUT
 
 #define VS_INPUT STATICMESHVS_INPUT
 
-//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\SkinAni.hlsl
+//Insert Node Declaration Node= D:\SVN\Evol3D\xEvolEngine\Demo\RayTracerDemo\..\..\bin\shader\d3d1x\hlsl\SkinAni.hlsl
 
 #define _CBUFFER_ANI_
 struct SKINMESHVS_INPUT
@@ -93,7 +102,7 @@ VM_SkinRet VM_DoSkin(float4 Pos , float4 Nor , float4 Tan , float4 Weights , int
 
 //============================================
 
-//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\SkinAni.hlsl
+//Insert Node Code Node= D:\SVN\Evol3D\xEvolEngine\Demo\RayTracerDemo\..\..\bin\shader\d3d1x\hlsl\SkinAni.hlsl
 
 
 
@@ -176,7 +185,7 @@ PS_INPUT main( VS_INPUT input )
       output.Pos   = mul( matWorld   , input.Pos );
       output.Pos   = mul( matView    , output.Pos);
       output.Pos   = mul( matProject , output.Pos);
-      output.Tex   = input.Tex;
+      output.Tex   = float4(input.Tex , 1.0f , 1.0f);
       output.Color = input.Color.xyzw;
 
 
@@ -194,16 +203,15 @@ PS_INPUT main( VS_INPUT input )
       output.wTangent  = mul(matNormal , input.Tan);
 
    //Ó¦ÓÃÐÞ¸ÄÆ÷ name=SkinAni 
-   VM_SkinRet Node_0_Ret = VM_DoSkin(input.Pos , input.Nor , input.Color , input.Weights , input.BoneIdxs);
+   VM_SkinRet Ret_VertexModifier_Node0 = VM_DoSkin(input.Pos , input.Nor , input.Color , input.Weights , input.BoneIdxs);
 
-   output.Pos = Node_0_Ret.Pos; 
-   output.Nor = Node_0_Ret.Nor; 
-   output.Tan = Node_0_Ret.Tan; 
-   output.wPosition = Node_0_Ret.wPos; 
-   output.wNormal = Node_0_Ret.wNor; 
-   output.wTangent = Node_0_Ret.wTan; 
+   output.Pos = Ret_VertexModifier_Node0.Pos; 
+   output.Nor = Ret_VertexModifier_Node0.Nor; 
+   output.Tan = Ret_VertexModifier_Node0.Tan; 
+   output.wPosition = Ret_VertexModifier_Node0.wPos; 
+   output.wNormal = Ret_VertexModifier_Node0.wNor; 
+   output.wTangent = Ret_VertexModifier_Node0.wTan; 
    output.Color = input.Color; 
-   output.Tex = input.Tex; 
 
     return output;
 }

@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="xcomdoc">
+      <UniqueIdentifier>{6b80f6dc-1b70-49f0-926e-4708b8c1db14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xcomdoc\inc">
+      <UniqueIdentifier>{a3ed5057-0206-4976-84ee-53a51d73d612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xcomdoc\src">
+      <UniqueIdentifier>{e4adb138-d194-4d9a-b644-f5aa4b27e330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="BaseLib">
+      <UniqueIdentifier>{a47f8f51-a623-417c-bde8-c4373ee91a39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\Logger">
+      <UniqueIdentifier>{04d2f898-742b-4e82-87ba-4672772f31ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\Mem">
+      <UniqueIdentifier>{3a41c9df-137f-4157-a729-e8d43a8dd26b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\Multi-Language">
+      <UniqueIdentifier>{1ea58509-07bd-4db9-acc2-d046267d4540}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="xcomdoc\xcdDirEnum.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdReadBuffer.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdStringHash.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdUtil.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdWriteBuffer.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdir.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdoc.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdoc_common.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdocbase.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdocImp.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xdocfstream.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\zlibStream.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\stl_dllalloc.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xBaseObject.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xEvol3DAPI.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xEvol3DBaseInc.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xStringHash.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\logstream.h">
+      <Filter>BaseLib\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xLogger.h">
+      <Filter>BaseLib\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FastMemAlloc.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FastSmallMemAlloc.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FixMemAlloc.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FixSmallMemAlloc.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mem.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mem_operator.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemAlloc.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\memdef.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemPool.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemState.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mstream.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\ObjectPool.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\stl_alloc.h">
+      <Filter>BaseLib\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xI18N.h">
+      <Filter>BaseLib\Multi-Language</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="xcomdoc\xcdDirEnum.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdFile.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdFileImp.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdReadWriterBuffer.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdStream.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdStringHash.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdUtil.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdir.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdoc.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\zlibStream.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\stl_dllalloc.cpp">
+      <Filter>BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xBaseObject.cpp">
+      <Filter>BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xLogger.cpp">
+      <Filter>BaseLib\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FastMemAlloc.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FastSmallMemAlloc.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FixMemAlloc.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FixSmallMemAlloc.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_dbg.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_operator.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_operator_dbg.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\MemPool.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\MemState.cpp">
+      <Filter>BaseLib\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xI18N.cpp">
+      <Filter>BaseLib\Multi-Language</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\stdafx.cpp" />
+  </ItemGroup>
+</Project>

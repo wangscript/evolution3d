@@ -4,6 +4,7 @@
 #include "RayTracerDemo.h"
 #include "working/xWorkingThread.h"
 #include "XMathLib/xspline.h"
+
 using namespace XEvol3D;
 
 class CMyJob : public IWorkingJob
@@ -126,11 +127,11 @@ bool CRaytracerPrimaryRenderCallback::postDrawPass(IBaseRenderer* pSender , xRen
 
 void CRaytracerPrimaryRenderCallback::init(xEvol3DEngine* pEngine)
 {
-    m_hObjectShader = pEngine->renderApi()->shaderManager()->add(L"PrimaryRay<0:simple.texture>" , (unsigned int)eShader_PixelShader , true);
-    IBaseShader* pShader = m_hObjectShader.getResource();
+    //m_hObjectShader = pEngine->renderApi()->shaderManager()->add(L"PrimaryRay(0:simple.texture)" , (unsigned int)eShader_PixelShader , true);
+    //IBaseShader* pShader = m_hObjectShader.getResource();
 
-    m_hLightShader = pEngine->renderApi()->shaderManager()->add(L"RaytracerLight" , (unsigned int)eShader_PixelShader , true);
-    pShader = m_hLightShader.getResource();
+    //m_hLightShader = pEngine->renderApi()->shaderManager()->add(L"RaytracerLight" , (unsigned int)eShader_PixelShader , true);
+    //pShader = m_hLightShader.getResource();
 
     return ;
 }
@@ -222,10 +223,10 @@ xvec4  CEvolEnviroment::CaclBuffer( HWND hRenderWindow, IRenderView* pRenderView
         xvec4* buf_Normal   = new xvec4[_rvDesc.m_width * _rvDesc.m_height];
         xvec4* buf_Reflect  = new xvec4[_rvDesc.m_width * _rvDesc.m_height];
         xvec4* buf_Tangent  = new xvec4[_rvDesc.m_width * _rvDesc.m_height];
-        ((IRenderTarget*)pRenderView->renderTarget(POS_VIEW)    )->grabRenderTagetData(0 , 0 , _rvDesc.m_width  , _rvDesc.m_height , (void*)buf_Position);
-        ((IRenderTarget*)pRenderView->renderTarget(NOR_VIEW)    )->grabRenderTagetData(0 , 0 , _rvDesc.m_width  , _rvDesc.m_height , (void*)buf_Normal  );
-        ((IRenderTarget*)pRenderView->renderTarget(REFLECT_VIEW))->grabRenderTagetData(0 , 0 , _rvDesc.m_width  , _rvDesc.m_height , (void*)buf_Reflect );
-        ((IRenderTarget*)pRenderView->renderTarget(TANGENT_VIEW))->grabRenderTagetData(0 , 0 , _rvDesc.m_width  , _rvDesc.m_height , (void*)buf_Tangent );
+        ((IRenderTarget*)pRenderView->renderTarget(POS_VIEW)    )->grabRenderTagetData( (void*)buf_Position ,0 , 0 , _rvDesc.m_width  , _rvDesc.m_height);
+        ((IRenderTarget*)pRenderView->renderTarget(NOR_VIEW)    )->grabRenderTagetData( (void*)buf_Normal   ,0 , 0 , _rvDesc.m_width  , _rvDesc.m_height);
+        ((IRenderTarget*)pRenderView->renderTarget(REFLECT_VIEW))->grabRenderTagetData( (void*)buf_Reflect  ,0 , 0 , _rvDesc.m_width  , _rvDesc.m_height);
+        ((IRenderTarget*)pRenderView->renderTarget(TANGENT_VIEW))->grabRenderTagetData( (void*)buf_Tangent  ,0 , 0 , _rvDesc.m_width  , _rvDesc.m_height);
 
         HDC hDC = ::GetDC(hRenderWindow);
         GetColor _GetColor;
@@ -260,7 +261,7 @@ xvec4  CEvolEnviroment::CaclBuffer( HWND hRenderWindow, IRenderView* pRenderView
         xvec4* buf_Color  = new xvec4[_rvDesc.m_width * _rvDesc.m_height];
         ret = xvec4(0.0f,0.0f,0.0f,0.0f);
         float weight = 0.0f;
-        ((IRenderTarget*)pRenderView->renderTarget(COL_VIEW)    )->grabRenderTagetData(0 , 0 , _rvDesc.m_width  , _rvDesc.m_height , (void*)buf_Color);
+        ((IRenderTarget*)pRenderView->renderTarget(COL_VIEW)    )->grabRenderTagetData((void*)buf_Color , 0 , 0 , _rvDesc.m_width  , _rvDesc.m_height );
         GetColor _GetColor;
         for(int y = 0 ; y < _rvDesc.m_height ; y ++)
         {
@@ -619,13 +620,9 @@ void     CEvolEnviroment::initRenderer(HWND hRenderWindow)
     m_p2DCamera = m_pRenderApi->createCamera(L"2DCamera");
     onResize();
 
-    m_ProcedureTexture = m_pRenderApi->createLockableTexture(256,256,PIXELFORMAT_R32G32B32A32F,false );
-    xTextureLockArea _lock;
-    m_ProcedureTexture->lock(eLock_WriteDiscard , _lock);
-    m_ProcedureTexture->unlock(_lock);
     m_pStencilState = m_pRenderApi->createDepthStencilState(L"Overlay");
 
-    m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel<0:simple.texture,simple.fakehdr>" , NULL);;
+    m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel(0:simple.texture,simple.fakehdr)" , NULL);;
 
     m_hFont    = m_pRenderApi->findFont(L"small" );
 
@@ -646,16 +643,13 @@ void     CEvolEnviroment::initRenderer(HWND hRenderWindow)
     m_GridPlan->init(m_pEngine->textureManager() );
 
 
-    m_pSelView = m_pRenderApi->createRenderView(800 , 600 , true);
-    m_pSelView->createRenderTarget(1 , PIXELFORMAT_R8G8B8A8 , true , true);
-
     ILightingEnv* pLightEnv = m_pRenderApi->findLightingState(L"xLightState");
     pLightEnv->enableLight(2);
     xLightDesc* pLight= pLightEnv->lightDesc(0);
     pLight->m_position  = xMathLib::xvec4(1000.0f , 1000.0f , 1000.0f , 1.0f);
-    pLight->m_Diffuse   = xMathLib::xvec4(0.6f , 0.6f , 0.6f , 1.0f);  
+    pLight->m_Diffuse   = xMathLib::xvec4(0.6f , 0.0f , 0.0f , 1.0f);  
     pLight->m_Speculer  = xMathLib::xvec4(0.6f , 0.6f , 0.6f , 25.0f); 
-    pLight->m_Ambient   = xMathLib::xvec4(0.1f , 0.1f , 0.1f , 1.0f);
+    pLight->m_Ambient   = xMathLib::xvec4(0.3f , 0.0f , 0.8f , 1.0f);
 
     //第二个灯光
     pLight= pLightEnv->lightDesc(1);
@@ -689,6 +683,39 @@ void     CEvolEnviroment::initRenderer(HWND hRenderWindow)
 
 
     m_PrimRayCb.init(m_pEngine);
+
+
+    m_ParticleSystem = xParticleSystem::createInstance(m_pRenderer , m_pEngine->textureManager() );
+    //m_pEmitter = m_ParticleSystem->createEmitter(L"xSphereEmitter");
+    //m_pEmitter->init(L"xQuadParticlePool");
+	//m_pEmitter->m_EmitterInfo.m_VelocityRange.setRange(xMathLib::xvec3(-20,-20,60.f) , xMathLib::xvec3(20.0f,20.0f,90.0f));
+	//m_pEmitter->m_EmitterInfo.m_AcellRange.setRange(xMathLib::xvec3(0.0f , 0.0f , -9.80f) , xMathLib::xvec3(0.0f,0.0f , -9.80f));
+	//m_pEmitter->m_EmitterInfo.m_EmitterFrequecy.setRange(10,50);
+	//m_pEmitter->m_EmitterInfo.m_LifeRange.setRange(15.0f , 25.0f);
+
+	//m_pBoxEmitter = m_ParticleSystem->createEmitter(L"xBoxEmitter");
+	//m_pBoxEmitter->init(L"xQuadParticlePool");
+	//m_pBoxEmitter->m_EmitterInfo.m_VelocityRange.setRange(xMathLib::xvec3(-2,-2,-5.f) , xMathLib::xvec3(2.0f,2.0f,-3.0f));
+	//m_pBoxEmitter->m_EmitterInfo.m_AcellRange.setRange(xMathLib::xvec3(0.0f , 0.0f , -3.80f) , xMathLib::xvec3(0.0f,0.0f , -1.3f));
+	//m_pBoxEmitter->m_EmitterInfo.m_EmitterFrequecy.setRange(1,15);
+	//m_pBoxEmitter->m_EmitterInfo.m_LifeRange.setRange(15.0f , 18.0f);
+	//m_pBoxEmitter->m_Info.m_PosArg.m_Value = xMathLib::xvec3(0.0f ,0.0f , 200.0f);
+
+    xXmlDocument doc;
+	doc.load( _XEVOL_ABSPATH_(L"./test.particle") );
+	m_ParticleSystem->load(doc.root( ) );
+	m_ParticleSystem->startAll();
+	m_ParticleSystem->operator[](0)->stop();
+
+    //doc.insertNode(L"emitters");
+    //xXmlNode* pNode = doc.root()->insertNode(L"emitter");
+    //m_pEmitter->save(pNode);
+    //m_pEmitter->stop();
+
+	//doc.root()->insertNode(L"emitter");
+	//m_pBoxEmitter->save(pNode);
+	//m_pBoxEmitter->start();
+    //doc.save( _XEVOL_ABSPATH_(L"./testparticle.xml"));
     return ;
 }
 
@@ -742,12 +769,17 @@ void     CEvolEnviroment::updateFrame(long passedTime , ISceneVisitor* pVisitor 
     static float angle = 0;
     static int   nFrame = 0;
 
+   
     nFrame ++;
     angle += passedTime/1000.0f * 35.0f;
-    xSleep(5);
+    //xSleep(15);
     m_pRenderApi->identityMatrix(MATRIXMODE_World);
     m_pRenderApi->applyCamera(m_pCamera);
-    m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.0f,1.0f));
+	if(m_pRenderApi->renderMode() == eRenderMode::eRenderMode_Select )
+		m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.0f,0.0f));
+	else 
+		m_pRenderApi->begin(xColor_4f(0.0f,0.3f,0.3f,0.0f));
+
     m_pRenderApi->beginScene();
     xMathLib::xmat4 mat;
     //xMathLib::XM_RotateY(mat,angle);
@@ -769,7 +801,15 @@ void     CEvolEnviroment::updateFrame(long passedTime , ISceneVisitor* pVisitor 
     }
     this->m_pRenderer->end(passedTime);
 
-
+    m_pRenderApi->setBlendState(NULL);
+    m_pRenderApi->setRasterizerState(NULL);
+    m_pRenderApi->identityMatrix(MATRIXMODE_World);
+	m_ParticleSystem->update( passedTime/1000.0f);
+	m_ParticleSystem->render( passedTime/1000.0f);
+	//m_pEmitter->update( passedTime/1000.0f);
+	//m_pBoxEmitter->update( passedTime/1000.0f );
+	//m_pEmitter->render(passedTime / 1000.0f);
+	//m_pBoxEmitter->render(passedTime / 1000.0f);
     if(bDrawUI ) drawOtherThing(mat, passedTime, nFrame);
 
     //m_pRenderApi->
@@ -791,7 +831,6 @@ CEvolEnviroment::CEvolEnviroment()
     m_ProcedureTexture   = NULL;
     m_cameraStep =1.0f;
 
-    m_pSelView   = NULL;
     m_pRenderer    = NULL;
     m_PrimaryBuffer  = NULL;
 

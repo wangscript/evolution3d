@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Model">
+      <UniqueIdentifier>{1515109c-024e-48e1-b728-49b2bad0d2b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\lib3ds">
+      <UniqueIdentifier>{087637f7-ec7a-4f3e-862b-1004387b2f14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\lib3ds\src">
+      <UniqueIdentifier>{ce72feeb-d085-4234-b440-0a0e480a0b0c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Model\Ase.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\DxfParser.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\HelpFunction.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds_helper.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelLoader.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ObjParser.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\x3dsModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\xAseModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\xDxfModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\xObjModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_atmosphere.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_background.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_camera.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_chunk.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_chunktable.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_file.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_io.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_light.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_material.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_math.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_matrix.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_mesh.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_node.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_quat.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_shadow.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_track.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_util.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_vector.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\lib3ds\lib3ds_viewport.c">
+      <Filter>Model\lib3ds\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin\Evol3D.ExPlugin.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Model\Ase.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\DxfParser.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\HelpFunction.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\lib3ds_helper.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelLoader.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ObjParser.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\x3dsModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\xAseModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\xDxfModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\xObjModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\lib3ds\lib3ds.h">
+      <Filter>Model\lib3ds</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\lib3ds\lib3ds_impl.h">
+      <Filter>Model\lib3ds</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\lib3ds\lib3ds_svn.txt">
+      <Filter>Model\lib3ds\src</Filter>
+    </None>
+  </ItemGroup>
+</Project>

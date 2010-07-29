@@ -29,8 +29,8 @@ BEGIN_NAMESPACE_XEVOL3D
 
 class   xGdiGlyphFontCharLoader;
 class   xGdiGlyphFontChar;
-typedef TResHandle <xGdiGlyphFontChar, wchar_t, xGdiGlyphFontCharLoader >  HXGdiGlyphFontChar;
-typedef TLRUPolicyResMgr<xGdiGlyphFontChar , wchar_t , xGdiGlyphFontCharLoader >  xGdiGlyphFontCharMgr;
+typedef TResHandle      <xGdiGlyphFontChar , xWCharType , xGdiGlyphFontCharLoader >  HXGdiGlyphFontChar;
+typedef TLRUPolicyResMgr<xGdiGlyphFontChar , xWCharType , xGdiGlyphFontCharLoader >  xGdiGlyphFontCharMgr;
 
 class xGdiGlyphIndexManager
 {
@@ -84,6 +84,7 @@ public:
 	IFontRenderDevice*  m_pRenderer;
     HDC                 m_hFontDC;
     HFONT               m_hGdiFont;
+    xGdiGlyphFontCharMgr* m_pThis;
 
 #ifdef _FONT_FULL_TEXTURE_
 	IBaseTexture*          m_pTexture;
@@ -104,14 +105,14 @@ public:
 	void        setCacheSize(int maxSize, int maxFontW , int maxFontH);
 	void        setRenderer(IFontRenderDevice*    pRenderer) { m_pRenderer = pRenderer ; };
 	bool        load_font(const wchar_t* pFont ,xFontInfo& info);
-
+    void        setThis(xGdiGlyphFontCharMgr* pThis){ m_pThis = pThis ; }
 	unsigned int _getResSize(xGdiGlyphFontChar*& pRes);
 	bool         _isResLoaded(xGdiGlyphFontChar* pRes);
-	bool         _postLoadResource(wchar_t& _char , xGdiGlyphFontChar*& pRes, int& ResSize,unsigned int arg) { return true ; }
-	bool         _preLoadResource(wchar_t& _char , xGdiGlyphFontChar*& pRes, int& ResSize,unsigned int arg)  { return true ; }
-	bool         _loadResource(wchar_t& _char , xGdiGlyphFontChar*& pRes, int& ResSize,unsigned int arg);
-	bool         _unloadResource(wchar_t& _char , xGdiGlyphFontChar*& pRes, unsigned int& TotalResSize);
-	void         _deleteResource(wchar_t& _char , xGdiGlyphFontChar* pRes);
+	bool         _postLoadResource(xWCharType& _char , xGdiGlyphFontChar*& pRes, int& ResSize,unsigned int arg) { return true ; }
+	bool         _preLoadResource(xWCharType& _char , xGdiGlyphFontChar*& pRes, int& ResSize,unsigned int arg)  { return true ; }
+	bool         _loadResource(xWCharType& _char , xGdiGlyphFontChar*& pRes, int& ResSize,unsigned int arg);
+	bool         _unloadResource(xWCharType& _char , xGdiGlyphFontChar*& pRes, unsigned int& TotalResSize);
+	void         _deleteResource(xWCharType& _char , xGdiGlyphFontChar* pRes);
 };
 
 
@@ -126,7 +127,7 @@ public:
 	eFontFilter       m_Filter;
 public:
     IMPL_BASE_OBJECT_INTERFACE(xGdiGlyphFont);
-	HXGdiGlyphFontChar    GetFontCharHandle(wchar_t _chr);
+	HXGdiGlyphFontChar    GetFontCharHandle(xWCharType _chr);
 public:
 	void             createFontCharManager(const wchar_t* managerName);
 	void             setFontChareManager(xGdiGlyphFontCharMgr* pMgr);
@@ -137,10 +138,10 @@ public:
 	void  releaseChache();
     const xFontInfo& getInfo(){ return m_Info ; }
 	void  setDrawFilter(eFontFilter filter){m_Filter = filter ; }
-	bool  drawChar(wchar_t _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl) ;
+	bool  drawChar(xWCharType _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl) ;
 	void  enableAntialias(bool bAnti);
 	bool  isAntialias();
-    bool  getCharDim(wchar_t _chr , int& dx , int& dy);
+    bool  getCharDim(xWCharType _chr , int& dx , int& dy);
 	void  setCacheSize(int maxSize);
 	int   getCacheSize();
 	int   getLinePitch(){return 0; m_LinePitch ; };

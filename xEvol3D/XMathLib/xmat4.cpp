@@ -26,7 +26,12 @@ BEGIN_NAMESPACE_XMATHLIB
 /***
 Matrix transform 3x3 for Matrix4x4
 ***/
-
+void xmat4::conveter(xmat3& _m)
+{
+	_m.m[0][0] =  m[0][0]; _m.m[0][0] =  m[0][0]; _m.m[0][0] =  m[0][0];
+	_m.m[1][1] =  m[1][1]; _m.m[1][1] =  m[1][1]; _m.m[1][1] =  m[1][1];
+	_m.m[2][2] =  m[2][2]; _m.m[2][2] =  m[2][2]; _m.m[2][2] =  m[2][2];
+}
 void  xmat4::toQuat(xquat& _quat)
 {
 	float tr, s, q[4];

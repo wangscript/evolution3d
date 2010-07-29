@@ -1,7 +1,7 @@
 #include "../stdafx.h"
 #include "objPlacement.h"
 #include "xEvol3DEnv.h"
-
+#include "BaseLib/xBaseMath.h"
 BEGIN_NAMESPACE_XEVOL3D
 xSceneSelection::xSceneSelection()
 {
@@ -191,6 +191,7 @@ bool xObjPlacement::onMessage(NS_XEVOL3D::xWindowMsg& msg)
 		ISceneNode* pSelNode = NULL;
 		if(val.x > 10000)
 		{
+            //val.x = xRoundToByte(val.x, 4);
 			pSelNode = dynamic_cast<ISceneNode*> ( (IBaseObject*)val.x);
 		}
 

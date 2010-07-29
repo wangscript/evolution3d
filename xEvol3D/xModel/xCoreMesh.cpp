@@ -1,6 +1,6 @@
 #include "../xStdPch.h"
 #include "xCoreMesh.h"
-#include "xCoreAction.h"
+#include "xBaseAction.h"
 #include "../xcomdoc/xdocfstream.h"
 #include "xCoreSkeleton.h"
 using namespace xMathLib;
@@ -297,13 +297,13 @@ bool xCoreMesh::load(xcomdoc& doc , const wchar_t* _dir , unsigned int arg)
 	xXmlNode::XmlNodes subMeshNodes;
 	pRootNode->findNode(L"submesh", subMeshNodes);
 	assert(subMeshNodes.size() == m_nSubMesh);
-	for(int i = 0 ; i < m_nSubMesh ; i ++)
-	{
-		xSubMesh& subMesh      = m_SubMeshs[i];
-		xXmlNode* pSubMeshNode = subMeshNodes[i];
-		subMesh.m_iMatIdx = pSubMeshNode->int_value(L"nMatIndex");
-		subMesh.m_nFace   = pSubMeshNode->int_value(L"nFace");
- 	}
+    for(int i = 0 ; i < m_nSubMesh ; i ++)
+    {
+        xSubMesh& subMesh      = m_SubMeshs[i];
+        xXmlNode* pSubMeshNode = subMeshNodes[i];
+        subMesh.m_iMatIdx = pSubMeshNode->int_value(L"nMatIndex");
+        subMesh.m_nFace   = pSubMeshNode->int_value(L"nFace");
+    }
 	//¼ÓÔØ²ÄÖÊ
   
 	loadMaterial(doc , _dir);
@@ -591,6 +591,20 @@ bool xCoreMesh::readAnimationFrame(xcomdoc& doc , const wchar_t* _dir , unsigned
 	return true;
 }
 
+void xCoreMesh::setTexture(int iSubMesh , int iTex , HBaseTexture hTexture)
+{
+    int matidx = m_SubMeshs[iSubMesh].m_iMatIdx;
+    if( matidx >= (int)m_Materials.size() ) 
+        matidx = (int)m_Materials.size() - 1;
+
+    xMeshMaterial& mat = m_Materials[ matidx ];
+    size_t nTex = mat.m_vTextures.size() ;
+    if(iTex >= (int)nTex)
+        return ;
+
+    mat.m_vTextures[iTex].m_hTexture = hTexture;
+}
+
 bool xCoreMesh::draw(xCoreSkeleton* pSkeleton , xCoreActionFrame* pActionFrame)
 {
     if(pSkeleton == NULL) pSkeleton = m_pSkeleton;
@@ -709,6 +723,7 @@ void xCoreMesh::PrepareNonGpuSkinData()
         {
             pStaticVertex->m_uv[iUV] = pSkinedVertex->m_uv[iUV];
         }
+		pStaticVertex->m_Diffuse = pSkinedVertex->m_Diffuse;
     }
 }
 

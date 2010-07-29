@@ -21,6 +21,7 @@ public:
 
 IRenderCamera::IRenderCamera()
 {
+    m_fStepLen = 4.0f;
 	m_RefCount = 1;
 	m_pPropertySet = NULL;
 	m_pEventHanlder = new xRenderCameraEvent(this);
@@ -50,7 +51,15 @@ ICameraPropertySet*  IRenderCamera::getPropertySet()
 	return m_pPropertySet;
 }
 
+float IRenderCamera::step()
+{
+    return m_fStepLen;
+}
 
+void IRenderCamera::setStep(float _step)
+{
+    m_fStepLen = _step;
+}
 
 void IRenderCamera::initPropertySet()
 {
@@ -79,6 +88,10 @@ void IRenderCamera::initPropertySet()
 	ADD_CAMERA_DESCRIPTOR(L"control_type" , L"cameraParam");
 	ADD_CAMERA_EVENTHANLDER(&g_CameraChangeHandler , (void*)this);
 	END_ADD_CAMERA_PROPERTY(L"相机参数");
+
+    DECL_ADD_CAMERA_PROPERTY_REF(L"相机的步进长度" , float , m_fStepLen);
+    ADD_CAMERA_DESCRIPTOR(L"data_type"    , L"float");
+    END_ADD_CAMERA_PROPERTY(L"相机的步进长度");
 
 }
 
@@ -161,5 +174,7 @@ void IRenderCamera::toFrontView()
 
 	dirty();
 }
+
+
 
 END_NAMESPACE_XEVOL3D

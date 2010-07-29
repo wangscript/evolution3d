@@ -38,14 +38,14 @@ public:
 	const   xFontInfo& getInfo();
 	bool    init( xXmlNode* pInitXml);
 	void    setDrawFilter(eFontFilter filter);
-	bool    drawChar(wchar_t _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl);
+	bool    drawChar(xWCharType _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl);
 	void    enableAntialias(bool bAnti);
 	bool    isAntialias();
 	bool    drawText(const wchar_t* strText, float x , float y ,const xColor_4f& cl );
 	bool    drawText(const wchar_t* strText, float x , float y , int maxWidth , const xColor_4f& cl );
 	bool    drawTextToDynTexture(const wchar_t* strText, IBaseTexture* pDy);
 
-	bool    getCharDim(wchar_t _chr , int& dx , int& dy);
+	bool    getCharDim(xWCharType _chr , int& dx , int& dy);
 	bool    getTextDim(const wchar_t*  strText , int& dx , int& dy , int maxWidth = 0);
 
 	void    releaseChache();
@@ -53,7 +53,7 @@ public:
 	int     getCacheSize();
 	int     getLinePitch(){return m_LinePitch ; };
 	int     getResSize(){ return 0 ; };
-	xFontRender* chooseRenderer(wchar_t _chr);
+	xFontRender* chooseRenderer(xWCharType _chr);
 };
 
 END_NAMESPACE_XEVOL3D

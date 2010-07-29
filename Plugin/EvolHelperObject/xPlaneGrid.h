@@ -20,7 +20,7 @@ class _XEVOL_PLUGIN_API_ xPlaneGridDrawable : public IDrawableHelper
 	IInputAssembler* m_pAss;
 	IRenderApi*      m_pRenderApi;
 	IBaseTexture*    m_pTexture;
-	IGpuProgram*     m_pGpuProgram;
+	HGpuProgram      m_hGpuProgram;
 
 	IBaseTexture*    m_pMaskTexture;
 	IBlenderState*   m_pBlendState;

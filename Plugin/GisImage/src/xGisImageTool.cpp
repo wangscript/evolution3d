@@ -1,0 +1,5 @@
+#include "stdafx.h"
+#include "xGisImageTool.h"
+#include "geotiffio.h"
+#include "libxtiff/xtiffio.h"
+#include "geo_normalize.h"

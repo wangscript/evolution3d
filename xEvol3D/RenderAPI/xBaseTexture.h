@@ -97,6 +97,7 @@ class _XEVOL_BASE_API_   IBaseTexture : public IRenderApiResource
 public:
 	IBaseTexture(IRenderApi* pRenderApi);
 	virtual ~IBaseTexture();
+	
 public:
 	virtual ePIXEL_FORMAT  format() = 0;
 	virtual bool           validate() = 0;
@@ -108,8 +109,45 @@ public:
 	virtual bool           create(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData = NULL, int nInitData = 0) = 0;
 	virtual IRenderTarget* toRenderTarget(size_t iSlice = 0 , size_t iMipMapLevel = 0) = 0;
 	virtual bool           saveToFile(const wchar_t* fileName) = 0;
+	virtual int            nSubTexture() { return 1 ; }
+	virtual IBaseTexture*  subTexture(int index) { if(index == 0 ) return this ;  return NULL ; }
 };
 
+class _XEVOL_BASE_API_   xBaseTextureArray : public IBaseTexture
+{
+public:
+	xBaseTextureArray(IRenderApi* pRenderApi = NULL);
+	virtual ~xBaseTextureArray();
+public:
+	DECL_BASE_OBJECT_INTERFACE(xBaseTextureArray);
+	virtual ePIXEL_FORMAT  format() {return PIXELFORMAT_None ; }
+	virtual bool           validate() {return false; }
+	virtual bool           desc(xTextureDesc& desc) { return false; }
+	virtual bool           update(void* data  , int dateLen , int rowPitch , int depthPicth =0 , int mipmapLevel = 0 , int arraySlice = 0)  { return false; }
+	virtual bool           lock(eLockPolicy lockPolicy, xTextureLockArea& lockInfo, int mipmapLevel = 0 , int arraySlice = 0) { return false; }
+	virtual bool           unlock(xTextureLockArea& lockInfo)  { return false; }
+
+	virtual bool           create(const  xTextureInitDesc& initDesc , xTextureInitData* pInitData = NULL, int nInitData = 0)  { return false; }
+	virtual IRenderTarget* toRenderTarget(size_t iSlice = 0 , size_t iMipMapLevel = 0)  { return NULL; }
+	virtual bool           saveToFile(const wchar_t* fileName) { return NULL ; }
+
+
+	virtual eResourceType res_type() { return RESOURCE_OTHER ; }
+	virtual bool          load(const wchar_t* fileName , unsigned long  arg) { return false; }
+	virtual bool          load(const wchar_t* fileName , const unsigned int8* buf , size_t bufLen, unsigned long arg) { return false; }
+	virtual bool          isLoaded()  { return false; }
+	virtual bool          unload() { return false; }
+	virtual unsigned long memUsage()  { return 1; }
+public:
+
+	virtual int              nSubTexture();
+	virtual IBaseTexture*    subTexture(int index);
+	virtual IBaseTexture*&   operator[] (int index) ;
+	virtual void             setArraySize(int _size);
+	virtual void             setSubTexture(int index , IBaseTexture* pTexture);
+protected:
+	ds_vector(IBaseTexture*)  m_vTextureArray;
+};
 
 class _XEVOL_BASE_API_  ITextureLoader : public IBaseObject
 {

@@ -148,6 +148,7 @@ public:
 	bool             HideMEdUI();
 	bool             ShowMEdUI();
 	const wchar_t*   typeName();
+    bool             IsVisible() { return IsWindowVisible() ; } 
 
 public:
 	bool  OnTreeSelChange();

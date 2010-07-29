@@ -108,9 +108,9 @@ public:
 
 	virtual bool         load(xImageSize size) = 0;
 	virtual bool         load(int w , int h , ePIXEL_FORMAT fmt) = 0;
-	virtual bool         load(const wchar_t* fileName, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER) = 0;
-	virtual bool         load(const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER) = 0;
-	virtual bool         load(const wchar_t* filename, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin = IO_LEFT_LOWER) = 0;
+	virtual bool         load(const wchar_t* fileName, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER, unsigned int _arg = 0) = 0;
+	virtual bool         load(const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin = IO_LEFT_LOWER, unsigned int _arg = 0) = 0;
+	virtual bool         load(const wchar_t* filename, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin = IO_LEFT_LOWER, unsigned int _arg = 0) = 0;
 	virtual bool         save(const wchar_t* fileName) = 0;
 	virtual bool         save(const wchar_t* fileName , const int8* image_buf  , int w , int h  , ePIXEL_FORMAT format);
 	virtual bool         free() = 0;

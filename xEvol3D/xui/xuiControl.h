@@ -60,6 +60,7 @@ protected:
     virtual bool            onMMouseRelease(xMouseMsg& mEvent);
     virtual bool            onMouseMove(xMouseMsg& mEvent);
     virtual bool            onMouseWhell(xMouseMsg& mEvent);
+    virtual bool            onLMouseDbClick(xMouseMsg& mEvent);
     virtual bool            onKeyDown(xKeyboardMsg& kEvent);
     virtual bool            onKeyUp(xKeyboardMsg& kEvent);
 

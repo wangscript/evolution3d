@@ -4,6 +4,7 @@
 #include "xScene/xSceneHelperDrawable.h"
 #include "Renderer/xDrawableHelper.h"
 #include "../xMedusaEditor.h"
+#include "xSceneSelector.h"
 using namespace xMathLib;
 class CEvolEnviroment;
 USING_NS_XEVOL3D;
@@ -43,40 +44,27 @@ public:
 	bool        m_bInsert;
 };
 
-class MEDUSA_API xSceneSelection
-{
-public:
-	ISceneNode*                    m_pSelSceneNode;
-	xSceneHelperDrawableNode*      m_pRotGizimo;
-	IDrawableHelper*               m_ArcBall;
-	CEvolEnviroment*               m_pEvolEnv;
-	xSceneHelperDrawableNode*      m_pCurGizmo;
-public:
-	bool             init(CEvolEnviroment*     pEvolEnv);
-	void             showGizimo();
-	void             setRotGizmo();
-	void             setMoveGizmo();
-	void             setNullGizmo();
-	void             setGizmoNode(ISceneNode* pNode);
-	void             setCurSelNode(ISceneNode* pNode);
-	ISceneNode*      GetCurSelNode();
-	ISceneNode*      GetRotGizmo(){ return m_pRotGizimo ; }
-	ISceneNode*      GetGizmo(){return m_pCurGizmo ; }
-	bool             IsGizmoNode(ISceneNode* pNode);
-	xSceneSelection();
-	~xSceneSelection();
 
-};
 class MEDUSA_API xObjPlacement : public NS_MDED::IMEdUIMessageListenner , public NS_MDED::CMEdUiToolBarInfo::MEdUIToolbarCallback
 {
 public:
-	bool             onMessage(NS_XEVOL3D::xWindowMsg& msg);
-	bool             onActive(bool bActive);
-	virtual NS_MDED::CMEdUiToolBarInfo::CommandUIStatus OnUpdateCommandUI(int ctrlID , int ctrlIdx);
-	virtual bool     OnCommand(int ctrlID , int ctrlIdx);
-	xvec4            getMouseMoveDir(int x , int y , float& movPercent);
-	void             setCurSelNode(ISceneNode* pNode);
-	ISceneNode*      GetCurSelNode();
+    enum eCommand
+    {
+        eCmd_Move,
+        eCmd_Rotate,
+        eCmd_Scale,
+    };
+public:
+    bool              DeActive();
+	bool              onMessage(NS_XEVOL3D::xWindowMsg& msg);
+	bool              onActive(IMEdUIMessageListenner::eActiveReason _Reason);
+	virtual bool      OnUpdateCommandUI(int ctrlID , int ctrlIdx, NS_MDED::CMEdUiToolBarInfo::CMEdUiCmdUi* pUi);
+	virtual bool      OnCommand(int ctrlID , int ctrlIdx);
+    virtual bool      SendCommand(eCommand _cmd);
+	xvec4             getMouseMoveDir(int x , int y , float& movPercent);
+	void              setCurSelNode(ISceneNode* pNode);
+	ISceneNode*       GetCurSelNode();
+    eObjPlacementType placementType() { return m_placementType ; }
     xObjPlacement();
     ~xObjPlacement();
 	void init(CEvolEnviroment* pEnv) ;

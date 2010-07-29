@@ -6,7 +6,7 @@
 #include "xDrawElement.h"
 #include "xRenderer.h"
 BEGIN_NAMESPACE_XEVOL3D
-class _XEVOL_BASE_API_  IDrawableHelper : public IDrawElement
+class _XEVOL_BASE_API_  IDrawableHelper : public xSerializeDrawElement
 {
 public:
 	DECL_BASE_OBJECT_DLLSAFE(IDrawableHelper);
@@ -17,7 +17,8 @@ public:
 	virtual bool  begin() = 0;
 	virtual bool  end() = 0;
 	virtual bool  update(unsigned long passedTime){return true ; }
-
+    virtual bool  load(xXmlNode* pXml) ;
+    virtual bool  save(xXmlNode* pNode) ;
 };
 
 END_NAMESPACE_XEVOL3D

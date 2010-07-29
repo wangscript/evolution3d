@@ -31,8 +31,9 @@ class xdirfilestream : public xcomdocstream
 	std::wstring m_FileName;
 	FILE*        m_File;
 	bool         m_bDir;
+	xcd_rwmode   m_rwMode;
 public:
-	xdirfilestream();
+	xdirfilestream(xcd_rwmode mode);
 	~xdirfilestream();
 public:
 	void             Release();
@@ -54,6 +55,7 @@ class xdircomdoc : public IComDocBase
 {
 	std::wstring         m_DirName;
 	int                  m_RefCount;
+	xcd_rwmode           m_rwMode;
 public:
 	virtual void       AddRef();
 	virtual bool       Release();

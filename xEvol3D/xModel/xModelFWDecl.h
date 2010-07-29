@@ -8,7 +8,6 @@ class  _XEVOL_BASE_API_ xCoreActionFrame;
 class  _XEVOL_BASE_API_ xBoneHiberarchy;
 class  _XEVOL_BASE_API_ xCoreSkeleton;
 class  _XEVOL_BASE_API_ xBaseAction;
-class  _XEVOL_BASE_API_ xCoreAction;
 class  _XEVOL_BASE_API_ xCoreActionLoader;
 class  _XEVOL_BASE_API_ xCoreActionName;
 

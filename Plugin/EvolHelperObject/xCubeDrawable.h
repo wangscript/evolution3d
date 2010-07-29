@@ -16,10 +16,9 @@ class _XEVOL_PLUGIN_API_ xCubeDrawable : public IDrawableHelper
 	xInputLayoutDesc m_InputDesc;
 	IInputAssembler* m_pAss;
 	IRenderApi*      m_pRenderApi;
-	IBaseTexture*    m_pTexture;
-	IGpuProgram*     m_pGpuProgram;
 
-	IBaseTexture*    m_pMaskTexture;
+	HBaseTexture     m_hTexture;
+	HGpuProgram      m_hProgram;	
 	IBlenderState*   m_pBlendState;
 
 
