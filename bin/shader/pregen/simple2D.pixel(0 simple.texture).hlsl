@@ -4,7 +4,7 @@
 //============================================
 
 
-//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d9\hlsl\simple2D.pixel.hlsl
+//Insert Node Declaration Node= D:\SVN\evol3d-google\Demo\RayTracerDemo\..\..\bin\shader\d3d9\hlsl\simple2D.pixel.hlsl
 
 sampler2D    DiffuseTexture : register(s0);
 struct PS_INPUT
@@ -17,7 +17,7 @@ struct PS_INPUT
 
 //============================================
 
-//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d9\lib\simple.texture.hlsl
+//Insert Node Code Node= D:\SVN\evol3d-google\Demo\RayTracerDemo\..\..\bin\shader\d3d9\lib\simple.texture.hlsl
 
 float4 COMMON_Texture(float4 _Color , float4 texCoord , sampler2D _texture )
 {
