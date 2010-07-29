@@ -13,12 +13,14 @@ public:
 	bool                    isLoaded();
 	bool                    unload();
 	unsigned long           memUsage();
+    const wchar_t*          name(){ return m_name.c_str() ; }
 public:
 	bool                    load(xcomdoc& doc , const wchar_t* _dir , unsigned int arg);
 	bool                    load_dir(const wchar_t* _dir , unsigned int arg);
     virtual bool            draw(xCoreSkeleton* pSkeleton , xCoreActionFrame* pActionFrame);
 	virtual bool            setCurrentFrame(int iFrame);
-    static IInputAssembler* CreateInputAssembler(int nUVChanel , IRenderApi* pRenderapi , bool bSkin);
+    IInputAssembler*        CreateInputAssembler(int nUVChanel , IRenderApi* pRenderapi , bool bSkin);
+    virtual void            setTexture(int iSubMesh , int iTex , HBaseTexture hTexture) ;
  protected:
 	bool                    loadMaterial(xcomdoc& doc ,const wchar_t* _dir);
 	bool                    readSingleFrame(xcomdoc& doc , const wchar_t* _dir , unsigned int arg , bool bInvertVCoord);

@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{130c791f-907e-4581-9acb-235f103d9acd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{257459f6-4a78-4524-aa07-eae90559fd4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{1d906ac3-972a-42dd-a318-7c2cc610e0d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="state">
+      <UniqueIdentifier>{2cb045b7-da3b-4981-9af9-3371c8f228ec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\xGL2BaseColorSelector.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2BaseRenderTarget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2BaseTexture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2ConstLexer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2FileTexture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2HelperRender.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2InputAssembler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2InputBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2LockableTexture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2MatrixContext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2Rect2D.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2RenderTarget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2RenderView.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xOpenGL2API.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2GPUProgram.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2ParamBuffer.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2Shader.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2BlendState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2DepthStencilState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2RazState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2Sampler.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xGL2TLEnviroment.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL2Plugin.cpp" />
+    <ClCompile Include="src\xGLXRenderWindow.cpp" />
+    <ClCompile Include="src\xOpenGL2DAPICreator.cpp" />
+    <ClCompile Include="src\xWin32RenderWindow.cpp" />
+    <ClCompile Include="src\xGLMipmapLevel.cpp">
+      <Filter>inc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\xGL2BaseColorSelector.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2BaseRenderTarget.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2BaseTexture.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2ConstLexer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2FileTexture.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2HelperRender.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2InputAssembler.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2InputBuffer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2LockableTexture.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2MatrixContext.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2Rect2D.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2RenderApiBaseDecl.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2RenderTarget.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2RenderView.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xOpenGL2API.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2GPUProgram.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2ParamBuffer.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2Shader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2BlendState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2DepthStencilState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2RazState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2Sampler.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xGL2TLEnviroment.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="GL2.h" />
+    <ClInclude Include="src\xOpenGL2DAPICreator.h" />
+    <ClInclude Include="src\xGLMipmapLevel.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

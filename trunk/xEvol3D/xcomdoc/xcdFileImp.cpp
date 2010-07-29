@@ -481,7 +481,7 @@ bool xComDocument::__write_data_to_file()
 #ifdef _WIN32
 	file.open(m_file_name,ios::binary);
 #else
-	char mbcFileName[512];    
+	char mbcFileName[512] = {0};    
 	_xcd_wcsTombs(m_file_name,mbcFileName,512);
 	file.open(mbcFileName,ios::binary);
 #endif

@@ -42,12 +42,32 @@ public:
       virtual IRenderApi*              renderApi();
       virtual bool                     render(unsigned long passedTime) = 0;
       virtual bool                     update(unsigned long passedTime) = 0 ;
-	  virtual bool                     setMatrix(const xMathLib::xmat4& _mat);
-	  virtual const xMathLib::xmat4&   getMatrix();
-	  virtual bool                     isVisible(xGeomLib::xCamera* pCamera);
-protected:
-	  xMathLib::xmat4                  m_trans;
+	  virtual bool                     isVisible(xGeomLib::xCamera* pCamera ,  const xMathLib::xmat4& _mat);
 	  //--------------------------------------------------------
+};
+
+
+
+class _XEVOL_BASE_API_  xSerializeDrawElement : public IDrawElement
+{
+public:
+	DECL_BASE_OBJECT_DLLSAFE(xSerializeDrawElement);
+	xSerializeDrawElement(IBaseRenderer* pRenderer, int arg);
+	virtual ~xSerializeDrawElement();
+	virtual bool   load(xXmlNode* pXml) = 0;
+	virtual bool   save(xXmlNode* pNode) = 0;
+};
+
+class _XEVOL_BASE_API_ IRenderPassArg : public IBaseObject
+{
+public:
+	DECL_BASE_OBJECT_DLLSAFE(IRenderPassArg); 
+	IRenderPassArg();
+	virtual ~IRenderPassArg();
+	virtual bool                     setMatrix(const xMathLib::xmat4& _mat);
+	virtual const xMathLib::xmat4&   getMatrix();
+protected:
+	xMathLib::xmat4                  m_trans;
 };
 
 //真正可以投到RenderQueue里的东西
@@ -61,11 +81,12 @@ public:
    XEVOL_DEFINE_PROPERTY_P(xMaterial             , Material);
    XEVOL_DEFINE_PROPERTY_P(IDrawElement          , Drawable);
    XEVOL_DEFINE_PROPERTY_P(IGpuProgramParamTable , ConstTable);
-
-
+   XEVOL_DEFINE_PROPERTY_P(IRenderPassArg        , RenderPassArg);
 public:
 	virtual bool  render(unsigned long passedTime);
 };
+
+
 
 class  _XEVOL_BASE_API_ IDrawElementCreator;
 class  _XEVOL_BASE_API_ xDrawElementFactoryMgr;

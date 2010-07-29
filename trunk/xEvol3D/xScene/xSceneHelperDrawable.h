@@ -10,12 +10,12 @@ class _XEVOL_BASE_API_  xSceneHelperDrawable : public xSceneEffectObject
 	DECL_BASE_OBJECT_DLLSAFE(xSceneHelperDrawable);
 public:
 	
-	bool           draw(IBaseRenderer* pRenderer, unsigned int passedTime , xGeomLib::xCamera* pCamer);
+	bool           drawImm(IBaseRenderer* pRenderer, unsigned int passedTime , xGeomLib::xCamera* pCamer);
 	bool           draw(IBaseRenderer* pRenderer , xGeomLib::xCamera* pCamer);
 	IDrawElement*  drawElement(size_t idx);
 	size_t         nDrawElement(){ return 1 ; }
 	bool           setDrawElement(IDrawElement* pDrawElement , size_t idx);
-	virtual bool   updateFrame(unsigned long passedTime);
+	virtual bool   updateFrame(unsigned long passedTime, IRenderCamera* pCamera);
 	virtual bool   load(xXmlNode* pXml);
 	virtual bool   save(xXmlNode* pNode);
 	xSceneHelperDrawable(ISceneGraph*  pScene , int arg);

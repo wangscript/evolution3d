@@ -249,12 +249,13 @@ bool xShaderName::removeNode(const wchar_t* nodeName)
     }
     return false;
 }
-void xShaderName::toName(ds_wstring& strName)
+void xShaderName::toName(ds_wstring& _strName)
 {
-	strName = m_strMainNodeName;
+	_strName = m_strMainNodeName;
 	if(m_Sokects.size() == 0)
 		return ;
-	strName += '(';
+    
+    ds_wstring _postFix = L"(";
 	size_t nSockets = m_Sokects.size() ;
 	for(size_t  i =0 ; i < nSockets ;  i ++)
 	{
@@ -262,24 +263,29 @@ void xShaderName::toName(ds_wstring& strName)
 		if(Socket.m_attachNodes.size() == 0)
 			continue;
 		if(Socket.m_idx == -1)
-			strName += Socket.m_name;
+			_postFix += Socket.m_name;
 		else
 		{
 			std::wostringstream oss;
 			oss<<Socket.m_idx;
-			strName += oss.str().c_str();
+			_postFix += oss.str().c_str();
 		}
-		strName += ':';
+		_postFix += ':';
 		size_t nAttachedNodes = Socket.m_attachNodes.size();
 		for(size_t j = 0 ; j <  nAttachedNodes; j ++)
 		{
-			strName += Socket.m_attachNodes[j];
+			_postFix += Socket.m_attachNodes[j];
 			if(j != Socket.m_attachNodes.size() - 1)
-				strName += ',';
+				_postFix += ',';
 		}
-		strName += ';';
+		_postFix += ';';
 	}
-	strName += ')';
+	_postFix += ')';
+
+    if(_postFix !=L"()")
+    {
+        _strName += _postFix;
+    }
 	return ;
 }
 
@@ -842,6 +848,7 @@ public:
 
 bool xGpuProgNameParser::_generateSocketCode(xShaderCodeNodeMgr* pNodeMgr ,xShaderNodeSocket* pSocket , xShaderSocketInfo* info , ds_string& _code)
 {
+    std::ds_string _socketName = pSocket->ansiName();
 	xRetValManager retValMgr;
 	size_t nInputPinArgs = pSocket->m_InputPin.m_Args.size() ;
 	for(size_t i = 0 ; i < nInputPinArgs; i ++)
@@ -912,7 +919,8 @@ bool xGpuProgNameParser::_generateSocketCode(xShaderCodeNodeMgr* pNodeMgr ,xShad
 		}
 
 		char nodeRetArgName[125];
-		sprintf(nodeRetArgName , "Node_%d_Ret", i);
+
+		sprintf(nodeRetArgName , "Ret_%s_Node%d", _socketName.c_str()  ,  i);
 		strLastVal = nodeRetArgName;
 		strLastValType = outRetClass;
 		outRetClass += " ";
@@ -955,8 +963,8 @@ bool xGpuProgNameParser::_generateSocketCode(xShaderCodeNodeMgr* pNodeMgr ,xShad
 	{
 		retDecl += "\n";;
 		retDecl += "//ÉùÃ÷·µ»ØÖµ;\n";
-		retDecl += "   " + socketOutpin.m_structName + "  RetVal_Finall;\n";
-		retVarPre = "RetVal_Finall." ;
+		retDecl += "   " + socketOutpin.m_structName + "  " + pSocket->ansiName()  + "_RetFinal;\n";
+		retVarPre = pSocket->ansiName() + "_RetFinal." ;
 	}
 
 	_code += "\n";
@@ -976,7 +984,13 @@ bool xGpuProgNameParser::_generateSocketCode(xShaderCodeNodeMgr* pNodeMgr ,xShad
 				return false;
 			}
 			assSent = assSent + retVal + "; \n";
-			_code += assSent;			
+
+            if( std::ds_string(retVarPre) + arg.m_Name != retVal )
+			   _code += assSent;
+            else
+            {
+                continue;
+            }
 		}
 	}
 	else if(socketOutpin.m_structName.length() > 0 ) 

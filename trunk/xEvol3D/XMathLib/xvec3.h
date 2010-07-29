@@ -174,7 +174,9 @@ public:
 
 	TVec3<_Type>&     operator +=(const TVec3<_Type>& v)
 	{ 
-		x += v.x ; y += v.y ; 
+		x += v.x ;
+        y += v.y ; 
+        z += v.z;
 		return *this; 
 	}
 
@@ -183,7 +185,9 @@ public:
 	//-----------------------------------------------------
 	TVec3<_Type>&     operator -=(const TVec3<_Type>& v)
 	{ 
-		x -= v.x ; y -= v.y ; 
+		x -= v.x ; 
+        y -= v.y ; 
+        z -= v.z;
 		return *this; 
 	}
 
@@ -265,6 +269,24 @@ public:
 	};
 
 };
+
+template <typename T> TVec3<T> operator * (const T& v1 , const TVec3<T>& v2)
+{
+    TVec3<T> _ret;
+    _ret.x = v1 * v2.x;
+    _ret.y = v1 * v2.y;
+    _ret.z = v1 * v2.z;
+    return _ret;
+}
+
+template <typename T> TVec3<T> operator * (const TVec3<T>& v1 , const TVec3<T>& v2)
+{
+    TVec3<T> _ret;
+    _ret.x = v1.x * v2.x;
+    _ret.y = v1.y * v2.y;
+    _ret.z = v1.z * v2.z;
+    return _ret;
+}
 
 //typedef TVec3<float> xvec3;
 //typedef TVec3<int  > xvec3i;

@@ -31,11 +31,11 @@ public:
 	bool                 resize(int w , int h);
 	bool                 resize(int w , int h  , bool destoryRT);
 	bool                 createRenderTarget(int nRenderTarget , ePIXEL_FORMAT fmt , bool bLockable , bool bAsTexture);
-	bool                 setRenderTarget(IBaseTexture*  pTexture , size_t rtIdx);
+	bool                 setRenderTarget(IBaseTexture*  pTexture , size_t rtIdx, size_t iSlice = 0 , size_t iMipMapLevel =0 );
 	bool                 setRenderTarget(IRenderTarget* pRenderTarget , size_t rtIdx);
 	bool                 setDepthBuffer(IRenderTarget* pDepthBuffer);
     bool                 setDepthBuffer(IBaseTexture* pDepthTexture);
-	int                  addRenderTarget(IBaseTexture*  pTexture);
+	int                  addRenderTarget(IBaseTexture*  pTexture, size_t iSlice , size_t iMipMapLevel);
 	int                  addRenderTarget(IRenderTarget* pRenderTarget);
 	IRenderTarget*       depthBuffer();
     bool                 depthBufferDesc(XD3D11_TEXTURE2D_DESC& _desc );

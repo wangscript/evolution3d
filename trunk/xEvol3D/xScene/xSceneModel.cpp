@@ -26,6 +26,11 @@ bool xSceneModel::load(xXmlNode* pXml)
 	xBaseModelMgr* pModelMgr = m_pSceneGraph->getModelManager();
 	m_strModelFile = pXml->value(L"file");
 	HBaseModel hModel = pModelMgr->add( m_strModelFile.c_str() , true , true);
+    if(hModel.getResource() == NULL)
+    {
+       //return false;
+    }
+
 	m_pModelElement->setModel(hModel);
 
 	//¼ÓÔØEffect;
@@ -66,7 +71,7 @@ bool xSceneModel::load(xXmlNode* pXml)
 	xXmlNode* pEffectXml = pXml->findNode(L"EffectParam");
 	_effect->load(pEffectXml);  
 	m_pEffect = _effect;
-	return true;
+	return pModel != NULL;
 }
 
 bool xSceneModel::save(xXmlNode* pXml)
@@ -85,7 +90,7 @@ bool xSceneModel::save(xXmlNode* pXml)
 	return true;
 }
 
-bool xSceneModel::updateFrame(unsigned long passedTime)
+bool xSceneModel::updateFrame(unsigned long passedTime, IRenderCamera* pCamera)
 {
     m_pModelElement->update(passedTime);
 	return true ;
@@ -158,7 +163,7 @@ bool xSceneMesh::setDrawElement(IDrawElement* pDrawElement , size_t idx)
 	return false;
 }
 
-bool xSceneMesh::updateFrame(unsigned long passedTime)
+bool xSceneMesh::updateFrame(unsigned long passedTime, IRenderCamera* pCamera)
 {
 	return true ;
 }

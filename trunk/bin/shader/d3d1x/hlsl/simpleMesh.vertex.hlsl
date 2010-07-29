@@ -1,9 +1,10 @@
 ///{{Declaration
 cbuffer TransformBuffer
 {
-      matrix matWorld;
-      matrix matView;
-      matrix matProject;
+      float4x4 matWorld;
+      float4x4 matView;
+      float4x4 matProject;
+      float4x4 matTexture;
 	  float4 cameraUp;
 	  float4 cameraPos;
 	  float4 cameraDir;
@@ -26,7 +27,7 @@ struct PS_INPUT
       float4 Nor      : NORMAL;
       float4 Color    : COLOR;
       float4 Tan      : TANGENT;
-      float2 Tex      : TEXCOORD;  
+      float4 Tex      : TEXCOORD;  
 
       float4 wPosition : TEXCOORD2;
       float4 wNormal   : TEXCOORD3;  
@@ -45,7 +46,7 @@ PS_INPUT main( VS_INPUT input )
       output.Pos   = mul( matWorld   , input.Pos );
       output.Pos   = mul( matView    , output.Pos);
       output.Pos   = mul( matProject , output.Pos);
-      output.Tex   = input.Tex;
+      output.Tex   = float4(input.Tex , 1.0f , 1.0f);
       output.Color = input.Color.xyzw;
 
 
@@ -85,7 +86,7 @@ PS_INPUT main( VS_INPUT input )
             float4 input.Color    : COLOR;
             float4 input.Weights  : BLENDWEIGHT;
             int4   input.BoneIdxs : BLENDINDICES;
-            float2 input.Tex      : TEXCOORD;  
+            float4 output.Tex     : TEXCOORD;  
             
             //Camera Infomation
             float4 cameraUp       : CAMERAUP ;
@@ -108,7 +109,7 @@ PS_INPUT main( VS_INPUT input )
 
             //ÎÆÀí×ø±ê£¬ÑÕÉ«¡£
             float4 output.Color    : COLOR;
-            float2 output.Tex      : TEXCOORD;   
+            float4 output.Tex      : TEXCOORD;   
       }
 ///}}
 */

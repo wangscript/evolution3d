@@ -26,10 +26,17 @@ BEGIN_NAMESPACE_XMATHLIB
 template <typename _Type> class TRect
 {
 public:
-      _Type x ;
-      _Type y ;
-      _Type w ;
-      _Type h ;
+    union
+    {
+        struct { 
+            _Type x ;
+            _Type y ;
+            _Type w ;
+            _Type h ;
+        };
+        _Type v[4];
+    };
+
 public:
       _Type right() {     return x + w;   }
       _Type bottom(){     return y + h;   }
@@ -139,6 +146,21 @@ public:
 		_Type ny = z * v1.x - v1.z * x;
 		_Type nz = x * v1.y - v1.x * y;
 		return TVec4<_Type>(nx,ny,nz,1);
+	}
+
+	void cp(const TVec4<_Type>& v1 , TVec4<_Type>& _out)  const      
+	{
+		_out.x = y * v1.z - v1.y * z;
+		_out.y = z * v1.x - v1.z * x;
+		_out.z = x * v1.y - v1.x * y;
+		_out.w = 1.0f;
+	}
+
+	void cp(const TVec4<_Type>& v1 , TVec3<_Type>& _out)  const      
+	{
+		_out.x = y * v1.z - v1.y * z;
+		_out.y = z * v1.x - v1.z * x;
+		_out.z = x * v1.y - v1.x * y;
 	}
 
 
@@ -296,6 +318,114 @@ public:
 		return (value_type)XM_ACosD((float)t);
 	}
 
+#define MK_SWIZLLE3( a , b , c) TVec3<_Type>  a##b##c() { return TVec3<_Type>(a , b , c); }
+    //=======x========
+    MK_SWIZLLE3(x,x,x);
+    MK_SWIZLLE3(x,x,y);
+    MK_SWIZLLE3(x,x,z);
+    MK_SWIZLLE3(x,x,w);
+
+    MK_SWIZLLE3(x,y,x);
+    MK_SWIZLLE3(x,y,y);
+    MK_SWIZLLE3(x,y,z);
+    MK_SWIZLLE3(x,y,w);
+
+    MK_SWIZLLE3(x,z,x);
+    MK_SWIZLLE3(x,z,y);
+    MK_SWIZLLE3(x,z,z);
+    MK_SWIZLLE3(x,z,w);
+
+    MK_SWIZLLE3(x,w,x);
+    MK_SWIZLLE3(x,w,y);
+    MK_SWIZLLE3(x,w,z);
+    MK_SWIZLLE3(x,w,w);
+
+    //======y==========
+    MK_SWIZLLE3(y,x,x);
+    MK_SWIZLLE3(y,x,y);
+    MK_SWIZLLE3(y,x,z);
+    MK_SWIZLLE3(y,x,w);
+
+    MK_SWIZLLE3(y,y,x);
+    MK_SWIZLLE3(y,y,y);
+    MK_SWIZLLE3(y,y,z);
+    MK_SWIZLLE3(y,y,w);
+
+    MK_SWIZLLE3(y,z,x);
+    MK_SWIZLLE3(y,z,y);
+    MK_SWIZLLE3(y,z,z);
+    MK_SWIZLLE3(y,z,w);
+
+    MK_SWIZLLE3(y,w,x);
+    MK_SWIZLLE3(y,w,y);
+    MK_SWIZLLE3(y,w,z);
+    MK_SWIZLLE3(y,w,w);
+
+    //======z==========
+    MK_SWIZLLE3(z,x,x);
+    MK_SWIZLLE3(z,x,y);
+    MK_SWIZLLE3(z,x,z);
+    MK_SWIZLLE3(z,x,w);
+
+    MK_SWIZLLE3(z,y,x);
+    MK_SWIZLLE3(z,y,y);
+    MK_SWIZLLE3(z,y,z);
+    MK_SWIZLLE3(z,y,w);
+
+    MK_SWIZLLE3(z,z,x);
+    MK_SWIZLLE3(z,z,y);
+    MK_SWIZLLE3(z,z,z);
+    MK_SWIZLLE3(z,z,w);
+
+    MK_SWIZLLE3(z,w,x);
+    MK_SWIZLLE3(z,w,y);
+    MK_SWIZLLE3(z,w,z);
+    MK_SWIZLLE3(z,w,w);
+
+    //======w==========
+    MK_SWIZLLE3(w,x,x);
+    MK_SWIZLLE3(w,x,y);
+    MK_SWIZLLE3(w,x,z);
+    MK_SWIZLLE3(w,x,w);
+
+    MK_SWIZLLE3(w,y,x);
+    MK_SWIZLLE3(w,y,y);
+    MK_SWIZLLE3(w,y,z);
+    MK_SWIZLLE3(w,y,w);
+
+    MK_SWIZLLE3(w,z,x);
+    MK_SWIZLLE3(w,z,y);
+    MK_SWIZLLE3(w,z,z);
+    MK_SWIZLLE3(w,z,w);
+
+    MK_SWIZLLE3(w,w,x);
+    MK_SWIZLLE3(w,w,y);
+    MK_SWIZLLE3(w,w,z);
+    MK_SWIZLLE3(w,w,w);
+#undef MK_SWIZLLE3
+
+#define MK_SWIZLLE2( a , b ) TVec3<_Type>  a##b() { return TVec2<_Type>(a , b); }
+
+    MK_SWIZLLE2(x,x);
+    MK_SWIZLLE2(x,y);
+    MK_SWIZLLE2(x,z);
+    MK_SWIZLLE2(x,w);
+
+    MK_SWIZLLE2(y,x);
+    MK_SWIZLLE2(y,y);
+    MK_SWIZLLE2(y,z);
+    MK_SWIZLLE2(y,w);
+
+    MK_SWIZLLE2(z,x);
+    MK_SWIZLLE2(z,y);
+    MK_SWIZLLE2(z,z);
+    MK_SWIZLLE2(z,w);
+
+    MK_SWIZLLE2(w,x);
+    MK_SWIZLLE2(w,y);
+    MK_SWIZLLE2(w,z);
+    MK_SWIZLLE2(w,w);
+#undef MK_SWIZLLE2
 
 	operator _Type* (){ return v ; }
 
@@ -318,6 +448,25 @@ public://We set this data public is for easy access
 		_Type        v[4];
 	};
 };
+template <typename T> TVec4<T> operator * (const T& v1 , const TVec4<T>& v2)
+{
+    TVec4<T> _ret;
+    _ret.x = v1 * v2.x;
+    _ret.y = v1 * v2.y;
+    _ret.z = v1 * v2.z;
+    _ret.w = v1 * v2.w;
+    return _ret;
+}
+
+template <typename T> TVec4<T> operator * (const TVec4<T>& v1 , const TVec4<T>& v2)
+{
+    TVec4<T> _ret;
+    _ret.x = v1.x * v2.x;
+    _ret.y = v1.y * v2.y;
+    _ret.z = v1.z * v2.z;
+    _ret.w = v1.w * v2.w;
+    return _ret;
+}
 
 //typedef TVec4<float> xvec4;
 //typedef TVec4<unsigned int> xvec4ui;

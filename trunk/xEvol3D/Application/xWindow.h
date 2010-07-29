@@ -34,6 +34,11 @@ class _XEVOL_BASE_API_  IWindow;
 struct xWindowMsg : public xBaseWindowMsg
 {
 	IWindow*      m_pWndReciver;
+    xWindowMsg()
+    {
+        m_pWndReciver    = NULL;
+        nProccessedCount = 0;
+    }
 };
 
 typedef bool (*PFNWINDOWPROC)(IWindow* pWnd,xWindowMsg msg);

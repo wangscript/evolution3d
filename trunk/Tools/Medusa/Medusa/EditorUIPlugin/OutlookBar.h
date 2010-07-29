@@ -49,6 +49,7 @@ public:
 	bool             AttachUIElement(nsMedusaEditor::IMEdUIElement* pPane);
 	bool             DetachUIElement(nsMedusaEditor::IMEdUIElement* pPane);
 	const wchar_t*   typeName();
+    bool             IsVisible() { return m_wndNavigationBar.IsWindowVisible() ; } 
 
 
 	typedef std::map<IMEdUIElement* , CTabWindowContainer*> vCtToElements;

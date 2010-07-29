@@ -39,7 +39,7 @@ static int FileLen();
 # endif
 #endif
 
-#ifdef _LINUX
+#ifdef _UNIX
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -80,7 +80,7 @@ public:
 
 void AddDirectoryRecurse(IComDocBase* _doc,const wchar_t* dir_name,int compressed_rate)
 {
-	xComDocument * pDoc = dynamic_cast<xComDocument*>(_doc); 
+	xComDocument * pDoc = type_cast<xComDocument*>(_doc); 
 	if(pDoc == NULL)
 		return ;
 
@@ -123,7 +123,7 @@ void create_all_dir(const wchar_t* bas_dir,const wchar_t* file)
 
 void ExtractToDirectory(IComDocBase* _doc,const wchar_t* bas_dir)
 {
-	xComDocument * pDoc = dynamic_cast<xComDocument*>(_doc); 
+	xComDocument * pDoc = type_cast<xComDocument*>(_doc); 
 	if(pDoc == NULL)
 		return ;
 
@@ -151,7 +151,7 @@ void ExtractToDirectory(IComDocBase* _doc,const wchar_t* bas_dir)
 #ifdef _WIN32
 	        ofstream out(file_name.c_str(),ios::binary);
 #else
-	        char mbcFileName[512];    
+			char mbcFileName[512] = {0};    
 	        _xcd_wcsTombs(file_name.c_str(),mbcFileName,512);
 	        ofstream out(mbcFileName,ios::binary);
 #endif

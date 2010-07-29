@@ -55,6 +55,9 @@ bool xD11FileTexture::__loadImageFile(const wchar_t* fileName , const unsigned i
 	xImageSize _size = pImg->getSize();
 	int pitch = _size.pitch;
 
+	//高16位是imageIndex
+	int imageIndex = arg >> 16;
+
 	//1个图像.那么就是2D纹理
 	if(pImg->nImage() == 1)
 	{
@@ -64,7 +67,12 @@ bool xD11FileTexture::__loadImageFile(const wchar_t* fileName , const unsigned i
 		desc.Height           = (UINT)_size.h;
 		desc.MipLevels        = (UINT)pImg->nMipmapLevel();
 		desc.ArraySize        = 1;
-		desc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+		xImageSize _size      = pImg->getSize();
+		desc.Format       = DXGI_FORMAT_R8G8B8A8_UNORM ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+		if(_size.fmt == PIXELFORMAT_R32F)
+		{
+			desc.Format       = DXGI_FORMAT_R32_FLOAT ; //DXGI_FORMAT_R32G32B32A32_FLOAT;
+		}
 		desc.SampleDesc.Count = 1;
 		desc.BindFlags        = D3D11_BIND_SHADER_RESOURCE  ;//| D3D11_BIND_RENDER_TARGET; 
 		desc.Usage            = D3D11_USAGE_DEFAULT;
@@ -75,7 +83,7 @@ bool xD11FileTexture::__loadImageFile(const wchar_t* fileName , const unsigned i
 		D3D11_SUBRESOURCE_DATA* pInitData = new D3D11_SUBRESOURCE_DATA [ pImg->nMipmapLevel() ] ;
 		for(int i = 0 ; i < (int)pImg->nMipmapLevel() ; i ++)
 		{
-			pInitData[i].pSysMem = pImg->data(i);
+			pInitData[i].pSysMem = pImg->data(i );
 			pInitData[i].SysMemPitch = pitch;
 			pInitData[i].SysMemSlicePitch = 0;
 			pitch/=2;
@@ -114,6 +122,9 @@ bool xD11FileTexture::_prepareLoadInfo(D3DX11_IMAGE_INFO& imgInfo , D3DX11_IMAGE
 
 bool xD11FileTexture::load(const wchar_t* fileName , unsigned long  arg)
 {
+    if( xFileSystem::singleton()->fileExist(fileName) == false )
+        return false;
+
 	ID3D11Resource* pTexture = NULL;
 
 	D3DX11_IMAGE_INFO      imgInfo;
@@ -166,14 +177,17 @@ bool xD11FileTexture::load(const wchar_t* fileName , const unsigned int8* buf , 
 	if(pTexture)
     {
         m_TexInfo.m_ShaderViewFmt = DXGI_FORMAT_UNKNOWN;
-        m_TexInfo.m_RTViewFmt  = DXGI_FORMAT_UNKNOWN;
-        m_TexInfo.m_ResFmt     = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_RTViewFmt     = DXGI_FORMAT_UNKNOWN;
+        m_TexInfo.m_ResFmt        = DXGI_FORMAT_UNKNOWN;
         return _load(pTexture);
     }
 	return __loadImageFile(fileName , buf , bufLen ,arg);
 }
 
-
+bool  xD11FileTexture::update( void* data  , int dateLen , int rowPitch , int depthPicth , int mipmapLevel , int arraySlice)
+{
+     return _update(m_pTexture , data , dateLen , rowPitch , depthPicth , mipmapLevel , arraySlice);
+}
 
 
 END_NAMESPACE_XEVOL3D

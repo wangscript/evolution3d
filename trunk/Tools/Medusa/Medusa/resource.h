@@ -44,15 +44,17 @@
 #define IDB_PAGES_SMALL_HC              191
 #define IDR_THEME_MENU                  200
 #define ID_SET_STYLE                    201
-#define ID_VIEW_APPLOOK_WIN_2000        210
-#define ID_VIEW_APPLOOK_OFF_XP          211
-#define ID_VIEW_APPLOOK_WIN_XP          212
-#define ID_VIEW_APPLOOK_OFF_2003        213
-#define ID_VIEW_APPLOOK_VS_2005         214
+#define ID_VIEW_APPLOOK_WIN_2000        205
+#define ID_VIEW_APPLOOK_OFF_XP          206
+#define ID_VIEW_APPLOOK_WIN_XP          207
+#define ID_VIEW_APPLOOK_OFF_2003        208
+#define ID_VIEW_APPLOOK_VS_2005         209
+#define ID_VIEW_APPLOOK_VS_2008         210
 #define ID_VIEW_APPLOOK_OFF_2007_BLUE   215
 #define ID_VIEW_APPLOOK_OFF_2007_BLACK  216
 #define ID_VIEW_APPLOOK_OFF_2007_SILVER 217
 #define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
+#define ID_VIEW_APPLOOK_WINDOWS_7       219
 #define ID_TOOLS_OPTIONS                220
 #define ID_VIEW_CAPTION_BAR             221
 #define IDB_INFO                        230
@@ -103,6 +105,7 @@
 #define IDB_SCENE_TREEVIEW              314
 #define IDR_CAMERAVIEW                  315
 #define IDD_INSERT_NODE                 316
+#define IDR_MAINRIBBON                  317
 #define IDC_EDIT_FILENAME               1000
 #define IDC_CB_MATERIAL                 1001
 #define IDC_CB_EFFECT                   1002
@@ -145,13 +148,16 @@
 #define ID_MODELOPERATOR_REFLESHLIB     32787
 #define ID_32788                        32788
 #define ID_32789                        32789
+#define ID_BUTTON2                      32790
+#define ID_EDIT_UNDOC                   32791
+#define ID_ID                           32792
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        317
-#define _APS_NEXT_COMMAND_VALUE         32790
+#define _APS_NEXT_RESOURCE_VALUE        318
+#define _APS_NEXT_COMMAND_VALUE         32793
 #define _APS_NEXT_CONTROL_VALUE         1016
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

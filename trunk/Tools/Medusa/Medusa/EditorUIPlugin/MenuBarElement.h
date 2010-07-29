@@ -22,6 +22,7 @@ public:
 	const wchar_t*   title();
 	const wchar_t*   name();
 	const wchar_t*   typeName();
+    bool             IsVisible() { return m_wndMenuBar.IsVisible() ; } 
 
 	IMPL_REFCOUNT_OBJECT_INTERFACE(CMEdUiMenuBar);
 protected:

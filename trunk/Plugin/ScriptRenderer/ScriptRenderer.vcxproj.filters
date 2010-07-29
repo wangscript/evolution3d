@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{c018c581-b881-4c46-91bd-42f675f923ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{d20b25d8-c8bc-494a-baad-4fa25f3786c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="script">
+      <UniqueIdentifier>{d957d70e-8a21-4a03-afdc-fa37df20935c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\csMaterial.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\csRenderer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\csRendererInc.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\bin\minigcc\include\csRenderer.h">
+      <Filter>script</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\csMaterial.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\csRenderer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="csRenderPlugin.cpp" />
+  </ItemGroup>
+</Project>

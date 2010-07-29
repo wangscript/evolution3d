@@ -44,21 +44,21 @@ CMedusaDoc::~CMedusaDoc()
 
 BOOL  CMedusaDoc::DoSave(LPCTSTR lpszPathName, BOOL bReplace)
 {
-	std::ds_wstring fileName = L"";
-	if(lpszPathName == NULL)
-	{
-		const TCHAR szFilters[]=_T("场景xml文件 files (*.xml)|*.xml|编译过的场景文件 files (*.evs)|*.evs|All Files (*.*)|*.*||");
-		CFileDialog dlg(FALSE, _T("xml"), _T("*.xml"), OFN_EXPLORER | OFN_HIDEREADONLY, szFilters);
-		if(dlg.DoModal() != IDOK)
-		{
-			return FALSE;
-		}
-		fileName = dlg.m_ofn.lpstrFile;
-	}
-	else
-	{
-		fileName = lpszPathName;
-	}
+    std::ds_wstring fileName = L"";
+    if(lpszPathName == NULL)
+    {
+        const TCHAR szFilters[]=_T("场景xml文件 files (*.xml)|*.xml|编译过的场景文件 files (*.evs)|*.evs|All Files (*.*)|*.*||");
+        CFileDialog dlg(FALSE, _T("xml"), _T("*.xml"), OFN_EXPLORER | OFN_HIDEREADONLY, szFilters);
+        if(dlg.DoModal() != IDOK)
+        {
+            return FALSE;
+        }
+        fileName = dlg.m_ofn.lpstrFile;
+    }
+    else
+    {
+        fileName = lpszPathName;
+    }
 
 	CMedusaApp* pApp = &theApp;
 	CEditorEnv* pEditorEnv = dynamic_cast<CEditorEnv*>(pApp);

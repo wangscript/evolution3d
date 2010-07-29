@@ -141,7 +141,7 @@ bool PlatformWin32::_registerWindow(WIN_CREATE_STRUCT& createStruct)
 	WNDCLASSEX  wndclass ;
 	wndclass.cbSize        = sizeof (wndclass) ;
 
-	wndclass.style         = CS_HREDRAW | CS_VREDRAW;
+	wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 	wndclass.lpfnWndProc   = PlatformWin32::windowProc;
 	wndclass.cbClsExtra    = 0 ;
 	wndclass.cbWndExtra    = 0 ;

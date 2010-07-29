@@ -4,37 +4,35 @@
 //============================================
 
 
-//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\hlsl\simple2D.pixel.hlsl
+//Insert Node Declaration Node= D:\SVN\evol3d-google\Demo\RayTracerDemo\..\..\bin\shader\d3d9\hlsl\simple2D.pixel.hlsl
 
-SamplerState DefaultSampler : register(s0);
-Texture2D    DiffuseTexture : register(t0);
+sampler2D    DiffuseTexture : register(s0);
 struct PS_INPUT
 {
-      float4 Pos      : SV_POSITION;
       float4 Tex      : TEXCOORD0;
       float4 Tex1     : TEXCOORD1;
       float4 Color    : COLOR;
 };
 
-//Insert Node Declaration Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.mask.hlsl
+//Insert Node Declaration Node= D:\SVN\evol3d-google\Demo\RayTracerDemo\..\..\bin\shader\d3d9\lib\simple.mask.hlsl
 
-Texture2D    Texture1       : register(t1);;
+sampler2D    Texture1       : register(s1);;
 //==================================================
 
 //============================================
 
-//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.texture.hlsl
+//Insert Node Code Node= D:\SVN\evol3d-google\Demo\RayTracerDemo\..\..\bin\shader\d3d9\lib\simple.texture.hlsl
 
-float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , Texture2D _texture )
+float4 COMMON_Texture(float4 _Color , float4 texCoord , sampler2D _texture )
 {
-      return _texture.Sample(_sampler, texCoord.xy) * _Color ;
+      return tex2D(_texture, texCoord.xy) * _Color ;
 }
 
-//Insert Node Code Node= d:\SVN\Evol3D\xEvolEngine\bin\shader\d3d1x\lib\simple.mask.hlsl
+//Insert Node Code Node= D:\SVN\evol3d-google\Demo\RayTracerDemo\..\..\bin\shader\d3d9\lib\simple.mask.hlsl
 
-float4 CM_Mask(float4 vDiffuse , float2 texCoord , SamplerState _sampler)
+float4 CM_Mask(float4 vDiffuse , float4 texCoord )
 {
-      float4 maskColor = Texture1.Sample(_sampler, texCoord.xy);
+      float4 maskColor = tex2D(Texture1, texCoord.xy);
       float4 ret = vDiffuse * maskColor;
       return ret;
 }
@@ -44,17 +42,17 @@ float4 CM_Mask(float4 vDiffuse , float2 texCoord , SamplerState _sampler)
 //============================================
 //Begin Main Node'code 
 
-float4 main( PS_INPUT input) : SV_Target
+float4 main( PS_INPUT input) : COLOR0
 {
       float4 vDiffuse =  input.Color ;
 
    //应用修改器 name=simple.texture 
-   float4 Node_0_Ret = COMMON_Texture(vDiffuse , input.Tex , DefaultSampler , DiffuseTexture);
+   float4 Ret_ColorModify_Node0 = COMMON_Texture(vDiffuse , input.Tex , DiffuseTexture);
 
    //应用修改器 name=simple.mask 
-   float4 Node_1_Ret = CM_Mask(Node_0_Ret , input.Tex1 , DefaultSampler);
+   float4 Ret_ColorModify_Node1 = CM_Mask(Ret_ColorModify_Node0 , input.Tex1);
 
-   vDiffuse = Node_1_Ret; 
+   vDiffuse = Ret_ColorModify_Node1; 
 
       return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , clamp(vDiffuse.w , 0.0  , 1.0) );
 }

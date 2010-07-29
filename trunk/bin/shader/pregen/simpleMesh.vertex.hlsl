@@ -14,16 +14,19 @@ float4x4 normalMatrix(float4x4 mat)
 //============================================
 
 
-cbuffer TransformBuffer
+struct cTransformBuffer
 {
-      matrix matWorld;
-      matrix matView;
-      matrix matProject;
+      float4x4 matWorld;
+      float4x4 matView;
+      float4x4 matProject;
+      float4x4 matTexture;
 	  float4 cameraUp;
 	  float4 cameraPos;
 	  float4 cameraDir;
 	  float4 cameraArg;//[Near , Far , Fov , Aspect]
-}
+};
+cTransformBuffer TransformBuffer;
+
 
 struct STATICMESHVS_INPUT
 {
@@ -37,15 +40,16 @@ struct STATICMESHVS_INPUT
 
 struct PS_INPUT
 {
-      float4 Pos      : SV_POSITION;
-      float4 Nor      : NORMAL;
-      float4 Color    : COLOR;
-      float4 Tan      : TANGENT;
-      float2 Tex      : TEXCOORD;  
+      float4 oPos      : POSITION0;
+      float4 Color     : COLOR;
+      float4 Tex       : TEXCOORD0;  
+      float4 Pos       : TEXCOORD1;
+      float4 Nor       : TEXCOORD2;     
+      float4 Tan       : TEXCOORD3;      
 
-      float4 wPosition : TEXCOORD2;
-      float4 wNormal   : TEXCOORD3;  
-      float4 wTangent  : TEXCOORD4;
+      float4 wPosition : TEXCOORD4;
+      float4 wNormal   : TEXCOORD5;  
+      float4 wTangent  : TEXCOORD6;   
 };
 
 #define VS_INPUT STATICMESHVS_INPUT
@@ -53,25 +57,26 @@ struct PS_INPUT
 PS_INPUT main( VS_INPUT input )
 {
       PS_INPUT output = (PS_INPUT)0;
-      output.Pos   = mul( matWorld   , input.Pos );
-      output.Pos   = mul( matView    , output.Pos);
-      output.Pos   = mul( matProject , output.Pos);
-      output.Tex   = input.Tex;
+      output.Pos   = mul( input.Pos  , TransformBuffer.matWorld  );
+      output.Pos   = mul( output.Pos , TransformBuffer.matView   );
+      output.Pos   = mul( output.Pos , TransformBuffer.matProject);
+      output.Tex   = float4(input.Tex , 1.0f , 1.0f);
       output.Color = input.Color.xyzw;
 
 
-	  float4x4 matModelView = matView * matWorld;
-	  float4x4 matNormal = normalMatrix(matModelView);
+	  float4x4 matModelView = TransformBuffer.matWorld * TransformBuffer.matView;
+	  float4x4 matNormal    = normalMatrix(matModelView);
 
 	  //观察坐标系中的
       output.Tan   = mul(matNormal , input.Tan);
       output.Nor   = mul(matNormal , input.Nor);
 
    	  //世界坐标系中的
-	  matNormal = normalMatrix(matWorld);
-      output.wPosition = mul(matWorld  , input.Pos );
-      output.wNormal   = mul(matNormal , input.Nor);
-      output.wTangent  = mul(matNormal , input.Tan);
+	  matNormal = normalMatrix(TransformBuffer.matWorld);
+      output.wPosition = mul( input.Pos  , TransformBuffer.matWorld );
+      output.wNormal   = mul( input.Nor  , matNormal                );
+      output.wTangent  = mul( input.Tan  , matNormal                );
 
+    output.oPos = output.Pos;
     return output;
 }

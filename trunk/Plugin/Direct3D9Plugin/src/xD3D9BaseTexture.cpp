@@ -383,13 +383,13 @@ bool  xD3D9BaseTexture::uploadTextureData(const char* pData[],int src_picth , in
 
  bool xD3D9BaseTexture::_grabRenderTagetData(IDirect3DSurface9* pRTSurface , void* pData , int x , int y , int w , int h)
  {
-     D3DSURFACE_DESC _SurfDesc;
-     pRTSurface->GetDesc(&_SurfDesc);
+	 D3DSURFACE_DESC _SurfDesc;
+	 pRTSurface->GetDesc(&_SurfDesc);
 
-     IDirect3DDevice9* pDevice  = m_pD3D9RenderApi->getDevice();
-     IDirect3DSurface9* pSysSurface = NULL;
-     pDevice->CreateOffscreenPlainSurface(_SurfDesc.Width , _SurfDesc.Height , _SurfDesc.Format , D3DPOOL_SYSTEMMEM , &pSysSurface , NULL);
-     HRESULT hr = pDevice->GetRenderTargetData(pRTSurface,pSysSurface); 
+	 IDirect3DDevice9* pDevice  = m_pD3D9RenderApi->getDevice();
+	 IDirect3DSurface9* pSysSurface = NULL;
+	 pDevice->CreateOffscreenPlainSurface(_SurfDesc.Width , _SurfDesc.Height , _SurfDesc.Format , D3DPOOL_SYSTEMMEM , &pSysSurface , NULL);
+	 HRESULT hr = pDevice->GetRenderTargetData(pRTSurface,pSysSurface); 
      if(FAILED(hr))
      {
          XSAFE_RELEASE(pSysSurface);
@@ -408,12 +408,26 @@ bool  xD3D9BaseTexture::uploadTextureData(const char* pData[],int src_picth , in
      int max_len  =  LockRect.Pitch - x * m_TexInfo.m_nBytePerPixel;
      if(dstPitch > max_len ) line_len = max_len;
 
-     for(int _y = 0 ; _y < (int)h ; _y ++ )
-     {
-         memcpy(pDstLine , pSrcLine , line_len );
-         pDstLine += dstPitch;
-         pSrcLine += LockRect.Pitch;
-     }
+	 if(h > 0)
+	 {
+		 for(int _y = 0 ; _y < (int)h ; _y ++ )
+		 {
+			 memcpy(pDstLine , pSrcLine , line_len );
+			 pDstLine += dstPitch;
+			 pSrcLine += LockRect.Pitch;
+		 }
+
+	 }
+	 else
+	 {
+		 for(int _y = 0 ; _y < -(int)h ; _y ++ )
+		 {
+			 memcpy(pDstLine , pSrcLine , line_len );
+			 pDstLine += dstPitch;
+			 pSrcLine -= LockRect.Pitch;
+		 }
+
+	 }
 
      pSysSurface->UnlockRect();
      XSAFE_RELEASE(pSysSurface);

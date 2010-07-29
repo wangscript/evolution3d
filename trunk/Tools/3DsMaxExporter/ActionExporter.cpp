@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "xXmlDocument.h"
 #include <decomp.h> 
 
-void     makBoneTrans2(INode* pNode , sBoneTrans_t& boneTrans , Matrix3& mat)
+void     makBoneTrans2(INode* pNode , sBoneTrans_t& boneTrans , Matrix3& mat , bool& bAlert)
 {
 	Point3   Trans = mat.GetTrans();
 	Matrix3  RotMat = mat;
@@ -49,11 +49,15 @@ void     makBoneTrans2(INode* pNode , sBoneTrans_t& boneTrans , Matrix3& mat)
 		abs(boneTrans.m_Scale.z - boneTrans.m_Scale.x) > 0.000001 )
 	{
             std::wstring _NodeName = INodeName(pNode);
-            XEVOL_LOG(eXL_DEBUG_HIGH , L"   {警告} :  骨头[ %s ] 的上有NonUniformScale\r\n", _NodeName.c_str() );
+            if(bAlert)
+            {
+                XEVOL_LOG(eXL_DEBUG_HIGH , L"   {警告} :  骨头[ %s ] 的上有NonUniformScale\r\n", _NodeName.c_str() );
+                bAlert = false;
+            }
 	}
 }
 
-void     makBoneTrans(INode* pNode , sBoneTrans_t& boneTrans , Matrix3& mat)
+void     makBoneTrans(INode* pNode , sBoneTrans_t& boneTrans , Matrix3& mat , bool& bAlert)
 {
 
     Point3   Scale ;
@@ -61,7 +65,7 @@ void     makBoneTrans(INode* pNode , sBoneTrans_t& boneTrans , Matrix3& mat)
 	Point3   Trans = mat.GetTrans();
 	SpectralDecomp(mat,Scale ,Rot );
 
-	makBoneTrans2(pNode , boneTrans,mat);
+	makBoneTrans2(pNode , boneTrans,mat , bAlert);
 	//boneTrans.m_Rotate    = conv_type<sQuat_t , Quat>(Rot);
 	//boneTrans.m_Trans     = conv_type<sVector_t   ,Point3 >(Trans);
 	//boneTrans.m_Scale     = conv_type<sVector_t   ,Point3 >(Scale);
@@ -102,6 +106,15 @@ Matrix3 CActionExporter::get_bone_tm(CSkeletonExporter* pSkeleton,int boneIndex,
 
          return BoneTM;
 
+}
+
+CActionExporter::CActionExporter()
+{
+    m_bAlertStringSet = NULL;
+    m_FlipYZMat.IdentityMatrix();
+    m_FlipYZMat.SetRow(0 , Point3(1.0f,0.0f,0.0f) );
+    m_FlipYZMat.SetRow(1 , Point3(0.0f,0.0f,1.0f) );
+    m_FlipYZMat.SetRow(2 , Point3(0.0f,1.0f,0.0f) );
 }
 
 bool CActionExporter::load_action_list(sActionInfos_t& actions,xcomdoc& comdoc , std::wstring action_list_name)
@@ -195,19 +208,20 @@ void CActionExporter::writeActionList(sActionInfos_t& actions, xcomdoc&  comdoc,
 	
 }
 
-
-
 void CActionExporter::export(CSkeletonExporter* pSkeleton, sActionInfos_t& actions, xcomdoc&  comdoc, std::wstring action_dir)
 {
+    //初始化AlertString列表
+    if(m_bAlertStringSet) delete [] m_bAlertStringSet;
+    m_bAlertStringSet = new bool[pSkeleton->m_MaxBones.size()];
+    for(int i = 0 ; i < (int) pSkeleton->m_MaxBones.size() ; i ++)
+    {
+        m_bAlertStringSet[i] = true;
+    }
 
+    //写入动作列表
     std::wstring action_list_name = action_dir + L"actions.xml";
 	writeActionList(actions,comdoc,action_list_name);
 
-	Matrix3 FlipYZMat;
-	FlipYZMat.IdentityMatrix();
-	FlipYZMat.SetRow(0 , Point3(1.0f,0.0f,0.0f) );
-	FlipYZMat.SetRow(1 , Point3(0.0f,0.0f,1.0f) );
-	FlipYZMat.SetRow(2 , Point3(0.0f,1.0f,0.0f) );
 	//
 	int nBone  = (int)pSkeleton->m_MaxBones.size();
 
@@ -215,176 +229,204 @@ void CActionExporter::export(CSkeletonExporter* pSkeleton, sActionInfos_t& actio
 	//分动作，把所有的Bone的Data写入到文件中
     for(size_t iAction = 0 ; iAction < actions.size() ; ++iAction)
     {
-	    sActionInfo_t action = actions[iAction];
-		xcomdocstream* pactiondatastream = comdoc.create_stream((action_dir + action.m_Name + L".xra").c_str(),xcddt_common,XCOMDOC_COMPRESS_BLEND);
-
-
-		if(pactiondatastream == NULL)
-		{
-			XEVOL_LOG(eXL_DEBUG_HIGH , L"{error}: Action已经存在或者非法: < %s > \n" , (action_dir + action.m_Name).c_str() );
-			continue;
-		}
-
-		//写入ID;
-		pSkeleton->makeID();
-		sSkeletonID_t sid = pSkeleton->getID();
-		pactiondatastream->write(sid);
-
-        int nBone = pSkeleton->m_MaxBones.size();
-		pactiondatastream->write(nBone);
-
-        int nFrame   = GetActNumFrame(action);
-		int firstFrame = action.m_iFirstFrame;
-
-		action.m_iLastFrame  -= firstFrame;
-		action.m_iFirstFrame -= firstFrame;
-		action.m_nFrame      = nFrame;
-        pactiondatastream->write( (const char*)&action.m_lTime , sizeof(sActionInfo_t) - sizeof(wchar_t) * 32 );
-
-
-		XEVOL_LOG(eXL_DEBUG_HIGH , L"  动作名字=%s 动作时间=%d 动作帧数=%d \n",action.m_Name,action.m_lTime,nFrame );
-
-		for(int i = 0 ; i < nFrame ; ++i)
-		{
-			int iFrame = firstFrame + i ;
-			for(size_t iBone = 0 ; iBone < pSkeleton->m_MaxBones.size() ; ++iBone)
-			{
-				sMaxBoneNode_t bone = pSkeleton->m_MaxBones[iBone];
-				bool           hasParentBone = (bone.m_Bone.m_ParentIndex != -1);
-				INode* pNode = bone.m_pNode;
-
-				unsigned int iMaxTime = iFrame * GetTicksPerFrame();
-				//因为我们在算WeightedVertx的时候乘了InitMT，
-				//所以我们这里要把它逆乘回去，好抵消掉
-				Matrix3 BoneTM = get_bone_tm(pSkeleton,(int)iBone,iMaxTime);
-
-				//现在开始计算出相对于父节点的相对矩阵
-				Matrix3 localTM = get_locale_tm(pNode,hasParentBone,iMaxTime);//Inverse(parentBoneTM) * BoneTM;
-				if(hasParentBone == false)
-					localTM = pNode->GetNodeTM(iMaxTime);
-				Point3 lTrans = localTM.GetTrans();
-				localTM.NoTrans();
-				//对骨骼进行缩放
-				lTrans.x *= pSkeleton->m_fScale;
-				lTrans.y *= pSkeleton->m_fScale;
-				lTrans.z *= pSkeleton->m_fScale;
-				localTM.SetTrans(lTrans);
-
-
-				sBoneData_t BoneData;
-				//世界空间中的变换矩阵
-				BoneData.m_Matrix    = conv_type<sMatrix4x3_t,Matrix3>(BoneTM);
-				//局部空间中的变换矩阵
-				BoneData.m_LocaleTM  = conv_type<sMatrix4x3_t,Matrix3>(localTM);
-
-				if(CMaxEnv::singleton().m_bInvertYZCoord )
-				{
-					Matrix3 fMat ;
-					fMat = FlipYZMat * BoneTM * FlipYZMat;
-					//世界空间中的变换矩阵
-					BoneData.m_Matrix    = conv_type<sMatrix4x3_t,Matrix3>(fMat);
-					fMat =  FlipYZMat * localTM * FlipYZMat;
-					BoneData.m_LocaleTM  = conv_type<sMatrix4x3_t,Matrix3>(fMat);
-				} 
-				//从LocalTM里构造出旋转，平移和缩放矩阵
-				makBoneTrans2(pNode , BoneData.m_lTranform , localTM );
-				pactiondatastream->write(BoneData);
-			}
-		}
-		comdoc.close_stream(pactiondatastream);
+        sActionInfo_t action = actions[iAction];
+        if(action.m_ActionType == eActType_Keyframe)
+            WriteActionDataInKeyFrame(action, comdoc, action_dir, pSkeleton);
+        else
+            WriteActionData(action, comdoc, action_dir, pSkeleton);
 	}
     pSkeleton->setUniform(FALSE);
-
 }
 
-/*
-
-void CActionExporter::export_xml(CSkeletonExporter* pSkeleton, sActionInfos_t& actions, xcomdoc&  comdoc, std::wstring action_dir)
+void CActionExporter::WriteActionData( sActionInfo_t& action , xcomdoc &comdoc, std::wstring action_dir, CSkeletonExporter* pSkeleton ) 
 {
+    xcomdocstream* pactiondatastream = comdoc.create_stream((action_dir + action.m_Name + L".xra").c_str(),xcddt_common,XCOMDOC_COMPRESS_BLEND);
 
-	wstring action_list_name = action_dir + L"actions.xml";
-	writeActionList(actions,comdoc,action_list_name);
+    if(pactiondatastream == NULL)
+    {
+        XEVOL_LOG(eXL_DEBUG_HIGH , L"{error}: Action已经存在或者非法: < %s > \n" , (action_dir + action.m_Name).c_str() );
+    }
 
-	//
+    WriteActionDesc(pSkeleton, pactiondatastream, action);
 
-	int nBone  = (int)pSkeleton->m_MaxBones.size();
-
-
-	xcomdocstream* pboneinfostream = comdoc.create_stream((action_dir + L"boneinfo").c_str(),xcddt_common,XCOMDOC_COMPRESS_BEST);
-	if(pboneinfostream)
-	{
-		XEVOL_LOG(eXL_DEBUG_HIGH , L"=====开始写入action data==========\r\n");
-		XEVOL_LOG(eXL_DEBUG_HIGH , L"        一共有%d个骨骼\r\n",nBone );
-		pboneinfostream->write(nBone);
-		for(size_t iBone = 0 ; iBone < pSkeleton->m_MaxBones.size() ; ++iBone)
-		{
-			sMaxBoneNode_t bone = pSkeleton->m_MaxBones[iBone];
-			Matrix3 InitTM,InitTMInv;
-			if(CMaxEnv::singleton().m_bUseBeforeSkeletonPose)
-				InitTM = bone.m_SkinInitMT;
-			else
-				InitTM = bone.m_InitNodeTM0 ;
-			Point3 Trans = InitTM.GetTrans();
-			InitTM.NoTrans();
-			Trans.x *= pSkeleton->m_fScale;
-			Trans.y *= pSkeleton->m_fScale;
-			Trans.z *= pSkeleton->m_fScale;
-			InitTM.SetTrans(Trans);
-			InitTMInv = Inverse(InitTM);
-			bone.m_Bone.m_InitMTInv = conv_type<sMatrix4x3_t,Matrix3>(InitTMInv);
-			bone.m_Bone.m_InitMT    = conv_type<sMatrix4x3_t,Matrix3>(InitTM);
-			pboneinfostream->write(bone.m_Bone);//先写入Bone的基本信息
-		}
-	}
-
-	//分动作，把所有的Bone的Data写入到文件中
-	for(size_t iAction = 0 ; iAction < actions.size() ; ++iAction)
-	{
-		sActionInfo_t& action = actions[iAction];
-		xcomdocstream* pactiondatastream = comdoc.create_stream( (action_dir + action.m_Name).c_str(),xcddt_common,XCOMDOC_COMPRESS_BEST);
-
-		int nFrame   = action.m_iLastFrame - action.m_iFirstFrame + 1;
-		int DataSize = nFrame *  nBone * sizeof(sBoneData_t);
-		for(size_t iBone = 0 ; iBone < pSkeleton->m_MaxBones.size() ; ++iBone)
-		{
-			sMaxBoneNode_t bone = pSkeleton->m_MaxBones[iBone];
-			bool           hasParentBone = (bone.m_Bone.m_ParentIndex != -1);
-			INode* pNode = bone.m_pNode;
-			for(int iFrame = action.m_iFirstFrame ; iFrame <= action.m_iLastFrame ; ++iFrame)
-			{
-				unsigned int iMaxTime = iFrame * GetTicksPerFrame();
-
-				//因为我们在算WeightedVertx的时候乘了InitMT，
-				//所以我们这里要把它逆乘回去，好抵消掉
-				Matrix3 BoneTM = get_bone_tm(pSkeleton,(int)iBone,iMaxTime);
-				Matrix3 RotMat = BoneTM;
-				Point3 Trans = BoneTM.GetTrans();
-				RotMat.NoTrans();
-				Quat RotQuat(RotMat);
-
-				//现在开始计算出相对于父节点的相对矩阵
-				Matrix3 localTM = get_locale_tm(pNode,hasParentBone,iMaxTime);//Inverse(parentBoneTM) * BoneTM;
-				if(hasParentBone == false)
-					localTM = pNode->GetNodeTM(iMaxTime);
-				Point3 lTrans = localTM.GetTrans();
-				localTM.NoTrans();
-				//对骨骼进行缩放
-				lTrans.x *= pSkeleton->m_fScale;
-				lTrans.y *= pSkeleton->m_fScale;
-				lTrans.z *= pSkeleton->m_fScale;
-				localTM.SetTrans(lTrans);
-
-
-				sBoneData_t BoneData;
-				BoneData.m_Matrix    = conv_type<sMatrix4x3_t,Matrix3>(BoneTM);
-				BoneData.m_LocaleTM  = conv_type<sMatrix4x3_t,Matrix3>(localTM);
-				makBoneTrans(pNode, BoneData.m_lTranform , localTM);
-				
-				pactiondatastream->write(BoneData);
-
-			}
-		}
-	}
-
+    //获取信息
+    int nFrame     = GetActNumFrame(action);
+    int firstFrame = action.m_iFirstFrame;
+    int nBone      = (int)pSkeleton->m_MaxBones.size();
+    for(int i = 0 ; i < nFrame ; ++i)
+    {
+        int iFrame = firstFrame + i ;
+        for(int iBone = 0 ; iBone < nBone ; ++iBone)
+        {
+            sBoneData_t  BoneData;
+            MakeBoneData(BoneData, (int)iBone , iFrame, pSkeleton);
+            pactiondatastream->write( BoneData.m_lTranform );
+        }
+    }
+    comdoc.close_stream(pactiondatastream);	
 }
-*/
+
+void AddKeyFrame(int iFrame , std::vector<int>& vKeys)
+{
+    for(size_t i = 0 ; i < vKeys.size() ; i ++)
+    {
+        if(vKeys[i] == iFrame)
+            return ;
+    }
+    vKeys.push_back(iFrame);
+}
+
+void CActionExporter::WriteActionDataInKeyFrame( sActionInfo_t& action , xcomdoc &comdoc, std::wstring action_dir, CSkeletonExporter* pSkeleton )
+{
+    xcomdocstream* pactiondatastream = comdoc.create_stream((action_dir + action.m_Name + L".xra").c_str(),xcddt_common,XCOMDOC_COMPRESS_BLEND);
+
+    if(pactiondatastream == NULL)
+    {
+        XEVOL_LOG(eXL_DEBUG_HIGH , L"{error}: Action已经存在或者非法: < %s > \n" , (action_dir + action.m_Name).c_str() );
+    }
+
+    WriteActionDesc(pSkeleton, pactiondatastream, action);
+
+    //获取信息
+    int nFrame     = GetActNumFrame(action);
+    int firstFrame = action.m_iFirstFrame;
+    int lastFrame  = firstFrame + nFrame - 1;
+    int nBone      = (int)pSkeleton->m_MaxBones.size();
+
+    for(int iBone = 0 ; iBone < nBone ; ++iBone)
+    {
+        sBoneData_t  BoneData;
+        sMaxBoneNode_t bone = pSkeleton->m_MaxBones[iBone];
+        bool           hasParentBone = (bone.m_Bone.m_ParentIndex != -1);
+        INode* pNode = bone.m_pNode;
+
+        std::vector<int> vKeys;
+        AddKeyFrame(firstFrame , vKeys);
+        AddKeyFrame(lastFrame  , vKeys);
+
+        //位置
+        {
+            Control *  pCtrl  = pNode->GetTMController()->GetPositionController();
+            IKeyControl *pKeyControl = GetKeyControlInterface(pCtrl);
+            int NumKey = pKeyControl->GetNumKeys();
+            for(int i = 0 ; i < NumKey ; i ++)
+            {
+                ILinPoint3Key Key;
+                pKeyControl->GetKey(i , &Key);
+                TimeValue _time = Key.time;
+                int iFrame = _time / GetTicksPerFrame();
+                AddKeyFrame(iFrame  , vKeys);
+            }
+        }
+
+        //旋转
+        {
+            Control *  pCtrl  = pNode->GetTMController()->GetRotationController();
+            IKeyControl *pKeyControl = GetKeyControlInterface(pCtrl);
+            int NumKey = pKeyControl->GetNumKeys();
+            for(int i = 0 ; i < NumKey ; i ++)
+            {
+                ILinRotKey Key;
+                pKeyControl->GetKey(i , &Key);
+                TimeValue _time = Key.time;
+                int iFrame = _time / GetTicksPerFrame();
+                AddKeyFrame(iFrame  , vKeys);
+            }
+        }
+
+        //缩放
+        {
+            Control *  pCtrl  = pNode->GetTMController()->GetScaleController();
+            IKeyControl *pKeyControl = GetKeyControlInterface(pCtrl);
+            int NumKey = pKeyControl->GetNumKeys();
+            for(int i = 0 ; i < NumKey ; i ++)
+            {
+                ILinScaleKey Key;
+                pKeyControl->GetKey(i , &Key);
+                TimeValue _time = Key.time;
+                int iFrame = _time / GetTicksPerFrame();
+                AddKeyFrame(iFrame  , vKeys);
+            }
+        }
+
+        int32 nKey = (int)vKeys.size();
+        pactiondatastream->write( nKey );
+        for(int i = 0 ; i < nKey ; ++i)
+        {
+            int iFrame = vKeys[i];
+            sBoneData_t  BoneData;
+            MakeBoneData(BoneData, (int)iBone , iFrame, pSkeleton);
+            int32 iFrameZoroBase = iFrame - firstFrame;
+            pactiondatastream->write( iFrameZoroBase );
+            pactiondatastream->write( BoneData.m_lTranform );
+        }
+        //INode* pNode = MakeBoneData(BoneData, (int)iBone , iFrame, pSkeleton);
+        //pactiondatastream->write( BoneData.m_lTranform );
+    }
+    comdoc.close_stream(pactiondatastream);	
+}
+
+void CActionExporter::MakeBoneData(sBoneData_t& BoneData , int iBone , int iFrame, CSkeletonExporter* pSkeleton) 
+{
+    sMaxBoneNode_t bone = pSkeleton->m_MaxBones[iBone];
+    bool           hasParentBone = (bone.m_Bone.m_ParentIndex != -1);
+    INode* pNode = bone.m_pNode;
+    //pNode->GetTMController()->
+
+    unsigned int iMaxTime = iFrame * GetTicksPerFrame();
+    //因为我们在算WeightedVertx的时候乘了InitMT，
+    //所以我们这里要把它逆乘回去，好抵消掉
+    Matrix3 BoneTM = get_bone_tm(pSkeleton,(int)iBone,iMaxTime);
+
+    //现在开始计算出相对于父节点的相对矩阵
+    Matrix3 localTM = get_locale_tm(pNode,hasParentBone,iMaxTime);//Inverse(parentBoneTM) * BoneTM;
+    if(hasParentBone == false)
+        localTM = pNode->GetNodeTM(iMaxTime);
+    Point3 lTrans = localTM.GetTrans();
+    localTM.NoTrans();
+    //对骨骼进行缩放
+    lTrans.x *= pSkeleton->m_fScale;
+    lTrans.y *= pSkeleton->m_fScale;
+    lTrans.z *= pSkeleton->m_fScale;
+    localTM.SetTrans(lTrans);
+
+
+    //世界空间中的变换矩阵
+    BoneData.m_Matrix    = conv_type<sMatrix4x3_t,Matrix3>(BoneTM);
+    //局部空间中的变换矩阵
+    BoneData.m_LocaleTM  = conv_type<sMatrix4x3_t,Matrix3>(localTM);
+
+    if(CMaxEnv::singleton().m_bInvertYZCoord )
+    {
+        Matrix3 fMat ;
+        fMat = m_FlipYZMat * BoneTM * m_FlipYZMat;
+        //世界空间中的变换矩阵
+        BoneData.m_Matrix    = conv_type<sMatrix4x3_t,Matrix3>(fMat);
+        fMat =  m_FlipYZMat * localTM * m_FlipYZMat;
+        BoneData.m_LocaleTM  = conv_type<sMatrix4x3_t,Matrix3>(fMat);
+    } 
+    //从LocalTM里构造出旋转，平移和缩放矩阵
+    makBoneTrans2(pNode , BoneData.m_lTranform , localTM , m_bAlertStringSet[iBone] );
+    return ;
+}
+
+void  CActionExporter::WriteActionDesc( CSkeletonExporter* pSkeleton, xcomdocstream* pactiondatastream, sActionInfo_t & _action ) 
+{
+    //写入ID;
+    sActionInfo_t action = _action;
+    pSkeleton->makeID();
+    sSkeletonID_t sid = pSkeleton->getID();
+    pactiondatastream->write(sid);
+
+    int nBone      = (int)pSkeleton->m_MaxBones.size();
+    pactiondatastream->write(nBone);
+
+    int nFrame   = GetActNumFrame(action);
+    int firstFrame = action.m_iFirstFrame;
+
+    action.m_iLastFrame  -= firstFrame;
+    action.m_iFirstFrame -= firstFrame;
+    action.m_nFrame      = nFrame;
+    pactiondatastream->write( (const char*)&action.m_lTime , sizeof(sActionInfo_t) - sizeof(wchar_t) * 32 );
+    XEVOL_LOG(eXL_DEBUG_HIGH , L"  动作名字=%s 动作时间=%d 动作帧数=%d \n",action.m_Name,action.m_lTime,nFrame );
+}

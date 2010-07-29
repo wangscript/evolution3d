@@ -39,6 +39,8 @@ CSkeletonActionExpDlg::CSkeletonActionExpDlg(sActionInfos_t& ActionList,CWnd* pP
     , m_iDurationTime(0)
     , m_ActionList(ActionList)
 	, m_bExpToSingleFile(TRUE)
+    , m_bHasUI(false)
+    , m_bKeyFrame(FALSE)
 {
 }
 
@@ -53,8 +55,9 @@ void CSkeletonActionExpDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_FIRST_FRAME, m_iStartFrame);
     DDX_Text(pDX, IDC_LAST_FRAME, m_EndFrame);
     DDX_Text(pDX, IDC_DUARING_TIME, m_iDurationTime);
-	DDX_Check(pDX, IDC_EXPORT_TO_SIGNLE , m_bExpToSingleFile);
+    DDX_Check(pDX, IDC_EXPORT_TO_SIGNLE , m_bExpToSingleFile);
     DDX_Control(pDX, IDT_ACTION_NAME, m_ctrlActionName);
+    DDX_Check(pDX, IDC_EXPORT_KEYFRAME, m_bKeyFrame);
 }
 
 
@@ -76,12 +79,18 @@ END_MESSAGE_MAP()
 void CSkeletonActionExpDlg::OnBnClickedOk()
 {
     // TODO: Add your control notification handler code here
+	m_ctrlActionList.DeleteAllItems();
+	m_ActionList.clear();
+	m_ActionXmlList.clear();
     OnOK();
 }
 
 void CSkeletonActionExpDlg::OnBnClickedCancel()
 {
     // TODO: Add your control notification handler code here
+	m_ctrlActionList.DeleteAllItems();
+	m_ActionList.clear();
+	m_ActionXmlList.clear();
     OnCancel();
 }
 int CSkeletonActionExpDlg::findAction(const wchar_t* actionName)
@@ -121,19 +130,62 @@ BOOL CSkeletonActionExpDlg::OnInitDialog()
     m_ctrlActionList.InsertColumn(3,"第一帧",LVCFMT_LEFT,30);
     m_ctrlActionList.InsertColumn(4,"最后帧",LVCFMT_LEFT,30);
 
-    for(size_t i = 0 ; i < m_ActionList.size() ; ++i)
-    {
-        InsertAction(m_ActionList[i],true);
-    }
+	m_bHasUI = true;
+	for(size_t i = 0 ; i < m_ActionList.size() ; ++i)
+	{
+		InsertActionToUI(m_ActionList[i]);
+	}
     return TRUE;  // return TRUE unless you set the focus to a control
     // EXCEPTION: OCX Property Pages should return FALSE
 }
+
+bool CSkeletonActionExpDlg::InsertActionToUI(sActionInfo_t& action)
+{
+	int index = findAction(action.m_Name);
+
+	if(index != -1 && !m_bHasUI )
+	{
+		return false;
+	}
+	char buf[23];
+	sprintf(buf,"%d",index);
+	m_ctrlActionList.InsertItem(index,buf);
+	m_ctrlActionList.SetItemText(index,1,ToAnsi(action.m_Name).c_str() );
+
+	sprintf(buf,"%d",action.m_lTime);
+	m_ctrlActionList.SetItemText(index,2,buf);
+
+	sprintf(buf,"%d",action.m_iFirstFrame);
+	m_ctrlActionList.SetItemText(index,3,buf);
+
+	sprintf(buf,"%d",action.m_iLastFrame);
+	m_ctrlActionList.SetItemText(index,4,buf);
+	return true;
+}
+
+
+void CSkeletonActionExpDlg::GetOperatedAction(sActionInfos_t& ActionList)
+{
+	for(size_t i = 0 ; i < m_ActionList.size() ; i ++)
+	{
+		std::wstring _actName = m_ActionList[i].m_Name;
+		if( m_OperatedActions.find(_actName) != m_OperatedActions.end() )
+		{
+			ActionList.push_back( m_ActionList[i] );
+		}
+	}
+}
+
+
 bool CSkeletonActionExpDlg::InsertAction(sActionInfo_t& action,bool isInsertToUI)
 {
     int index = findAction(action.m_Name);
+
+    isInsertToUI = m_bHasUI && isInsertToUI;
     if(index != -1 && isInsertToUI == false)
     {
-        ::MessageBoxA(::GetActiveWindow(),"相同名字的动作存在","错误",MB_OK);
+        //::MessageBoxA(::GetActiveWindow(),"相同名字的动作存在","错误",MB_OK);
+        XEVOL_LOG(eXL_ERROR_FALT , L"----------相同名字=%s 动作存在--------------\n" , action.m_Name);
         return false;
     }
     if(index == -1)
@@ -141,20 +193,13 @@ bool CSkeletonActionExpDlg::InsertAction(sActionInfo_t& action,bool isInsertToUI
        index = (int)m_ActionList.size();
        m_ActionList.push_back(action);
     }
-    char buf[23];
-    sprintf(buf,"%d",index);
-    m_ctrlActionList.InsertItem(index,buf);
-    m_ctrlActionList.SetItemText(index,1,ToAnsi(action.m_Name).c_str() );
 
-    sprintf(buf,"%d",action.m_lTime);
-    m_ctrlActionList.SetItemText(index,2,buf);
+	if(isInsertToUI)
+	{
+		InsertActionToUI(action);
+	}
 
-    sprintf(buf,"%d",action.m_iFirstFrame);
-    m_ctrlActionList.SetItemText(index,3,buf);
-
-    sprintf(buf,"%d",action.m_iLastFrame);
-    m_ctrlActionList.SetItemText(index,4,buf);
-
+	m_OperatedActions.insert( action.m_Name );
     return true;
 }
 void CSkeletonActionExpDlg::OnLvnItemchangedActionList(NMHDR *pNMHDR, LRESULT *pResult)
@@ -163,13 +208,18 @@ void CSkeletonActionExpDlg::OnLvnItemchangedActionList(NMHDR *pNMHDR, LRESULT *p
     // TODO: Add your control notification handler code here
     *pResult = 0;
 }
-
+int  CSkeletonActionExpDlg::GetActionType()
+{
+    if(m_bKeyFrame) 
+        return eActType_Keyframe;
+    return eActType_Skeleton;
+}
 void CSkeletonActionExpDlg::OnBnClickedActionAdd()
 {
     // TODO: Add your control notification handler code here
     sActionInfo_t action;
     UpdateData();
-    action.m_ActionType  = ACTION_SKELENTON;
+    action.m_ActionType  = GetActionType();
     action.m_iFirstFrame = m_iStartFrame;
     action.m_iLastFrame  = m_EndFrame;
     action.m_lTime       = m_iDurationTime;
@@ -193,35 +243,16 @@ void CSkeletonActionExpDlg::OnBnClickedActionAdd()
         ::MessageBoxA(::GetActiveWindow(),"动作时间不能为0","错误",MB_OK);
         return ;
     }
-    InsertAction(action); 
+    InsertAction(action, true); 
     
 }
-
-void CSkeletonActionExpDlg::OnBnClickedActionLoad()
+void CSkeletonActionExpDlg::LoadActionList(const wchar_t* fileName , bool FilterByFile)
 {
-    wchar_t file_name[1024]={0};
-    OPENFILENAMEW ofn; 
-    ZeroMemory(&ofn, sizeof(OPENFILENAMEW));
-    ofn.lStructSize = sizeof(OPENFILENAMEW);
-    ofn.hwndOwner = ::GetActiveWindow();
-    ofn.lpstrFile = file_name;
-    ofn.nMaxFile = 1024;
-    ofn.lpstrFilter = L"动作列表(*.xml)\0*.xml\0所有文件(*.*)\0*.*\0";
-    ofn.nFilterIndex = 1;
-    ofn.lpstrFileTitle = NULL;
-    ofn.lpstrDefExt = L"xml";
-    ofn.nMaxFileTitle = 0;
-    ofn.lpstrInitialDir = NULL;
-    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-    if(GetOpenFileNameW(&ofn) == FALSE)
-    {
-        return;
-    }
-
     xXmlDocument doc;
-    if(doc.load( file_name , true ) == false)
+    if(doc.load( fileName , true ) == false)
         return ;
 
+    m_ActionXmlList.clear();
     xXmlNode* pNode = doc.root();
     if(pNode == NULL)
         return ;
@@ -238,12 +269,18 @@ void CSkeletonActionExpDlg::OnBnClickedActionLoad()
     for(size_t i = 0 ; i < nAction ; i ++)
     {
         xXmlNode* pActNode = nodes[i];
-        if(pActNode->value(L"MaxFile") == NULL || pActNode->value(L"MaxFile") == maxFileName)
+        if(pActNode->value(L"MaxFile") == NULL || pActNode->value(L"MaxFile") == maxFileName || FilterByFile == false )
         {
             sActionInfo_t action;
-            action.m_ActionType  = ACTION_SKELENTON;
+            action.m_ActionType  = GetActionType();
             action.m_iFirstFrame = pActNode->int_value(L"StartFrame");
-            action.m_iLastFrame  = pActNode->int_value(L"EndFrame");;
+            action.m_iLastFrame  = pActNode->int_value(L"EndFrame");
+            if(action.m_iFirstFrame > action.m_iLastFrame )
+            {
+                int _v = action.m_iFirstFrame;
+                action.m_iFirstFrame = action.m_iLastFrame;
+                action.m_iLastFrame = _v;
+            }
             action.m_lTime       = pActNode->int_value(L"DurTime");
             wcsncpy(action.m_Name  , pActNode->value(L"ActionName") , 32);
             action.m_nFrame      = action.m_iLastFrame - action.m_iFirstFrame + 1;
@@ -254,10 +291,48 @@ void CSkeletonActionExpDlg::OnBnClickedActionLoad()
                 float vTime = CMaxEnv::singleton().TicksToSeconds(iMaxTime);
                 action.m_lTime       =  vTime * 1000;
             }
-            InsertAction(action); 
+            InsertAction(action , true); 
+
+            xActionXMLInfo _info;
+            _info.m_MaxFile = pActNode->value(L"MaxFile") ? pActNode->value(L"MaxFile") : maxFileName.c_str();
+            _info.m_Name    = action.m_Name;
+            _info.m_nFirst  = pActNode->int_value(L"StartFrame");
+            _info.m_nLast   = pActNode->int_value(L"EndFrame");
+            _info.m_DurTime = 0;
+            if(pActNode->value(L"DurTime") )
+            {
+                _info.m_DurTime = pActNode->int_value(L"DurTime");
+            }
+            m_ActionXmlList.push_back(_info);
         }
     }
     return ;
+}
+void CSkeletonActionExpDlg::LoadActionList(bool FilterByFile)
+{
+    m_XmlFile[0] = 0;
+    OPENFILENAMEW ofn; 
+    ZeroMemory(&ofn, sizeof(OPENFILENAMEW));
+    ofn.lStructSize = sizeof(OPENFILENAMEW);
+    ofn.hwndOwner = ::GetActiveWindow();
+    ofn.lpstrFile = m_XmlFile;
+    ofn.nMaxFile = 1024;
+    ofn.lpstrFilter = L"动作列表(*.xml)\0*.xml\0所有文件(*.*)\0*.*\0";
+    ofn.nFilterIndex = 1;
+    ofn.lpstrFileTitle = NULL;
+    ofn.lpstrDefExt = L"xml";
+    ofn.nMaxFileTitle = 0;
+    ofn.lpstrInitialDir = NULL;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+    if(GetOpenFileNameW(&ofn) == FALSE)
+    {
+        return;
+    }
+    return LoadActionList(m_XmlFile , FilterByFile);
+}
+void CSkeletonActionExpDlg::OnBnClickedActionLoad()
+{
+     return LoadActionList(true);
 }
 
 void CSkeletonActionExpDlg::OnBnClickedActionRemove()
@@ -285,7 +360,7 @@ void CSkeletonActionExpDlg::OnBnClickedExportToSignle()
 void CSkeletonActionExpDlg::OnBnClickedActionSave()
 {
     // TODO: Add your control notification handler code here
-    CFileDialog dlg(FALSE , 0 , 0 ,4|2 , TEXT("Action List(*.xml)\0AllFile(*.*)\0*.*\0") , this );
+    CFileDialog dlg(FALSE , 0 , 0 ,4|2 , TEXT("Action List(*.xml)|*.xml|AllFile(*.*)|*.*||") , this );
     if(dlg.DoModal() != IDOK)
         return ;
     wchar_t file_name[1024] = {0};

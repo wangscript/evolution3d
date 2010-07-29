@@ -44,12 +44,13 @@ class  _XEVOL_BASE_API_  xBaseTextureLoader : public xResPathManager
 {
 	IRenderApi*          m_pRenderApi;
 public:	
-	xBaseTextureLoader();
-	IRenderApi*          renderApi(){return m_pRenderApi ;}
-	void                 setRenderApi(IRenderApi* pRenderApi);
-	HBaseTexture         load(const xTextureName& texName , bool bLoadImm  , bool arg);
-	HBaseTexture         loadTexture(const wchar_t* texName, bool bLoadImm  , bool arg);
-	HBaseTexture         loadTexture(const wchar_t* texName , xTextureInitDesc& initDesc , eResourceType type = RESOURCE_TEXTURE2D ) ;
+	IRenderApi*              renderApi(){return m_pRenderApi ;}
+	void                     setRenderApi(IRenderApi* pRenderApi);
+	HBaseTexture             load(const xTextureName& texName , bool bLoadImm  , bool arg);
+	HBaseTexture             loadTexture(const wchar_t* texName, bool bLoadImm  , bool arg);
+	HBaseTexture             loadTexture(const wchar_t* texName , xTextureInitDesc& initDesc , eResourceType type = RESOURCE_TEXTURE2D ) ;
+    static xBaseTextureMgr*  createInstance(IRenderApi* pRenderApi , const wchar_t* _name);   
+	void                     setThis(xBaseTextureMgr* pThis){m_pThis = pThis; }
 protected:
 	virtual unsigned int _getResSize(IBaseTexture* pRes);
 	virtual bool         _isResLoaded(IBaseTexture* pRes);
@@ -59,8 +60,12 @@ protected:
 	virtual bool         _unloadResource(const xTextureName& strResName , IBaseTexture* & pRes , unsigned int& TotalResSize);
 	virtual void         _deleteResource(const xTextureName& strResName , IBaseTexture* pRes);
 protected:
+    xBaseTextureLoader();
 	virtual bool    _loadTexture( const xTextureName& _texName  , IBaseTexture*& pTexture , int& ResSize , unsigned int arg);
 	IBaseTexture*   _loadTexture( const xTextureName& _texName , const wchar_t* fileName ,unsigned char* buf , int bufLen , unsigned int arg);
+ 
+    xBaseTextureMgr*     m_pThis;
+    
 };
 
 

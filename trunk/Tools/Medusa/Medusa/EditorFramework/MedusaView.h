@@ -1,44 +1,43 @@
-// This MFC Samples source code demonstrates using MFC Microsoft Office Fluent User Interface 
-// (the "Fluent UI") and is provided only as referential material to supplement the 
-// Microsoft Foundation Classes Reference and related electronic documentation 
-// included with the MFC C++ library software.  
-// License terms to copy, use or distribute the Fluent UI are available separately.  
-// To learn more about our Fluent UI licensing program, please visit 
-// http://msdn.microsoft.com/officeui.
+// 这段 MFC 示例源代码演示如何使用 MFC Microsoft Office Fluent 用户界面 
+// (“Fluent UI”)。该示例仅供参考，
+// 用以补充《Microsoft 基础类参考》和 
+// MFC C++ 库软件随附的相关电子文档。
+// 复制、使用或分发 Fluent UI 的许可条款是单独提供的。
+// 若要了解有关 Fluent UI 许可计划的详细信息，请访问  
+// http://msdn.microsoft.com/officeui。
 //
-// Copyright (C) Microsoft Corporation
-// All rights reserved.
+// 版权所有(C) Microsoft Corporation
+// 保留所有权利。
 
-// MedusaView.h : interface of the CMedusaView class
+// MedusaView.h : CMedusaView 类的接口
 //
-
 
 #pragma once
 
 
 class CMedusaView : public CView
 {
-protected: // create from serialization only
+protected: // 仅从序列化创建
 	CMedusaView();
 	DECLARE_DYNCREATE(CMedusaView)
 
-// Attributes
+// 特性
 public:
 	CMedusaDoc* GetDocument() const;
 
-// Operations
+// 操作
 public:
 
-// Overrides
+// 重写
 public:
-	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
+	virtual void OnDraw(CDC* pDC);  // 重写以绘制该视图
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
-
-// Implementation
+	virtual BOOL OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
+// 实现
 public:
 	virtual ~CMedusaView();
 #ifdef _DEBUG
@@ -48,23 +47,16 @@ public:
 
 protected:
 
-// Generated message map functions
+// 生成的消息映射函数
 protected:
+	afx_msg int  OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
-public:
-	virtual BOOL DestroyWindow();
-	afx_msg void OnClose();
-protected:
-	virtual BOOL OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
-public:
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 
-#ifndef _DEBUG  // debug version in MedusaView.cpp
+#ifndef _DEBUG  // MedusaView.cpp 中的调试版本
 inline CMedusaDoc* CMedusaView::GetDocument() const
    { return reinterpret_cast<CMedusaDoc*>(m_pDocument); }
 #endif

@@ -39,7 +39,7 @@ public:
 
 protected:
     IRenderTarget*               m_RenderTargets[MAX_RENDER_TARGET];
-    xGL2RenderApi*               m_pD10Api;
+    xGL2RenderApi*               m_pGL2Api;
 protected:
     xGL2DepthTexture*            m_DepthTexture;
     IRenderTarget*               m_DepthBuffer;

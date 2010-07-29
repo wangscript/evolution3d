@@ -11,6 +11,7 @@ class  CEvolEnviroment : public IApplication
 {
 public:
 	CEvolEnviroment();
+    ~CEvolEnviroment();
 	bool                   onResize();
 	xEvol3DEngine*         engine(){return m_pEngine; }
 	void                   topCamera(xGeomLib::xaabb& aabox);
@@ -37,6 +38,10 @@ public:
 	IRenderCamera*         camera2D(){ return m_p2DCamera; }
 	xBaseTextureMgr*       texMgr()    { return m_pEngine->textureManager(); }
 	xBaseModelMgr*         modelMgr()  { return m_pEngine->modelMgr(); }
+    void                   lock() { if (m_pLocker) m_pLocker->lock() ; }
+    void                   unlock(){ if( m_pLocker ) m_pLocker->unlock() ; }
+
+    void                   setInfoText(const wchar_t* _info) { m_textInfo = _info ; }
 
 public:
 	xvec2i*  GetSelectData(xTextureDesc& _desc , int x , int y);
@@ -72,5 +77,9 @@ protected:
 	xSceneRenderVisitor*        m_renderVisitor;
 	xSceneSelection             m_Selection;
     float                       m_fCameraDist;
+    
+
+    std::wstring                m_textInfo;
+    xThreadLocker*              m_pLocker;
 };
 END_NAMESPACE_XEVOL3D

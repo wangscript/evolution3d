@@ -31,13 +31,13 @@ size_t AddVertexIndex(v3dsVertIndex& vis , v3dsVertIndexSet& viset , _3dsVertInd
 	}
 	else
 	{
-		_3dsVertIndex& ret = *pos;
+		const _3dsVertIndex& ret = *pos;
 		return ret._idx;
 	}
 	//----------------
 	for(size_t i = 0 ; i < nVertex ; i ++)
 	{
-		 _3dsVertIndex& _vi2 = vis[i];
+		 const _3dsVertIndex& _vi2 = vis[i];
 		 if(_vi2._vert == _vi._vert && _vi2._smthGroup == _vi._smthGroup)
 			 return i;
 	}

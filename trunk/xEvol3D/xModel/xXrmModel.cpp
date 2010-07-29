@@ -72,20 +72,20 @@ bool xXrmModel::load(xcomdoc& doc , const wchar_t* _dir , unsigned int arg)
 	//XML加载完毕
 	xXmlNode* pRootNode = xml.root();
 
-	m_name = pRootNode->value(L"name");
-	xXmlNode* pAABBNode = pRootNode->findNode(L"BoundBox");
-	m_aabb.m_Min = xvec3(0.0f , 0.0f , 0.0f);
-	m_aabb.m_Max = xvec3(1.0f , 1.0f , 1.0f);
-	if(pAABBNode)
-	{
-		m_aabb.m_Min.x = pAABBNode->float_value(L"min_x");
-		m_aabb.m_Min.y = pAABBNode->float_value(L"min_y");
-		m_aabb.m_Min.z = pAABBNode->float_value(L"min_z");
+    m_name = pRootNode->value(L"name");
+    xXmlNode* pAABBNode = pRootNode->findNode(L"BoundBox");
+    m_aabb.m_Min = xvec3(0.0f , 0.0f , 0.0f);
+    m_aabb.m_Max = xvec3(1.0f , 1.0f , 1.0f);
+    if(pAABBNode)
+    {
+        m_aabb.m_Min.x = pAABBNode->float_value(L"min_x");
+        m_aabb.m_Min.y = pAABBNode->float_value(L"min_y");
+        m_aabb.m_Min.z = pAABBNode->float_value(L"min_z");
 
-		m_aabb.m_Max.x = pAABBNode->float_value(L"max_x");
-		m_aabb.m_Max.y = pAABBNode->float_value(L"max_y");
-		m_aabb.m_Max.z = pAABBNode->float_value(L"max_z");
-	}
+        m_aabb.m_Max.x = pAABBNode->float_value(L"max_x");
+        m_aabb.m_Max.y = pAABBNode->float_value(L"max_y");
+        m_aabb.m_Max.z = pAABBNode->float_value(L"max_z");
+    }
 
 	//开始加载Skeleton
 	loadSkeleton(doc , _dir);
@@ -145,8 +145,8 @@ bool xXrmModel::loadAction(xcomdoc& doc ,const wchar_t* _dir)
 		size_t _ActNodes = actNodes.size() ;
 		for(size_t  i = 0 ;i < _ActNodes ; i ++)
 		{
-			xCoreAction* pAction = new xEmbAction();
-			pAction->setBoneNumber( 0 );
+            xXmlNode* pNode = actNodes[i];
+			xBaseAction* pAction = xBaseAction::createInstance( (eActionType)pNode->int_value(L"ActionType") , m_pSkeleton , 0 );
 			pAction->load(actNodes[i]);
 			m_Actions.push_back(pAction);
 		}   
@@ -191,9 +191,8 @@ bool xXrmModel::loadSkeleton(xcomdoc& doc , const wchar_t* _dir)
 		size_t _ActNodes = actNodes.size() ;
 		for(size_t  i = 0 ;i < _ActNodes ; i ++)
 		{
-			xCoreAction* pAction = new xEmbAction();
-			pAction->setBoneNumber(m_pSkeleton->nBone() );
-			xXmlNode* pNode = actNodes[i];
+            xXmlNode* pNode = actNodes[i];
+            xBaseAction* pAction = xBaseAction::createInstance( (eActionType)pNode->int_value(L"ActionType") , m_pSkeleton , 0 );
 			if(false == pAction->load(pNode , doc , actDir.c_str()) )
 			{
 				delete pAction;

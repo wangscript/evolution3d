@@ -29,14 +29,18 @@ BEGIN_NAMESPACE_XEVOL3D
 
 void  xHashCodeTable::string_hash(const wchar_t* str, HashValue& hashValue)
 {
-	wchar_t *key     = (wchar_t *)str;
+    std::wstring _key = str;
+    for(size_t i = 0 ; i < _key.length() ;  i ++)
+        if(_key[i] == '\\') _key[i] = '/';
+
+    const wchar_t *key     =  _key.c_str();
 	unsigned long seed1_i  = 0x7FED7FED, seed2_i = 0xEEEEEEEE;
 	unsigned long seed1_va = 0x7FED7FED, seed2_va = 0xEEEEEEEE;
 	unsigned long seed1_vb = 0x7FED7FED, seed2_vb = 0xEEEEEEEE;
 
-	hashValue.indexHash = ELFHash(str);
-	hashValue.valueA    = RSHash(str);
-	hashValue.valueB    = JSHash(str);
+	hashValue.indexHash = ELFHash(key);
+	hashValue.valueA    = RSHash(key);
+	hashValue.valueB    = JSHash(key);
 	return ;
 	/*
 	int ch;

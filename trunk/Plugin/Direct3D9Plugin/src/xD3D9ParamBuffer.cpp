@@ -113,7 +113,7 @@ bool xD3D9BufferBinding::validate(IDirect3DDevice9* pDevice)
        }
 
        xD3D9ConstantBuffer* InputBuffer = (xD3D9ConstantBuffer*)m_InputBuffer;
-       int len = min(InputBuffer->bufLen() , m_Bytes );
+       int len = min( ((int)InputBuffer->bufLen()) , m_Bytes );
        //如果这是一个单一的结构体，没有嵌套结构体;。直接搞定它
        m_pConstTable->SetValue(pDevice , m_hConstHandle , &LightStat , len );
        
@@ -257,7 +257,7 @@ bool xD3D9ShaderParamTable::createBufferVarList(ID3DXConstantTable* pShaderRefle
 	//开始建立所有的变量
 	for(size_t i = 0 ; i < ConstDesc.StructMembers ; i ++ )
 	{
-		D3DXHANDLE hConstHandle = pShaderReflection->GetConstant(hParentHandle , i);
+		D3DXHANDLE hConstHandle = pShaderReflection->GetConstant(hParentHandle , (UINT)i);
         D3DXCONSTANT_DESC _desc;
         UINT _nConstant = 1;
         pShaderReflection->GetConstantDesc(hConstHandle , &_desc , &_nConstant);
@@ -357,6 +357,7 @@ bool xD3D9ShaderParamTable::load(ID3DXConstantTable* pShaderReflection )
             texer.m_iTexUsage = xD3D9ConstLexer::GetTextureSlotIdx(slotName);
             texer.m_iName     = xStringHash(texer.m_Name);
             texer.m_pTexture  = NULL;
+			texer.m_nTexture  = ConstDesc.Elements;
             m_TextureBindings.push_back(texer);
         }
 
@@ -444,6 +445,13 @@ bool xD3D9ShaderParamTable::installSamplerTextureBinding()
 	{
 		xD3D9TextureBinding& binder = m_TextureBindings[i];
 
+		//绑定的是一个纹理的数组。做特殊处理
+		if(binder.m_nTexture > 1 )
+		{
+
+			continue;
+		}
+
 		//首先要检查binder.m_pTexture
 		IBaseTexture* pTexture = binder.m_pTexture ;
 
@@ -460,6 +468,18 @@ bool xD3D9ShaderParamTable::installSamplerTextureBinding()
 			}
 		}
 
+		//绑定的是一个纹理的数组。做特殊处理
+		if(binder.m_nTexture > 1 )
+		{
+			int nTexture = pTexture->nSubTexture();
+			for(int iTex  = 0 ;  iTex < binder.m_nTexture && iTex < nTexture ; iTex ++)
+			{
+				IBaseTexture* pSubTexture = pTexture->subTexture(iTex);
+				pD3D9Api->getDevice()->SetTexture(binder.m_iShaderSlot  + iTex , (IDirect3DBaseTexture9*)pSubTexture->handle() );
+			}
+			continue;
+		}
+
 		//如果还为空，就从其它地方找
 		if(pTexture != NULL)
 		{
@@ -467,7 +487,7 @@ bool xD3D9ShaderParamTable::installSamplerTextureBinding()
 		}
 		else
 		{
-			XEVOL_LOG(eXL_DEBUG_HIGH , L"Missing texture bing texture name=%s\n",binder.m_Name);
+			XEVOL_LOG(eXL_DEBUG_HIGH , L"Missing texture binding texture name=%s\n",binder.m_Name);
             pD3D9Api->getDevice()->SetTexture(binder.m_iShaderSlot , NULL);
 		}
 	}
@@ -486,7 +506,7 @@ bool xD3D9ShaderParamTable::installConstBuffer()
             continue;
 
 		xD3D9ConstantBuffer* InputBuffer = (xD3D9ConstantBuffer*)cbslot.m_InputBuffer;
-        int len = min(InputBuffer->bufLen() , cbslot.m_Bytes );
+        int len = min( ((int)InputBuffer->bufLen()) , cbslot.m_Bytes );
         HRESULT hr = E_FAIL;
 
         //如果这是一个单一的结构体，没有嵌套结构体;。直接搞定它
@@ -497,7 +517,7 @@ bool xD3D9ShaderParamTable::installConstBuffer()
         else
         {
             //有嵌套结构体，郁闷一点。我们只支持一层嵌套。基本也够用了。不够用的找自己的老妈去。
-            int _nConstant = cbslot.m_pReflection->nConstant();
+            int _nConstant = (int)cbslot.m_pReflection->nConstant();
             char* pSource = (char*)InputBuffer->handle();
             for(int i = 0 ; i < _nConstant ; i ++ )
             {

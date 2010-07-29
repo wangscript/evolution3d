@@ -3,7 +3,7 @@
 
 #include "xModelFWDecl.h"
 #include "xCoreMeshDef.h"
-#include "xCoreAction.h"
+#include "xBaseAction.h"
 BEGIN_NAMESPACE_XEVOL3D
 
 //============Action==================
@@ -42,27 +42,21 @@ public:
 	int                findBoneIndex(const wchar_t* boneName);
 	const xSkeletonID& id() const { return m_SkeletonID ; }
     const xSkinBone&   getBone(int idx) { return m_Bones[idx] ; }
+	xCoreActionFrame*  createActionFrame();
+	void               destoryActionFrame(xCoreActionFrame* pAcFrame);
 public:
-	bool               blendLerp      (xBaseAction* pAction, xCoreActionAttr* pAttr , xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2);
-	bool               blendHiberarchy(xBaseAction* pAction, xCoreActionAttr* pAttr , xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent = -1);
-    
-    bool               blendSlerp(xBaseAction* pAction, xBaseActionState* pActionState ,xCoreActionFrame& skeletonFrame , int parent = -1);
-    bool               blendSlerp(xBaseAction* pAction, xCoreActionAttr* pAttr , xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent = -1);
-	
-	bool               blendLerp(xBaseAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2)
-	{
-		return blendLerp(pAction , pAction->attribute() , skeletonFrame , t , frame1 , frame2);
-	}
-
-	bool               blendHiberarchy(xBaseAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent = -1)
-	{
-		return blendHiberarchy(pAction , pAction->attribute() , skeletonFrame , t , frame1 , frame2 , parent);
-	}
-
-	bool               blendSlerp(xBaseAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent = -1)
-	{
-		return blendSlerp(pAction , pAction->attribute() , skeletonFrame , t , frame1 , frame2 , parent);
-	}
+	//bool               blendLerp      (xBaseAction* pAction, xCoreActionAttr* pAttr , xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2);
+	//bool               blendHiberarchy(xBaseAction* pAction, xCoreActionAttr* pAttr , xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent = -1);
+	//bool               blendLerp(xBaseAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2)
+	//{
+	//	return blendLerp(pAction , pAction->attribute() , skeletonFrame , t , frame1 , frame2);
+	//}
+	//bool               blendHiberarchy(xBaseAction* pAction,xCoreActionFrame& skeletonFrame,float t, int frame1, int frame2,int parent = -1)
+	//{
+	//	return blendHiberarchy(pAction , pAction->attribute() , skeletonFrame , t , frame1 , frame2 , parent);
+	//}
+	bool              blendSlerp(xBaseAction* pAction, xBaseActionState* pActionState , xCoreActionAttr* pAttr ,  xCoreActionFrame& skeletonFrame,int parent = -1);
+    bool              blendSlerp(xBaseAction* pAction, xBaseActionState* pActionState , xCoreActionFrame& skeletonFrame , int parent = -1);
 
 protected:
 	bool               saveHiberarchy(xXmlNode* pRootNode , int rootindex);

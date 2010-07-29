@@ -17,6 +17,7 @@ struct xD10TextureBinding
 	wchar_t         m_Name[32];//在Shader里的名字
 	int             m_iName;//Shader里的名字
 	IBaseTexture*   m_pTexture;
+	int             m_nTexture;
 };
 
 struct xD10SamplerBinding

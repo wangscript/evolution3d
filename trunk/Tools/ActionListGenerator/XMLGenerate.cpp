@@ -12,13 +12,40 @@ struct NewItem
 	std::wstring m_Pos;//位置，是左中还是右
 };
 
+std::wstring TrimSpace(const wchar_t* Name)
+{
+    wchar_t _Name[1024];
+    wcsncpy_x(_Name , Name , 1024);
+
+	for(int k = (int)wcslen(_Name) - 1; k >=0 ;  k --)
+    {
+        if(_Name[k] !='\t' && _Name[k] != ' ')
+            break;
+        else
+            _Name[k] = 0 ;
+    }
+
+    std::wstring _ret;
+    int i = 0 ;
+    for( ;  i < (int)wcslen(_Name) ; i ++)
+    {
+        if(_Name[i] !='\t' && _Name[i] != ' ')
+            break;
+    }
+
+    for( ;  i < (int)wcslen(_Name) ; i ++)
+    {
+         _ret.push_back(_Name[i]);
+    }
+    return _ret;
+}
 
 int main()
 {
 	std::wstring excelFile  = _XEVOL_ABSPATH_(L"动作列表.xls");
 	std::wstring excelFilex = _XEVOL_ABSPATH_(L"动作列表.xlsx");
 	IExcelWriter* pExcel = createExcelWriter();
-
+    XEVOL_LOG_REDIR(_XEVOL_ABSPATH_(L"动作列表.log.txt"));
 	if(pExcel->init(excelFile.c_str() , false ) == false)
 	{
          pExcel->ReleaseObject();
@@ -112,11 +139,33 @@ int main()
             continue;
         }
 
+        std::wstring _actionName  = TrimSpace(actionName);
+        std::wstring _maxFileName = TrimSpace(lastMaxFile.c_str() );
+		if(_maxFileName.find(L".max") == std::wstring::npos &&
+           _maxFileName.find(L".Max") == std::wstring::npos &&
+           _maxFileName.find(L".MAX") == std::wstring::npos)
+		{
+			_maxFileName += L".max";
+		}
+
+        for(int i = 0 ; i < pRootNode->countNode() ; i ++)
+        {
+            xXmlNode* pActionNode = pRootNode->findNode(i);
+            if(pActionNode->value(L"ActionName") == _actionName )
+            {
+                XEVOL_LOG(eXL_ERROR_FALT , L"动作名重复 name=%s " , _actionName.c_str() );
+                XEVOL_LOG(eXL_ERROR_FALT , L"原始[%s , %d-%d] "   , pActionNode->value(L"MaxFile") , pActionNode->int_value(L"StartFrame"), pActionNode->int_value(L"EndFrame") );
+                XEVOL_LOG(eXL_ERROR_FALT , L"重复[%s , %d-%d] \n"   , _maxFileName.c_str() , startFrame , endFrame );
+                continue;
+            }
+        }
+
         xXmlNode* pActionNode = pRootNode->insertNode(L"动作");
         pActionNode->setValue(L"StartFrame" , startFrame);
         pActionNode->setValue(L"EndFrame"   , endFrame  );
-        pActionNode->setValue(L"ActionName" , actionName);
-        pActionNode->setValue(L"MaxFile"    , lastMaxFile.c_str() );
+        pActionNode->setValue(L"ActionName" , _actionName.c_str() );
+        pActionNode->setValue(L"MaxFile"    , _maxFileName.c_str() );
+
         if(wcslen_x(actionTime) > 0)
         {
             pActionNode->setValue(L"DurTime" , actionTime);
@@ -125,11 +174,14 @@ int main()
 
     }
 
+    system("PAUSE");
 	
     doc.save(_XEVOL_ABSPATH_(L".\\动作列表.xml"));
     XSAFE_RELEASEOBJECT(pActioListSheet);
 	pExcel->close();
     XSAFE_RELEASEOBJECT(pExcel);
+    
+    XEVOL_LOG_CLOSE();
     return 0;
 
 }

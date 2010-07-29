@@ -1,6 +1,6 @@
 #ifndef __xXmlFileStream_H__
 #define __xXmlFileStream_H__
-
+#include "xI18N.h"
 #include "xEvol3DBaseInc.h"
 #include "stl_dllalloc.h"
 #include <string>
@@ -15,17 +15,17 @@ BEGIN_NAMESPACE_XEVOL3D
 //====================================================
 template<typename TStreamType> class xXmlUnicodeStream
 {
-	TStreamType&    _stream;
+	TStreamType*    _stream;
 public:
 
-	xXmlUnicodeStream(TStreamType& os,bool bAddHeader = false):_stream(os)
+	xXmlUnicodeStream(TStreamType* os,bool bAddHeader = false):_stream(os)
 	{
 		if(bAddHeader)
 		{
 			unsigned char buf[2];
 			buf[0] = 0xFF;
 			buf[1] = 0xFE;
-			os.write((const char*)buf,2);
+			os->write((const char*)buf,2);
 		}
 
 
@@ -35,7 +35,7 @@ public:
 	{
 		wchar_t c[20]={0};
 		swprintf(c,20,L"\r\n");
-		_stream.write((const char*)c, sizeof(wchar_t) * 2 );
+		_stream->write((const char*)c, sizeof(wchar_t) * 2 );
 		return *this;
 	}
 
@@ -48,28 +48,28 @@ public:
 			if(wChar == '\n' )
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(wchar_t) );
+				_stream->write( (const char*)&wChar, sizeof(wchar_t) );
 				wChar = 'n';
-				_stream.write( (const char*)&wChar, sizeof(wchar_t) );
+				_stream->write( (const char*)&wChar, sizeof(wchar_t) );
 
 			}
 			else if(wChar == '\t')
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(wchar_t) );
+				_stream->write( (const char*)&wChar, sizeof(wchar_t) );
 				wChar = 't';
-				_stream.write( (const char*)&wChar, sizeof(wchar_t) );
+				_stream->write( (const char*)&wChar, sizeof(wchar_t) );
 			}
 			else if(wChar == '\r')
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(wchar_t) );
+				_stream->write( (const char*)&wChar, sizeof(wchar_t) );
 				wChar = 'r';
-				_stream.write( (const char*)&wChar, sizeof(wchar_t) );
+				_stream->write( (const char*)&wChar, sizeof(wchar_t) );
 			}
 			else
 			{
-				_stream.write( (const char*)&wChar, sizeof(wchar_t) );
+				_stream->write( (const char*)&wChar, sizeof(wchar_t) );
 			}
 		}
 		return *this;
@@ -81,7 +81,7 @@ template<> class xXmlUnicodeStream<std::wostringstream>
 	std::wostringstream&    _stream;
 public:
 
-	xXmlUnicodeStream(std::wostringstream& os,bool bAddHeader = false):_stream(os)
+	xXmlUnicodeStream(std::wostringstream* os,bool bAddHeader = false):_stream(*os)
 	{
 	}
 
@@ -103,9 +103,9 @@ public:
 template<typename TStreamType> class xXmlUtf8Stream
 {
 protected:
-	TStreamType&    _stream;
+	TStreamType*    _stream;
 public:
-	xXmlUtf8Stream(TStreamType& os,bool bAddHeader = false) : _stream(os)
+	xXmlUtf8Stream(TStreamType* os,bool bAddHeader = false) : _stream(os)
 	{
 		if(bAddHeader)
 		{
@@ -113,7 +113,7 @@ public:
 			buf[0] = UTF8_LEAD_0;
 			buf[1] = UTF8_LEAD_1;
 			buf[2] = UTF8_LEAD_2;
-			os.write((const char*)buf,3);
+			os->write((const char*)buf,3);
 		}
 	}
 
@@ -121,7 +121,7 @@ public:
 	{
 		char c[20]={0};
 		sprintf(c,"\r\n");
-		_stream.write((const char*)c, sizeof(char) * 2 );
+		_stream->write((const char*)c, sizeof(char) * 2 );
 		return *this;
 	}
 
@@ -138,28 +138,28 @@ public:
 			if(wChar == '\n' )
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 				wChar = 'n';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 
 			}
 			else if(wChar == '\t')
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 				wChar = 't';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 			}
 			else if(wChar == '\r')
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 				wChar = 'r';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 			}
 			else
 			{
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 			}
 		}
 		return *this;
@@ -171,9 +171,9 @@ public:
 template<typename TStreamType> class xXmlAnsiStream
 {
 protected:
-	TStreamType&    _stream;
+	TStreamType*    _stream;
 public:
-	xXmlAnsiStream(TStreamType& os,bool bAddHeader = false) : _stream(os)
+	xXmlAnsiStream(TStreamType* os,bool bAddHeader = false) : _stream(os)
 	{
 
 	}
@@ -182,7 +182,7 @@ public:
 	{
 		char c[20]={0};
 		sprintf(c,"\r\n");
-		_stream.write((const char*)c, sizeof(char) * 2 );
+		_stream->write((const char*)c, sizeof(char) * 2 );
 		return *this;
 	}
 
@@ -199,28 +199,28 @@ public:
 			if(wChar == '\n' )
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 				wChar = 'n';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 
 			}
 			else if(wChar == '\t')
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 				wChar = 't';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 			}
 			else if(wChar == '\r')
 			{
 				wChar = '\\';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 				wChar = 'r';
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 			}
 			else
 			{
-				_stream.write( (const char*)&wChar, sizeof(char) );
+				_stream->write( (const char*)&wChar, sizeof(char) );
 			}
 		}
 		return *this;

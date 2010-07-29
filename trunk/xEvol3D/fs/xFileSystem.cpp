@@ -1,5 +1,5 @@
 #include "../xStdPch.h"
-#ifdef _LINUX
+#ifdef _UNIX
 #include <dirent.h>
 #endif
 
@@ -150,7 +150,7 @@ std::ds_wstring xFileSystem::getPathName(const wchar_t* fullName)
 	}
 
 	_ret.replace(pos ,wcslen(fullName), L"");
-	return _ret + L"/";
+	return _ret + PATH_SPLITTER_STRING;
 }
 
 bool xFileSystem::fileExist(const wchar_t* wcsFileName)
@@ -230,7 +230,8 @@ const wchar_t* xFileSystem::getFileExtName(const wchar_t* filename )
 	static wchar_t name_ext[16]={0};
 	name_ext[0] = 0;
 	size_t  len = wcslen(filename);
-
+    if(len == 0)
+        return name_ext;
 	for( size_t i = len-1 ; i > 0 ; i -- )
 	{
 		if(filename[i] == '.')
@@ -311,7 +312,7 @@ static int ___fileSize(const wchar_t* wcsFileName)
 	return len;
 }
 
-#ifdef _LINUX
+#ifdef _UNIX
 static bool ___isDir(const char* dir_name)
 {
 	DIR* dirp = opendir(dir_name);

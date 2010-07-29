@@ -230,7 +230,7 @@ bool xFreeImage::flipY( )
 {
 	return __flipY( m_pFreeImage );
 }
-bool xFreeImage::load(const wchar_t* wcsFileName,IMAGE_ORIGIN img_origin)
+bool xFreeImage::load(const wchar_t* wcsFileName,IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
 	int8 fileName[512]={0};
 	XEvol_UnicodeToFsEnc(wcsFileName,fileName,512);
@@ -266,11 +266,11 @@ bool xFreeImage::data(const int8 * image_buffer,int mWidth,int mHeight , ePIXEL_
 	 return true;
 }
 
-bool xFreeImage::load(const wchar_t* fileName,const char* mem_buf , int buf_len, IMAGE_ORIGIN img_origin)
+bool xFreeImage::load(const wchar_t* fileName,const char* mem_buf , int buf_len, IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
 	if(mem_buf == NULL)
 	{
-		return load(fileName,img_origin);
+		return load(fileName,img_origin,_arg);
 	}
 
 
@@ -287,9 +287,9 @@ bool xFreeImage::load(const wchar_t* fileName,const char* mem_buf , int buf_len,
 	return m_pFreeImage != NULL;
 }
 
-bool xFreeImage::load(const wchar_t* filename, const int8* buf,int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin)
+bool xFreeImage::load(const wchar_t* filename, const int8* buf,int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
-   if(load(filename, buf , buf_len , img_origin) )
+   if(load(filename, buf , buf_len , img_origin , _arg) )
    {
         return convert(format);
    }

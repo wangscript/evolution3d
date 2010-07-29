@@ -19,7 +19,7 @@ Output
 
 ///{{SourceCode
 
-float4 CM_FakeHDR(float4 vDiffuse , float2 texCoord , sampler2D _texture )
+float4 CM_FakeHDR(float4 vDiffuse , float4 texCoord , sampler2D _texture )
 {
       float2    TexSize = float2(32 , 32);
       float2    intXY   = float2(texCoord.x * TexSize.x , texCoord.y * TexSize.y);

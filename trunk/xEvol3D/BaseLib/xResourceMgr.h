@@ -216,10 +216,12 @@ namespace XEvol3D
 		friend class TBaseResMgr<ResType, _TKey , _TLoader ,_TLocker>;
 		MyResMgr* m_pResMgr;
 		int       m_iData;
+        ResType*  m_ResPtr;
 		//面向资源管理器的类
 
 	public:
-		TResHandle(){ m_pResMgr = NULL; }
+		TResHandle(){ m_pResMgr = NULL; m_iData = -1 ; m_ResPtr = NULL; }
+        TResHandle(ResType* pResPtr){ m_pResMgr = NULL; m_iData = -1 ; m_ResPtr = pResPtr; }
 		
 		MyResMgr* getOwner(){return m_pResMgr;}
 		int       data(){return m_iData;}
@@ -232,6 +234,7 @@ namespace XEvol3D
 		{
 			m_iData   = rhv.m_iData;
 			m_pResMgr = rhv.m_pResMgr;
+            m_ResPtr  = rhv.m_ResPtr;
 			AddRef();
 			return *this;
 		}
@@ -241,7 +244,7 @@ namespace XEvol3D
 		ResType* queryResPtr() const;
 		operator ResType*() const{ return getResource() ; }
 		ResType* operator->(){return getResource();}
-		void     setNULL(){m_pResMgr = NULL ; m_iData = 0 ; }
+		void     setNULL(){ unload() ; m_pResMgr = NULL ; m_iData = 0 ; }
 		bool     operator == (const TResHandle<ResType , _TKey , _TLoader,_TLocker>& rhv){ return m_pResMgr && m_pResMgr == rhv.m_pResMgr && m_iData == rhv.m_iData ; };
 		bool     confirm() const;
 		bool     preLoad();
@@ -252,13 +255,13 @@ namespace XEvol3D
 		void     unload();
 		void     AddRef();
 		int      RefCount();		
-		bool     isHandle() const {return m_pResMgr != NULL;}
+		bool     isHandle() const {return m_pResMgr != NULL || m_ResPtr != NULL;}
         operator bool() const { return isHandle(); }
 	};
 
 	template<typename T , typename THandle> T resource_cast(THandle& h)
 	{
-		return dynamic_cast<T>( h.getResource() );
+		return type_cast<T>( h.getResource() );
 	}
 	//------------------------------------------------------
 	//Resource Manager的接口，
@@ -392,12 +395,12 @@ namespace XEvol3D
 		}
 
 		//重新加载一个Slot里的资源
-		virtual bool     _load(ResSlot& slot , size_t resIdx)
+		virtual bool     _load(size_t resIdx)
 		{
-			thread_lock();
+			this->thread_lock();
 		    size_t nResCapacity = m_ResSlots.capacity();
-			eResStatus _resStatus = slot.m_Status;
-			thread_unlock();
+			eResStatus _resStatus = m_ResSlots[resIdx].m_Status;
+			this->thread_unlock();
 
 			if(_resStatus == RES_LOADING)
 				return false;
@@ -407,45 +410,47 @@ namespace XEvol3D
 
 
 			bool bLoaded = false;
-			slot.m_LastUsedTime = this->advanceTime();
+			m_ResSlots[resIdx].m_LastUsedTime = this->advanceTime();
 			int  ResSize = 0;
 			//对资源做预加载
 			if(_resStatus == RES_PRELOAD)
 			{
-				this->_preLoadResource(slot.m_ResName,slot.m_pRes , ResSize ,slot.m_Arg) ;
-				slot.m_Status = RES_POSTLOAD;
+				this->_preLoadResource(m_ResSlots[resIdx].m_ResName,m_ResSlots[resIdx].m_pRes , ResSize ,m_ResSlots[resIdx].m_Arg) ;
+				m_ResSlots[resIdx].m_Status = RES_POSTLOAD;
 				return false;
 			}
 			   
 
-
+            ;
 			if(_resStatus == RES_POSTLOAD)
-                bLoaded = this->_postLoadResource(slot.m_ResName,slot.m_pRes , ResSize ,slot.m_Arg) ;
+                bLoaded = this->_postLoadResource(m_ResSlots[resIdx].m_ResName,m_ResSlots[resIdx].m_pRes , ResSize ,m_ResSlots[resIdx].m_Arg) ;
 			else 
-                bLoaded = this->_loadResource(slot.m_ResName,slot.m_pRes , ResSize ,slot.m_Arg) ;
+                bLoaded = this->_loadResource    (m_ResSlots[resIdx].m_ResName,m_ResSlots[resIdx].m_pRes , ResSize ,m_ResSlots[resIdx].m_Arg) ;
 
 			TResMgrAutoLocker<MyResManager> _alocker(this);
 			if(bLoaded)
 			{
-				slot.m_Status  = RES_LOADED;
+				m_ResSlots[resIdx].m_Status  = RES_LOADED;
 				this->m_ResSize += ResSize;
 			}
 			else 
 			{
 				//家在失败了。
-				slot.m_Status  = RES_NOTLOADED;
+				m_ResSlots[resIdx].m_Status  = RES_NOTLOADED;
 			}
+            m_ResSlots[resIdx].m_iLockCount ++ ;
 			freeResource();
+            m_ResSlots[resIdx].m_iLockCount -- ;
 			//如果m_ResSlots的capacity发生了变化，那么要重新对m_ResSlots赋值
-			if( m_ResSlots.capacity() > nResCapacity) 
-			{
-				m_ResSlots[ resIdx ] = slot;
-			}
+			//if( m_ResSlots.capacity() > nResCapacity) 
+			//{
+			//	m_ResSlots[ resIdx ] = slot;
+			//}
 			if(m_ResSlots.size() == nResCapacity )
 			{
 				m_ResSlots.reserve(nResCapacity * 2);
 			}
-			return slot.m_Status == RES_LOADED;
+			return m_ResSlots[resIdx].m_Status == RES_LOADED;
 		}
 
 		//判断一个Slot里的资源是不是已经加载了。
@@ -583,13 +588,12 @@ namespace XEvol3D
 			if(isHandle(handle) == false)
 				return NULL;
 
-			ResSlot& slot = m_ResSlots[handle.m_iData];
 			//锁定这个资源，防止使用的时候被释放掉
-			slot.m_iLockCount ++;
+			m_ResSlots[handle.m_iData].m_iLockCount ++;
 			confirm(handle);
-			slot.m_LastUsedTime = this->getTime();
-			slot.m_iLockCount --;
-			return slot.m_pRes;
+			m_ResSlots[handle.m_iData].m_LastUsedTime = this->getTime();
+			m_ResSlots[handle.m_iData].m_iLockCount --;
+			return m_ResSlots[handle.m_iData].m_pRes;
 		}
 
 		/*
@@ -759,7 +763,7 @@ namespace XEvol3D
 			if( _isLoaded(Slot) )
 				return true;
 			else
-				return _load(Slot , handle.m_iData);
+				return _load( handle.m_iData);
 		}
 
 
@@ -778,7 +782,7 @@ namespace XEvol3D
 			else
 			{
 				Slot.m_Status = RES_PRELOAD;
-				return _load(Slot , handle.m_iData);
+				return _load(handle.m_iData);
 			}
 		}
 		/***************************************
@@ -835,7 +839,7 @@ namespace XEvol3D
 				ResSlot& Slot = m_ResSlots[i];
 				if(_isLoaded(Slot) == false)
 				{
-					_load(Slot , i);
+					_load(i);
 				}
 			}
 		}
@@ -856,12 +860,13 @@ namespace XEvol3D
 		*/
 		virtual void    unload()
 		{
+			this->thread_lock();
 			ResManagerLocker alocker(this);
 			size_t nRes = m_ResSlots.size();
 			for(size_t i = 0 ; i < nRes ; i++)
 			{
 				ResSlot& slot = m_ResSlots[i];
-				if(_isLoaded(slot))
+				if(_isLoaded(slot) && slot.m_iLockCount == 0)
 				{
 					_unload(slot);
 				}
@@ -869,6 +874,18 @@ namespace XEvol3D
 			this->thread_unlock();
 		}
 
+		virtual void clearLock()
+		{
+			this->thread_lock();
+			ResManagerLocker alocker(this);
+			size_t nRes = m_ResSlots.size();
+			for(size_t i = 0 ; i < nRes ; i++)
+			{
+				ResSlot& slot = m_ResSlots[i];
+				slot.m_iLockCount = 0;
+			}
+			this->thread_unlock();
+		}
 		/*
 		清理这个ResManager里的所有的资源
 		*/
@@ -1084,7 +1101,7 @@ namespace XEvol3D
 	template <typename ResType , typename _TKey ,  typename _TLoader , typename _TLocker >
 	ResType* TResHandle<ResType ,  _TKey , _TLoader , _TLocker >::getResource() const
 	{
-		if(m_pResMgr == NULL) return NULL;
+		if(m_pResMgr == NULL) return m_ResPtr;
 		return m_pResMgr->getResource(*this);
 	}
 
@@ -1092,21 +1109,21 @@ namespace XEvol3D
 	template <typename ResType , typename _TKey ,  typename _TLoader , typename _TLocker >
 	ResType* TResHandle<ResType , _TKey ,  _TLoader , _TLocker >::query() const
 	{
-		if(m_pResMgr == NULL) return NULL;
+		if(m_pResMgr == NULL) return m_ResPtr;
 		return m_pResMgr->query(*this);
 	}
 
 	template <typename ResType , typename _TKey ,  typename _TLoader , typename _TLocker >
 	ResType* TResHandle<ResType , _TKey ,  _TLoader , _TLocker >::queryResPtr() const
 	{
-		if(m_pResMgr == NULL) return NULL;
+		if(m_pResMgr == NULL) return m_ResPtr;
 		return m_pResMgr->queryResPtr(*this);
 	}
 
 	template <typename ResType , typename _TKey ,  typename _TLoader , typename _TLocker >
 	bool TResHandle<ResType ,  _TKey ,  _TLoader , _TLocker >::confirm()  const
 	{
-		if(m_pResMgr == NULL) return false;
+		if(m_pResMgr == NULL) return m_ResPtr != NULL;
 		return m_pResMgr->confirm(*this);
 	}
 
@@ -1141,8 +1158,9 @@ namespace XEvol3D
 	template <typename ResType , typename _TKey ,  typename _TLoader , typename _TLocker >
 	TResHandle<ResType , _TKey ,  _TLoader , _TLocker >::TResHandle(const TResHandle<ResType , _TKey , _TLoader,_TLocker>& rhv)
 	{
-		m_pResMgr = rhv.m_pResMgr;
-		m_iData   = rhv.m_iData;
+        m_iData   = rhv.m_iData;
+        m_pResMgr = rhv.m_pResMgr;
+        m_ResPtr  = rhv.m_ResPtr;
         AddRef();
 	}
 

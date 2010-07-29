@@ -77,9 +77,7 @@ protected:
     IFrameUpdateObject*      m_AutoUpdater;
     IRenderApi*              m_pRenderApi;
     xBaseTextureMgr*         m_pTextureMgr;
-    I2DRectObject*           m_p2DRectObject;
-    IGpuProgram*             m_GpuProgram[2];
- 
+    x2DRenderer*             m_p2DRenderer;
     xRefCount                m_RefCount;
     DECL_REFCOUNT_OBJECT_INTERFACE(xuiWindowManager);
 protected:
@@ -88,6 +86,7 @@ public:
 
     static xuiWindowManager* createManager(IRenderApi* pRenderApi , xBaseTextureMgr* pTexMgr);
     ~xuiWindowManager();
+    x2DRenderer*             get2DRenderer(){ return m_p2DRenderer ; }
     IRenderApi*              renderApi() { return m_pRenderApi ; }
     xBaseTextureMgr*         textureManager() { return m_pTextureMgr ; };
     bool                     drawRectf(int nTextureLayer , IBaseTexture* pTexture[], float vDestRect[4] , const xColor_4f& color);
@@ -102,7 +101,6 @@ public:
     void                     hideDialog(xuiDialog*    pWindow);
     void                     showDialog(xuiDialog*    pWindow);
     bool                     loadPlugin(const wchar_t* dir);
-    I2DRectObject*           get2DRectObject(){return m_p2DRectObject ; }
     void                     setMouseFocus(xuiWindow* pWindow,bool bFocus);
     xuiWindow*               getMouseFocus();
 

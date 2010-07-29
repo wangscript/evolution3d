@@ -36,12 +36,14 @@ public:
     virtual bool  keyUp(xKeyboardMsg& kEvent);
     virtual bool  leftMouseDown(xMouseMsg& mEvent);
     virtual bool  leftMouseRelease(xMouseMsg& mEvent);
+    virtual bool  leftMouseDbClick(xMouseMsg& mEvent);
     virtual bool  rightMouseDown(xMouseMsg& mEvent);
     virtual bool  rightMouseRelease(xMouseMsg& mEvent);
     virtual bool  midleMouseDown(xMouseMsg& mEvent);
     virtual bool  midleMouseRelease(xMouseMsg& mEvent);
     virtual bool  mouseMove(xMouseMsg& mEvent);
     virtual bool  mouseWhell(xMouseMsg& mEvent);
+
     virtual bool  setKBInputFocus(xuiControl* pCtrl);
 
 

@@ -6,147 +6,38 @@
 #include "xCoreMesh.h"
 using namespace xMathLib;
 BEGIN_NAMESPACE_XEVOL3D 
-IMPL_BASE_OBJECT_CLASSID(xBaseAction          , IBaseObject);
+
 IMPL_BASE_OBJECT_CLASSID(xCoreAction          , xBaseAction);
-IMPL_BASE_OBJECT_CLASSID(xEmbAction           , xCoreAction);
-//骨架的一个Frame
-xCoreActionFrame::xCoreActionFrame()
+IMPL_ACTION_FACTORY(xCoreAction);
+
+//////////////////////////////////////////////////////////////////////////
+xSkeletonAction::xSkeletonAction(xCoreSkeleton* pSkeleton , int param) : xBaseAction(pSkeleton , param)
 {
-    m_nBone = 0;
-    m_FrameMat   = NULL;
-    m_WSMats     = NULL;
-    m_vBoneTrans = NULL;
+
 }
 
-xCoreActionFrame::~xCoreActionFrame()
+bool xSkeletonAction::setTime(float _time)
 {
-    unload();
+    m_Info.m_lTime = 1000 * _time;
+    return true;
 }
 
-int    xCoreActionFrame::nBone()
+float xSkeletonAction::getDurTime()
 {
-    return m_nBone;
+    return m_Info.m_lTime/1000.0f;
 }
-
-xmat4& xCoreActionFrame::operator[](int index)
+int xSkeletonAction::memUsage()
 {
-    assert(index < m_nBone);
-    assert(index >= 0);
-    return m_FrameMat[index];
+    return m_nBone * m_Info.m_nFrame * sizeof(xBoneTrans);
 }
-
-xMathLib::xmat4&  xCoreActionFrame::wsMat(int index)
+void xSkeletonAction::setBoneNumber(int _nBone)
 {
-    assert(index < m_nBone);
-    assert(index >= 0);
-    return m_WSMats[index];
-}
-
-xBoneTrans&  xCoreActionFrame::boneTrans(int index)
-{
-    assert(index < m_nBone);
-    assert(index >= 0);
-    return m_vBoneTrans[index];
-}
-
-bool xCoreActionFrame::load(int _nBone)
-{
-    unload();
-    m_FrameMat   = new xMathLib::xmat4[_nBone];
-    m_WSMats     = new xMathLib::xmat4[_nBone];
-    m_vBoneTrans = new xBoneTrans[_nBone];
-    assert(m_FrameMat);
     m_nBone = _nBone;
-    return m_FrameMat != NULL;
 }
 
-void xCoreActionFrame::unload()
-{
-    XSAFE_DELETE_ARRAY(m_FrameMat);
-    XSAFE_DELETE_ARRAY(m_WSMats);
-    XSAFE_DELETE_ARRAY(m_vBoneTrans);
-}
 
-//////////////////////////////////////////////////////////////////////////
-void xCoreActionAttr::init(int nBone , int Attri )
-{
-	m_BoneAttribtes.resize(nBone);
-	for(int i = 0 ; i < nBone ; i ++)
-	{
-		m_BoneAttribtes[i] = Attri;
-	}
-}
-
-bool xCoreActionAttr::boneUsed(int boneIndex)
-{
-	return m_BoneAttribtes[boneIndex] == eBoneInclude;
-}
-
-void xCoreActionAttr::setBoneAttribute(int attr )
-{
-	size_t nBone = m_BoneAttribtes.size();
-	for(size_t i = 0 ; i < nBone ; i ++) m_BoneAttribtes[i] = attr;
-}
-
-void xCoreActionAttr::setBoneAttribute(int attr , int idx)
-{
-	m_BoneAttribtes[idx] = attr;
-}
-
-void xCoreActionAttr::setBoneAttribute(int* pAttributes , int nAttr , int iStart)
-{
-	for(int i = iStart ; i < iStart + nAttr ; i ++)
-	{
-		m_BoneAttribtes[i] = pAttributes[i - iStart];
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-float xBaseAction::_getBlendFrameLoop(const xActionInfo* pInfo ,long _time_in_ms, int& frame1 , int& frame2)
-{
-    long t = _time_in_ms % pInfo->m_lTime;
-
-    int nFrame = pInfo->m_iLastFrame - pInfo->m_iFirstFrame + 1;
-    float fFrame = nFrame *  t / float( pInfo->m_lTime); 
-
-    frame1 = (int)fFrame;
-    frame2 = frame1 + 1;
-    if(frame2 >= nFrame)
-    {
-        frame2 = frame2%nFrame;
-    }
-    if(frame1 > nFrame)
-    {
-        frame1 = frame1%nFrame;
-    }
-    return fFrame - frame1;
-}
-
-float xBaseAction::_getBlendFrameClamp(const xActionInfo* pInfo ,long _time_in_ms, int& frame1 , int& frame2)
-{
-    if(_time_in_ms > pInfo->m_lTime) _time_in_ms = pInfo->m_lTime;
-    long t = _time_in_ms ;//tt % m_Info.m_lTime;
-
-    int nFrame = pInfo->m_iLastFrame - pInfo->m_iFirstFrame + 1;
-    float lTime = float( pInfo->m_lTime); 
-    if(lTime == 0.0f ) lTime = 30.0f;
-    float fFrame = nFrame *  t / float( pInfo->m_lTime); 
-
-    frame1 = (int)fFrame;
-    frame2 = frame1 + 1;
-    if(frame2 >= nFrame)
-    {
-        frame2 = nFrame - 1;//frame2%nFrame;
-    }
-    if(frame1 >= nFrame)
-    {
-        frame1 = nFrame - 1; //frame1%nFrame;
-    }
-    return fFrame - frame1;
-}
-
-//////////////////////////////////////////////////////////////////////////
-xCoreAction::xCoreAction()
+//CoreAction
+xCoreAction::xCoreAction(xCoreSkeleton* pSkeleton , int param) : xSkeletonAction(pSkeleton , param)
 {
     m_RefCount = 1;
 	m_bLoopAction = true;
@@ -156,51 +47,56 @@ xCoreAction::~xCoreAction()
 
 }
 
-bool xCoreAction::setTime(float _time)
+bool xCoreAction::getBoneTrans(int boneIndex, xBaseActionState* pActionState , xBoneTrans& boneTrans)
 {
-	m_Info.m_lTime = 1000 * _time;
+	float t = pActionState->m_fTime;
+	int frame1 = pActionState->m_Frame1;
+	int frame2 = pActionState->m_Frame2;
+	xBoneTrans* _boneData1 = this->getBoneData(boneIndex, frame1);
+	xBoneTrans* _boneData2 = this->getBoneData(boneIndex, frame2);
+	if(_boneData1 == NULL || _boneData2 == NULL)
+		return false;
+
+	xBoneTrans& boneData1 = *_boneData1;
+	xBoneTrans& boneData2 = *_boneData2;
+
+	//插值旋转
+	xquat q1 = boneData1.m_Rotate;
+	xquat q2 = boneData2.m_Rotate;
+	boneTrans.m_Rotate = q1.slerp(t,q2);
+
+	//插值平移
+	xvec3& t1 = boneData1.m_Trans;
+	xvec3& t2 = boneData2.m_Trans;
+	boneTrans.m_Trans = t1*(1.0f - t) + t2*t;
+
+	//插值平移
+	xvec3& s1 = boneData1.m_Scale;
+	xvec3& s2 = boneData2.m_Scale;
+	boneTrans.m_Scale = s1*(1.0f - t) + s2*t;
 	return true;
 }
 
-float xCoreAction::getDurTime()
-{
-    return m_Info.m_lTime/1000.0f;
-}
-
-const wchar_t* xCoreAction::typeID() const
-{
-	return L"xra";
-}
 
 bool xCoreAction::blend(long _time_in_ms, xCoreActionFrame* _skeletonFrame , xCoreSkeleton* pSkeleton)
 {
 	xCoreActionFrame& skeletonFrame = *_skeletonFrame;
-    int frame1;
-    int frame2;
-	float tfloat = 0.0f;
-    if(m_bLoopAction)
-	{
-		tfloat = _getBlendFrameLoop(info() , _time_in_ms , frame1 , frame2);
-	}
-	else
-	{
-		tfloat = _getBlendFrameClamp(info() ,_time_in_ms , frame1 , frame2);
-	}
-    pSkeleton->blendSlerp(this,skeletonFrame,tfloat,frame1,frame2);
+	m_ActionState.m_lTime = _time_in_ms;
+	updateState(_time_in_ms , m_ActionState , m_bLoopAction );
+    pSkeleton->blendSlerp(this, &m_ActionState , attribute() ,  skeletonFrame );
     return true;
 }
 
-int xCoreAction::memUsage()
-{
-	return m_nBone * m_Info.m_nFrame * sizeof(xBoneData);
-}
 
-xBoneData* xCoreAction::getBoneData(int boneIndex, int frame)
+
+xBoneTrans* xCoreAction::getBoneData(int boneIndex, int frame)
 {
 	if(frame == -1 || frame >= m_Info.m_nFrame) 
 		frame = m_Info.m_nFrame - 1;
 	return &m_BoneFrame[boneIndex][frame];
 }
+
+
 
 bool  xCoreAction::load(xXmlNode* pCfgNode )
 {
@@ -226,6 +122,10 @@ bool  xCoreAction::load(const wchar_t * _name , istream& stream)
 	stream.read((char*)&m_SkeID , sizeof(m_SkeID) );
 	stream.read((char*)&m_nBone , sizeof(m_nBone) );
 	stream.read((char*)&m_Info  , sizeof(m_Info) );
+    istream::pos_type cur_pos = stream.tellg();
+    stream.seekg(0 , ios::end );
+    int len = (int)(stream.tellg() - cur_pos );
+    stream.seekg(cur_pos , ios::beg);
 
 	int nFrame = m_Info.m_iLastFrame - m_Info.m_iFirstFrame + 1;
 	assert(m_Info.m_nFrame == nFrame );
@@ -236,14 +136,30 @@ bool  xCoreAction::load(const wchar_t * _name , istream& stream)
 
 	m_BoneFrame.create(dim);
 	m_ActionAttr.init(m_nBone);
-	for(int iFrame = 0 ; iFrame < nFrame ; iFrame ++ )
-	{
-		for(int iBone = 0 ; iBone < m_nBone ; iBone++)
-		{
-			xBoneData& boneData = m_BoneFrame[iBone][iFrame];
-			stream.read((char*)&boneData , sizeof(xBoneData) );
-		}
-	}
+
+    if(len > (int)sizeof(xBoneTrans) * nFrame * m_nBone )
+    {
+        xBoneData  boneData ;
+        for(int iFrame = 0 ; iFrame < nFrame ; iFrame ++ )
+        {
+            for(int iBone = 0 ; iBone < m_nBone ; iBone++)
+            {
+                stream.read((char*)&boneData , sizeof(xBoneData) );
+                m_BoneFrame[iBone][iFrame] = boneData.m_BoneTrans;
+            }
+        }
+    }
+    else
+    {
+        for(int iFrame = 0 ; iFrame < nFrame ; iFrame ++ )
+        {
+            for(int iBone = 0 ; iBone < m_nBone ; iBone++)
+            {
+                xBoneTrans& boneTrans = m_BoneFrame[iBone][iFrame];
+                stream.read((char*)&boneTrans , sizeof(xBoneTrans) );
+            }
+        }
+    }
 	return true;
 }
 
@@ -254,6 +170,11 @@ bool xCoreAction::load(const wchar_t * _name , xcomdocstream* stream)
     stream->read(m_nBone);
     stream->read(m_Info);
 
+    int cur_pos = stream->stream_tellr();
+    stream->stream_seekr(xcdsd_end , 0 );
+    int len = (int)(stream->stream_tellr() - cur_pos );
+    stream->stream_seekr(xcdsd_beg , cur_pos );
+
     int nFrame = m_Info.m_iLastFrame - m_Info.m_iFirstFrame + 1;
     assert(m_Info.m_nFrame == nFrame );
 	
@@ -263,22 +184,32 @@ bool xCoreAction::load(const wchar_t * _name , xcomdocstream* stream)
 
     m_BoneFrame.create(dim);
 	m_ActionAttr.init(m_nBone);
-    for(int iFrame = 0 ; iFrame < nFrame ; iFrame ++ )
-    {
-        for(int iBone = 0 ; iBone < m_nBone ; iBone++)
-        {
 
-            xBoneData& boneData = m_BoneFrame[iBone][iFrame];
-            if(stream->read(boneData) < sizeof(boneData) )
+    if(len > (int)sizeof(xBoneTrans) * nFrame * m_nBone )
+    {
+        xBoneData  boneData ;
+        for(int iFrame = 0 ; iFrame < nFrame ; iFrame ++ )
+        {
+            for(int iBone = 0 ; iBone < m_nBone ; iBone++)
             {
-                return false;
-            }
-            else
-            {
-                continue;
+                if(stream->read(boneData) == sizeof(boneData) )
+                {
+                    m_BoneFrame[iBone][iFrame] = boneData.m_BoneTrans;
+                }
             }
         }
     }
+    else //否则，只有BoneTrans数据
+    {
+        for(int iFrame = 0 ; iFrame < nFrame ; iFrame ++ )
+        {
+            for(int iBone = 0 ; iBone < m_nBone ; iBone++)
+            {
+                stream->read(m_BoneFrame[iBone][iFrame]);
+            }
+        }
+    }
+ 
 	return true;
 	/*
     //write;
@@ -326,28 +257,12 @@ bool xCoreAction::load(xXmlNode* pCfgNode , xcomdoc& doc , const wchar_t* action
     return true;
 }
 
-void xCoreAction::setBoneNumber(int _nBone)
-{
-    m_nBone = _nBone;
-}
+
 
 void xCoreAction::unload()
 {
     m_BoneFrame.free();
 }
-//模型内置的动作
-xEmbAction::xEmbAction()
-{
 
-}
 
-xEmbAction::~xEmbAction()
-{
-	xCoreAction::unload();
-}
-
-void xEmbAction::unload()
-{
-
-}
 END_NAMESPACE_XEVOL3D

@@ -40,13 +40,12 @@ template<typename TObject> class xObjectStack
 public:
 	xObjectStack(){ m_pObject = NULL; }
 	TObject* operator ->() { return m_pObject ;}
-	template <typename TypeTo> TypeTo type_case(){ return dynamic_cast<TypeTo>(m_pObject) ;} ;
 	operator TObject*(){ return m_pObject ; }
 	void operator = (TObject* rhv){m_pObject = rhv ; }
 	bool equal(const TObject* rhv){return m_pObject == rhv ; } 
 	bool operator !=(const TObject* rhv){return m_pObject != rhv ; } 
-	template <typename TTypeCv> TTypeCv* dynamic_convert() { return dynamic_cast<TTypeCv> (m_pObject) ; }
-	template <typename TTypeCv> TTypeCv* static_convert()  { return static_cast<TTypeCv> (m_pObject) ; }
+	template <typename TTypeCv> TTypeCv dynamic_convert() { return type_cast<TTypeCv> (m_pObject) ; }
+	template <typename TTypeCv> TTypeCv static_convert()  { return static_cast<TTypeCv> (m_pObject) ; }
 public:
 	bool push()
 	{

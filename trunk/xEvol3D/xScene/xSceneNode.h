@@ -61,7 +61,7 @@ public:
 	virtual bool                    load(xXmlNode* pNode) = 0;
 	virtual bool                    unload() = 0;
 	virtual bool                    save(xXmlNode* pNode) = 0;
-	virtual bool                    updateFrame(unsigned long passedTime, bool bRecursive = false) = 0;
+	virtual bool                    updateFrame(unsigned long passedTime, IRenderCamera* pCamera ,  bool bRecursive = false) = 0;
     virtual bool                    bInScene();
 	virtual void                    setInScene(bool _bInScene);
 	virtual ISceneGraph*            sceneGraph(){return m_pScene ; }
@@ -83,16 +83,40 @@ public:
 		for(size_t i = 0 ; i < nObj ; i ++)
 		{
 			ISceneObject* pObj = getObject(i);
-			T* pRet = dynamic_cast<T*>(pObj);
+			T* pRet = type_cast<T*>(pObj);
 			if(pRet) return pRet;
 		}
 		return NULL;
 	}
 
+    template<typename T>  void        getObjects(ds_vector(T*)& _ret , bool bRecursive)
+    {
+        size_t nObj =  nObjects();
+        for(size_t i = 0 ; i < nObj ; i ++)
+        {
+            ISceneObject* pObj = getObject(i);
+            T* pRet = type_cast<T*>(pObj);
+            if(pRet) 
+            {
+                _ret.push_back(pRet);
+            }
+        }
+        if(bRecursive)
+        {
+            beginEnumChildren();
+            ISceneNode* pChildNode = NULL;
+            while(pChildNode = nextChild() )
+            {
+                if(pChildNode) pChildNode->getObjects(_ret , bRecursive);
+            }
+            endEnumChildren(); 
+        }
+    }
+
 	template<typename T>  T*        getObject(int i )
 	{
 			ISceneObject* pObj = getObject(i);
-			T* pRet = dynamic_cast<T*>(pObj);
+			T* pRet = type_cast<T*>(pObj);
 			return pRet;
 	}
 
@@ -101,13 +125,13 @@ public:
 		size_t nObj =  nObjects();
 		for(size_t i = 0 ; i < nObj ; i ++)
 		{
-			ISceneDrawable* pDrawable = dynamic_cast<ISceneDrawable*>(getObject(i));
+			ISceneDrawable* pDrawable = type_cast<ISceneDrawable*>(getObject(i));
 			if(pDrawable)
 			{
                 size_t nEl = pDrawable->nDrawElement();
                 for(size_t j = 0 ; j < nEl ; j ++)
                 {
-                    T* pRet = dynamic_cast<T*>(pDrawable->drawElement(j) );
+                    T* pRet = type_cast<T*>(pDrawable->drawElement(j) );
                     if(pRet)
                         return pRet;
                 }
@@ -118,10 +142,10 @@ public:
 
 	template<typename T> T*         drawElement(size_t iObject , size_t iElement = 0)
 	{
-		ISceneDrawable* pDrawable = dynamic_cast<ISceneDrawable*>(getObject(iObject));
+		ISceneDrawable* pDrawable = type_cast<ISceneDrawable*>(getObject(iObject));
 		if(pDrawable)
 		{
-			T* pRet = dynamic_cast<T*>(pDrawable->drawElement(iElement) );
+			T* pRet = type_cast<T*>(pDrawable->drawElement(iElement) );
 			return pRet;
 		}
 		return NULL;
@@ -170,7 +194,7 @@ public:
 	virtual bool                     load(xXmlNode* pNode);
 	virtual bool                     unload();
 	virtual bool                     save(xXmlNode* pNode);
-	virtual bool                     updateFrame(unsigned long passedTime, bool bRecursive);
+	virtual bool                     updateFrame(unsigned long passedTime, IRenderCamera* pCamera , bool bRecursive);
 	virtual bool                     updateChildrenTrans();
 	virtual bool                     initPropertySet(){ return ISceneNode::initPropertySet() ; }
 	virtual ISceneNodePropertySet*   getPropertySet();

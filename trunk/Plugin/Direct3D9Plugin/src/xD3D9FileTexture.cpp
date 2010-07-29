@@ -69,11 +69,15 @@ bool xD3D9FileTexture::__loadImageFile(const wchar_t* fileName , const unsigned 
         D3DPOOL pool = xD3D9ConstLexer::singleton()->GetD3DPool( m_InitDesc.m_usage ); 
         RESET_D3DPOOL(pool);
         IDirect3DTexture9* p2DTexture = NULL;
-        if(FAILED(m_pD3D9RenderApi->getDevice()->CreateTexture((UINT)_size.w, (UINT)_size.h,1, usage , D3DFMT_A8B8G8R8, pool , &p2DTexture,0)) )
+        if(FAILED(m_pD3D9RenderApi->getDevice()->CreateTexture((UINT)_size.w, (UINT)_size.h,1, usage , D3DFMT_A8R8G8B8, pool , &p2DTexture,0)) )
+        {
+            pImg->ReleaseObject();
             return false;
+        }
         m_pTexture = p2DTexture;
         const char* pData[1] = { (const char*)pImg->data(0)};
         uploadTextureData(pData , _size.pitch , _size.pitch *  _size.h , 0 , false);
+        pImg->ReleaseObject();
 		if(m_pTexture == NULL)
 			return false;
 		return _load(m_pTexture);
@@ -82,6 +86,7 @@ bool xD3D9FileTexture::__loadImageFile(const wchar_t* fileName , const unsigned 
 	{
         XEVOL_WARNNING_NOT_IMPLEMENT_INFO("CubeMap目前还不支持dds以外格式\n");
 	}
+    pImg->ReleaseObject();
 	return true;
 }
 
@@ -100,6 +105,10 @@ bool xD3D9FileTexture::_prepareLoadInfo(D3DXIMAGE_INFO& imgInfo , D3DX_IMAGE_LOA
     loadInfo.Depth     = imgInfo.Depth;
 	loadInfo.MipLevels = imgInfo.MipLevels;
 	loadInfo.Format    = imgInfo.Format;
+	if(loadInfo.Format == D3DFMT_R8G8B8 && imgInfo.ImageFileFormat == D3DXIFF_TGA)
+	{
+		loadInfo.Format = D3DFMT_A8B8G8R8;
+	}
 	return true;
 }
 

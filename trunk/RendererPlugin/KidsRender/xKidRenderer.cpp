@@ -105,7 +105,8 @@ xMaterial* xKidRenderer::createMaterial(const wchar_t* matName)
 
 IRenderEffect* xKidRenderer::createRenderEffect(const wchar_t* effectName)
 {
-    xKidBasicRenderEffect* pEffect = new xKidBasicRenderEffect( this);
+	if(effectName == NULL) effectName =  L"KidBlendEffect";
+    xKidBasicRenderEffect* pEffect = new xKidBasicRenderEffect( this , effectName );
 	if(effectName == std::wstring(L"KidBlendEffect"))
 	{
 		pEffect->setQueueName(L"transpency");

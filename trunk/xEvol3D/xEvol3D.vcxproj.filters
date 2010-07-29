@@ -1,0 +1,1561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Mem">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="BaseLib">
+      <UniqueIdentifier>{5fce2c83-f267-410a-bf5e-b8743f0d6ac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\xXMLParser">
+      <UniqueIdentifier>{3dcf5dc6-4813-48ea-9011-7f7bf92323ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\Logger">
+      <UniqueIdentifier>{2a38bd58-9fdb-45de-9dd4-8e3adba9acc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\Multi-Language">
+      <UniqueIdentifier>{eb00cad0-e12d-48a2-9bb4-d2ff3a37d2d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\ResourceManager">
+      <UniqueIdentifier>{cc6e363e-bfb6-4364-874f-c01994abfa0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\Object">
+      <UniqueIdentifier>{d6dd9280-7f63-41f1-b39b-bd2781e9e4e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseLib\String">
+      <UniqueIdentifier>{704c9183-273e-463e-8931-aed771325e9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileSystem">
+      <UniqueIdentifier>{0a3a4aff-7f9f-46c9-9708-760101df7831}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageLib">
+      <UniqueIdentifier>{368cb70a-0a34-4420-9c4d-fa2a7aaa6018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{2998a521-e434-485b-b8d9-ca6f12bb9bc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xcomdoc">
+      <UniqueIdentifier>{816bef60-fcb6-4728-8861-eb8cbd8fdce9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xcomdoc\inc">
+      <UniqueIdentifier>{4cff2435-aa51-4d1a-bbc1-877bb5c46c8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xcomdoc\src">
+      <UniqueIdentifier>{336ba192-4fd6-4b6b-ab1c-8b34db45b1d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xcomdoc\dir">
+      <UniqueIdentifier>{a38e2201-f74a-44bb-8084-c2ed20df249c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{daec13c6-8831-4172-8afb-1eb7a153b883}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xmathlib">
+      <UniqueIdentifier>{b299e8bc-ae1a-4df4-9f22-94d36d3ce908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{8c05cfd3-c8f7-4551-895f-240b4a4fa10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\RenderApi">
+      <UniqueIdentifier>{c245e55a-7aba-4afe-b655-2149dc340908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\RenderApi\Shader">
+      <UniqueIdentifier>{1a9f506d-ca74-48c0-bb36-355ce7033fcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\RenderApi\Texture">
+      <UniqueIdentifier>{00805697-080b-4fad-ac7e-60ec1566ed55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\RenderApi\Buffer">
+      <UniqueIdentifier>{3ff103b4-4cd6-45d4-8249-388e56469a5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\RenderApi\HelperRender">
+      <UniqueIdentifier>{ecf04ecc-a461-41f9-8098-4f863ecda1fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Font">
+      <UniqueIdentifier>{0d5c457f-2e63-4cec-9bb8-8e217dd573d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer">
+      <UniqueIdentifier>{8c4df8c2-416e-4078-8c09-9ee0a490008f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\src">
+      <UniqueIdentifier>{c500838f-ad31-414a-bfa2-5dd9957175c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\include">
+      <UniqueIdentifier>{5fcbd476-5ae6-49f3-bafa-82d920dede84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\ToyRender">
+      <UniqueIdentifier>{7ed2f958-0f08-4e03-aa94-e1695380c815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xModel">
+      <UniqueIdentifier>{09db8f64-98c8-4cb1-9681-9d5425ea501c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xModel\Core">
+      <UniqueIdentifier>{53841ddf-4297-4d37-92d5-75ca1ba9bdd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xModel\Model">
+      <UniqueIdentifier>{378d54af-de7c-4ecd-a75c-7b6a37ae5105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xModel\MGR">
+      <UniqueIdentifier>{d9d1d9a1-eaab-4931-a741-47e88ddac7b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xModel\Action">
+      <UniqueIdentifier>{fd3434b0-2c66-46d1-9ae4-8a36b3db6978}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\SceneGraph">
+      <UniqueIdentifier>{e8ddbacf-70f2-452f-af77-0960c5820e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\SceneGraph\SceneObject">
+      <UniqueIdentifier>{05c0a5c1-59d2-44dd-babd-2badfe23536f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xEffectSystem">
+      <UniqueIdentifier>{2f0d575f-e0e9-44d8-a53a-4ba6b58dbe3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xEffectSystem\Particle">
+      <UniqueIdentifier>{0f90719f-4dc4-4505-ac8e-2a373b1fa2c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="float16">
+      <UniqueIdentifier>{4bd530ca-183c-4f6c-9d84-d08fc1f2eaeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvol3D">
+      <UniqueIdentifier>{8288c5d1-a3a1-4917-8960-d917aef3537c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OperationSystem">
+      <UniqueIdentifier>{f273ce85-078d-483f-8e09-64dc9be36254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OperationSystem\Win32">
+      <UniqueIdentifier>{e105032a-4dbc-4c87-bc9f-d6b5493c7d01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OperationSystem\Linux">
+      <UniqueIdentifier>{22d04ca1-f5aa-4f28-8288-129c2f20ef77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xui">
+      <UniqueIdentifier>{c01354e9-879a-4560-8413-adfde388780b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xui\include">
+      <UniqueIdentifier>{08966fa8-c1f5-4769-b0a6-eb28ae978013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xui\src">
+      <UniqueIdentifier>{427b8fcc-4731-4294-90ec-cb4b1cf2763c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{f27182ad-1fe7-445d-aa75-4dc96d62db6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{8641def9-e1b0-4fd8-b3d0-67dd9cac665b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Working">
+      <UniqueIdentifier>{84bbaf12-ee0a-46e4-97c3-4e2da1b17c3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="loki">
+      <UniqueIdentifier>{a0738ebe-f554-415b-8e67-615d6f4d8a89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="loki\src">
+      <UniqueIdentifier>{eb517c44-427b-49f4-8af8-3a49ab63ba31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lzma">
+      <UniqueIdentifier>{f761d432-9a85-413b-b455-c3221862ff95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lzma\h">
+      <UniqueIdentifier>{ca8db52d-dcb1-426f-93ef-e85fb48117b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zlib">
+      <UniqueIdentifier>{16f991f3-9b50-40ec-bc0c-c89aadf95a7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zlib\header">
+      <UniqueIdentifier>{412a48c4-2a83-403d-a4f5-7438365aa000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xTools">
+      <UniqueIdentifier>{9b4872e2-54e2-4225-ab72-6a1c9839191f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xmathlib\Math">
+      <UniqueIdentifier>{8dee6599-21c3-479f-8136-22fc3d279cc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xmathlib\Math\source">
+      <UniqueIdentifier>{ba5165d7-bf78-45b4-b77f-64160f2e4a55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xmathlib\Math\include">
+      <UniqueIdentifier>{28abe6a3-3711-4a05-831b-ccc7e2ffb9b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xmathlib\Geom">
+      <UniqueIdentifier>{3e833b7e-34e0-4282-8c4f-9e67ee4013f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xEffectSystem\quad">
+      <UniqueIdentifier>{49eb0726-61b5-4ba6-b30e-a91d0fb70a76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\xEffectSystem\Emitter">
+      <UniqueIdentifier>{762062ca-30d1-4eb2-b4c1-f6e20fffc491}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mem\FastMemAlloc.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FastSmallMemAlloc.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FixMemAlloc.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FixSmallMemAlloc.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_dbg.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_operator.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_operator_dbg.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\MemPool.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\MemState.cpp">
+      <Filter>Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\stl_dllalloc.cpp">
+      <Filter>BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xBaseMath.cpp">
+      <Filter>BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xIDManager.cpp">
+      <Filter>BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xParamTable.cpp">
+      <Filter>BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xProperties.cpp">
+      <Filter>BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xXmlDocBuilder.cpp">
+      <Filter>BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xXmlDocument.cpp">
+      <Filter>BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xXmlManager.cpp">
+      <Filter>BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xLogger.cpp">
+      <Filter>BaseLib\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xI18N.cpp">
+      <Filter>BaseLib\Multi-Language</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xStringTable.cpp">
+      <Filter>BaseLib\Multi-Language</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xBaseObject.cpp">
+      <Filter>BaseLib\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xBaseLexer.cpp">
+      <Filter>BaseLib\String</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xstring.cpp">
+      <Filter>BaseLib\String</Filter>
+    </ClCompile>
+    <ClCompile Include="fs\xFileManager.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="fs\xFileSystem.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\PixelFormatAssit.cpp">
+      <Filter>ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xBaseImage.cpp">
+      <Filter>ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xDXTImage.cpp">
+      <Filter>ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xFreeImage.cpp">
+      <Filter>ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xHDRImage.cpp">
+      <Filter>ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xILImage.cpp">
+      <Filter>ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xImage.cpp">
+      <Filter>ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdDirEnum.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdFile.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdFileImp.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdReadWriterBuffer.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdStream.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdStringHash.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdUtil.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdoc.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdocbase.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\zlibStream.cpp">
+      <Filter>xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdir.cpp">
+      <Filter>xcomdoc\dir</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xApplication.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xApplicationLayer.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xListener.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xPlatform.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xPluginMgr.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xWindow.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmat3.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmat4.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmat4x3.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmatfunc.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xMathTrace.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xPlacement.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xquat.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xrotator.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xvec2.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xvec3.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xvec4.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\x2DRenderer.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xMatrixContext.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderAPI.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderAPIDef.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderApiImp.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderAPIManager.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderApiObject .cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderStateObjManager.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderView.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xTLEnvioroment.cpp">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xBaseShader.cpp">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderLexer.cpp">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderManager.cpp">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderName.cpp">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderNode.cpp">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderSemantic.cpp">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xBaseTexture.cpp">
+      <Filter>Graphics\RenderApi\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xTextureManager.cpp">
+      <Filter>Graphics\RenderApi\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xVideoTexture.cpp">
+      <Filter>Graphics\RenderApi\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xMemBuffer.cpp">
+      <Filter>Graphics\RenderApi\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xHelperRender.cpp">
+      <Filter>Graphics\RenderApi\HelperRender</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xAliasFont.cpp">
+      <Filter>Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xDistanceFont.cpp">
+      <Filter>Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xFontManager.cpp">
+      <Filter>Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xFontRender.cpp">
+      <Filter>Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xFT2Font.cpp">
+      <Filter>Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xGdiGlyphFont.cpp">
+      <Filter>Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xMultiFtRender.cpp">
+      <Filter>Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xActorDrawElement.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xDrawableHelper.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xDrawElement.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xDrawElementRes.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xMaterial.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xModelElement.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xPrimitiveElement.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xRenderer.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xRendererQueue.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xRenderObject.cpp">
+      <Filter>Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\ToyRender\xToyRenderer.cpp">
+      <Filter>Graphics\Renderer\ToyRender</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreMesh.cpp">
+      <Filter>Graphics\xModel\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreSkeleton.cpp">
+      <Filter>Graphics\xModel\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xActionTrack.cpp">
+      <Filter>Graphics\xModel\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xBaseModel.cpp">
+      <Filter>Graphics\xModel\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xXrmModel.cpp">
+      <Filter>Graphics\xModel\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xBaseModelMgr.cpp">
+      <Filter>Graphics\xModel\MGR</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreActionMgr.cpp">
+      <Filter>Graphics\xModel\MGR</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreMeshMgr.cpp">
+      <Filter>Graphics\xModel\MGR</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xBaseAction.cpp">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreAction.cpp">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xKeyframeAction.cpp">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xMixAction.cpp">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xTransitionAction.cpp">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xBaseTerrain.cpp">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneGraph.cpp">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneNode.cpp">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneObjectRes.cpp">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneSimpleVistor.cpp">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneVisitor.cpp">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xActorModel.cpp">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneCommonObject.cpp">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneDrawable.cpp">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneHelperDrawable.cpp">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneModel.cpp">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneObject.cpp">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="float16\float16.cpp">
+      <Filter>float16</Filter>
+    </ClCompile>
+    <ClCompile Include="xEvol3D.cpp">
+      <Filter>xEvol3D</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\xOperationSys.cpp">
+      <Filter>OperationSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Win32\xWin32DllLoader.cpp">
+      <Filter>OperationSystem\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Win32\xWin32IME.cpp">
+      <Filter>OperationSystem\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Win32\xWin32OS.cpp">
+      <Filter>OperationSystem\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Win32\xWin32Thread.cpp">
+      <Filter>OperationSystem\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Linux\xLinuxDllLoader.cpp">
+      <Filter>OperationSystem\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Linux\xLinuxOS.cpp">
+      <Filter>OperationSystem\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiButton.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiCaption.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiControl.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiCtrlContainer.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiDialog.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiHotArea.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiStateBlend.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiStringParser.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiTextArea.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiTextLabel.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiTheme.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiTransBlend.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiWindow.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiWindowManager.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiWindowState.cpp">
+      <Filter>xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="working\xWorkingThread.cpp">
+      <Filter>Working</Filter>
+    </ClCompile>
+    <ClCompile Include="loki\src\Singleton.cpp">
+      <Filter>loki\src</Filter>
+    </ClCompile>
+    <ClCompile Include="loki\src\SmallObj.cpp">
+      <Filter>loki\src</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Alloc.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Bra.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzFind.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzFindMt.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Lzma2Dec.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Lzma2Enc.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaDec.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaEnc.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaLib.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\MtCoder.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Threads.c">
+      <Filter>lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\adler32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\compress.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\crc32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\deflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\gzio.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\infback.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inffast.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inftrees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\trees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\uncompr.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\zutil.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="xStdPch.cpp" />
+    <ClCompile Include="Image\xJPEGImage.cpp">
+      <Filter>ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmat2.cpp">
+      <Filter>xmathlib\Math\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xplane.cpp">
+      <Filter>xmathlib\Geom</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xpolygon.cpp">
+      <Filter>xmathlib\Geom</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xRayIntersection.cpp">
+      <Filter>xmathlib\Geom</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xcamera.cpp">
+      <Filter>xmathlib\Geom</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xfrustum.cpp">
+      <Filter>xmathlib\Geom</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xIntersection.cpp">
+      <Filter>xmathlib\Geom</Filter>
+    </ClCompile>
+    <ClCompile Include="xEffectSystem\quad\xQuadParticle.cpp">
+      <Filter>Graphics\xEffectSystem\quad</Filter>
+    </ClCompile>
+    <ClCompile Include="xEffectSystem\emitter\xSphereEmitter.cpp">
+      <Filter>Graphics\xEffectSystem\Emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="xEffectSystem\xParticle.cpp">
+      <Filter>Graphics\xEffectSystem\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="xEffectSystem\xParticleEmitter.cpp">
+      <Filter>Graphics\xEffectSystem\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="xEffectSystem\xParticleSystem.cpp">
+      <Filter>Graphics\xEffectSystem\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="xEffectSystem\emitter\xBoxEmitter.cpp">
+      <Filter>Graphics\xEffectSystem\Emitter</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mem\FastMemAlloc.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FastSmallMemAlloc.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FixMemAlloc.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FixSmallMemAlloc.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mem.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mem_operator.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemAlloc.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\memdef.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemPool.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemState.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mstream.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\ObjectPool.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\stl_alloc.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\stl_dllalloc.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xarray.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xBaseMath.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xEvol3DAPI.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xEvol3DBaseInc.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xIDManager.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xParamTable.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xProperties.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xRect.h">
+      <Filter>BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xXmlDocBuilder.h">
+      <Filter>BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xXmlDocument.h">
+      <Filter>BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xXmlFileStream.h">
+      <Filter>BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xXmlManager.h">
+      <Filter>BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\logstream.h">
+      <Filter>BaseLib\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xLogger.h">
+      <Filter>BaseLib\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xI18N.h">
+      <Filter>BaseLib\Multi-Language</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xStringTable.h">
+      <Filter>BaseLib\Multi-Language</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xResourceMgr.h">
+      <Filter>BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xResPackageMgr.h">
+      <Filter>BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xResPackageMgrTool.h">
+      <Filter>BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xResPathMgr.h">
+      <Filter>BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xBaseObject.h">
+      <Filter>BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xObjectFactory.h">
+      <Filter>BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xRefCountObjPtr.h">
+      <Filter>BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xBaseLexer.h">
+      <Filter>BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xstring.h">
+      <Filter>BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xStringHash.h">
+      <Filter>BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="fs\xFileManager.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="fs\xFileSystem.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\Color.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\endian.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\PixelFormatAssit.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xBaseImage.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xDXTImage.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xFreeImage.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xHDRImage.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xILImage.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xImage.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xJPEGImage.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xPixelFormatEnum.h">
+      <Filter>ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="io\bzip2stream.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\bzip2stream.hpp">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\mstream.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\zipstream.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\zipstream.hpp">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdDirEnum.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdReadBuffer.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdStringHash.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdUtil.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdWriteBuffer.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdoc.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdoc_common.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdocbase.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdocImp.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xdocfstream.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\zlibStream.h">
+      <Filter>xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdir.h">
+      <Filter>xcomdoc\dir</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xApplication.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xApplicationLayer.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xListener.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xPlatform.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xPluginMgr.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xVirtualKey.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xWindow.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xWindowMsg.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat3.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat3func.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat3x3_asm_gcc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat3x3_asm_vc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4func.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4x3.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4x3_asm_gcc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4x3_asm_vc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4x3func.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat_asm_gcc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat_asm_vc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmath_asm_gcc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmath_asm_vc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmathbasedef.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xMathDecl.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmathfunc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xMathLib.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xMathTrace.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xPlacement.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xquat.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xrotator.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvec2.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvec3.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvec4.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvecfunc.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\x2DRenderer.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xMatrixContext.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderAPI.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderAPIDef.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiEnum.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiFwDecl.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiHelper.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiImp.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderAPIManager.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiObject.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderResManager.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderStateObjManager.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderView.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xTLEnvioroment.h">
+      <Filter>Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xBaseShader.h">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderDefine.h">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderLexer.h">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderManager.h">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderName.h">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderNode.h">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderSemantic.h">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderSemanticEnum.h">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xBaseTexture.h">
+      <Filter>Graphics\RenderApi\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xTextureManager.h">
+      <Filter>Graphics\RenderApi\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xVideoTexture.h">
+      <Filter>Graphics\RenderApi\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xMemBuffer.h">
+      <Filter>Graphics\RenderApi\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xHelperRender.h">
+      <Filter>Graphics\RenderApi\HelperRender</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xAliasFont.h">
+      <Filter>Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xDistanceFont.h">
+      <Filter>Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xFontManager.h">
+      <Filter>Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xFontRender.h">
+      <Filter>Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xFT2Font.h">
+      <Filter>Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xGdiGlyphFont.h">
+      <Filter>Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xMultiFtRender.h">
+      <Filter>Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xActorDrawElement.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xDrawableHelper.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xDrawElement.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xDrawElementRes.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xMaterial.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xModelElement.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xPrimitiveElement.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xRenderer.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xRendererQueue.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xRenderObject.h">
+      <Filter>Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\ToyRender\xToyRenderer.h">
+      <Filter>Graphics\Renderer\ToyRender</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xModelFWDecl.h">
+      <Filter>Graphics\xModel</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreMesh.h">
+      <Filter>Graphics\xModel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreMeshDef.h">
+      <Filter>Graphics\xModel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreSkeleton.h">
+      <Filter>Graphics\xModel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xActionTrack.h">
+      <Filter>Graphics\xModel\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xBaseModel.h">
+      <Filter>Graphics\xModel\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xXrmModel.h">
+      <Filter>Graphics\xModel\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xBaseModelMgr.h">
+      <Filter>Graphics\xModel\MGR</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreActionMgr.h">
+      <Filter>Graphics\xModel\MGR</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreMeshMgr.h">
+      <Filter>Graphics\xModel\MGR</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xBaseAction.h">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreAction.h">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xKeyframeAction.h">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xMixAction.h">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xTransitionAction.h">
+      <Filter>Graphics\xModel\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xBaseTerrain.h">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneGraph.h">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneNode.h">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneObjectRes.h">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xScenePropertyTool.h">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneSimpleVistor.h">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneVisitor.h">
+      <Filter>Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xActorModel.h">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneCommonObject.h">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneDrawable.h">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneHelperDrawable.h">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneModel.h">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneObject.h">
+      <Filter>Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xEffectSystem.h">
+      <Filter>Graphics\xEffectSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParticleSystem.h">
+      <Filter>Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="float16\eLut.h">
+      <Filter>float16</Filter>
+    </ClInclude>
+    <ClInclude Include="float16\endian.h">
+      <Filter>float16</Filter>
+    </ClInclude>
+    <ClInclude Include="float16\float16.h">
+      <Filter>float16</Filter>
+    </ClInclude>
+    <ClInclude Include="float16\toFloat.h">
+      <Filter>float16</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3D.h">
+      <Filter>xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3DBase.h">
+      <Filter>xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3DGraphics.h">
+      <Filter>xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3DRenderer.h">
+      <Filter>xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3DScene.h">
+      <Filter>xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\xOperationSys.h">
+      <Filter>OperationSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\Win32\xWin32DllLoader.h">
+      <Filter>OperationSystem\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\Win32\xWin32IME.h">
+      <Filter>OperationSystem\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\Win32\xWin32Thread.h">
+      <Filter>OperationSystem\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\Linux\xLinuxDllLoader.h">
+      <Filter>OperationSystem\Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xui.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuibase.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiButton.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiCaption.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiControl.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiCtrlContainer.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiDataType.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiDialog.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiHotArea.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiStringParser.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiTextArea.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiTextLabel.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiTheme.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiWindow.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiWindowManager.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiWindowState.h">
+      <Filter>xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\xMediaFX.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="xPhysics\xPhysics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="working\xWorkingThread.h">
+      <Filter>Working</Filter>
+    </ClInclude>
+    <ClInclude Include="loki\Allocator.h">
+      <Filter>loki</Filter>
+    </ClInclude>
+    <ClInclude Include="loki\LokiExport.h">
+      <Filter>loki</Filter>
+    </ClInclude>
+    <ClInclude Include="loki\Singleton.h">
+      <Filter>loki</Filter>
+    </ClInclude>
+    <ClInclude Include="loki\SmallObj.h">
+      <Filter>loki</Filter>
+    </ClInclude>
+    <ClInclude Include="loki\Threads.h">
+      <Filter>loki</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Alloc.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Bra.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzFind.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzFindMt.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzHash.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Lzma2Dec.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Lzma2Enc.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaDec.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaEnc.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaLib.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\MtCoder.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Threads.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Types.h">
+      <Filter>lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\crc32.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\deflate.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffast.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffixed.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inflate.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inftrees.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\trees.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.in.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zlib.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zutil.h">
+      <Filter>zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="xTools\xStringToMath.h">
+      <Filter>xTools</Filter>
+    </ClInclude>
+    <ClInclude Include="xStdPch.h">
+      <Filter>Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat2func.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat2.h">
+      <Filter>xmathlib\Math\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xspline.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xline.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xplane.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xpolygon.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvolume.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xcamera.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xfrustum.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xGeomLib.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xintersection.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xbinomial.h">
+      <Filter>xmathlib\Geom</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\quad\xQuadParticle.h">
+      <Filter>Graphics\xEffectSystem\quad</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\emitter\xSphereEmitter.h">
+      <Filter>Graphics\xEffectSystem\Emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParticleData.h">
+      <Filter>Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParticle.h">
+      <Filter>Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParticleEffect.h">
+      <Filter>Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParticleEmitter.h">
+      <Filter>Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\emitter\xBoxEmitter.h">
+      <Filter>Graphics\xEffectSystem\Emitter</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="XMathLib\说明.txt">
+      <Filter>xmathlib</Filter>
+    </None>
+    <None Include="RenderAPI\ShaderNodeSystem.txt">
+      <Filter>Graphics\RenderApi\Shader</Filter>
+    </None>
+    <None Include="Renderer\Renderer.vsd">
+      <Filter>Graphics\Renderer</Filter>
+    </None>
+    <None Include="xModel\Design.txt">
+      <Filter>Graphics\xModel</Filter>
+    </None>
+  </ItemGroup>
+</Project>

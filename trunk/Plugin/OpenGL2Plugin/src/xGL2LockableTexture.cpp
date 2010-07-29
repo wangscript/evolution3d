@@ -52,7 +52,7 @@ bool xGL2LockableTexture::load(const wchar_t* fileName , unsigned long  arg)
 	D3DX10_IMAGE_LOAD_INFO loadInfo;
 	fillLoadInfo(loadInfo, true );
 	ID3D10Resource* pTexture = NULL;
-	D3DX10CreateTextureFromFileW( m_pD10Api->d10Device() , fileName ,  &loadInfo , NULL, &pTexture, NULL );
+	D3DX10CreateTextureFromFileW( m_pGL2Api->d10Device() , fileName ,  &loadInfo , NULL, &pTexture, NULL );
 	if(pTexture)
     {
         m_TexInfo.m_ShaderViewFmt    = DXGI_FORMAT_UNKNOWN;
@@ -73,7 +73,7 @@ bool xGL2LockableTexture::load(const wchar_t* fileName , const unsigned int8* bu
 	D3DX10_IMAGE_LOAD_INFO loadInfo;
 	fillLoadInfo( loadInfo, true );
 	ID3D10Resource* pTexture = NULL;
-	D3DX10CreateTextureFromMemory(m_pD10Api->d10Device() , buf , bufLen , &loadInfo, NULL, &pTexture, NULL );
+	D3DX10CreateTextureFromMemory(m_pGL2Api->d10Device() , buf , bufLen , &loadInfo, NULL, &pTexture, NULL );
 	if(pTexture)
     {
         m_TexInfo.m_ShaderViewFmt    = DXGI_FORMAT_UNKNOWN;
@@ -103,7 +103,7 @@ bool  xGL2LockableTexture::_create2DTexture()
 		//desc.CPUAccessFlags   |= GL2_CPU_ACCESS_READ;
 	}
 
-	m_pD10Api->d10Device()->CreateTexture2D( &desc, NULL, &m_2DTexture );
+	m_pGL2Api->d10Device()->CreateTexture2D( &desc, NULL, &m_2DTexture );
 	if(m_2DTexture == NULL)
 		return false;
 	m_2DTexture->AddRef();
@@ -161,7 +161,7 @@ bool xGL2LockableTexture::_create3DTexture()
 		//desc.CPUAccessFlags   |= GL2_CPU_ACCESS_READ;
 	}
 
-	m_pD10Api->d10Device()->CreateTexture3D( &desc, NULL, &m_3DTexture );
+	m_pGL2Api->d10Device()->CreateTexture3D( &desc, NULL, &m_3DTexture );
 	if(m_3DTexture == NULL)
 		return false;
 	m_3DTexture->AddRef();

@@ -8,4 +8,5 @@ ISceneObject::ISceneObject(ISceneGraph*  pScene , int )
 {
 	m_pSceneGraph = pScene;
 }
+
 END_NAMESPACE_XEVOL3D

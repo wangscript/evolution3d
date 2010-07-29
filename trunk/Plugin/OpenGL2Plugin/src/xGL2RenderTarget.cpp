@@ -85,7 +85,7 @@ bool xGL2RenderTarget::create(ID3D10Resource* pTexture , xGL2TexInfo& TexInfo, i
 		rtDesc.Texture2D.MipSlice = 0;
 	}
 
-	m_pD10Api->d10Device()->CreateRenderTargetView( pTexture, &rtDesc, &m_pRenderTargetView );
+	m_pGL2Api->d10Device()->CreateRenderTargetView( pTexture, &rtDesc, &m_pRenderTargetView );
 	return m_pRenderTargetView != NULL;
 }
 
@@ -154,7 +154,7 @@ int xGL2DepthBuffer::KillObject()
 bool xGL2DepthBuffer::create(ID3D10Resource* pTexture , xGL2TexInfo& TexInfo)
 {
     destory();
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
+	ID3D10Device* pDevice = m_pGL2Api->d10Device();
 	//创建深度缓冲
 	GL2_DEPTH_STENCIL_VIEW_DESC descDSV;
 	descDSV.Format = TexInfo.m_RTViewFmt;
@@ -191,7 +191,7 @@ bool  xGL2RenderTexture::grabRenderTagetData(int x , int y , int w , int h , voi
 	if(m_bLockable == false || m_pSysTexture == NULL)
 		return false;
 
-	ID3D10Device* pDevice = m_pD10Api->d10Device();
+	ID3D10Device* pDevice = m_pGL2Api->d10Device();
 	pDevice->CopyResource(m_pSysTexture , m_pTexture);
 	xTextureLockArea lockInfo;
 	lock(eLock_Read , lockInfo);
@@ -263,7 +263,7 @@ bool xGL2RenderTexture::__createSysTexture(int w , int h , DXGI_FORMAT fmt)
 	desc.Usage            = GL2_USAGE_STAGING;
 	desc.CPUAccessFlags   = GL2_CPU_ACCESS_READ;
 	ID3D10Texture2D* pTexture = NULL;
-	m_pD10Api->d10Device()->CreateTexture2D( &desc, NULL, &m_pSysTexture );
+	m_pGL2Api->d10Device()->CreateTexture2D( &desc, NULL, &m_pSysTexture );
     return m_pSysTexture != NULL;
 }
 
@@ -290,7 +290,7 @@ bool xGL2RenderTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLeve
 	desc.CPUAccessFlags   = 0;
 
 	ID3D10Texture2D* pTexture = NULL;
-	m_pD10Api->d10Device()->CreateTexture2D( &desc, NULL, &pTexture );
+	m_pGL2Api->d10Device()->CreateTexture2D( &desc, NULL, &pTexture );
 	if(pTexture == NULL)
 		return false;
 	m_pTextureView = NULL;
@@ -328,7 +328,7 @@ bool xGL2RenderTexture::create(int w , int h , int depth , ePIXEL_FORMAT fmt, in
 	desc.CPUAccessFlags   = 0;
 
 	ID3D10Texture3D* pTexture = NULL;
-	m_pD10Api->d10Device()->CreateTexture3D( &desc, NULL, &pTexture );
+	m_pGL2Api->d10Device()->CreateTexture3D( &desc, NULL, &pTexture );
 	if(pTexture == NULL)
 		return false;
 	m_pTextureView = NULL;
@@ -358,7 +358,7 @@ IRenderTarget* xGL2RenderTexture::toRenderTarget(size_t iSlice , size_t iMipMapL
 	}
 	else
 	{
-		xGL2DynamicRenderTarget* pRenderTarget = new xGL2DynamicRenderTarget(m_pD10Api);
+		xGL2DynamicRenderTarget* pRenderTarget = new xGL2DynamicRenderTarget(m_pGL2Api);
 		pRenderTarget->setTexture(this);
 		pRenderTarget->create(m_pTexture,m_TexInfo , (int)iSlice , (int)iMipMapLevel );
         AddRef();
@@ -433,7 +433,7 @@ bool xGL2DepthTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevel
 	desc.CPUAccessFlags   = 0;
 
 	ID3D10Texture2D* pTexture = NULL;
-	m_pD10Api->d10Device()->CreateTexture2D( &desc, NULL, &pTexture );
+	m_pGL2Api->d10Device()->CreateTexture2D( &desc, NULL, &pTexture );
 	if(pTexture == NULL)
 		return false;
 
@@ -460,7 +460,7 @@ bool xGL2DepthTexture::create(int w , int h , ePIXEL_FORMAT fmt, int mipMapLevel
             srvDesc.Texture2D.MostDetailedMip = 0;
             srvDesc.Texture2D.MipLevels       = desc.MipLevels;
             ID3D10ShaderResourceView *pSRView = NULL;
-            m_pD10Api->d10Device()->CreateShaderResourceView( m_pTexture, &srvDesc, &pSRView );
+            m_pGL2Api->d10Device()->CreateShaderResourceView( m_pTexture, &srvDesc, &pSRView );
             if(pSRView != NULL)
             {
                 m_pTextureView = pSRView;

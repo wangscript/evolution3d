@@ -52,7 +52,7 @@ bool  xComDocument::open(IStreamIO* pReader,xcd_rwmode /*mode*/,int /*_offset*/,
 
 bool  xComDocument::open(xcomdocstream* pStream,xcd_rwmode mode,int _offset , bool load_to_mem)
 {
-	xStreamContext* pDocStream = dynamic_cast<xStreamContext*>(pStream);
+	xStreamContext* pDocStream = type_cast<xStreamContext*>(pStream);
 
 	if(pDocStream == NULL)
 		return false;
@@ -107,10 +107,14 @@ bool       xComDocument::open(const wchar_t* file_name,xcd_rwmode mode,int _offs
 
 
 	m_mode = mode;
+
+	if ( file_exist(file_name) && mode == xcdm_read )
+		return __open_for_read(file_name,_offset,load_to_mem);
 	if(file_exist(file_name) == false && mode != xcdm_read && not_create == false)
 	{
 		return create(file_name,256);
 	}
+
 
 	if(m_mode == xcdm_write || m_mode == xcdm_rw)
 		load_to_mem = true;

@@ -33,8 +33,9 @@ public:
 	virtual bool           render(unsigned long passedTime);
 	virtual bool           update(unsigned long passedTime);
     virtual const wchar_t* modelName();
+    virtual HBaseModel     hModel(){return m_Model;}
 public:
-	bool    setModel(HBaseModel hModel);
+	bool                   setModel(HBaseModel hModel);
 public:
 	DECL_BASE_OBJECT_DLLSAFE(xModelElement);
 protected:

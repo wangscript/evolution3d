@@ -33,6 +33,13 @@ inline int xGetMipLevelSize(int nFullSize , int mipLv)
     return nFullSize >> mipLv;
 }
 
+
+inline bool xIsNaN(float v)
+{
+    uint32&  _iv = *((uint32*)&v);
+    return _iv == 0x7FC00000;
+}
+
 #define xIsPower2(x)   ( (x) & (x-1) ? false : true )
 
 END_NAMESPACE_XEVOL3D

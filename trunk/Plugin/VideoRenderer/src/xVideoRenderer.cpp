@@ -192,7 +192,7 @@ HRESULT xDSVideoRenderer::RGBRenderSample(IMediaSample * pSample)
 
 	if(m_pRenderTarget->fmt() == VIF_RGB && m_pRenderTarget->direct_update() )
 	{
-          if( true == m_pRenderTarget->update(pSrcData , m_lVidWidth , m_lVidHeight, m_lVidPitch , VIF_RGB) );
+          if( true == m_pRenderTarget->update(pSrcData , m_lVidWidth , m_lVidHeight, m_lVidPitch , VIF_RGB) )
 		     return S_OK;
 	}
 
@@ -355,9 +355,9 @@ HRESULT xDSVideoRenderer::FillRGBWithYUY2(IMediaSample * pSample)
 					c_v = ((unsigned char*)pSrcLine)[src_y_idx+3];
 				}
 
-				int r = 	1.f * (c_y - 16)                        + 1.14f  * (c_v - 128) ;  //R 
-				int g = 	1.f * (c_y - 16) - 0.390f * (c_u - 128) - 0.58f * (c_v - 128) ;  //G
-				int b = 	1.f * (c_y - 16) + 2.03f  * (c_u - 128)                        ;  //B
+				int r = 	(int)(1.f * (c_y - 16)                        + 1.14f  * (c_v - 128) );  //R 
+				int g = 	(int)(1.f * (c_y - 16) - 0.390f * (c_u - 128) - 0.58f * (c_v - 128)  );  //G
+				int b = 	(int)(1.f * (c_y - 16) + 2.03f  * (c_u - 128)                        );  //B
 
 				pDstLine[Bbp * x + _A] = 255;
 				pDstLine[Bbp * x + _R] = CLIP(r);

@@ -107,7 +107,7 @@ void CFrameAniModelExportDlg::OnBnClickedActionAdd()
     // TODO: Add your control notification handler code here
     sMaxActionInfo_t action;
     UpdateData();
-    action.m_BaseInfo.m_ActionType = ACTION_FA_MODEL;
+    action.m_BaseInfo.m_ActionType = eActType_Frame;
     action.m_BaseInfo.m_iFirstFrame = m_uiFirstFrame;
     action.m_BaseInfo.m_iLastFrame  = m_uiLastFrame;
     action.m_BaseInfo.m_lTime       = m_uiActionTime;
@@ -150,7 +150,8 @@ bool CFrameAniModelExportDlg::InsertAction(sMaxActionInfo_t& action)
 {
      if(findAction(action.m_BaseInfo.m_Name) != -1)
      {
-         ::MessageBoxA(::GetActiveWindow(),"相同名字的动作存在","错误",MB_OK);
+         //::MessageBoxA(::GetActiveWindow(),"相同名字的动作存在","错误",MB_OK);
+         XEVOL_LOG(eXL_ERROR_FALT , L"----------相同名字=%s 动作存在--------------\n" , action.m_BaseInfo.m_Name);
          return false;
      }
      int index = (int)m_ExpContex.m_Actions.size();

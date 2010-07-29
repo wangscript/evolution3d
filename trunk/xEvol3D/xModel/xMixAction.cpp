@@ -1,15 +1,18 @@
 #include "../xStdPch.h"
+#include "xBaseModelMgr.h"
+#include "xCoreActionMgr.h"
 #include "xMixAction.h"
 #include "xCoreSkeleton.h"
 #include "../xcomdoc/xdocfstream.h"
 #include "../BaseLib/xI18N.h"
 #include "xCoreMesh.h"
+
 using namespace xMathLib;
 BEGIN_NAMESPACE_XEVOL3D 
 
-IMPL_BASE_OBJECT_CLASSID(xMixedAction         , xCoreAction);
-
-xMixedAction::xMixedAction(xCoreSkeleton* pSkeleton)
+IMPL_BASE_OBJECT_CLASSID(xMixedAction         , xBaseAction);
+IMPL_ACTION_FACTORY(xMixedAction);
+xMixedAction::xMixedAction(xCoreSkeleton* pSkeleton , int param) : xBaseAction(pSkeleton , param)
 {
 	m_Info.m_eActType    = eActType_Mix;
 	m_Info.m_iFirstFrame = 0;
@@ -17,35 +20,43 @@ xMixedAction::xMixedAction(xCoreSkeleton* pSkeleton)
 	m_Info.m_lTime       = 5000; //5Ãë
 	m_Info.m_nFrame      = 200;
 	m_pSkeleton          = pSkeleton;
+	m_pActionSlotState   = NULL;
 }
 
-const wchar_t* xMixedAction::typeID() const
-{
-	return L"mix";
-}
 
 xMixedAction::~xMixedAction()
 {
 
 }
 
-bool xMixedAction::setMainAction(xCoreAction* pAction)
+bool xMixedAction::setMainAction(xBaseAction* pAction)
 {
 	return true;
 }
 
-bool xMixedAction::setAction(const wchar_t* slotName , xCoreAction* pAction)
+bool xMixedAction::setAction(const wchar_t* slotName , HCoreAction pAction)
 {
 	return true;
 }
 
-bool xMixedAction::setAction(int slotName , xCoreAction* pAction)
+bool xMixedAction::setAction(int slotName , HCoreAction pAction)
 {
 	xActionSlot& slot = m_ActionSlots[slotName];
-	slot.m_pAction = pAction;
+	slot.setAction(pAction);
 	return true;
 }
 
+bool xMixedAction::setAction(const wchar_t* slotName , xBaseAction* pAction)
+{
+   return true;
+}
+
+bool xMixedAction::setAction(int slotName , xBaseAction* pAction)
+{
+    xActionSlot& slot = m_ActionSlots[slotName];
+    slot.setAction(pAction);
+    return true;
+}
 
 bool xMixedAction::load(xXmlNode* pCfgNode , xcomdoc& doc , const wchar_t* actionDir)
 {
@@ -86,6 +97,7 @@ bool xMixedAction::load(const wchar_t * _name , istream& stream)
 
 bool xMixedAction::load(xXmlNode* pXmlNode )
 {
+	unload();
 	int _nBone = m_pSkeleton->nBone();
     m_BoneActionMap.resize(_nBone);
 	for(int i = 0 ; i <  _nBone; i ++)
@@ -104,11 +116,9 @@ bool xMixedAction::load(xXmlNode* pXmlNode )
 			xXmlNode* pSlotNode = slotNodes[iSlot];
 			xActionSlot& slot = m_ActionSlots[iSlot];
 			slot.m_strName = pSlotNode->value(L"name");
-			slot.m_pAction = NULL;
 			slot.m_pAttribute = new xCoreActionAttr();
 			slot.m_pAttribute->init(_nBone , xCoreActionAttr::eBoneExclude );
 			slot.m_hashName = xStringHash( slot.m_strName.c_str() );
-			slot.m_TimeShift = 0;
 			//³õÊ¼»¯¹Ç÷À;
 			xXmlNode::XmlNodes boneNodes;
 			pSlotNode->findNode(L"bone" , boneNodes);
@@ -122,7 +132,7 @@ bool xMixedAction::load(xXmlNode* pXmlNode )
 				{
 					if(m_BoneActionMap[i] == -1) 
 					{
-						m_BoneActionMap[i] = iSlot;
+						m_BoneActionMap[i] = (int)iSlot;
 						(*slot.m_pAttribute)[i] = xCoreActionAttr::eBoneInclude ;
 					}
 				}
@@ -136,7 +146,7 @@ bool xMixedAction::load(xXmlNode* pXmlNode )
 				bool onlyChild = pBoneNode->bool_value(L"onlyChild");
 
 				int boneIdx = m_pSkeleton->findBoneIndex(pBoneNode->value(L"name"));
-				setBoneToActionSlot(boneIdx , iSlot , bRecursive , onlyChild);
+				setBoneToActionSlot(boneIdx , (int)iSlot , bRecursive , onlyChild);
 			}
 
 		}
@@ -190,18 +200,18 @@ bool xMixedAction::setBoneToActionSlot(int boneIdx , int iSlot , bool bRecursive
 	return true;
 }
 
+bool xMixedAction::getBoneTrans(int boneIndex, xBaseActionState* _pActionState , xBoneTrans& boneTrans)
+{
+    int iSlot = m_BoneActionMap[boneIndex];
+    xBaseActionState* pActionState = _pActionState + iSlot;
+    xBaseAction* pAction = m_ActionSlots[iSlot].getAction();
+    return pAction->getBoneTrans(boneIndex , pActionState , boneTrans);
+}
 
 xBaseActionState* xMixedAction::getActionState(int boneIndex, xBaseActionState* pActionState)
 {
     int iSlot = m_BoneActionMap[boneIndex];
     return (pActionState + iSlot);
-}
-
-xBoneData*  xMixedAction::getBoneData(int boneIndex, int frame )
-{
-	int iSlot = m_BoneActionMap[boneIndex];
-	xMixedAction::xActionSlot& slot = m_ActionSlots[iSlot];
-	return slot.m_pAction->getBoneData(boneIndex, frame );
 }
 
 xCoreActionAttr*  xMixedAction::attribute()
@@ -217,19 +227,8 @@ bool xMixedAction::blend(xBaseActionState* pActionSlotState , xCoreActionFrame* 
     {
         xMixedAction::xActionSlot& slot = m_ActionSlots[i];
         xBaseActionState& SlotState = pActionSlotState[i];
-        int& frame1   = SlotState.m_Frame1;
-        int& frame2   = SlotState.m_Frame2;
-        float& tfloat = SlotState.m_fTime;
-        const xActionInfo* pActionInfo = slot.m_pAction->info();
-        int realTime = slot.m_TimeShift + SlotState.m_lTime;
-        if(slot.m_pAction->bLoop())
-        {
-            tfloat = _getBlendFrameLoop( pActionInfo ,  realTime , frame1 , frame2);
-        }
-        else
-        {
-            tfloat = _getBlendFrameClamp(pActionInfo ,  realTime , frame1 , frame2);
-        }
+        const xActionInfo* pActionInfo = slot.getAction()->info();
+		slot.getAction()->updateState( SlotState.m_lTime , SlotState );
     }
 
     return pSkeleton->blendSlerp(this , pActionSlotState , skeletonFrame );
@@ -238,54 +237,34 @@ bool xMixedAction::blend(xBaseActionState* pActionSlotState , xCoreActionFrame* 
 
 bool  xMixedAction::blend(long _time_in_ms,xCoreActionFrame* _skeletonFrame, xCoreSkeleton* pSkeleton)
 {
-	xCoreActionFrame& skeletonFrame = *_skeletonFrame;
+	xCoreActionFrame& skeletonFrame = *_skeletonFrame;	
 	size_t nSlot = m_ActionSlots.size();
+	if(m_pActionSlotState == NULL)
+		m_pActionSlotState = new xBaseActionState[nSlot];
+
 	for(size_t i = 0 ; i < nSlot ; i ++)
 	{
-		xMixedAction::xActionSlot& slot = m_ActionSlots[i];
-		int frame1;
-		int frame2;
-		float tfloat = 0.0f;
-		const xActionInfo* pActionInfo = slot.m_pAction->info();
-		int realTime = slot.m_TimeShift + _time_in_ms;
-		if(m_bLoopAction)
-		{
-			tfloat = _getBlendFrameLoop( pActionInfo ,  realTime , frame1 , frame2);
-		}
-		else
-		{
-			tfloat = _getBlendFrameClamp(pActionInfo ,  realTime , frame1 , frame2);
-		}
-		pSkeleton->blendSlerp(slot.m_pAction , slot.m_pAttribute , skeletonFrame,tfloat,frame1,frame2);
+		xBaseActionState& SlotState = m_pActionSlotState[i];
+		SlotState.m_lTime = _time_in_ms;
 	}
-	return true;
+	return blend(m_pActionSlotState, _skeletonFrame , pSkeleton);
 }
 
 
 
 bool  xMixedAction::blend(long _time_in_ms[], xCoreActionFrame* _skeletonFrame, xCoreSkeleton* pSkeleton)
 {
-    xCoreActionFrame& skeletonFrame = *_skeletonFrame;
-    size_t nSlot = m_ActionSlots.size();
-    for(size_t i = 0 ; i < nSlot ; i ++)
-    {
-        xMixedAction::xActionSlot& slot = m_ActionSlots[i];
-        int frame1;
-        int frame2;
-        float tfloat = 0.0f;
-        const xActionInfo* pActionInfo = slot.m_pAction->info();
-        int realTime = _time_in_ms[i];
-        if(slot.m_pAction->bLoop() )
-        {
-            tfloat = _getBlendFrameLoop( pActionInfo ,  realTime , frame1 , frame2);
-        }
-        else
-        {
-            tfloat = _getBlendFrameClamp(pActionInfo ,  realTime , frame1 , frame2);
-        }
-        pSkeleton->blendSlerp(slot.m_pAction , slot.m_pAttribute , skeletonFrame,tfloat,frame1,frame2);
-    }
-    return true;
+	xCoreActionFrame& skeletonFrame = *_skeletonFrame;	
+	size_t nSlot = m_ActionSlots.size();
+	if(m_pActionSlotState == NULL)
+		m_pActionSlotState = new xBaseActionState[nSlot];
+
+	for(size_t i = 0 ; i < nSlot ; i ++)
+	{
+		xBaseActionState& SlotState = m_pActionSlotState[i];
+		SlotState.m_lTime = _time_in_ms[i];
+	}
+	return blend(m_pActionSlotState, _skeletonFrame , pSkeleton);
 }
 
 void xMixedAction::unload()
@@ -296,6 +275,7 @@ void xMixedAction::unload()
 		xMixedAction::xActionSlot& slot = m_ActionSlots[i];
 		XSAFE_DELETE(slot.m_pAttribute);
 	}
+	XSAFE_DELETE_ARRAY(m_pActionSlotState);
 	m_ActionSlots.clear();
 	m_BoneActionMap.clear();
 }
@@ -318,7 +298,9 @@ float xMixedAction::getDurTime()
 const xActionInfo* xMixedAction::info() const
 {
 	const xMixedAction::xActionSlot& slot = m_ActionSlots[0];
-	return slot.m_pAction->info();
+    const xBaseAction* pAction = slot.getAction();
+    if(pAction == NULL) return NULL;
+	return pAction->info();
 }
 
 const xSkeletonID& xMixedAction::skeletonID() const

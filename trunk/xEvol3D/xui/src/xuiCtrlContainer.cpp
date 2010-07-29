@@ -144,6 +144,24 @@ bool  xuiCtrlContainer::leftMouseDown(xMouseMsg& mEvent)
     return false;
 }
 
+bool  xuiCtrlContainer::leftMouseDbClick(xMouseMsg& mEvent)
+{
+    int nCtrl  = (int)m_vControls.size();
+    for(int i = 0 ; i < nCtrl ; ++i)
+    {
+        xuiControl* pControl = m_vControls[i];
+        if(pControl->hitTest(mEvent.x ,mEvent.y) && pControl->isVisable() )
+        {
+            pControl->setMouseFocus(true);
+            setKBInputFocus(pControl);
+            bool _ret = pControl->onLMouseDown(mEvent);
+            if(_ret == true)
+                return true;
+        }
+    }
+    return false;
+}
+
 bool  xuiCtrlContainer::leftMouseRelease(xMouseMsg& mEvent)
 {
     int nCtrl  = (int)m_vControls.size();

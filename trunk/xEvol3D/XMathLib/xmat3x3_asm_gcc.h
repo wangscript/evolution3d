@@ -49,7 +49,7 @@ __FORCE_INLINE__ void _MATH_LIB_EXPORT_  XM_Mul(const xmat3& m1,float s,xmat3& m
 
 __FORCE_INLINE__ void	_MATH_LIB_EXPORT_ XM_Mul(const xmat3& m1,const xmat3& m2,xmat3& mOut)
 {
-	for(int r =0 ; r < 4 ; r++)
+	for(int r =0 ; r < 3 ; r++)
 	{
 		mOut.m[r][0] = m1.m[r][0] * m2.m[0][0] +
 			m1.m[r][1] * m2.m[1][0] +
@@ -78,6 +78,8 @@ __FORCE_INLINE__ void	_MATH_LIB_EXPORT_ XM_Mul(const xmat3& m,const xvec3& v,xve
 	vOut.y = m.m[1][0] * v.x + m.m[1][1] * v.y + m.m[1][2] * v.z ;
 	vOut.z = m.m[2][0] * v.x + m.m[2][1] * v.y + m.m[2][2] * v.z ;
 }
+
+
 END_NAMESPACE_XMATHLIB
 
 

@@ -94,12 +94,12 @@ public:
     size_t   seek(long _offset, std::ios_base::seekdir dir)
 	{
 		m_pStream->seekg(_offset,dir);
-        return m_pStream->tellg();
+        return (size_t)m_pStream->tellg();
 	}
 
 	size_t    tell()
 	{
-		return m_pStream->tellg();
+		return (size_t)m_pStream->tellg();
 	}
 
 	void set_stream(std::istream*  pStream)

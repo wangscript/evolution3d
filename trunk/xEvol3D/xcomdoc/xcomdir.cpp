@@ -10,10 +10,11 @@ void xdirfilestream::Release()
 	delete this;
 }
 
-xdirfilestream::xdirfilestream()
+xdirfilestream::xdirfilestream(xcd_rwmode mode)
 {
 	m_File = NULL;
 	m_FileName = L"";
+	m_rwMode = mode;
 }
 
 bool xdirfilestream::open(const wchar_t* fileName , bool bNotCreated)
@@ -21,10 +22,18 @@ bool xdirfilestream::open(const wchar_t* fileName , bool bNotCreated)
 	m_FileName = fileName;
     if(m_File) fclose(m_File);
 
-	if(bNotCreated )
-		m_File = _xcd_wfopen_rw_notCreate(fileName);
+	if(m_rwMode == xcdm_read)
+	{
+		m_File = _xcd_wfopen_rb(fileName);
+	}
 	else
-		m_File = _xcd_wfopen_rwb(fileName);
+	{
+		if(bNotCreated )
+			m_File = _xcd_wfopen_rw_notCreate(fileName);
+		else
+			m_File = _xcd_wfopen_rwb(fileName);
+	}
+
 
 	if( m_File )
 	{
@@ -151,6 +160,7 @@ xdircomdoc::~xdircomdoc()
 
 bool  xdircomdoc::open(const wchar_t* file_name,xcd_rwmode mode,int _offset ,bool load_to_mem, bool not_create)
 {
+	m_rwMode = mode;
 	if(xcd_is_dir(file_name) == true)
 	{
 		m_DirName = file_name;
@@ -193,7 +203,7 @@ bool  xdircomdoc::add_file(const wchar_t* bas_dir,const wchar_t* file_name,int c
 
 xcomdocstream*  xdircomdoc::open_stream(const wchar_t* name,bool not_create)
 {
-    xdirfilestream* pStream = new xdirfilestream;
+    xdirfilestream* pStream = new xdirfilestream(m_rwMode);
 	std::wstring fullname = m_DirName + L"/" + name;
 	if(pStream->open(fullname.c_str() , not_create) == true)
 	{
@@ -205,7 +215,7 @@ xcomdocstream*  xdircomdoc::open_stream(const wchar_t* name,bool not_create)
 
 xcomdocstream*  xdircomdoc::create_stream(const wchar_t* name, int compressed_rate , xcd_data_type type)
 {
-	xdirfilestream* pStream = new xdirfilestream;
+	xdirfilestream* pStream = new xdirfilestream(m_rwMode);
 	std::wstring fullname = m_DirName + L"/" + name;
 	if(pStream->open(fullname.c_str() , false) == true)
 	{
@@ -217,7 +227,7 @@ xcomdocstream*  xdircomdoc::create_stream(const wchar_t* name, int compressed_ra
 
 xcomdocstream*  xdircomdoc::create_stream_with_dir(const wchar_t* name, int compressed_rate, xcd_data_type type)
 {
-	xdirfilestream* pStream = new xdirfilestream;
+	xdirfilestream* pStream = new xdirfilestream(m_rwMode);
 	create_all_dir(m_DirName.c_str() , name);
 	std::wstring fullname = m_DirName + L"/" + name;
 	if(pStream->open(fullname.c_str() , false) == true)

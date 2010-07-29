@@ -36,7 +36,12 @@ xuiCaption::~xuiCaption()
 {
 }
 
-bool xuiCaption::onLMouseRelease(xMouseMsg& mEvent)
+bool  xuiCaption::onLMouseDbClick(xMouseMsg& mEvent)
+{
+    return true;
+}
+
+bool  xuiCaption::onLMouseRelease(xMouseMsg& mEvent)
 {
     static int lastTickt = IPlatform::singleton()->getElapsTime();
     int thisTickt = IPlatform::singleton()->getElapsTime();

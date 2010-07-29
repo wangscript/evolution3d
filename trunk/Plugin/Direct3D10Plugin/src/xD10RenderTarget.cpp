@@ -288,11 +288,25 @@ bool  xD10RenderTexture::grabRenderTagetDataTexture2D(void* pData, int x , int y
 	int max_len  =  lockInfo.m_picth - x * m_TexInfo.m_nBytePerPixel;
 	if(dstPitch > max_len ) line_len = max_len;
 
-	for(int _y = 0 ; _y < (int)h ; _y ++ )
+	if(h > 0)
 	{
-        memcpy(pDstLine , pSrcLine , line_len );
-		pDstLine += dstPitch;
-		pSrcLine += lockInfo.m_picth;
+		for(int _y = 0 ; _y < (int)h ; _y ++ )
+		{
+			memcpy(pDstLine , pSrcLine , line_len );
+			pDstLine += dstPitch;
+			pSrcLine += lockInfo.m_picth;
+		}
+
+	}
+	else
+	{
+		for(int _y = 0 ; _y < -(int)h ; _y ++ )
+		{
+			memcpy(pDstLine , pSrcLine , line_len );
+			pDstLine += dstPitch;
+			pSrcLine -= lockInfo.m_picth;
+		}
+
 	}
 	
     pSys2DTexture->Unmap(lockInfo.m_lockResource );

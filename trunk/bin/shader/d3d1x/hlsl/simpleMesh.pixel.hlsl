@@ -4,13 +4,14 @@
 ///{{Declaration
 cbuffer TransformBuffer
 {
-      matrix matWorld;
-      matrix matView;
-      matrix matProject;
-	  float4 cameraUp;
-	  float4 cameraPos;
-	  float4 cameraDir;
-	  float4 cameraArg;//[Near , Far , Fov , Aspect]
+      float4x4 matWorld;
+      float4x4 matView;
+      float4x4 matProject;
+      float4x4 matTexture;
+	  float4   cameraUp;
+	  float4   cameraPos;
+	  float4   cameraDir;
+	  float4   cameraArg;//[Near , Far , Fov , Aspect]
 }
 
 SamplerState DefaultSampler : register(s0);
@@ -22,7 +23,7 @@ struct PS_INPUT
       float4 Nor      : NORMAL;
       float4 Color    : COLOR;
       float4 Tan      : TANGENT;
-      float2 Tex      : TEXCOORD; 
+      float4 Tex      : TEXCOORD; 
 
       float4 wPosition : TEXCOORD2;
       float4 wNormal   : TEXCOORD3;  
@@ -39,11 +40,11 @@ float4 main( PS_INPUT input) : SV_Target
 ///}}
 
 
-    /*
-    ///{{Default = ColorModify
+/*
+///{{Default = ColorModify
     vDiffuse = float4(vDiffuse.xxx , 1.0);
-    ///}}
-    */
+///}}
+*/
 
 /*
 ///{{Socket = ColorModify // Socket = 名字, 在这里定义一个插入点
@@ -79,7 +80,7 @@ float4 main( PS_INPUT input) : SV_Target
 */
 
 ///{{SourceCode
-    if(vDiffuse.w <= AlphaRef)
+    if(vDiffuse.w <= AlphaRef || vDiffuse.w < 0.0001)
        discard;
     return float4(vDiffuse.x , vDiffuse.y , vDiffuse.z , clamp(vDiffuse.w , 0.0  , 1.0) );
 }

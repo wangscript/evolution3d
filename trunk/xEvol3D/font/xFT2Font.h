@@ -36,8 +36,8 @@ BEGIN_NAMESPACE_XEVOL3D
 
 class   xFT2FontCharLoader;
 class   xFT2FontChar;
-typedef TResHandle <xFT2FontChar, wchar_t, xFT2FontCharLoader >  HXFT2FontChar;
-typedef TLRUPolicyResMgr<xFT2FontChar , wchar_t , xFT2FontCharLoader >  xFT2FontCharMgr;
+typedef TResHandle       <xFT2FontChar , xWCharType , xFT2FontCharLoader >  HXFT2FontChar;
+typedef TLRUPolicyResMgr <xFT2FontChar , xWCharType , xFT2FontCharLoader >  xFT2FontCharMgr;
 int GetBoldenSize(bool bBold , int w );
 int GetBoldenStrength(bool bBold , int w );
 
@@ -90,6 +90,7 @@ public:
 	bool                m_UnderLine;
 	bool                m_bAntilias;
 	IFontRenderDevice*  m_pRenderer;
+    xFT2FontCharMgr*    m_pThis;
 
 #ifdef _FONT_FULL_TEXTURE_
 	IBaseTexture*     m_pTexture;
@@ -110,14 +111,14 @@ public:
 	void        setCacheSize(int maxSize, int maxFontW , int maxFontH);
 	void        setRenderer(IFontRenderDevice*    pRenderer) { m_pRenderer = pRenderer ; };
 	bool        load_font(const wchar_t* font_file , int _w , int _h);
-
+    void        setThis(xFT2FontCharMgr* pThis){ m_pThis = pThis ; }
 	unsigned int _getResSize(xFT2FontChar*& pRes);
 	bool         _isResLoaded(xFT2FontChar* pRes);
-	bool         _postLoadResource(wchar_t& _char , xFT2FontChar*& pRes, int& ResSize,unsigned int arg) { return true ; }
-	bool         _preLoadResource(wchar_t& _char , xFT2FontChar*& pRes, int& ResSize,unsigned int arg)  { return true ; }
-	bool         _loadResource(wchar_t& _char , xFT2FontChar*& pRes, int& ResSize,unsigned int arg);
-	bool         _unloadResource(wchar_t& _char , xFT2FontChar*& pRes, unsigned int& TotalResSize);
-	void         _deleteResource(wchar_t& _char , xFT2FontChar* pRes);
+	bool         _postLoadResource(xWCharType& _char , xFT2FontChar*& pRes, int& ResSize,unsigned int arg) { return true ; }
+	bool         _preLoadResource(xWCharType& _char  , xFT2FontChar*& pRes, int& ResSize,unsigned int arg)  { return true ; }
+	bool         _loadResource(xWCharType& _char     , xFT2FontChar*& pRes, int& ResSize,unsigned int arg);
+	bool         _unloadResource(xWCharType& _char   , xFT2FontChar*& pRes, unsigned int& TotalResSize);
+	void         _deleteResource(xWCharType& _char   , xFT2FontChar* pRes);
 };
 
 
@@ -132,21 +133,21 @@ public:
 	eFontFilter       m_Filter;
 public:
     IMPL_BASE_OBJECT_INTERFACE(xFT2Font);
-	HXFT2FontChar    GetFontCharHandle(wchar_t _chr);
+	HXFT2FontChar    GetFontCharHandle(xWCharType _chr);
 public:
 	void             createFontCharManager(const wchar_t* managerName);
 	void             setFontChareManager(xFT2FontCharMgr* pMgr);
 	xFT2FontCharMgr* getFontCharManager();
 	xFT2Font(xFontLoader* pFontLoader , int arg);
 	~xFT2Font();
-	bool init( xXmlNode* pInitXml);
+	bool  init( xXmlNode* pInitXml);
 	void  releaseChache();
     const xFontInfo& getInfo(){ return m_Info ; }
 	void  setDrawFilter(eFontFilter filter){m_Filter = filter ; }
-	bool  drawChar(wchar_t _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl) ;
+	bool  drawChar(xWCharType _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl) ;
 	void  enableAntialias(bool bAnti);
 	bool  isAntialias();
-    bool  getCharDim(wchar_t _chr , int& dx , int& dy);
+    bool  getCharDim(xWCharType _chr , int& dx , int& dy);
 	void  setCacheSize(int maxSize);
 	int   getCacheSize();
 	int   getLinePitch(){return 0; m_LinePitch ; };

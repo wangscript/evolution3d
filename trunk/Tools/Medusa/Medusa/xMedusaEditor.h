@@ -8,6 +8,7 @@
 #else
 #define MEDUSA_API _declspec(dllimport)
 #endif
+class MEDUSA_API CEvolEnviroment;
 namespace nsMedusaEditor
 {
 	//ID 管理。定义每一个插件可以使用的ID范围
@@ -16,9 +17,9 @@ namespace nsMedusaEditor
 		ID_VIEW_DOCKPANE      = 10000,
 		ID_VIEW_DOCKPANE_MAX  =  1000, //最大支持10000个DockPane, 地球人应该够用了。
 
-		ID_PLUGIN_ID_0        =  12000, //插件可以用的动态ID,由这里开始
-		ID_PLUGIN_ID_STEP     =   1000, //每个插件可以用的ID数量
-		ID_PLUGIN_ID_MAX      =  50000
+		ID_PLUGIN_ID_0        =  35000, //插件可以用的动态ID,由这里开始
+		ID_PLUGIN_ID_STEP     =    500, //每个插件可以用的ID数量
+		ID_PLUGIN_ID_MAX      =  15000
 
 	};
 
@@ -64,25 +65,40 @@ namespace nsMedusaEditor
 	struct MEDUSA_API CMEdUiToolBarInfo
 	{
 	public:
-		enum CommandUIStatus
-		{
-			CUS_CHECKED   = 1,
-			CUS_UNCHECKED = 2,
-			CUS_ENABLE    = 3,
-			CUS_DISABLE   = 0,
-		};
-		class     MEdUIToolbarCallback : public IMEdUICommandReciver
+        enum ToolBarType
+        {
+            eToolBarTypeNone = 0 ,
+            eToolBar,
+            eMenuBar,
+            eRibbonBar,
+        };
+        class MEDUSA_API CMEdUiCmdUi
+        {
+        public:
+            virtual void Enable(BOOL bOn = TRUE) = 0;
+            virtual void SetCheck(int nCheck = 1) = 0;   // 0, 1 or 2 (indeterminate)
+            virtual void SetRadio(BOOL bOn = TRUE) = 0;
+            virtual void SetText(LPCTSTR lpszText) = 0;
+        };
+		class MEDUSA_API MEdUIToolbarCallback : public IMEdUICommandReciver
 		{
 		public:
-			virtual CommandUIStatus OnUpdateCommandUI(int ctrlID , int ctrlIdx) = 0;
-			virtual bool            OnCommand(int ctrlID , int ctrlIdx) = 0;
+			virtual bool             OnUpdateCommandUI(int ctrlID , int ctrlIdx , CMEdUiCmdUi* pCmdUi) = 0;
+			virtual bool             OnCommand(int ctrlID , int ctrlIdx) = 0;
+            virtual bool             OnExit(){ return true; }
 		};
 	public:
-		void      ProcessToolbarID(int startID);
-        void      ProcessMenuID(int startID);
+		void                         ProcessToolbarID(int startID);
+        void                         ProcessMenuID(int startID);
+        void*                        ProcessRibbonBarData(int startID);
+        void                         FreeData(void* pData);
 
-		bool      IsToolbarCmd(int cmdId);
-		int       GetCommandID(int cmdID);
+		bool                         IsToolbarCmd(int cmdId);
+		int                          GetOriginID(int cmdID);
+        int                          MapOriginID2CtrlID(int originID);
+        
+        ToolBarType                  GetType(); 
+        void                         SetType(ToolBarType _type) { m_Type = _type ; } 
 		CMEdUiToolBarInfo();
 		~CMEdUiToolBarInfo();
 	public:
@@ -92,10 +108,13 @@ namespace nsMedusaEditor
 		HINSTANCE             m_hDll;
 		UINT                  m_ResID;
 		void*                 m_hToolbar;
+        
 
 		int                   m_startID;
 		int                   m_nButton;
 		int*                  m_OriginBtnIDs;
+    protected:
+       ToolBarType             m_Type;
 	};
 
 
@@ -126,6 +145,7 @@ namespace nsMedusaEditor
 		virtual bool             destroyMEdUI() = 0 ;
 		virtual bool             HideMEdUI()=0;
 		virtual bool             ShowMEdUI()=0;
+        virtual bool             IsVisible()=0;
 		virtual HWND             hWnd() = 0 ;
 		virtual const wchar_t*   title() = 0;
 		virtual const wchar_t*   name() = 0;
@@ -136,7 +156,7 @@ namespace nsMedusaEditor
 		virtual bool             DetachUIElement() { return false ; }
 
 	};
-
+              
 	//可以停靠的UI基类，必须带一个hIcon, title 和 HWND .
 	class MEDUSA_API IMEdDockPane : public IMEdUIElement
 	{
@@ -146,18 +166,36 @@ namespace nsMedusaEditor
 		virtual UINT             getID() = 0;
 		
 	};
-
+    
+    class MEDUSA_API CMEdUiBaseToolbarElement : public IMEdUIElement
+    {
+     public:
+         virtual BOOL    IsChecked(int ctrlIdx) = 0;
+         virtual int     GetSliderPos(int ctrlIdx) = 0;
+         virtual void    SetChecked(int ctrlIdx , BOOL bFlag) = 0;
+         virtual void    SetSliderPos(int ctrlIdx  , int pos) = 0;
+    } ;
+    
 	class MEDUSA_API IMEdUIMessageListenner : public NS_XEVOL3D::IMsgListener
 	{
 	public:
+		enum eActiveReason
+		{
+			eAR_DeActive ,
+			eAR_Active,
+			eAR_Attach,
+			eAR_Detach,
+		};
+	public:
 		virtual bool onMessage( NS_XEVOL3D::xWindowMsg& msg) = 0;
-		virtual bool onActive(bool bActive) = 0 ;
+		virtual bool onActive(eActiveReason _Reason ) = 0 ;
 	};
 
 	//编辑器的主UI。
 	class MEDUSA_API IMEdMainUI
 	{
 	public:
+        virtual IMEdUIElement*     FindUIElement(const wchar_t* _name , bool recursive = true) = 0 ;
 		virtual void               AttachUIElement(IMEdUIElement* pPane) = 0 ;
 		virtual void               DetachUIElement(IMEdUIElement* pPane) = 0 ;
 		virtual bool               DetachUIElement() = 0;
@@ -170,15 +208,15 @@ namespace nsMedusaEditor
 		virtual bool               DestroyToolbar(const wchar_t* _tbName) = 0;
 		virtual CMEdUiToolBarInfo* FindToolbarByCmdID(int cmdID) = 0;
 		virtual bool               PushMessageListenner(IMEdUIMessageListenner* pListener) = 0;
-		virtual void               PopMessageListenner() = 0;
+		virtual bool               PopMessageListenner() = 0;
         virtual IMEdUIMessageListenner* GetMessageListenner() = 0;
 		virtual bool               fireMEdUIEvent(eMEUIEvent _event , int param , int param2 = 0) = 0;
 		virtual IMEdUIStatusBar*   GetStatusBar() = 0;
-		virtual bool               Redo() = 0 ;
-		virtual bool               Undo() = 0 ;
-		virtual bool               CanRedo() = 0 ;
-		virtual bool               CanUndo() = 0 ;
-		virtual bool               InsertCommand(IMEdUICommand* pCommand) = 0;
+        virtual bool               Redo() = 0 ;
+        virtual bool               Undo() = 0 ;
+        virtual bool               CanRedo() = 0 ;
+        virtual bool               CanUndo() = 0 ;
+        virtual bool               InsertCommand(IMEdUICommand* pCommand) = 0;
 
 	public:
 		virtual int                AllocUIID(int nId) = 0;
@@ -191,8 +229,8 @@ namespace nsMedusaEditor
 	class MEDUSA_API IMedusaEditor
 	{
 	public :
-		virtual IMEdMainUI* GetUI() = 0 ;
-
+		virtual IMEdMainUI*      GetUI() = 0 ;
+        virtual CEvolEnviroment* GetEvol3DEnv() = 0;
 	public:
 	};
 

@@ -76,7 +76,9 @@ void xMedusaApplication::updateFrame()
 bool xMedusaApplication::messageLoop()
 {
 	//return GetEditorEnv()->messageLoop();
-	MSG msg;
+	BOOL bIdle = TRUE;
+	LONG lIdleCount = 0;
+	_AFX_THREAD_STATE *pState = AfxGetThreadState();
 	//long  thisTick;
 	long  lastTick;
 	CEvolEnviroment* pCurrentApp = GetEditorEnv()->evol3DEnv();
@@ -84,23 +86,28 @@ bool xMedusaApplication::messageLoop()
 	lastTick= ::GetTickCount();
 	while( 1 )
 	{  
-		if( PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ) )
+		if( PeekMessage( &pState->m_msgCur, NULL, 0, 0, PM_NOREMOVE ) )
 		{
-			if( !GetMessage( &msg, NULL, 0, 0 ) )//Remove The message From the Message Queue
+			if( !GetMessage( &pState->m_msgCur, NULL, 0, 0 ) )//Remove The message From the Message Queue
 			{
 				if(pCurrentApp)
 				{
 					pCurrentApp->exitAppliction();
 				}				
-				return msg.wParam != 0;
+				return pState->m_msgCur.wParam != 0;
 			}
 
-			_AFX_THREAD_STATE *pState = AfxGetThreadState();
-			//if ( !TranslateAccelerator( g_AppData.hWnd, g_AppData.hAccel, &msg ) ) 
-			if (msg.message != WM_KICKIDLE && !AfxPreTranslateMessage(&msg))
+			if (theApp.IsIdleMessage(&(pState->m_msgCur)))
 			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+				bIdle = TRUE;
+				lIdleCount = 0;
+			}
+			
+			//if ( !TranslateAccelerator( g_AppData.hWnd, g_AppData.hAccel, &msg ) ) 
+			if (pState->m_msgCur.message != WM_KICKIDLE && !AfxPreTranslateMessage(&pState->m_msgCur))
+			{
+				TranslateMessage(&pState->m_msgCur);
+				DispatchMessage(&pState->m_msgCur);
 			}
 		}
 		else if(pCurrentApp && pCurrentApp->isRun())
@@ -114,6 +121,15 @@ bool xMedusaApplication::messageLoop()
 				pCurrentApp->updateFrame(passedTime);
 				pCurrentApp->postUpdateFrame(passedTime);
 			}
+			//-------------OnIdle--------------------------
+			if(bIdle)
+			{
+				if ( !theApp.OnIdle(lIdleCount++) )
+			    {
+					bIdle = FALSE; // assume "no idle" state
+				}
+			}
+
 		}
 		else
 		{   

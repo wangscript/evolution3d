@@ -140,7 +140,7 @@ public:
 	}
 	virtual bool   setValulePtr(const void* pData , size_t dataLen , int _offset = 0)
 	{
-		m_value = (const TSTRING::value_type*)pData;
+		m_value = (const typename TSTRING::value_type*)pData;
 		return true;
 	}
 
@@ -280,9 +280,9 @@ public:
 	}
     
 
-	template<typename T> T               get_property(const wchar_t* _name) 
+	template<typename T> T               get_property_value(const wchar_t* _name) 
 	{
-		xPropertyItem*  pProperty = get_property(_name , sizeof(T) , NULL);
+		xPropertyItem*  pProperty = get_property(_name );
 		pProperty->value<T>();
 	}
     

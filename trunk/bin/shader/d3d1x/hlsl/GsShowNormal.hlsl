@@ -4,7 +4,7 @@ struct GS_VERTEX
       float4 Nor      : NORMAL;
       float4 Color    : COLOR;
       float4 Tan      : TANGENT;
-      float2 Tex      : TEXCOORD;  
+      float4 Tex      : TEXCOORD;  
 
       float4 wPosition : TEXCOORD2;
       float4 wNormal   : TEXCOORD3;  

@@ -33,6 +33,11 @@ module name : logstream
 #include "xI18N.h"
 #include "stl_dllalloc.h"
 #include <vector>
+
+#ifndef _WIN32
+#include "xI18N.h"
+#endif
+
 namespace std
 {
 
@@ -115,7 +120,7 @@ namespace std
 			m_bOpened = true;
 #ifndef _WIN32
 			char ansiFileName[512] = {0};
-			XEvol_UnicodeToFsEnc(_filename,ansiFileName,512);
+			NS_XEVOL3D::XEvol_UnicodeToFsEnc(_filename,ansiFileName,512);
 			m_filestream.open(ansiFileName);
 #else
 			m_filestream.open(_filename);
@@ -326,7 +331,7 @@ namespace std
 				OutputDebugStringA(_text);
 #endif
 #endif
-				printf(_text);
+				printf("%s",_text);
 				if(m_bOpened)
 				{
 					m_filestream<<_text;

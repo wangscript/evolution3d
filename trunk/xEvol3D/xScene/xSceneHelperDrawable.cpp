@@ -10,39 +10,41 @@ bool     xSceneHelperDrawable::draw(IBaseRenderer* pRenderer , xGeomLib::xCamera
 	IDrawElement*   pDrawElement = drawElement(0);
 	IRenderEffect*  pEffect      = effect(0);
 
-	if(pDrawElement && pCamera && false == pDrawElement->isVisible(pCamera) )
+	if(pDrawElement && pCamera && false == pDrawElement->isVisible(pCamera , m_trans) )
 		return false; 
 
 	if(pEffect )
 	{
-		pEffect->draw(pDrawElement);
+		pEffect->draw(pDrawElement  , this);
 		return true;
 	}
 	else
 	{
 		m_Pass.setRenderer( pRenderer  );
 		m_Pass.setDrawable(pDrawElement);
+		m_Pass.setRenderPassArg( this );
 		pRenderer->drawPass( xStringHash(L"overlay") , &m_Pass);	
 	}
 	return false;
 }
-bool  xSceneHelperDrawable::draw(IBaseRenderer* pRenderer, unsigned int passedTime, xGeomLib::xCamera* pCamera)
+bool  xSceneHelperDrawable::drawImm(IBaseRenderer* pRenderer, unsigned int passedTime, xGeomLib::xCamera* pCamera)
 {
 	IDrawElement*   pDrawElement = drawElement(0);
 	IRenderEffect*  pEffect      = effect(0);
 
-	if(pDrawElement && pCamera && false == pDrawElement->isVisible(pCamera) )
+	if(pDrawElement && pCamera && false == pDrawElement->isVisible(pCamera , m_trans) )
 		return false; 
 
 	if(pEffect )
 	{
-		pEffect->draw(pDrawElement , passedTime );
+		pEffect->drawImm(pDrawElement  , this , passedTime );
 		return true;
 	}
 	else
 	{
 		m_Pass.setRenderer( pRenderer );
 		m_Pass.setDrawable(pDrawElement);
+		m_Pass.setRenderPassArg( this );
 		pRenderer->drawPass(  &m_Pass , passedTime , true);	
 	}
 	return false;
@@ -64,7 +66,7 @@ bool             xSceneHelperDrawable::setDrawElement(IDrawElement* pDrawElement
 	return true ;
 }
 
-bool     xSceneHelperDrawable::updateFrame(unsigned long passedTime)
+bool     xSceneHelperDrawable::updateFrame(unsigned long passedTime, IRenderCamera* pCamera)
 {
 	return true ;
 }
@@ -128,7 +130,7 @@ bool xSceneHelperDrawableNode::detachDrawElement(IDrawElement* pDrawElement)
    for( ; pos != m_vObjects.end() ; pos ++)
    {
 	   ISceneObject* pObject = *pos;
-	   xSceneHelperDrawable* pDrawable = dynamic_cast<xSceneHelperDrawable*>(pObject);
+	   xSceneHelperDrawable* pDrawable = type_cast<xSceneHelperDrawable*>(pObject);
 	   if(pDrawable->drawElement(0) == pDrawElement)
 	   {
 		   m_vObjects.erase(pos);

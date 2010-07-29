@@ -101,13 +101,13 @@ bool xuiWindowState::draw(xuiWindow* pWindow)
 {
     if(m_border.m_size)
     {
-        xuiRegion region;
-        region._type = m_Region._type;
-        region.Rect() = pWindow->getWndAbsRect();
-        xuiWindowBorder& border = m_border;
-        return _drawRect(pWindow , region.Rect() , border.m_color, border.m_bevel);
+
     }
-    return false;
+    xuiRegion region;
+    region._type = m_Region._type;
+    region.Rect() = pWindow->getWndAbsRect();
+    xuiWindowBorder& border = m_border;
+    return _drawRect(pWindow , region.Rect() , m_color, border.m_bevel);
 }
 
 bool xuiWindowState::_drawRect(xuiWindow* pWindow , xMathLib::xvec4& _rect , xColor_4f& _cl)
@@ -143,7 +143,10 @@ bool xuiWindowState::_drawRect(xuiWindow* pWindow ,xMathLib::xvec4& _rect , xCol
 {
     if(bevel.isBevel() == false)
         return _drawRect(pWindow , _rect, _cl );
-
+    else
+    {
+        return _drawRect(pWindow , _rect, _cl );
+    }
     //xLineHelper _line[8];
     //xHelperRenderer* hlpRenderer = IRenderSystem::singleton()->getHelperRender();
 

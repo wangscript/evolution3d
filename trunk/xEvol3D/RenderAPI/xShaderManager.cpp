@@ -26,48 +26,42 @@ HGpuProgram xGpuProgramManager::loadEffect(const wchar_t* _effName)
 HGpuProgram xGpuProgramManager::load(const wchar_t* _programName)
 {
 	HGpuProgram hProgram ;
-	xGpuProgramMgrImp* mgrImp = dynamic_cast<xGpuProgramMgrImp*>(this);
     xGpuProgramName _name(_programName,true);
-	hProgram = mgrImp->add(_name,0,true);
+	hProgram = m_pThis->add(_name,0,true);
     return hProgram;
 }
 
 HGpuProgram xGpuProgramManager::load(const wchar_t* _vsName , const wchar_t* _psName , const wchar_t* _gsName)
 {
 	HGpuProgram hProgram ;
-	xGpuProgramMgrImp* mgrImp = dynamic_cast<xGpuProgramMgrImp*>(this);
 	xGpuProgramName _name(_vsName , _psName , _gsName);
-	hProgram = mgrImp->add(_name,0,true);
+	hProgram = m_pThis->add(_name,0,true);
 	return hProgram;
 }
 
 HGpuProgram xGpuProgramManager::load(const wchar_t* _shaderNames[eShader_Max])
 {
 	HGpuProgram hProgram ;
-	xGpuProgramMgrImp* mgrImp = dynamic_cast<xGpuProgramMgrImp*>(this);
 	xGpuProgramName _name(_shaderNames);
-	hProgram = mgrImp->add(_name,0,true);
+	hProgram = m_pThis->add(_name,0,true);
 	return hProgram;
 }
 
 HGpuProgram xGpuProgramManager::load(const xGpuProgramName& _programName)
 {
 	HGpuProgram hProgram ;
-	xGpuProgramMgrImp* mgrImp = dynamic_cast<xGpuProgramMgrImp*>(this);
-	hProgram = mgrImp->add(_programName,0,true);
+	hProgram = m_pThis->add(_programName,0,true);
 	return hProgram;
 }
 
 void xGpuProgramManager::clear()
 {
-      xGpuProgramMgrImp* mgrImp = dynamic_cast<xGpuProgramMgrImp*>(this);
-	  mgrImp->clear();
+	  m_pThis->clear();
 }
 
 void xGpuProgramManager::unload()
 {
-	xGpuProgramMgrImp* mgrImp = dynamic_cast<xGpuProgramMgrImp*>(this);
-	mgrImp->unload();
+	m_pThis->unload();
 }
 
 xGpuProgramManager::~xGpuProgramManager()

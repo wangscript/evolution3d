@@ -1,5 +1,5 @@
 #include "../../xStdPch.h"
-#ifdef _LINUX
+#ifdef _UNIX
 
 #ifdef _ENABLE_XLIB_
 #include <X11/Xlib.h>

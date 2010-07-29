@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 using namespace XEvol3D::XMathLib;
 
 BEGIN_NAMESPACE_XGEOMLIB
-xplane::xplane(xvec3 a, xvec3 b,xvec3 c)
+xplane::xplane(const xvec3 a, const xvec3 b, const xvec3 c)
 {
 	xvec3 v1 = c - a;
 	xvec3 v2 = b - a;
@@ -35,7 +35,7 @@ xplane::xplane(xvec3 a, xvec3 b,xvec3 c)
 		A = n.x;
 		B = n.y;
 		C = n.z;
-		D = n.dp(a);
+		D = -n.dp(a);
 	}
 	else
 	{
@@ -47,15 +47,16 @@ xplane::xplane(xvec3 a, xvec3 b,xvec3 c)
 	}
 }
 
-xplane::xplane(xvec3 point,xvec3 n)
+xplane::xplane(const xvec3& point, const xvec3& _n)
 {
+    xvec3 n = _n;
 	if( !(n.x == 0 && n.y == 0 && n.z == 0) )
 	{
 		n.normalize();
 		A = n.x;
 		B = n.y;
 		C = n.z;
-		D = n.dp(point);
+		D = -n.dp(point);
 	}
 	else
 	{
@@ -65,6 +66,27 @@ xplane::xplane(xvec3 point,xvec3 n)
 		C = 0;
 		D = 0;
 	}
+}
+
+xplane::xplane(const xvec4& point, const xvec4& _n)
+{
+    xvec4 n = _n;
+    if( !(n.x == 0 && n.y == 0 && n.z == 0) )
+    {
+        n.normalize();
+        A = n.x;
+        B = n.y;
+        C = n.z;
+        D = -n.dp3(point);
+    }
+    else
+    {
+        //Null plan
+        A = 0;
+        B = 0;
+        C = 0;
+        D = 0;
+    }
 }
 
 void xplane::normalize()
@@ -73,14 +95,37 @@ void xplane::normalize()
     float len = pNormal->len();
 	if( xMathLib::numeric_equal(len , 0) )
 		return ;
+	if(D > 0) len = - len;
 	A /= len;
 	B /= len;
 	C /= len;
 	D /= len;
 }
+
+void xplane::getPt0(xMathLib::xvec3& _pt)
+{
+    xvec3* pNormal = (xvec3*)&A;
+    float len2 = A * A + B * B + C * C;
+    if( xMathLib::numeric_equal(len2 , 0) )
+        return ;
+
+     float _e = -D / len2; 
+     _pt.x = A * _e;
+     _pt.y = B * _e;
+     _pt.z = C * _e;
+}
+
+void  xplane::getNormal(xMathLib::xvec3& _nor)
+{
+     _nor.x = A;
+     _nor.y = B;
+     _nor.z = C;
+     _nor.normalize();
+}
+
 float xplane::operator*(const xvec3& p)
 {
-	return (p.x * A + p.y * B + p.z * C +  D);
+	return (p.x * A + p.y * B + p.z * C + D);
 }
 float operator*(const xvec3& v ,const xplane& p)
 {

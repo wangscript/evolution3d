@@ -170,13 +170,13 @@ public:
     }
     void ValidateName()
     {
-         XEvol_UCS2ToUCS4(m_utf16Name , m_ucs4DataName,128,128);
+         XEvol_Utf16ToUtf32((const UTF16*)m_utf16Name , (UTF32*)m_ucs4DataName,128);
     }
 
     void SetDataName(const wchar_t* name)
     {
         wcscpy( (wchar_t*)m_ucs4DataName,name);
-        XEvol_UCS4ToUCS2(m_ucs4DataName , m_utf16Name ,128,128);
+        XEvol_Utf32ToUtf16((const UTF32*)m_ucs4DataName , (UTF16*)m_utf16Name ,128);
         
     }
 

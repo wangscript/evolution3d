@@ -1,20 +1,20 @@
-// This MFC Samples source code demonstrates using MFC Microsoft Office Fluent User Interface 
-// (the "Fluent UI") and is provided only as referential material to supplement the 
-// Microsoft Foundation Classes Reference and related electronic documentation 
-// included with the MFC C++ library software.  
-// License terms to copy, use or distribute the Fluent UI are available separately.  
-// To learn more about our Fluent UI licensing program, please visit 
-// http://msdn.microsoft.com/officeui.
+// 这段 MFC 示例源代码演示如何使用 MFC Microsoft Office Fluent 用户界面 
+// (“Fluent UI”)。该示例仅供参考，
+// 用以补充《Microsoft 基础类参考》和 
+// MFC C++ 库软件随附的相关电子文档。
+// 复制、使用或分发 Fluent UI 的许可条款是单独提供的。
+// 若要了解有关 Fluent UI 许可计划的详细信息，请访问  
+// http://msdn.microsoft.com/officeui。
 //
-// Copyright (C) Microsoft Corporation
-// All rights reserved.
+// 版权所有(C) Microsoft Corporation
+// 保留所有权利。
 
-// Medusa.h : main header file for the Medusa application
+// Medusa.h : Medusa 应用程序的主头文件
 //
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "include 'stdafx.h' before including this file for PCH"
+	#error "在包含此文件之前包含“stdafx.h”以生成 PCH 文件"
 #endif
 
 #include "../Resource.h"       // main symbols
@@ -22,50 +22,57 @@
 #include "../Editor/EditorEnv.h"
 #include <vector>
 #include <string>
+
+class CMedusaView;
 // CMedusaApp:
-// See Medusa.cpp for the implementation of this class
+// 有关此类的实现，请参阅 Medusa.cpp
 //
 
-class CMedusaApp : public CWinAppEx , public CEditorEnv
+class CLocaleToolbas
 {
-public:  
+	CMEdUiToolBarInfo m_LocaleToolBar[1];
+public:
+	CLocaleToolbas()
+	{
+
+	}
+
+	void Register()
+	{
+		m_LocaleToolBar[0].m_funcCallback = NULL;
+		m_LocaleToolBar[0].m_startID = -1;
+		m_LocaleToolBar[0].m_hDll = AfxGetResourceHandle();
+		m_LocaleToolBar[0].m_ResID = IDR_MAINFRAME_256;
+		wcscpy(m_LocaleToolBar[0].m_name  , L"MainToolbar");
+		wcscpy(m_LocaleToolBar[0].m_title , L"Standard Toolbar");	
+		m_LocaleToolBar[0].m_OriginBtnIDs = NULL;
+		m_LocaleToolBar[0].m_hToolbar = NULL;
+		m_LocaleToolBar[0].m_nButton = 0;
+		m_LocaleToolBar[0].SetType(CMEdUiToolBarInfo::eToolBar);
+		GetMedusaEditor()->GetUI()->RegisteToolbar(m_LocaleToolBar);
+	}
+};
+
+class CMedusaApp : public CWinAppEx  , public CEditorEnv
+{
+public:
+	//接口
 	void              SetAppName(const wchar_t* _appName);
 	void              SetUILayout(const wchar_t* layoutFile , const wchar_t* layoutName , bool bRelPath);
-    void              SetInitSceneFile(const wchar_t* sceneFile);
+	void              SetInitSceneFile(const wchar_t* sceneFile);
 	void              SetWorkDir(const wchar_t* _workDir);
 	std::wstring      GetWorkDir(){ return m_WorkDir; }
-	CMedusaEditor&    GetEditor(){ return m_MedusaEditor ; }
+	CMedusaEditor&    GetEditor() { return m_MedusaEditor ; }
+
+	BOOL              InitMedusaEditor();
+	bool              OnMainWindowCreate(CMainFrame* pMainFrame);
+	bool              OnRenderWindowCreate(CMedusaView* pView);
+	void              LoadMedusaUI(NS_XEVOL3D::xXmlNode* pNode , nsMedusaEditor::IMEdUIElement* pRootPanel , nsMedusaEditor::IMEdMainUI* pMainUI );
 public:
 	CMedusaApp();
-	virtual BOOL      OnIdle(LONG lCount);
-	bool              OnMainWindowCreate();
-	bool              AddDocTemplate(CMultiDocTemplate* pDocTemplate , const wchar_t* _name);
-	// Overrides   
-public:			   
-	virtual BOOL      InitInstance();
-	virtual BOOL      RegisteAllViews();
-    BOOL              InitMedusaEditor();
-				   
-				   
-	virtual void      PreLoadState();
-	virtual void      LoadCustomState();
-	virtual void      SaveCustomState();
-				   
-	afx_msg void      OnAppAbout();
-	afx_msg void      CreateFileView();
-	afx_msg void      OnFileOpen();
-	afx_msg void      OnFileSave();
-	afx_msg void      OnFileSaveAs();
-	DECLARE_MESSAGE_MAP()
+
+
 protected:
-	void              LoadMedusaUI(NS_XEVOL3D::xXmlNode* pNode , nsMedusaEditor::IMEdUIElement* pRootPanel , nsMedusaEditor::IMEdMainUI* pMainUI );
-protected:
-	
-	typedef std::vector<CMultiDocTemplate*> vMultiDocTemplates;
-	typedef std::vector<CString>            vMultiDocTemplateStrings;
-	CMultiDocTemplate*                      m_pMainDocTemplate;
-	vMultiDocTemplates                      m_vDocTemplates;
-	vMultiDocTemplateStrings                m_vDocTemplateStrings;
 	CMedusaEditor                           m_MedusaEditor;
 	std::wstring                            m_AppName;
 	std::wstring                            m_AppCfgFile ;
@@ -73,19 +80,35 @@ protected:
 	std::wstring                            m_UILayoutFile;
 	std::wstring                            m_UILayoutName;
 	std::wstring                            m_InitSceneFile;
+	CLocaleToolbas                          m_LocaleToolbar;
+	CMedusaView*                            m_pRenderWindow;
 
+
+// 重写
+public:
+	virtual BOOL OnIdle(LONG lCount);
+	virtual BOOL InitInstance();
+	virtual int  ExitInstance();
+
+
+	virtual void PreLoadState();
+	virtual void LoadCustomState();
+	virtual void SaveCustomState();
+
+	afx_msg void OnAppAbout();
+	afx_msg void CreateFileView();
+	afx_msg void OnFileOpen();
+	afx_msg void OnFileSave();
+	afx_msg void OnFileSaveAs();
+
+
+	DECLARE_MESSAGE_MAP()
 
 public:
-	UINT                                    m_nAppLook;
-	BOOL                                    m_bHiColorIcons;
-
-	virtual int ExitInstance();
-	afx_msg void OnEditUndo();
-	afx_msg void OnUpdateEditUndo(CCmdUI *pCmdUI);
-	afx_msg void OnUpdateEditRedo(CCmdUI *pCmdUI);
-	afx_msg void OnEditRedo();
+	// MFC自己的属性
+	UINT  m_nAppLook;
+    afx_msg void OnEditUndo();
 };
 
 extern CMedusaApp theApp;
 std::wstring  _MEDUSA_RESPATH(const wchar_t* _path);
-

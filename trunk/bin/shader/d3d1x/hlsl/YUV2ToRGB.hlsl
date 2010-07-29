@@ -2,7 +2,7 @@ sampler2D YUY2Textue;
 float4    TexSize;
 struct PS_INPUT 
 {
-      float2 Texcoord :        TEXCOORD0;
+      float4 Texcoord :        TEXCOORD0;
 };
 float Mod2(int x)
 {
@@ -18,7 +18,7 @@ float4 main( PS_INPUT Input ) : COLOR0
 
       float3 yuvColor;
       float3 delYuv    = float3(-16.0/255.0 , -128.0/255.0 , -128.0/255.0);
-      float2 TexCoord = Input.Texcoord;
+      float2 TexCoord = Input.Texcoord.xy;
       int texCoordX = TexCoord.x*TexSize.x*2;
       if( Mod2(texCoordX) > 0.0)
             yuvColor.x       = tex2D( YUY2Textue, TexCoord ).x;

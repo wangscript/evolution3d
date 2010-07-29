@@ -105,7 +105,7 @@ struct xKeyboardMsg
 
 struct xCommonMsg
 {
-	eMsgID	eMsgID;
+	eMsgID	MsgID;
 	union
 	{
 		struct 
@@ -143,6 +143,7 @@ public:
 	}sSysMsg;
 
 	eBaseMsgType          eMsgType;
+    int                   nProccessedCount;
 };
 
 //------------------------------------------------------------------------------------------

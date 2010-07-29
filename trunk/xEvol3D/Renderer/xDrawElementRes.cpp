@@ -87,12 +87,12 @@ bool xDrawElementResLoader::_loadFromPackage(xcomdoc& doc , const std::ds_wstrin
 		return true;
 
 	//从包里的xrm里加载
-	xcomdocstream* pstream = doc.create_stream(_name.c_str());
+	xcomdocstream* pstream = doc.open_stream(_name.c_str());
 	if(pstream == NULL)
 	{
 		//加一个扩展名
 		std::ds_wstring nameWithExt = _name + m_ext;
-		pstream = doc.create_stream(nameWithExt.c_str());
+		pstream = doc.open_stream(nameWithExt.c_str());
 	}
 
 	//加了扩展名，依然找不到那个stream,表示失败了。

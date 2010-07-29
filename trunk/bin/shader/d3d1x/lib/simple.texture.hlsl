@@ -15,7 +15,7 @@ Output
 
 
 ///{{SourceCode
-float4 COMMON_Texture(float4 _Color , float2 texCoord , SamplerState _sampler , Texture2D _texture )
+float4 COMMON_Texture(float4 _Color , float4 texCoord , SamplerState _sampler , Texture2D _texture )
 {
       return _texture.Sample(_sampler, texCoord.xy) * _Color ;
 }

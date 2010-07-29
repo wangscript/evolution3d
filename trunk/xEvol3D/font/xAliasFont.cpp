@@ -39,7 +39,7 @@ const xFontInfo& xAliasFont::getInfo()
 }
 
 
-bool  xAliasFont::drawChar(wchar_t _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl)
+bool  xAliasFont::drawChar(xWCharType _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl)
 {
 	return m_FontRenderer->drawChar(_chr ,  x ,  y,  dx , dy, cl);
 }
@@ -54,7 +54,7 @@ bool  xAliasFont::isAntialias()
 	return m_FontRenderer->isAntialias();
 }
 
-bool  xAliasFont::getCharDim(wchar_t _chr , int& dx , int& dy)
+bool  xAliasFont::getCharDim(xWCharType _chr , int& dx , int& dy)
 {
 	return m_FontRenderer->getCharDim(_chr , dx , dy);
 }

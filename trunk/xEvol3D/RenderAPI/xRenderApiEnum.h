@@ -120,7 +120,7 @@ ENUMCLASS(enum)  eShaderType
 	eShader_ComputeShader,
 	eShader_HullShader,
 	eShader_DomainShader,
-	eShader_Tessellator,
+	//eShader_Tessellator,
 	eShader_Max,
 	eShader_None,
 };

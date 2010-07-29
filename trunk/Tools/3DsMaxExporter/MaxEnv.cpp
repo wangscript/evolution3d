@@ -173,7 +173,7 @@ TimeValue CMaxEnv::SecondsToTicks(float sec)
     return (TimeValue)(sec * (float)TIME_TICKSPERSEC);
 }
 
-bool  CMaxEnv::get_saved_filename(wchar_t* file_name, const wchar_t* extern_string , const wchar_t* ext_name,const wchar_t* strTile)
+bool  CMaxEnv::get_saved_filename(wchar_t* file_name, const wchar_t* extern_string , const wchar_t* ext_name,const wchar_t* strTile , bool saved)
 {
     OPENFILENAMEW ofn; 
     ZeroMemory(&ofn, sizeof(OPENFILENAME));
@@ -188,13 +188,25 @@ bool  CMaxEnv::get_saved_filename(wchar_t* file_name, const wchar_t* extern_stri
     ofn.lpstrDefExt = ext_name;
     ofn.nMaxFileTitle = 0;
     ofn.lpstrInitialDir = NULL;
-    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-    if(GetSaveFileNameW(&ofn) == FALSE)
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST |OFN_EXPLORER;
+    if(saved)
     {
-        return false;
+        if(GetSaveFileNameW(&ofn) == FALSE)
+        {
+            return false;
+        }
     }
+    else
+    {
+        if(GetOpenFileNameW(&ofn) == FALSE)
+        {
+            return false;
+        }
+    }
+
     return true;
 }
+
 void CMaxEnv::start(Interface* pInterface , HWND hPannel)
 {
 	m_pIGameScene = GetIGameInterface();

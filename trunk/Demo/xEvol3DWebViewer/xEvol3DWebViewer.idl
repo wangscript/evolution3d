@@ -17,6 +17,7 @@ import "ocidl.idl";
 	pointer_default(unique)
 ]
 interface ICxEvol3DViewer : IDispatch{
+    [id(1), helpstring("method OpenURL")] HRESULT OpenURL([in] BSTR _url);
 };
 
 [

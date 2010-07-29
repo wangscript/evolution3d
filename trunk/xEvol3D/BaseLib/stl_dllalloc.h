@@ -156,12 +156,12 @@ namespace std
 
 			void* alloc(size_t _num,const void* hint = NULL)
 			{
-				return _stlalloc.allocate(_num ,(const T*)hint );
+				return allocate(_num ,(const T*)hint );
 			}
 
 			void  dealloc(const void* pData , size_t _size)
 			{
-				return _stlalloc.deallocate( (T*) pData , _size);
+				return deallocate( (T*) pData , _size);
 
 			}
 

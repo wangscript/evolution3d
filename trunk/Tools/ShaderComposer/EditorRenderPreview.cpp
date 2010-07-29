@@ -336,7 +336,7 @@ void     xEditorPreviewApp::init(HWND hRenderWindow)
 	m_ProcedureTexture->unlock(_lock);
 	m_pStencilState = m_pRenderApi->createDepthStencilState(L"Overlay");
 
-	m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel<0:simple.texture,simple.fakehdr>" , NULL);;
+	m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel(0:simple.texture,simple.fakehdr)" , NULL);;
 
 	m_hFont    = m_pRenderApi->findFont(L"small" , true);
 
@@ -356,7 +356,7 @@ void     xEditorPreviewApp::init(HWND hRenderWindow)
 	{
 	_parser.addShaderNode( eShader_VertexShader , L"SkinAni" , (size_t)0);
 	}
-	_parser.setShaderName( eShader_PixelShader , L"simpleMesh.pixel<0:simple.texture,simple.Lighting;>" );
+	_parser.setShaderName( eShader_PixelShader , L"simpleMesh.pixel(0:simple.texture,simple.Lighting;)" );
 	xGpuProgramName _modelShaderName;
 	_parser.toName(_modelShaderName);
 	HGpuProgram hModelShader = m_pRenderApi->gpuProgramManager()->load(_modelShaderName);

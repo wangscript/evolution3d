@@ -18,7 +18,6 @@ CDockPaneContainer::CDockPaneContainer()
 {
 	m_ChildWindow = NULL;
 	m_pMEdDockPane = NULL;
-	m_pViewBarButton = NULL;
 }
 
 void CDockPaneContainer::SetMEdDockPane(nsMedusaEditor::IMEdDockPane* pPane)
@@ -26,7 +25,6 @@ void CDockPaneContainer::SetMEdDockPane(nsMedusaEditor::IMEdDockPane* pPane)
 	HWND hWnd = pPane->hWnd();
 	m_ChildWindow = hWnd;
 	m_pMEdDockPane = pPane;
-	m_pViewBarButton = NULL;
 }
 
 HICON CDockPaneContainer::hIcon()

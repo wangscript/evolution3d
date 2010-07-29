@@ -5,11 +5,35 @@
 using namespace xMathLib;
 BEGIN_NAMESPACE_XEVOL3D
 
-IMPL_BASE_OBJECT_DLLSAFE(IDrawElement         ,  IRenderApiObject);
+IMPL_BASE_OBJECT_DLLSAFE(IRenderPassArg  ,  IBaseObject);
+
+IMPL_BASE_OBJECT_DLLSAFE(IDrawElement ,  IRenderApiObject);
 IMPL_BASE_OBJECT_DLLSAFE(xRenderPass  ,  IRenderApiObject);
 
 IMPL_OBJECT_FACTORY_MGR(IDrawElement ,IDrawElementCreator , xDrawElementFactoryMgr );
 IMPL_OBJECT_FACTORY_MGR(xRenderPass  ,xRenderPassCreator  , xRenderPassFactoryMgr );
+
+bool IRenderPassArg::setMatrix(const xMathLib::xmat4& _mat)
+{
+	m_trans = _mat;
+	return true;
+}
+
+const xMathLib::xmat4& IRenderPassArg::getMatrix()
+{
+	return m_trans;
+}
+
+IRenderPassArg::IRenderPassArg()
+{
+
+}
+
+IRenderPassArg::~IRenderPassArg()
+{
+
+}
+
 
 IDrawElement::IDrawElement(IBaseRenderer* pRenderer)
 :IRenderObject(pRenderer)
@@ -17,25 +41,13 @@ IDrawElement::IDrawElement(IBaseRenderer* pRenderer)
 
 }
 
-bool IDrawElement::setMatrix(const xmat4& _mat)
-{
-	m_trans = _mat;
-	return true ;
-}
-
-const xmat4&   IDrawElement::getMatrix()
-{
-	return m_trans;
-}
-
-bool IDrawElement::isVisible(xGeomLib::xCamera* pCamera)
+bool IDrawElement::isVisible(xGeomLib::xCamera* pCamera , const xMathLib::xmat4& _mat)
 {
 	bool bVisible = true;
 	if(pCamera)
 	{
 		xGeomLib::xaabb _aabb;
 		this->aabb(_aabb);
-		const xMathLib::xmat4& _mat = this->getMatrix();
 		xMathLib::xvec3 _min = _aabb.m_Min * _mat;
 		xMathLib::xvec3 _max = _aabb.m_Max * _mat;
 		xMathLib::xvec3 cen = 0.5f* (_min + _max);
@@ -73,7 +85,7 @@ bool  xRenderPass::render(unsigned long passedTime)
 	   return false;
   
    IRendererEventCallback* pCallback = m_pRenderer->getEventCallBack();
-   const xmat4& _trans = m_Drawable->getMatrix();
+   const xmat4& _trans = m_RenderPassArg->getMatrix();
    //m_pRenderApi->pushMatrix(eMatrixMode::MATRIXMODE_World);
    IRenderApi* pRenderApi = m_pRenderer->renderApi();
    pRenderApi->setMatrix(_trans.data , MATRIXMODE_World);
@@ -105,6 +117,19 @@ bool  xRenderPass::render(unsigned long passedTime)
 	   m_Drawable->render(passedTime);
    }
    return true;
+}
+
+
+IMPL_BASE_OBJECT_DLLSAFE(xSerializeDrawElement ,  IDrawElement);
+xSerializeDrawElement::xSerializeDrawElement(IBaseRenderer* pRenderer, int arg)
+:IDrawElement(pRenderer)
+{
+
+}
+
+xSerializeDrawElement::~xSerializeDrawElement()
+{
+
 }
 
 END_NAMESPACE_XEVOL3D

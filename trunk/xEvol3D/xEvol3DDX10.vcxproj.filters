@@ -1,0 +1,1657 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="xEvolEngine">
+      <UniqueIdentifier>{4d176c9e-949c-4204-ac38-61258fc692e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Application">
+      <UniqueIdentifier>{43859937-e500-42f7-9c51-8b851564504b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Audio">
+      <UniqueIdentifier>{1663fb88-217c-4967-a9d6-bcff46a9d59a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\BaseLib">
+      <UniqueIdentifier>{6317b4ac-afcd-4fe6-b9a2-ec0b10f98266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\BaseLib\xXMLParser">
+      <UniqueIdentifier>{5096ff5f-3f6b-4284-9edf-230891dacae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\BaseLib\Logger">
+      <UniqueIdentifier>{1a8afd1b-a48a-4186-93a0-3b8c2f2e5f8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\BaseLib\Multi-Language">
+      <UniqueIdentifier>{68ac8eff-779f-41de-9c3f-bd155247cdac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\BaseLib\ResourceManager">
+      <UniqueIdentifier>{53f60e5f-1825-42c8-9904-21c7b23f863e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\BaseLib\Object">
+      <UniqueIdentifier>{b313ae96-d3ec-4539-a227-18af4d4482e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\BaseLib\String">
+      <UniqueIdentifier>{49e64a31-6b75-40b4-84d4-705338eae70f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\FileSystem">
+      <UniqueIdentifier>{700df91b-1e45-489a-af0c-003d96fff123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\float16">
+      <UniqueIdentifier>{386172d0-8422-4580-b866-006268dc08be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics">
+      <UniqueIdentifier>{f10e9412-b071-4d91-b00f-ccea7d1f1db1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\RenderApi">
+      <UniqueIdentifier>{58942ba5-dde4-4240-b18d-ac532cdd4884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\RenderApi\Shader">
+      <UniqueIdentifier>{11617530-1467-45a1-b298-f74d4dc15570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\RenderApi\Texture">
+      <UniqueIdentifier>{b6cb640a-453d-4a5f-b981-f5aad28d3dc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\RenderApi\Buffer">
+      <UniqueIdentifier>{bb929761-9865-4890-a84e-db39e015b9c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\RenderApi\HelperRender">
+      <UniqueIdentifier>{94d3580b-1778-47c0-a63e-326996790f69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\Font">
+      <UniqueIdentifier>{55a9f5e5-4457-4dc1-8d6a-c612af42c190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\Renderer">
+      <UniqueIdentifier>{4cc07444-9d9c-42e9-92cd-8e797394e959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\Renderer\src">
+      <UniqueIdentifier>{7802a58d-2a44-4b53-b614-3b91ead51ce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\Renderer\include">
+      <UniqueIdentifier>{e13b7af3-5d68-4589-b1a3-85faa573eee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\Renderer\ToyRender">
+      <UniqueIdentifier>{ae35c8c0-0b08-4a29-96a3-38461e614b2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\xModel">
+      <UniqueIdentifier>{8be9963a-ae65-4211-83e1-6670e3d1ff4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\xModel\Core">
+      <UniqueIdentifier>{21a35f5c-90f4-443d-9e71-93be2413babf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\xModel\Model">
+      <UniqueIdentifier>{bf621b78-178f-4390-b004-da00954778d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\xModel\MGR">
+      <UniqueIdentifier>{d0fa2074-673a-4ebc-968a-d62dc43457a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\xModel\Action">
+      <UniqueIdentifier>{a24d63da-edbb-46da-be4a-20ab89d2cf21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\SceneGraph">
+      <UniqueIdentifier>{728f12b5-5e44-4bf8-9696-4bffd787527c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\SceneGraph\SceneObject">
+      <UniqueIdentifier>{f59fbf1f-969e-4fd7-a8d5-b3b2df0dad4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\xEffectSystem">
+      <UniqueIdentifier>{87db8f4b-9a5a-410d-b37f-f3c1f9790487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Graphics\xEffectSystem\Particle">
+      <UniqueIdentifier>{4bb49bd0-1b60-4eeb-b864-ed080d7e05c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\ImageLib">
+      <UniqueIdentifier>{2a1b9996-7fdb-405a-a30f-e6b1459a48fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\io">
+      <UniqueIdentifier>{d6c529b3-3fd4-4872-bbcf-b3062abbd5b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Mem">
+      <UniqueIdentifier>{b633be5b-3c14-43b1-95bf-9d232c19f0a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\OperationSystem">
+      <UniqueIdentifier>{70cb6622-1fc9-49b0-96ac-a8a5017aefda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\OperationSystem\Win32">
+      <UniqueIdentifier>{d421ba00-de3c-4215-bc05-aeccf4f92467}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\OperationSystem\Linux">
+      <UniqueIdentifier>{70ff2c22-e928-4a33-b551-e8da1125fa5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Physics">
+      <UniqueIdentifier>{e8b2cac8-f35c-4d74-8bf2-c9f8735b1721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\Working">
+      <UniqueIdentifier>{a44d443f-2f43-40e4-9d7b-e608d18dbdd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xcomdoc">
+      <UniqueIdentifier>{9c210670-b165-4324-82ac-9623e1e5eaf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xcomdoc\inc">
+      <UniqueIdentifier>{924bccb8-9da6-4471-9c0b-bd69fd2aa77c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xcomdoc\src">
+      <UniqueIdentifier>{a5e4775d-5eff-482b-9da1-787e0f092e7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xcomdoc\dir">
+      <UniqueIdentifier>{d6103818-4787-40e3-9c3f-c16c0ace61f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xEvol3D">
+      <UniqueIdentifier>{29cbf16b-fdc9-4b14-8e33-0995c2067273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xmathlib">
+      <UniqueIdentifier>{dca212a6-078a-4341-8e8a-cc7571fb7c23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xmathlib\include">
+      <UniqueIdentifier>{47bec06b-08ce-427c-a12e-fd019a308bcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xmathlib\source">
+      <UniqueIdentifier>{f9a3cc83-3796-4794-9bbe-e039e286427d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xui">
+      <UniqueIdentifier>{8827541f-37be-4172-afdf-1e9608c2d26b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xui\include">
+      <UniqueIdentifier>{59f14584-4807-4a97-9182-1797fce3e61a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\xui\src">
+      <UniqueIdentifier>{28acb9de-42d0-4143-bdda-1ceefaf2e9ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\lzma">
+      <UniqueIdentifier>{bb622fd5-c798-40d8-bcfa-9882a764540d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\lzma\h">
+      <UniqueIdentifier>{fb9634bf-0e51-4a2d-afdc-f2fee5143eae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\zlib">
+      <UniqueIdentifier>{1bdd7225-31c6-48cf-8e1e-e7ea66868b91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xEvolEngine\zlib\header">
+      <UniqueIdentifier>{262c4961-5721-4efe-b51f-adf3fb82a3d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32Platform">
+      <UniqueIdentifier>{14cb9f28-f6e1-4916-85a4-c1716661799c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KidsRenderer">
+      <UniqueIdentifier>{18cfff68-ada8-4e3c-b555-e5c81306df0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KidsRenderer\inc">
+      <UniqueIdentifier>{21f5fa62-a8d4-42af-9098-1a70c8d3ca8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KidsRenderer\Materials">
+      <UniqueIdentifier>{d598dee3-ece7-410a-ad51-cf167dbbe325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KidsRenderer\src">
+      <UniqueIdentifier>{0235c954-cd56-423e-868f-fc1a105a1d79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D10Plugin">
+      <UniqueIdentifier>{10f17beb-0fec-4d38-84b0-6f3b5877dcdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D10Plugin\inc">
+      <UniqueIdentifier>{3833094e-8aa0-4b9c-b6df-d4e99df46985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D10Plugin\shader">
+      <UniqueIdentifier>{ceda67d6-7729-4195-b33a-952a9dac97b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D10Plugin\src">
+      <UniqueIdentifier>{fa36abe3-5fd8-42af-8c46-0efa0af36af3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D10Plugin\state">
+      <UniqueIdentifier>{d58f6752-ae97-4581-942d-85c8f035ad8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HelpObject">
+      <UniqueIdentifier>{b1048a69-8025-4a72-90ad-a63353320deb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3DCommon">
+      <UniqueIdentifier>{430a798f-fe47-40e3-aac4-59bf73797541}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="xStdPch.cpp">
+      <Filter>xEvolEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xApplication.cpp">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xApplicationLayer.cpp">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xListener.cpp">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xPlatform.cpp">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xPluginMgr.cpp">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\xWindow.cpp">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\stl_dllalloc.cpp">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xBaseMath.cpp">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xIDManager.cpp">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xParamTable.cpp">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xProperties.cpp">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xXmlDocBuilder.cpp">
+      <Filter>xEvolEngine\BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xXmlDocument.cpp">
+      <Filter>xEvolEngine\BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xXmlManager.cpp">
+      <Filter>xEvolEngine\BaseLib\xXMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xLogger.cpp">
+      <Filter>xEvolEngine\BaseLib\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xI18N.cpp">
+      <Filter>xEvolEngine\BaseLib\Multi-Language</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xStringTable.cpp">
+      <Filter>xEvolEngine\BaseLib\Multi-Language</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xBaseObject.cpp">
+      <Filter>xEvolEngine\BaseLib\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xBaseLexer.cpp">
+      <Filter>xEvolEngine\BaseLib\String</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLib\xstring.cpp">
+      <Filter>xEvolEngine\BaseLib\String</Filter>
+    </ClCompile>
+    <ClCompile Include="fs\xFileSystem.cpp">
+      <Filter>xEvolEngine\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="float16\float16.cpp">
+      <Filter>xEvolEngine\float16</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xMatrixContext.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderAPI.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderAPIDef.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderApiImp.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderAPIManager.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderApiObject .cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderStateObjManager.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xRenderView.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xTLEnvioroment.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xBaseShader.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderLexer.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderManager.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderName.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderNode.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xShaderSemantic.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xBaseTexture.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xTextureManager.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xVideoTexture.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xMemBuffer.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderAPI\xHelperRender.cpp">
+      <Filter>xEvolEngine\Graphics\RenderApi\HelperRender</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xAliasFont.cpp">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xFontManager.cpp">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xFontRender.cpp">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xGdiGlyphFont.cpp">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="font\xMultiFtRender.cpp">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xDrawableHelper.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xDrawElement.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xDrawElementRes.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xMaterial.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xModelElement.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xPrimitiveElement.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xRenderer.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xRendererQueue.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\xRenderObject.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\ToyRender\xToyRenderer.cpp">
+      <Filter>xEvolEngine\Graphics\Renderer\ToyRender</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreAction.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreMesh.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreSkeleton.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xBaseModel.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xXrmModel.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xBaseModelMgr.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\MGR</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreActionMgr.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\MGR</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xCoreMeshMgr.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\MGR</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xMixAction.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="xModel\xTransitionAction.cpp">
+      <Filter>xEvolEngine\Graphics\xModel\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xBaseTerrain.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneGraph.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneNode.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneObjectRes.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneSimpleVistor.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneVisitor.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneDrawable.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneHelperDrawable.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneModel.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="xScene\xSceneObject.cpp">
+      <Filter>xEvolEngine\Graphics\SceneGraph\SceneObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\PixelFormatAssit.cpp">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xBaseImage.cpp">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xDXTImage.cpp">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xImage.cpp">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Image\xTgaImage.cpp">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FastMemAlloc.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FastSmallMemAlloc.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FixMemAlloc.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\FixSmallMemAlloc.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_dbg.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_operator.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\mem_operator_dbg.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\MemPool.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem\MemState.cpp">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\xOperationSys.cpp">
+      <Filter>xEvolEngine\OperationSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Win32\xWin32DllLoader.cpp">
+      <Filter>xEvolEngine\OperationSystem\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Win32\xWin32IME.cpp">
+      <Filter>xEvolEngine\OperationSystem\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Win32\xWin32OS.cpp">
+      <Filter>xEvolEngine\OperationSystem\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Win32\xWin32Thread.cpp">
+      <Filter>xEvolEngine\OperationSystem\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Linux\xLinuxDllLoader.cpp">
+      <Filter>xEvolEngine\OperationSystem\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="OperationSys\Linux\xLinuxOS.cpp">
+      <Filter>xEvolEngine\OperationSystem\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="working\xWorkingThread.cpp">
+      <Filter>xEvolEngine\Working</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdDirEnum.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdFile.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdFileImp.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdReadWriterBuffer.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdStream.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdStringHash.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcdUtil.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdoc.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdocbase.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\zlibStream.cpp">
+      <Filter>xEvolEngine\xcomdoc\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xcomdoc\xcomdir.cpp">
+      <Filter>xEvolEngine\xcomdoc\dir</Filter>
+    </ClCompile>
+    <ClCompile Include="xEvol3D.cpp">
+      <Filter>xEvolEngine\xEvol3D</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xcamera.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xfrustum.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xIntersection.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmat3.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmat4.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmat4x3.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xmatfunc.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xMathTrace.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xPlacement.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xplane.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xquat.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xRayIntersection.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xrotator.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xvec2.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xvec3.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="XMathLib\xvec4.cpp">
+      <Filter>xEvolEngine\xmathlib\source</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiButton.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiCaption.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiControl.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiCtrlContainer.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiDialog.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiHotArea.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiStateBlend.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiStringParser.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiTextArea.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiTextLabel.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiTransBlend.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiWindow.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiWindowManager.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="xui\src\xuiWindowState.cpp">
+      <Filter>xEvolEngine\xui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Alloc.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Bra.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzFind.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzFindMt.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Lzma2Dec.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Lzma2Enc.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaDec.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaEnc.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\LzmaLib.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\MtCoder.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="lzmza\Threads.c">
+      <Filter>xEvolEngine\lzma</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\adler32.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\compress.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\crc32.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\deflate.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\gzio.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\infback.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inffast.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inflate.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\inftrees.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\trees.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\uncompr.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib\zutil.c">
+      <Filter>xEvolEngine\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Win32Platform\xWin32Platform.cpp">
+      <Filter>Win32Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Win32Platform\xWin32PlatformPlugin.cpp">
+      <Filter>Win32Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Win32Platform\xWindowImp.cpp">
+      <Filter>Win32Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Win32Platform\xWindowMsgConvert.cpp">
+      <Filter>Win32Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RendererPlugin\KidsRender\KidsRendererPlugin.cpp">
+      <Filter>KidsRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RendererPlugin\KidsRender\xKidMaterail.cpp">
+      <Filter>KidsRenderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RendererPlugin\KidsRender\xKidRenderer.cpp">
+      <Filter>KidsRenderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RendererPlugin\KidsRender\xKidRTech.cpp">
+      <Filter>KidsRenderer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10GPUProgram.cpp">
+      <Filter>D3D10Plugin\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10ParamBuffer.cpp">
+      <Filter>D3D10Plugin\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10Shader.cpp">
+      <Filter>D3D10Plugin\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10_InputAssembler.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10BaseRenderTarget.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10BaseTexture.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10ConstLexer.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10FileTexture.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10HelperRender.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10InputBuffer.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10LockableTexture.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10RenderTarget.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10RenderView.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xDirect3D10API.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xDirect3D10APICreator.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\xDirect3D10Plugin.cpp">
+      <Filter>D3D10Plugin\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10BlendState.cpp">
+      <Filter>D3D10Plugin\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10DepthStencilState.cpp">
+      <Filter>D3D10Plugin\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10RazState.cpp">
+      <Filter>D3D10Plugin\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D10Plugin\src\xD10Sampler.cpp">
+      <Filter>D3D10Plugin\state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\EvolHelperObject\xArcBall.cpp">
+      <Filter>HelpObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\EvolHelperObject\xBoundBox.cpp">
+      <Filter>HelpObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\EvolHelperObject\xCubeDrawable.cpp">
+      <Filter>HelpObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\EvolHelperObject\xPlaneGrid.cpp">
+      <Filter>HelpObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D1x\xD3D2DRect.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D1x\xD3DBaseColorSelector.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D1x\xD3DInputBuffer.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plugin\Direct3D1x\xD3DTLEnviroment.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="xSmallSizeControl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="xStdPch.h">
+      <Filter>xEvolEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xApplication.h">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xApplicationLayer.h">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xListener.h">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xPlatform.h">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xPluginMgr.h">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xVirtualKey.h">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xWindow.h">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\xWindowMsg.h">
+      <Filter>xEvolEngine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\xMediaFX.h">
+      <Filter>xEvolEngine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\stl_dllalloc.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xarray.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xBaseMath.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xEvol3DAPI.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xEvol3DBaseInc.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xIDManager.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xParamTable.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xProperties.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xRect.h">
+      <Filter>xEvolEngine\BaseLib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xXmlDocBuilder.h">
+      <Filter>xEvolEngine\BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xXmlDocument.h">
+      <Filter>xEvolEngine\BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xXmlFileStream.h">
+      <Filter>xEvolEngine\BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xXmlManager.h">
+      <Filter>xEvolEngine\BaseLib\xXMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\logstream.h">
+      <Filter>xEvolEngine\BaseLib\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xLogger.h">
+      <Filter>xEvolEngine\BaseLib\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xI18N.h">
+      <Filter>xEvolEngine\BaseLib\Multi-Language</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xStringTable.h">
+      <Filter>xEvolEngine\BaseLib\Multi-Language</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xResourceMgr.h">
+      <Filter>xEvolEngine\BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xResPackageMgr.h">
+      <Filter>xEvolEngine\BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xResPackageMgrTool.h">
+      <Filter>xEvolEngine\BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xResPathMgr.h">
+      <Filter>xEvolEngine\BaseLib\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xBaseObject.h">
+      <Filter>xEvolEngine\BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xObjectFactory.h">
+      <Filter>xEvolEngine\BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xRefCountObjPtr.h">
+      <Filter>xEvolEngine\BaseLib\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xBaseLexer.h">
+      <Filter>xEvolEngine\BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xstring.h">
+      <Filter>xEvolEngine\BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLib\xStringHash.h">
+      <Filter>xEvolEngine\BaseLib\String</Filter>
+    </ClInclude>
+    <ClInclude Include="fs\xFileSystem.h">
+      <Filter>xEvolEngine\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="float16\eLut.h">
+      <Filter>xEvolEngine\float16</Filter>
+    </ClInclude>
+    <ClInclude Include="float16\endian.h">
+      <Filter>xEvolEngine\float16</Filter>
+    </ClInclude>
+    <ClInclude Include="float16\float16.h">
+      <Filter>xEvolEngine\float16</Filter>
+    </ClInclude>
+    <ClInclude Include="float16\toFloat.h">
+      <Filter>xEvolEngine\float16</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xMatrixContext.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderAPI.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderAPIDef.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiEnum.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiFwDecl.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiHelper.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiImp.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderAPIManager.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderApiObject.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderResManager.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderStateObjManager.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xRenderView.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xTLEnvioroment.h">
+      <Filter>xEvolEngine\Graphics\RenderApi</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xBaseShader.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderDefine.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderLexer.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderManager.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderName.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderNode.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderSemantic.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xShaderSemanticEnum.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xBaseTexture.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xTextureManager.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xVideoTexture.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xMemBuffer.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderAPI\xHelperRender.h">
+      <Filter>xEvolEngine\Graphics\RenderApi\HelperRender</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xAliasFont.h">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xFontManager.h">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xFontRender.h">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xGdiGlyphFont.h">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="font\xMultiFtRender.h">
+      <Filter>xEvolEngine\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xDrawableHelper.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xDrawElement.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xDrawElementRes.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xMaterial.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xModelElement.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xPrimitiveElement.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xRenderer.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xRendererQueue.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\xRenderObject.h">
+      <Filter>xEvolEngine\Graphics\Renderer\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\ToyRender\xToyRenderer.h">
+      <Filter>xEvolEngine\Graphics\Renderer\ToyRender</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xModelFWDecl.h">
+      <Filter>xEvolEngine\Graphics\xModel</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreAction.h">
+      <Filter>xEvolEngine\Graphics\xModel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreMesh.h">
+      <Filter>xEvolEngine\Graphics\xModel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreMeshDef.h">
+      <Filter>xEvolEngine\Graphics\xModel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreSkeleton.h">
+      <Filter>xEvolEngine\Graphics\xModel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xBaseModel.h">
+      <Filter>xEvolEngine\Graphics\xModel\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xXrmModel.h">
+      <Filter>xEvolEngine\Graphics\xModel\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xBaseModelMgr.h">
+      <Filter>xEvolEngine\Graphics\xModel\MGR</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreActionMgr.h">
+      <Filter>xEvolEngine\Graphics\xModel\MGR</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xCoreMeshMgr.h">
+      <Filter>xEvolEngine\Graphics\xModel\MGR</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xMixAction.h">
+      <Filter>xEvolEngine\Graphics\xModel\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="xModel\xTransitionAction.h">
+      <Filter>xEvolEngine\Graphics\xModel\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xBaseTerrain.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneGraph.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneNode.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneObjectRes.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xScenePropertyTool.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneSimpleVistor.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneVisitor.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneDrawable.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneHelperDrawable.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneModel.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xScene\xSceneObject.h">
+      <Filter>xEvolEngine\Graphics\SceneGraph\SceneObject</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xEffectSystem.h">
+      <Filter>xEvolEngine\Graphics\xEffectSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParitcle.h">
+      <Filter>xEvolEngine\Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParitcleEffect.h">
+      <Filter>xEvolEngine\Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParitcleEmitter.h">
+      <Filter>xEvolEngine\Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="xEffectSystem\xParticleSystem.h">
+      <Filter>xEvolEngine\Graphics\xEffectSystem\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\Color.h">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\endian.h">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\PixelFormatAssit.h">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xBaseImage.h">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xDXTImage.h">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xImage.h">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xPixelFormatEnum.h">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Image\xTgaImage.h">
+      <Filter>xEvolEngine\ImageLib</Filter>
+    </ClInclude>
+    <ClInclude Include="io\bzip2stream.h">
+      <Filter>xEvolEngine\io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\bzip2stream.hpp">
+      <Filter>xEvolEngine\io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\mstream.h">
+      <Filter>xEvolEngine\io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\zipstream.h">
+      <Filter>xEvolEngine\io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\zipstream.hpp">
+      <Filter>xEvolEngine\io</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FastMemAlloc.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FastSmallMemAlloc.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FixMemAlloc.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\FixSmallMemAlloc.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mem.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mem_operator.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemAlloc.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\memdef.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemPool.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\MemState.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\mstream.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\ObjectPool.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem\stl_alloc.h">
+      <Filter>xEvolEngine\Mem</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\xOperationSys.h">
+      <Filter>xEvolEngine\OperationSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\Win32\xWin32DllLoader.h">
+      <Filter>xEvolEngine\OperationSystem\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\Win32\xWin32IME.h">
+      <Filter>xEvolEngine\OperationSystem\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\Win32\xWin32Thread.h">
+      <Filter>xEvolEngine\OperationSystem\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="OperationSys\Linux\xLinuxDllLoader.h">
+      <Filter>xEvolEngine\OperationSystem\Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="xPhysics\xPhysics.h">
+      <Filter>xEvolEngine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="working\xWorkingThread.h">
+      <Filter>xEvolEngine\Working</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdDirEnum.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdReadBuffer.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdStringHash.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdUtil.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcdWriteBuffer.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdoc.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdoc_common.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdocbase.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdocImp.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xdocfstream.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\zlibStream.h">
+      <Filter>xEvolEngine\xcomdoc\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="xcomdoc\xcomdir.h">
+      <Filter>xEvolEngine\xcomdoc\dir</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3D.h">
+      <Filter>xEvolEngine\xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3DBase.h">
+      <Filter>xEvolEngine\xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3DGraphics.h">
+      <Filter>xEvolEngine\xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3DRenderer.h">
+      <Filter>xEvolEngine\xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="xEvol3DScene.h">
+      <Filter>xEvolEngine\xEvol3D</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xbinomial.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xcamera.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xfrustum.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xGeomLib.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat3.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat3func.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat3x3_asm_gcc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat3x3_asm_vc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4func.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4x3.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4x3_asm_gcc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4x3_asm_vc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat4x3func.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat_asm_gcc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmat_asm_vc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmath_asm_gcc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmath_asm_vc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmathbasedef.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xMathDecl.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xmathfunc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xMathLib.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xMathTrace.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xPlacement.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xquat.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xrotator.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xspline.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvec2.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvec3.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvec4.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvecfunc.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="XMathLib\xvolume.h">
+      <Filter>xEvolEngine\xmathlib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xui.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuibase.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiButton.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiCaption.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiControl.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiCtrlContainer.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiDataType.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiDialog.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiHotArea.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiStringParser.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiTextArea.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiTextLabel.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiWindow.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiWindowManager.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="xui\xuiWindowState.h">
+      <Filter>xEvolEngine\xui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Alloc.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Bra.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzFind.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzFindMt.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzHash.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Lzma2Dec.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Lzma2Enc.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaDec.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaEnc.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\LzmaLib.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\MtCoder.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Threads.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="lzmza\Types.h">
+      <Filter>xEvolEngine\lzma\h</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\crc32.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\deflate.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffast.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffixed.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inflate.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inftrees.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\trees.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.in.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zlib.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zutil.h">
+      <Filter>xEvolEngine\zlib\header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Win32Platform\xWin32Platform.h">
+      <Filter>Win32Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Win32Platform\xWindowImp.h">
+      <Filter>Win32Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RendererPlugin\KidsRender\xKidRdrApi.h">
+      <Filter>KidsRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RendererPlugin\KidsRender\xKidMaterail.h">
+      <Filter>KidsRenderer\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RendererPlugin\KidsRender\xKidRenderCreator.h">
+      <Filter>KidsRenderer\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RendererPlugin\KidsRender\xKidRenderer.h">
+      <Filter>KidsRenderer\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RendererPlugin\KidsRender\xKidRTech.h">
+      <Filter>KidsRenderer\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\stdafx.h">
+      <Filter>D3D10Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10_InputAssembler.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10BaseRenderTarget.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10BaseTexture.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10ConstLexer.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10FileTexture.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10HelperRender.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10InputBuffer.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10LockableTexture.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10RenderTarget.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10RenderView.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xDirect3D10API.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xDirect3D10APICreator.h">
+      <Filter>D3D10Plugin\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10GPUProgram.h">
+      <Filter>D3D10Plugin\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10ParamBuffer.h">
+      <Filter>D3D10Plugin\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10Shader.h">
+      <Filter>D3D10Plugin\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10BlendState.h">
+      <Filter>D3D10Plugin\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10DepthStencilState.h">
+      <Filter>D3D10Plugin\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10RazState.h">
+      <Filter>D3D10Plugin\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D10Plugin\src\xD10Sampler.h">
+      <Filter>D3D10Plugin\state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\EvolHelperObject\xArcBall.h">
+      <Filter>HelpObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\EvolHelperObject\xBoundBox.h">
+      <Filter>HelpObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\EvolHelperObject\xCubeDrawable.h">
+      <Filter>HelpObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\EvolHelperObject\xPlaneGrid.h">
+      <Filter>HelpObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\xPluginBaseInc.h">
+      <Filter>HelpObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D1x\xD3D2DRect.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D1x\xD3DBaseColorSelector.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D1x\xD3DInputBuffer.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plugin\Direct3D1x\xD3DTLEnviroment.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RenderAPI\ShaderNodeSystem.txt">
+      <Filter>xEvolEngine\Graphics\RenderApi\Shader</Filter>
+    </None>
+    <None Include="Renderer\Renderer.vsd">
+      <Filter>xEvolEngine\Graphics\Renderer</Filter>
+    </None>
+    <None Include="xModel\Design.txt">
+      <Filter>xEvolEngine\Graphics\xModel</Filter>
+    </None>
+    <None Include="XMathLib\说明.txt">
+      <Filter>xEvolEngine\xmathlib</Filter>
+    </None>
+    <None Include="..\bin\KidRenderer\materials.xml">
+      <Filter>KidsRenderer\Materials</Filter>
+    </None>
+    <None Include="..\bin\KidRenderer\material\SimpleModel.material">
+      <Filter>KidsRenderer\Materials</Filter>
+    </None>
+    <None Include="..\bin\KidRenderer\material\SimpleModelBlend.material">
+      <Filter>KidsRenderer\Materials</Filter>
+    </None>
+    <None Include="..\bin\KidRenderer\material\SimpleSkin.material">
+      <Filter>KidsRenderer\Materials</Filter>
+    </None>
+    <None Include="..\bin\KidRenderer\material\SimpleSkinBlend.material">
+      <Filter>KidsRenderer\Materials</Filter>
+    </None>
+    <None Include="..\bin\KidRenderer\material\SimpleTerrainPatch.material">
+      <Filter>KidsRenderer\Materials</Filter>
+    </None>
+    <None Include="..\bin\KidRenderer\material\StaticModelNotLight.material">
+      <Filter>KidsRenderer\Materials</Filter>
+    </None>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

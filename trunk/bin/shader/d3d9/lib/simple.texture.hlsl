@@ -14,7 +14,7 @@ Output
 
 
 ///{{SourceCode
-float4 COMMON_Texture(float4 _Color , float2 texCoord , sampler2D _texture )
+float4 COMMON_Texture(float4 _Color , float4 texCoord , sampler2D _texture )
 {
       return tex2D(_texture, texCoord.xy) * _Color ;
 }

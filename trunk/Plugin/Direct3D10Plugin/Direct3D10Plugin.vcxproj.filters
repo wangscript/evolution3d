@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{62e1413c-7fcd-4612-9511-99877b87b424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{9539e616-5e3c-4ae4-a96c-673f0b6e5c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{36e9b8b0-61f4-40de-b812-0536a3e26c83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="state">
+      <UniqueIdentifier>{dee24504-7eb3-4fbc-bff7-e67b7b7f34b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3DCommon">
+      <UniqueIdentifier>{a913dca8-28c6-4999-9453-0390874a4e42}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\xD10_InputAssembler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10BaseRenderTarget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10BaseTexture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10ConstLexer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10FileTexture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10HelperRender.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10InputBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10LockableTexture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10RenderTarget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10RenderView.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xDirect3D10API.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xDirect3D10APICreator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10GPUProgram.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10ParamBuffer.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10Shader.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10BlendState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10DepthStencilState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10RazState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD10Sampler.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3D2DRect.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DBaseColorSelector.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DInputBuffer.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DTLEnviroment.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="xDirect3D10Plugin.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\xD10_InputAssembler.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10BaseRenderTarget.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10BaseTexture.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10ConstLexer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10FileTexture.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10HelperRender.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10InputBuffer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10LockableTexture.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10RenderTarget.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10RenderView.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xDirect3D10API.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xDirect3D10APICreator.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10GPUProgram.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10ParamBuffer.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10Shader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10BlendState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10DepthStencilState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10RazState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD10Sampler.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3D2DRect.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DBaseColorSelector.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DInputBuffer.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DTLEnviroment.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UML.cd" />
+  </ItemGroup>
+</Project>

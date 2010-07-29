@@ -1,12 +1,28 @@
 <HTML>
 <HEAD>
-<TITLE>ATL 8.0 test page for object CxEvol3DViewer</TITLE>
+<TITLE>XEvolution3D Demo Page</TITLE>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+function OpenUrl()
+{
+	if (StringInput.value != " ")
+	{
+	    CxEvol3DViewer.OpenURL(StringInput.value);
+	}
+}
+</SCRIPT>
+
+
 </HEAD>
 <BODY>
 
 
 <OBJECT ID="CxEvol3DViewer" WIDTH=800 HEIGHT=800 CLASSID="CLSID:189C05E3-2961-4C64-87C1-886B04F4145B"></OBJECT>
-
+<p></p>
+ ‰»ÎURL: <INPUT TYPE ="text" NAME="StringInput" VALUE="http://www.hellocpp.net:8888/web3d/indoor.w3d" size=55>
+<p></p>
+<INPUT TYPE="button" NAME="Submit" VALUE="Submit" ONCLICK=OpenUrl()>
 
 </BODY>
 </HTML>

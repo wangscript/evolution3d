@@ -346,7 +346,7 @@ void     CEvolEnviroment::initRenderer(HWND hRenderWindow)
 	m_ProcedureTexture->unlock(_lock);
 	m_pStencilState = m_pRenderApi->createDepthStencilState(L"Overlay");
 
-	m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel<0:simple.texture,simple.fakehdr>" , NULL);;
+	m_hProgram = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel(0:simple.texture,simple.fakehdr)" , NULL);;
 
 	m_hFont    = m_pRenderApi->findFont(L"small" );
 
@@ -434,7 +434,10 @@ void     CEvolEnviroment::updateFrame(long passedTime , ISceneVisitor* pVisitor)
 	xSleep(5);
 	m_pRenderApi->identityMatrix(MATRIXMODE_World);
 	m_pRenderApi->applyCamera(m_pCamera);
-	m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.3f,1.0f));
+	if(m_pRenderApi->renderMode() == eRenderMode::eRenderMode_Select )
+		m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.0f,0.0f));
+	else 
+		m_pRenderApi->begin(xColor_4f(0.0f,0.0f,0.3f,1.0f));
 	m_pRenderApi->beginScene();
 	xMathLib::xmat4 mat;
 	//xMathLib::XM_RotateY(mat,angle);

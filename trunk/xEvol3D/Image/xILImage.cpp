@@ -850,13 +850,13 @@ bool  xILImage::scalePOT(IMAGE_FILTER filter)
 	return scale(w, h,filter);
 }
 
-bool  xILImage::load(const wchar_t* filename, IMAGE_ORIGIN img_origin)
+bool  xILImage::load(const wchar_t* filename, IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
-	return load(filename,NULL,0,img_origin);
+	return load(filename,NULL,0,img_origin , _arg);
 }
 
 
-bool  xILImage::load(const wchar_t* wcsFileName, const int8* buf,int buf_len, IMAGE_ORIGIN img_origin )
+bool  xILImage::load(const wchar_t* wcsFileName, const int8* buf,int buf_len, IMAGE_ORIGIN img_origin , unsigned int _arg)
 {
 	char ansiFileName[1024] = {0};
 	XEvol_UnicodeToFsEnc(wcsFileName , ansiFileName , 1024);
@@ -968,7 +968,7 @@ int xILImage::byteAlign()
    return m_nByteAlign;
 }
 
-bool  xILImage::load(const wchar_t* filename, const int8* buf,int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin)
+bool  xILImage::load(const wchar_t* filename, const int8* buf,int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
 	if(false == load(filename,buf,buf_len,img_origin))
 		return false;
@@ -991,7 +991,7 @@ bool xILImage::__convertILFormat(ePIXEL_FORMAT format)
 	return true;
 }
 
-bool xILImage::data(const int8 * image_buffer,int mWidth,int mHeight , ePIXEL_FORMAT format)
+bool xILImage::data(const int8 * image_buffer,int mWidth,int mHeight , ePIXEL_FORMAT format, unsigned int _arg)
 {
 	if(!ilIsImage(m_ImageID))
 	{

@@ -34,7 +34,8 @@ IRenderApiObject::IRenderApiObject(IRenderApi* pOwner)
 
 IRenderApiObject::~IRenderApiObject()
 {
-    m_pRenderApi->removeRenderObject(this);
+    if(m_pRenderApi)
+        m_pRenderApi->removeRenderObject(this);
 }
 
 IRenderApiState::IRenderApiState(IRenderApi* pOwner):IRenderApiObject(pOwner) 

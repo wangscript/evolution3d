@@ -185,7 +185,7 @@ namespace xImageLib
 		return pImage;
 	}
 
-	xImage* load(IMAGE_TYPE type ,const wchar_t* fileName, IMAGE_ORIGIN img_origin)
+	xImage* load(IMAGE_TYPE type ,const wchar_t* fileName, IMAGE_ORIGIN img_origin, unsigned int _arg)
 	{
 		xImage* pImage = __createImageByeExtname(fileName);
 		if(false == pImage->load(fileName , img_origin) )
@@ -196,7 +196,7 @@ namespace xImageLib
 		return pImage;
 	}
 
-	xImage*         load(IMAGE_TYPE type ,const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin)
+	xImage*         load(IMAGE_TYPE type ,const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin, unsigned int _arg)
 	{
 		xImage* pImage = __createImageByeExtname(fileName);
 		if(false == pImage->load(fileName , mem_buf , buf_len , img_origin) )
@@ -207,7 +207,7 @@ namespace xImageLib
 		return pImage;
 	}
 
-	xImage*         load(IMAGE_TYPE type ,const wchar_t* fileName, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin )
+	xImage*         load(IMAGE_TYPE type ,const wchar_t* fileName, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format,IMAGE_ORIGIN img_origin , unsigned int _arg)
 	{
 		xImage* pImage = __createImageByeExtname(fileName);
 		if(false == pImage->load(fileName , mem_buf , buf_len , format, img_origin) )

@@ -34,6 +34,7 @@ public:
     virtual bool draw();
     virtual void setText(const wchar_t* _text);
     virtual bool onLMouseRelease(xMouseMsg& mEvent);
+    virtual bool onLMouseDbClick(xMouseMsg& mEvent);
     virtual void onLostActive();
     virtual void onActive();
 };

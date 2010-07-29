@@ -277,7 +277,7 @@ int xHDRImage::byteAlign()
      return 4;
 }
 
-bool xHDRImage::load(const wchar_t* fileName, IMAGE_ORIGIN img_origin)
+bool xHDRImage::load(const wchar_t* fileName, IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
 	m_ImgOrigin = img_origin;
 	std::ifstream _stream;
@@ -297,7 +297,7 @@ bool xHDRImage::load(const wchar_t* fileName, IMAGE_ORIGIN img_origin)
 	return __loadHDRFile(fileName , _stream);
 }
 
-bool xHDRImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin)
+bool xHDRImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len, IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
 	m_ImgOrigin = img_origin;
 	if(mem_buf)
@@ -309,7 +309,7 @@ bool xHDRImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len,
 	return load(fileName , img_origin);
 }
 
-bool xHDRImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format, IMAGE_ORIGIN img_origin)
+bool xHDRImage::load(const wchar_t* fileName, const int8* mem_buf , int buf_len, ePIXEL_FORMAT format, IMAGE_ORIGIN img_origin, unsigned int _arg)
 {
     return load(fileName , mem_buf , buf_len , img_origin);
 }

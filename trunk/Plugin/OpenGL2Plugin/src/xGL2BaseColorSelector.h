@@ -58,7 +58,7 @@ class xGL2BaseColorSelector : public IColorSelector
 	xGL2RenderView*            m_SelectRenderView;
 	IBaseShader*               m_pColorSelShader;
 	xPixelSelectID             m_SelectID[2];
-	xGL2RenderApi*           m_pD10Api;
+	xGL2RenderApi*           m_pGL2Api;
 	ePIXEL_FORMAT              m_Format;
 	IMPL_REFCOUNT_OBJECT_INTERFACE(xGL2BaseColorSelector);
 public:

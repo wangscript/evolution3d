@@ -12,7 +12,7 @@ xPlaneGridDrawable::xPlaneGridDrawable(IBaseRenderer* pRenderer, int arg)
 	m_pAss = NULL;
 	m_pRenderApi = NULL;
 	m_pTexture = NULL;
-	m_pGpuProgram = NULL;
+	m_hGpuProgram = NULL;
 
 	m_pMaskTexture = NULL;
 	m_pBlendState = NULL;
@@ -84,9 +84,8 @@ bool xPlaneGridDrawable::init( xBaseTextureMgr* pTexMgr)
 	m_pRenderApi->setBlendState(m_pBlendState);
 
 
-	HGpuProgram hProgram = m_pRenderApi->gpuProgramManager()->load(L"PlaneGrid.vertex",L"PlaneGrid.pixel",NULL);
-	m_pGpuProgram = hProgram.getResource() ;
-	m_pRenderApi->setGpuProgram( m_pGpuProgram );
+	m_hGpuProgram = m_pRenderApi->gpuProgramManager()->load(L"PlaneGrid.vertex",L"PlaneGrid.pixel",NULL);
+	m_pRenderApi->setGpuProgram( m_hGpuProgram );
 
 	delete [] vertices;
 	delete [] indices;
@@ -95,7 +94,7 @@ bool xPlaneGridDrawable::init( xBaseTextureMgr* pTexMgr)
 
 bool xPlaneGridDrawable::begin()
 {
-	m_pRenderApi->setGpuProgram( m_pGpuProgram );
+	m_pRenderApi->setGpuProgram( m_hGpuProgram );
 	return true;
 }
 

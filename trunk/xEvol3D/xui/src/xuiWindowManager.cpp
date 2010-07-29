@@ -205,14 +205,7 @@ xuiWindowManager::xuiWindowManager(IRenderApi* pRenderApi , xBaseTextureMgr* pTe
     m_pMouseFocusWindow  = NULL;
     m_commandProc        = NULL;
 
-    m_p2DRectObject = pRenderApi->create2DRectObject();
-    if(m_p2DRectObject)
-	{
-		m_p2DRectObject->setUVChanel(0);
-	}
-    m_GpuProgram[0] = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel"                               , NULL).getResource();
-    m_GpuProgram[1] = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel(0:simple.texture)"             , NULL).getResource();
-    m_GpuProgram[2] = m_pRenderApi->gpuProgramManager()->load(L"simple2D.vertex" , L"simple2D.pixel(0:simple.texture,simple.mask)" , NULL).getResource();
+    m_p2DRenderer   = new x2DRenderer(pRenderApi);
 
 }
 
@@ -290,6 +283,9 @@ bool xuiWindowManager::onMessage(xWindowMsg& msg)
     case WIN_MMOUSE_RELEASE:
     case WIN_MOUSE_MOVE:
     case WIN_MOUSE_WHEEL:
+    case WIN_LMOUSE_DB_CLICK:
+    case WIN_RMOUSE_DB_CLICK:
+    case WIN_MMOUSE_DB_CLICK:
         return onMouseMsg(msg.Mouse);
         break;
 
@@ -378,72 +374,33 @@ xuiDialog* xuiWindowManager::createDialogFromFile(const wchar_t* _xuiScript,xuiW
 
 void xuiWindowManager::draw()
 {
-    for(int i = (int)m_visibleDialog.size() - 1 ;i  >= 0  ; i --)
-    {
-        //if(m_visibleDialog[i]->getStateBlender() == NULL || m_visibleDialog[i]->getStateBlender()->isInBlending() == false)
-        m_visibleDialog[i]->drawWindow();
-    }
+	for(int i = 0 ; i < (int)m_visibleDialog.size() ; i ++)
+	{
+		//if(m_visibleDialog[i]->getStateBlender() == NULL || m_visibleDialog[i]->getStateBlender()->isInBlending() == false)
+		m_visibleDialog[i]->drawWindow();
+	}
 
-    for(int i = (int)m_blendingDialogs.size() - 1 ;i  >= 0  ; i --)
-    {
-        m_blendingDialogs[i]->drawWindow();
-    }
+	for(int i = 0 ; i < (int)m_blendingDialogs.size() ; i ++)
+	{
+		m_blendingDialogs[i]->drawWindow();
+	}
 }
 
 bool xuiWindowManager::drawRectf(int nTextureLayer , IBaseTexture* pTexture[], float vDestRect[4] , const xColor_4f& color)
 {
-    if(m_pRenderApi)
-    {
-        xvec4& dstRect =  *((xvec4*)vDestRect);
-        m_p2DRectObject->setColor(color);
-        m_p2DRectObject->setUVChanel(2);//nTextureLayer);
-        for(int i = 0 ; i < nTextureLayer ; i ++)
-        {
-            m_p2DRectObject->setTexture(i,pTexture[i]);
-        }        
-        m_p2DRectObject->setRect(dstRect);
-        m_pRenderApi->pushGpuProgram(m_GpuProgram[nTextureLayer]);
-        bool bRet = m_pRenderApi->draw2DRect(m_p2DRectObject);
-        m_pRenderApi->popGpuProgram();
-        return bRet;
-    }
-    return false;
+    return m_p2DRenderer->drawRectf(nTextureLayer , pTexture , vDestRect , color);
 }
 
 bool xuiWindowManager::drawRectf(int nTextureLayer , IBaseTexture* pTexture[], float vDestRect[4] , float vSrcRect[4]  , const xColor_4f& color)
 {
-    if(m_pRenderApi)
-    {
-        xvec4& dstRect =  *((xvec4*)vDestRect);
-        xvec4& srcRect =  *((xvec4*)vSrcRect);
-        m_p2DRectObject->setUVChanel(2);//nTextureLayer);
-        if(nTextureLayer >= 1)
-        {
-            m_p2DRectObject->setTexture(0,  pTexture[0] , srcRect);
-        }
-        for(int i = 1 ; i < nTextureLayer ; i ++)
-        {
-            m_p2DRectObject->setTexture(i,pTexture[i]);
-        }        
-        m_p2DRectObject->setRect(dstRect);
-        m_pRenderApi->pushGpuProgram(m_GpuProgram[nTextureLayer]);
-        bool bRet = m_pRenderApi->draw2DRect(m_p2DRectObject);
-        m_pRenderApi->popGpuProgram();
-        return bRet;
-    }
-    return false;
+    return m_p2DRenderer->drawRectf(nTextureLayer , pTexture , vDestRect , vSrcRect , color);
 }
+
 bool xuiWindowManager::drawRectf(I2DRectObject*   p2DRectObject)
 {
-    if(p2DRectObject == NULL)
-        p2DRectObject = m_p2DRectObject;
-
-    m_pRenderApi->pushGpuProgram(m_GpuProgram[ p2DRectObject->nUVChanel() ]);
-    bool bRet = m_pRenderApi->draw2DRect(m_p2DRectObject);
-    m_pRenderApi->popGpuProgram();
-    return bRet;
-
+  return m_p2DRenderer->drawRectf(p2DRectObject);
 }
+
 xuiRect xuiWindowManager::clipRect(xuiRect& _baseRect , xuiRect& _rect)
 {
     xuiRect _out = _rect;

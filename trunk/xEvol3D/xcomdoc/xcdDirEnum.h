@@ -43,7 +43,7 @@ namespace xComdoc
 
 	class xDirEnum
 	{
-#ifdef _LINUX
+#ifdef _UNIX
 	void _enumDir(const wchar_t* wcsDirName, bool recursive);
 #endif
 	public:

@@ -44,10 +44,10 @@ public:
 	virtual bool              clear(xColor_4f& bkColor , float z , unsigned int stencil) = 0;
 	virtual bool              clear(xColor_4f& bkColor ,  float z , unsigned int stencil, int nClear) = 0;
     virtual bool              createRenderTarget(int nRenderTarget , ePIXEL_FORMAT fmt , bool bLockable , bool bAsTexture) = 0;
-	virtual bool              setRenderTarget(IBaseTexture*  pTexture , size_t rtIdx) = 0;
+	virtual bool              setRenderTarget(IBaseTexture*  pTexture , size_t rtIdx , size_t iSlice = 0 , size_t iMipMapLevel = 0) = 0;
 	virtual bool              setRenderTarget(IRenderTarget* pRenderTarget , size_t rtIdx) = 0;
 	virtual bool              setDepthBuffer(IRenderTarget* pDepthBuffer) = 0;
-	virtual int               addRenderTarget(IBaseTexture*  pTexture) = 0;
+	virtual int               addRenderTarget(IBaseTexture*  pTexture  , size_t iSlice = 0 , size_t iMipMapLevel = 0 ) = 0;
 	virtual int               addRenderTarget(IRenderTarget* pRenderTarget) = 0;
 	virtual IRenderTarget*    depthBuffer() = 0;
 	virtual IRenderApiObject* renderTarget(size_t rtIdx ) = 0;

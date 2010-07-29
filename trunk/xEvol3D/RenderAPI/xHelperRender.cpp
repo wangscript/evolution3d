@@ -25,8 +25,8 @@ bool  xHelpRender::queryInputBuffer()
 {
 	if(m_pInputBuffer)
 	{
-		int len = m_pInputBuffer->bufLen();
-		int lenNeed = m_Vertexs.size() * sizeof(xHelperVertex);
+		int len = (int)m_pInputBuffer->bufLen();
+		int lenNeed = (int)m_Vertexs.size() * (int)sizeof(xHelperVertex);
 		if(lenNeed <= len)
 		{
 			m_pInputBuffer->update(eLock_WriteDiscard , (void*)&m_Vertexs[0] , lenNeed ) ;
@@ -48,7 +48,7 @@ void xHelpRender::end()
 
     queryInputBuffer();
 	m_pRenderApi->setVertexStream(m_pVertStream);
-	m_pRenderApi->drawPrimitive(m_Vertexs.size() , 0 , m_type);
+	m_pRenderApi->draw(m_Vertexs.size() , 0 , m_type);
 	
 	m_Vertexs.clear();
 	m_type = ePrimtiveType_Unknown;

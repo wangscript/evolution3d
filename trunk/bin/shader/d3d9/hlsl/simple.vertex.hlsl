@@ -16,7 +16,7 @@ struct VS_INPUT
 struct PS_INPUT
 {
       float4 Pos      : POSITION0;
-      float2 Tex      : TEXCOORD0;
+      float4 Tex      : TEXCOORD0;
       float4 Color    : COLOR;
 
 };
@@ -30,7 +30,7 @@ PS_INPUT main( VS_INPUT input )
       output.Pos = mul(input.Pos  ,  matWorld  );
       output.Pos = mul(output.Pos ,  matView   );
       output.Pos = mul(output.Pos ,  matProject);
-      output.Tex = input.Tex;
+      output.Tex = float4(input.Tex , 1.0f , 1.0f);
       output.Color = input.Color;
 
       return output;

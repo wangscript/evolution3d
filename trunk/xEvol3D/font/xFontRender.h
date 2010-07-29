@@ -22,11 +22,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __XFONT_RENDERER_H__
 #include "../BaseLib/xResourceMgr.h"
 #include "../BaseLib/xBaseObject.h"
+#include "../BaseLib/xstring.h"
 #include "../Image/Color.h"
 #include "../XMathLib/xMathLib.h"
 #include "../RenderAPI/xRenderApiFwDecl.h"
 #include "../BaseLib/xObjectFactory.h"
 BEGIN_NAMESPACE_XEVOL3D
+
+
+
+
 
 class  _XEVOL_BASE_API_ xFontLoader;
 class  _XEVOL_BASE_API_ xFontRenderCreatorMgr;
@@ -89,7 +94,7 @@ public:
       virtual ~xFontRender(){}
 	  virtual bool  init( xXmlNode* pInitXml) = 0;
       virtual const xFontInfo& getInfo() = 0;
-      virtual bool  drawChar(wchar_t _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl) = 0;
+      virtual bool  drawChar(xWCharType _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl) = 0;
       virtual void  enableAntialias(bool bAnti) = 0;
       virtual bool  isAntialias() = 0;
       virtual int   getResSize() = 0;
@@ -97,7 +102,7 @@ public:
       virtual int   getCacheSize() = 0;
       virtual void  releaseChache() = 0;
 
-      virtual bool  getCharDim(wchar_t _chr , int& w , int& h) = 0;
+      virtual bool  getCharDim(xWCharType _chr , int& w , int& h) = 0;
       virtual bool  getTextDim(const wchar_t* text , int& w , int& h);
       virtual bool  getTextDim(const wchar_t* strText, int& dx , int& dy , int maxWidth);
       virtual int	getTextWidth(const wchar_t* strText, int iBegin, int& nLen);

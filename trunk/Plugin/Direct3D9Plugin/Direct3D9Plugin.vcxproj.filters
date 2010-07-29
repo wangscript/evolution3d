@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{1a1b258d-5b5d-4a40-818a-d1ddfe48b389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{9fc6b145-73f7-4d8f-a854-adcc65a9275e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{58cc6bdf-683a-4f0e-91a5-6eb24156c487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="state">
+      <UniqueIdentifier>{1efe6ce8-3edc-4e42-beeb-6a1a882b4cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3DCommon">
+      <UniqueIdentifier>{c1c74e11-433d-42ce-b415-9d6e3741a9e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="texture">
+      <UniqueIdentifier>{ec200194-4334-436a-9f72-ba77ce9ab3fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\xD3D9ConstLexer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9InputAssembler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9InputBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9RenderView.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xDirect3D9API.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xDirect3D9APICreator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xDirect3D9APIResource.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9ConstantBuffer.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9GPUProgram.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9ParamBuffer.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9Shader.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9BlendState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9DepthStencilState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9RazState.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9Sampler.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3D2DRect.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DBaseColorSelector.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DInputBuffer.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Direct3D1x\xD3DTLEnviroment.cpp">
+      <Filter>D3DCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9BaseRenderTarget.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9BaseTexture.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9FileTexture.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9RenderTarget.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9Texture2D.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9Texture3D.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xD3D9TextureCube.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="xDirect3D9Plugin.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\xDirect3D9APIResource.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9ConstLexer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9InputAssembler.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9InputBuffer.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9RenderView.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xDirect3D9API.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xDirect3D9APICreator.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9ConstantBuffer.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9GPUProgram.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9ParamBuffer.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9Shader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9BlendState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9DepthStencilState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9RazState.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9Sampler.h">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3D2DRect.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DBaseColorSelector.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DInputBuffer.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Direct3D1x\xD3DTLEnviroment.h">
+      <Filter>D3DCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9BaseRenderTarget.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9BaseTexture.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9FileTexture.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9RenderTarget.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9Texture2D.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9Texture3D.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xD3D9TextureCube.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="DX9 Must to Know.txt" />
+  </ItemGroup>
+</Project>

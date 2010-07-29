@@ -1,5 +1,7 @@
 #pragma once
 #include "../xMedusaEditor.h"
+#include "../xEvolEnviroment.h"
+#include "../Editor/EditorEnv.h"
 #include "../xMedusaEditorHelper.h"
 #include "BaseLib/xIDManager.h"
 USING_NS_MDED;
@@ -21,6 +23,7 @@ public:
 	CMedusaMainUI();
 	~CMedusaMainUI(); 
 //针对 SDK的接口
+    IMEdUIElement*     FindUIElement(const wchar_t* _name , bool recursive);
 	void               AttachUIElement(nsMedusaEditor::IMEdUIElement* pPane);
 	void               DetachUIElement(nsMedusaEditor::IMEdUIElement* pPane);
 	bool               DetachUIElement();
@@ -28,6 +31,7 @@ public:
 	void               _DetachUIElementImpl( nsMedusaEditor::IMEdUIElement* pPane ) ;
 	void               AttachDockPane(nsMedusaEditor::IMEdDockPane* pPane);
 	void               DetachDockPane(nsMedusaEditor::IMEdDockPane* pPane = NULL);
+    void               OnExit();
 public:
 
 	void               RegisteToolbar(CMEdUiToolBarInfo* _toolbar);
@@ -40,7 +44,7 @@ public:
 	bool               ShowToolbar(const wchar_t* _tbName);
 	CMEdUiToolBarInfo* FindToolbarByCmdID(int cmdID);
 	bool               PushMessageListenner(IMEdUIMessageListenner* pListener);
-    void               PopMessageListenner();
+    bool               PopMessageListenner();
 	IMEdUIMessageListenner* GetMessageListenner();
     bool               fireMEdUIEvent(eMEUIEvent _event , int param, int param2 = 0);
 	//插件需要分配一定量的ID给插件用
@@ -70,7 +74,10 @@ public:
 	friend class CMedusaApp;
 public:
 	nsMedusaEditor::IMEdMainUI* GetUI() { return &m_MainUI ; }
-
+    CEvolEnviroment* GetEvol3DEnv()
+    {
+        return GetEditorEnv()->evol3DEnv();
+    }
 protected:
 	void SetMainFrame(CMainFrame*   pMainFrame);
 public:

@@ -36,6 +36,7 @@ public:
 	xEvol3DEngine();
 	~xEvol3DEngine();
 	IRenderApi*      renderApi();
+    IWindow*         renderWindow(){return m_pWindow;};
 	bool             exit();
 	bool             initCfg(const wchar_t* cfgFile);
 	bool             initPlatform(IApplication* pApp , const wchar_t* cfgFile, const wchar_t* pluginDir);
@@ -48,16 +49,17 @@ public:
 	xBaseTextureMgr* textureManager();
 	bool             loadCamera(xGeomLib::xCamera* pCamera , xXmlNode* pCameraNode);
 	bool             saveCamera(xGeomLib::xCamera* pCamera , xXmlNode* pCameraNode);
-
-	bool             messageLoop();
+    
+	bool             messageLoop(); 
 	//ISceneGraph*    createScene(const wchar_t* _sceneFile , IBaseRenderer* pRenderer);
 	xXmlNode*        sysConfig();
+    void             saveConfigure();
+    void             saveConfigure(const wchar_t* fileName);
 	int              sysValue(const wchar_t* sector , const wchar_t* _value, int defaultValue);
 	const wchar_t*   sysValue(const wchar_t* sector , const wchar_t* _value, const wchar_t* defValue);
 	float            sysValue(const wchar_t* sector , const wchar_t* _value, float defValue);     
 	bool             sysValue(const wchar_t* sector , const wchar_t* _value, bool defValue);
     void             onDeviceReset(bool bNewDevice , eResetAction _Action);
-protected:
 	xXmlNode*        sysCfgNode(const wchar_t* sector , bool bCreated = false);
 }; 
 END_NAMESPACE_XEVOL3D

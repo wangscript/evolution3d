@@ -65,6 +65,7 @@ protected:
     //=================
     virtual bool        leftMouseDown(xMouseMsg& mEvent);
     virtual bool        leftMouseRelease(xMouseMsg& mEvent);
+    virtual bool        leftMouseDbClick(xMouseMsg& mEvent);
     virtual bool        rightMouseDown(xMouseMsg& mEvent) ;
     virtual bool        rightMouseRelease(xMouseMsg& mEvent);
     virtual bool        midleMouseDown(xMouseMsg& mEvent);

@@ -13,13 +13,14 @@ Output
      float4 color: COLOR0;
 }
 ///}}
+*/
 
 ///>>Import = libDip
 
 
 ///{{SourceCode
 
-float4 CM_FakeHDR(float4 vDiffuse , float2 texCoord , SamplerState _sampler , Texture2D _texture )
+float4 CM_FakeHDR(float4 vDiffuse , float4 texCoord , SamplerState _sampler , Texture2D _texture )
 {
       float2    TexSize = float2(32 , 32);
       float2    intXY   = float2(texCoord.x * TexSize.x , texCoord.y * TexSize.y);

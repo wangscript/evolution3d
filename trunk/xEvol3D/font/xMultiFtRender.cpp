@@ -114,7 +114,7 @@ bool  xMixedFont::drawText(const wchar_t* strText, float x , float y ,const xCol
 	return xFontRender::drawText(strText,x,y,cl);
 }
 
-xFontRender* xMixedFont::chooseRenderer(wchar_t _chr)
+xFontRender* xMixedFont::chooseRenderer(xWCharType _chr)
 {
 	xFontRender* pFont = NULL;
 
@@ -128,7 +128,7 @@ xFontRender* xMixedFont::chooseRenderer(wchar_t _chr)
 	}
 	return pFont;
 }
-bool  xMixedFont::getCharDim(wchar_t _chr , int& dx , int& dy)
+bool  xMixedFont::getCharDim(xWCharType _chr , int& dx , int& dy)
 {
 	xFontRender* pFont = chooseRenderer(_chr);
 	return pFont->getCharDim(_chr , dx,dy );
@@ -137,12 +137,12 @@ bool  xMixedFont::getCharDim(wchar_t _chr , int& dx , int& dy)
 bool  xMixedFont::getTextDim(const wchar_t*  strText , int& dx , int& dy , int maxWidth)
 {
 	dx = 0 ; dy = 0;
-	if(m_pUCSFontRender == NULL && m_pAsciiFontRender == NULL)
+	if(m_pUCSFontRender.isHandle() == false && m_pAsciiFontRender.isHandle()  == false )
 		return false;	
 	return xFontRender::getTextDim(strText,dx,dy,maxWidth);
 }
 
-bool xMixedFont::drawChar(wchar_t _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl)
+bool xMixedFont::drawChar(xWCharType _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl)
 {
 	xFontRender* pFont = chooseRenderer(_chr);
 	return pFont->drawChar(_chr,x,y,dx,dy,cl);

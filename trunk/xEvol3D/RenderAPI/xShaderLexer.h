@@ -106,9 +106,15 @@ public:
 	xShaderPin     m_OutPin;
 public:
 	xShaderNodeSocket(const wchar_t* _name);
-	const wchar_t* name();
-	bool           load(const char* _code);
-	bool           unload();
+	const wchar_t*    name();
+	bool              load(const char* _code);
+	bool              unload();
+    const std::ds_string ansiName()
+    {
+        char _buf[64] = {0};
+        XEvol_UnicodeToLocale(m_name.c_str() , _buf , 64);
+        return _buf;
+    }
 };
 
 /*

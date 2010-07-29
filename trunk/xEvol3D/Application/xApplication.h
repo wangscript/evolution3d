@@ -139,6 +139,9 @@ public:
 	virtual IAppLayer*       handleAppLayer(const wchar_t* AppLayerName);
 	virtual IAppLayer*       handleAppLayer(IAppLayer* appLayer);
 
+public:
+    virtual bool             onLogicTick(long passedTime);
+    virtual bool             onRenderTick(long passedTime);
 private:
 	//ËùÓÐµÄListenr.
 	vector<IMsgListener*>       m_MsgListeners;
@@ -155,6 +158,7 @@ protected:
 
 };
 
+_XEVOL_BASE_API_  IApplication* xEvol_GetApplication();
 
 template<typename _Type> class TFrameUpdateObjHolder : public IFrameUpdateObject
 {
@@ -168,8 +172,8 @@ public:
 	};
 	~TFrameUpdateObjHolder()
 	{
-		if(IPlatform::singleton() && IPlatform::singleton()->IPlatform::singleton()->getApplication()  )
-			IPlatform::singleton()->getApplication()->removeFrameUpdateObj(this);
+		if( xEvol_GetApplication()  )
+			xEvol_GetApplication()->removeFrameUpdateObj(this);
 	};
 	const wchar_t* name()
 	{

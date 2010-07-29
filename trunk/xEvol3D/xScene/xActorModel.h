@@ -19,7 +19,7 @@ public:
 	virtual IDrawElement*  drawElement( size_t iEl) ;
     virtual size_t         nDrawElement() { return 1; }
 	virtual bool           setDrawElement(IDrawElement* pDrawElement , size_t iEl);
-	virtual bool           updateFrame(unsigned long passedTime);
+	virtual bool           updateFrame(unsigned long passedTime, IRenderCamera* pCamera);
 protected:
 	xActorElement*         m_pModelElement;
 	std::ds_wstring        m_strModelFile;

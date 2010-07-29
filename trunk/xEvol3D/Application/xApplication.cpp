@@ -117,6 +117,7 @@ bool     IApplication::uninit()
 
 bool IApplication::onMessage(xWindowMsg& msg)
 {
+    if(m_pCurAppLayer) return m_pCurAppLayer->onMessage(msg);
 	return false;
 }
 
@@ -210,6 +211,23 @@ void IApplication::updateFrame(long passedTime)
 {
 	if(m_pCurAppLayer)
 		m_pCurAppLayer->updateFrame(passedTime);
+
+    this->onLogicTick(passedTime);
+    this->onRenderTick(passedTime);
+}
+
+bool IApplication::onLogicTick(long passedTime)
+{
+    if(m_pCurAppLayer)
+        m_pCurAppLayer->onLogicTick(passedTime);
+    return true;
+}
+
+bool IApplication::onRenderTick(long passedTime)
+{
+    if(m_pCurAppLayer)
+        m_pCurAppLayer->onRenderTick(passedTime);
+    return true;
 }
 
 //------------------------------------------------
@@ -334,5 +352,11 @@ IAppLayer*  IApplication::handleAppLayer(IAppLayer* appLayer)
 	return pOldLayer;
 }
 
+IApplication* xEvol_GetApplication()
+{
+	if(IPlatform::singleton() == NULL )
+		return NULL;
+	return IPlatform::singleton()->getApplication();
+}
 
 END_NAMESPACE_XEVOL3D

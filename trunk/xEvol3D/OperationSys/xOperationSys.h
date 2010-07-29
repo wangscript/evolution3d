@@ -10,7 +10,7 @@
 
 BEGIN_NAMESPACE_XEVOL3D
 //Operation System API
-#ifdef _LINUX
+#ifdef _UNIX
 unsigned long timeGetTime();
 #endif
 unsigned long _XEVOL_BASE_API_  xGetTickCount();

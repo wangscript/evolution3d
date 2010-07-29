@@ -5,7 +5,7 @@ BEGIN_NAMESPACE_XEVOL3D
 
 xGL2BaseRenderTarget::xGL2BaseRenderTarget(xGL2RenderApi* pD10Api):IRenderTarget(pD10Api) 
 {
-	m_pD10Api = pD10Api ; 
+	m_pGL2Api = pD10Api ; 
 	m_pBaseTexture = NULL;
 	m_RefCount  = 1;
 

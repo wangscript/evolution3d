@@ -65,20 +65,30 @@ const char* xD3D11RenderApi::getShaderProfile(eShaderType _type)
 	{
 	case D3D_FEATURE_LEVEL_11_0:
 		{
-			if(_type == eShader_VertexShader) return  "vs_5_0";
-			if(_type == eShader_PixelShader)  return  "ps_5_0";
-			break;
+            //cs_5_0, ds_5_0, gs_5_0, hs_5_0, ps_5_0, vs_5_0
+			if(_type == eShader_VertexShader  ) return  "vs_5_0";
+			if(_type == eShader_PixelShader   ) return  "ps_5_0";
+            if(_type == eShader_GeometryShader) return  "gs_5_0";
+            
+            if(_type == eShader_HullShader    ) return  "hs_5_0";
+            if(_type == eShader_DomainShader  ) return  "ds_5_0";
+            if(_type == eShader_ComputeShader ) return  "cs_5_0";
+            //if(_type == eShader_Tessellator   ) return  NULL;
+ 			break;
 		}
 	case D3D_FEATURE_LEVEL_10_1:
 		{
-			if(_type == eShader_VertexShader) return  "vs_4_1";
-			if(_type == eShader_PixelShader)  return  "ps_4_1";
+			if(_type == eShader_VertexShader  ) return  "vs_4_1";
+			if(_type == eShader_PixelShader   ) return  "ps_4_1";
+            if(_type == eShader_GeometryShader) return  "gs_4_1";
+            if(_type == eShader_ComputeShader ) return  "cs_4_1";
 			break;
 		}
 	case D3D_FEATURE_LEVEL_10_0:
 		{
-			if(_type == eShader_VertexShader) return  "vs_4_0" ;
-			if(_type == eShader_PixelShader)  return  "ps_4_0" ;
+			if(_type == eShader_VertexShader  ) return  "vs_4_0" ;
+			if(_type == eShader_PixelShader   ) return  "ps_4_0" ;
+            if(_type == eShader_GeometryShader) return  "gs_4_0";
 			break;
 		}
 	case D3D_FEATURE_LEVEL_9_3:
@@ -95,7 +105,7 @@ const char* xD3D11RenderApi::getShaderProfile(eShaderType _type)
 			break;
 		}
 	}
-	return "vs_5_0";
+	return NULL;
 }
 
 
@@ -221,7 +231,7 @@ bool xD3D11RenderApi::onResize(int width , int height)
 {
 	TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
 	TAutoLocker<xRenderApiLocker> aRenderLocker(&m_RenderLocker);
-	xD11RenderView* pRenderView = m_RenderView.type_case<xD11RenderView*>(); //dynamic_cast<xD11RenderView*>(m_RenderView.operator TObject*());
+	xD11RenderView* pRenderView = m_RenderView.dynamic_convert<xD11RenderView*>(); //dynamic_cast<xD11RenderView*>(m_RenderView.operator TObject*());
 	if(false == __needResize(width , height) )
 	{
 		pRenderView->install();
@@ -372,15 +382,15 @@ bool xD3D11RenderApi::__createD11Device(DXGI_SAMPLE_DESC sampleDes)
 		DXGI_ADAPTER_DESC desc;
 		pAdapter->GetDesc(&desc);
 
-		std::vector<IDXGIOutput*> vOutputers;
-		IDXGIOutput* pOutputer = NULL;
-		while(pAdapter->EnumOutputs( (UINT)vOutputers.size(), &pOutputer) != DXGI_ERROR_NOT_FOUND)
-		{
-			vOutputers.push_back(pOutputer);
-			DXGI_OUTPUT_DESC odesc;
-			pOutputer->GetDesc(&odesc);
-			continue;
-		}
+		//std::vector<IDXGIOutput*> vOutputers;
+		//IDXGIOutput* pOutputer = NULL;
+		//while(pAdapter->EnumOutputs( (UINT)vOutputers.size(), &pOutputer) != DXGI_ERROR_NOT_FOUND)
+		//{
+		//	vOutputers.push_back(pOutputer);
+		//	DXGI_OUTPUT_DESC odesc;
+		//	pOutputer->GetDesc(&odesc);
+		//	continue;
+		//}
 
 CREATE_DEVICE:
 
@@ -401,7 +411,13 @@ CREATE_DEVICE:
 		for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
 		{
 			m_driverType    = driverTypes[driverTypeIndex];
+			
 			HMODULE hModule = hDriverModule[driverTypeIndex];
+			if(pAdapter)
+			{
+					m_driverType = D3D_DRIVER_TYPE_UNKNOWN ;
+					hModule      = NULL;
+			}
 			hr = D3D11CreateDevice(pAdapter , m_driverType, hModule , createDeviceFlags , FeatureLevels , NumFeatureLevels , D3D11_SDK_VERSION , &m_pD3DDevice, &m_FeatureLevel , &m_pD3DDeviceContext);
 			
 			//m_pD3DDevice-
@@ -452,11 +468,11 @@ CREATE_DEVICE:
 			goto CREATE_DEVICE;
 		}
 
-		size_t _nOutput = vOutputers.size();
-		for(size_t iOp = 0 ; iOp < _nOutput ; iOp ++)
-		{
-			XSAFE_RELEASE(vOutputers[iOp]);
-		}
+		//size_t _nOutput = vOutputers.size();
+		//for(size_t iOp = 0 ; iOp < _nOutput ; iOp ++)
+		//{
+		//	XSAFE_RELEASE(vOutputers[iOp]);
+		//}
 		if(m_pD3DDevice && pSwapChain)
 		{
 			break;
@@ -554,7 +570,6 @@ bool xD3D11RenderApi::swapBuffer()
 {
 	TAutoLocker<xRenderApiLocker> aLocker(m_pDevLocker);
 	m_RenderWindow->Present(0  , 0 );
-	unlock();
 	return true;
 }
 
@@ -730,22 +745,40 @@ bool xD3D11RenderApi::setVertexStream(IVertexStream* vertexStream)
 	return false;
 }
 
-bool xD3D11RenderApi::drawPrimitive(size_t nVertex , size_t iStartVertex , ePrimtiveType pt)
+bool xD3D11RenderApi::drawPrimitiveIndex(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt)
 {
 	if(m_pCallback)
 	{
 		m_pCallback->preDrawPrimitive(this , m_RenderMode);
 		setPrimitiveType(pt);
-		d11DeviceContext()->DrawIndexed( (UINT)nVertex , (UINT)iStartVertex , 0 );
+		d11DeviceContext()->DrawIndexed( (UINT)nVertexIndex , (UINT)iStartVertexIndex , 0 );
 		m_pCallback->preDrawPrimitive(this , m_RenderMode);
 	}
 	else
 	{
 		setPrimitiveType(pt);
-		d11DeviceContext()->DrawIndexed( (UINT)nVertex , (UINT)iStartVertex , 0 );
+		d11DeviceContext()->DrawIndexed( (UINT)nVertexIndex , (UINT)iStartVertexIndex , 0 );
 	}
 	return true;
 }
+
+bool xD3D11RenderApi::drawPrimitive(size_t nVertexIndex , size_t iStartVertexIndex , ePrimtiveType pt)
+{
+    if(m_pCallback)
+    {
+        m_pCallback->preDrawPrimitive(this , m_RenderMode);
+        setPrimitiveType(pt);
+        d11DeviceContext()->Draw((UINT)nVertexIndex , (UINT)iStartVertexIndex  );
+        m_pCallback->preDrawPrimitive(this , m_RenderMode);
+    }
+    else
+    {
+        setPrimitiveType(pt);
+        d11DeviceContext()->Draw( (UINT)nVertexIndex , (UINT)iStartVertexIndex  );
+    }
+    return true;
+}
+
 
 bool  xD3D11RenderApi::drawRectf(IBaseTexture* pTexture, float vDestRect[4] , const xColor_4f& color)
 {

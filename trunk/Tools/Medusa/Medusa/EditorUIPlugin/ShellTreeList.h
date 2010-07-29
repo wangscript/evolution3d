@@ -28,6 +28,7 @@ public:
 	HICON            hIcon() ;
 	void             setID(UINT id) ;
 	UINT             getID() ;
+    bool             IsVisible() { return m_wndTree.IsWindowVisible() ; } 
 
 protected:
 	CMFCShellTreeCtrl       m_wndTree;

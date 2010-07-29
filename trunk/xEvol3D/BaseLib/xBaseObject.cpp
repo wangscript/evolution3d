@@ -34,9 +34,9 @@ public:
         for(; pos != m_List.end() ; pos ++)
         {
             IBaseObject* pObject = (IBaseObject*)*pos;
-            int RefCount = pObject->RefCount();
+            ///int RefCount = pObject->RefCount();
             const xObjectClassID& clsID = pObject->classID();
-            XEVOL_LOG(eXL_DEBUG_HIGH , L"   ->Object not released: refcount=%d , name=%s POINTER=0x%XH\n" , pObject->RefCount() , clsID.name() , (int)pObject );
+            XEVOL_LOG(eXL_DEBUG_HIGH , L"   ->Object not released: refcount=%d , name=%s POINTER=0x%XH\n" , pObject->RefCount() , clsID.name() , pObject );
         }
         XEVOL_LOG(eXL_DEBUG_HIGH , "End BaseObject dumping......\n");   
         return true;

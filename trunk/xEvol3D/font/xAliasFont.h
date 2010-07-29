@@ -35,10 +35,10 @@ public:
 	bool  init( xXmlNode* pInitXml);
 	void  releaseChache();
     const xFontInfo& getInfo();
-	bool  drawChar(wchar_t _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl) ;
+	bool  drawChar(xWCharType _chr , float x , float y, int& dx , int& dy, const xColor_4f& cl) ;
 	void  enableAntialias(bool bAnti);
 	bool  isAntialias();
-    bool  getCharDim(wchar_t _chr , int& dx , int& dy);
+    bool  getCharDim(xWCharType _chr , int& dx , int& dy);
 	void  setCacheSize(int maxSize);
 	int   getCacheSize();
 	int   getLinePitch();

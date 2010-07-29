@@ -1,9 +1,15 @@
 #include "../xStdPch.h"
+#include "xGeomLib.h"
 #include "xfrustum.h"
-#include "xcamera.h"
 #include "xvolume.h"
 using namespace xMathLib;
-BEGIN_NAMESPACE_XGEOMLIB
+BEGIN_NAMESPACE_XGEOMLIB;
+
+void NormalizePlane(float* v)
+{
+    xplane* plane = (xplane*)v;
+    plane->normalize();
+}
 
 bool xFrustum::from(const xMathLib::xmat4& _viewMat , const xMathLib::xmat4& _projMat)
 {
@@ -39,6 +45,7 @@ bool xFrustum::from(const xMathLib::xmat4& _viewMat , const xMathLib::xmat4& _pr
 	xvec4 vTOP      (0  ,-1 , 0 , 1);
 	xvec4 vNEAR     (0  , 0 , 1 , 1);
 	xvec4 vFAR      (0  , 0 ,-1 , 1);
+
 
 	p= (xvec4*)&m_plane[PL_RIGHT];
     XM_Mul(vpmat ,vRIGHT ,  *p);

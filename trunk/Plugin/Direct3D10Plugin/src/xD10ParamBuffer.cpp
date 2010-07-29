@@ -197,6 +197,7 @@ bool xD10ShaderParamTable::createResourceBindingTable(ID3D10ShaderReflection* pS
 					texer.m_iTexUsage = xD10ConstLexer::GetTextureSlotIdx(slotName);
 					texer.m_iName     = xStringHash(texer.m_Name);
 					texer.m_pTexture  = NULL;
+					texer.m_nTexture  = resDesc.BindCount;
 					m_TextureBindings.push_back(texer);
 				}
 			}
@@ -507,6 +508,18 @@ bool xD10ShaderParamTable::installSamplerTextureBinding()
 			}
 		}
 
+		//绑定的是一个纹理的数组。做特殊处理
+		if(binder.m_nTexture > 1 )
+		{
+			int nTexture = pTexture->nSubTexture();
+			for(int iTex  = 0 ;  iTex < binder.m_nTexture && iTex < nTexture ; iTex ++)
+			{
+				IBaseTexture* pSubTexture = pTexture->subTexture(iTex);
+				pD10Api->setShaderResource(m_pD10Shader->type() , binder.m_iShaderSlot + iTex, pSubTexture);
+			}
+			continue;
+		}
+
 		//如果还为空，就从其它地方找
 		if(pTexture != NULL)
 		{
@@ -514,7 +527,7 @@ bool xD10ShaderParamTable::installSamplerTextureBinding()
 		}
 		else
 		{
-			XEVOL_LOG(eXL_DEBUG_HIGH , L"Missing texture bing texture name=%s\n",binder.m_Name);
+			XEVOL_LOG(eXL_DEBUG_HIGH , L"Missing texture binding texture name=%s\n",binder.m_Name);
 			pD10Api->setShaderResource(m_pD10Shader->type() , binder.m_iShaderSlot , (IBaseTexture *)NULL);
 		}
 	}

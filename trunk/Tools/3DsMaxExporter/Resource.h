@@ -76,6 +76,7 @@
 #define IDC_SET_BONES_GROUP             2022
 #define IDC_LIST1                       2023
 #define IDC_CHECK1                      2024
+#define IDC_EXPORT_ACTION_BACTH         2024
 #define IDC_CHECK2                      2025
 #define IDC_BUTTON17                    2025
 #define IDC_EDIT1                       2026
@@ -132,7 +133,6 @@
 #define IDC_CREATE_SKINGROUP            2056
 #define IDC_CREATE_SKINGROUP2           2057
 #define IDC_REFLESH                     2057
-#define IDC_ADD_BONES2                  2057
 #define IDC_ADD_BONE_H                  2057
 #define IDC_ALL_NODES                   2058
 #define IDC_FMODELSCALE                 2059
@@ -143,6 +143,8 @@
 #define IDC_EXPORT_TO_SIGNLE            2064
 #define IDC_COMBO1                      2065
 #define IDC_COMPRESS_RATIO              2065
+#define IDC_EXPORT_TO_SIGNLE2           2065
+#define IDC_EXPORT_KEYFRAME             2065
 
 // Next default values for new objects
 // 

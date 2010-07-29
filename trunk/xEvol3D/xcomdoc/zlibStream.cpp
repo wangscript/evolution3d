@@ -128,7 +128,7 @@ int   XComDoc_Compress(_xcd_int8* dest_buf,_xcd_int8* src_buf, int src_len,int c
         XEVOL_LOG(eXL_ERROR_FALT , "lzma not compiled, uncompressed failed\n");
         assert(0);
 #endif
-        return dest_len;
+        return (int)dest_len;
     }
 	
 }
